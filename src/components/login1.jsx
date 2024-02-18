@@ -4,7 +4,7 @@ import c2 from '../images/ellipse.png'
 import { Switch } from '@headlessui/react'
 import {Link} from 'react-router-dom'
 
-function Login() {
+function Login1() {
     const [vis,setVis]=useState('password')
     const handleToggle=()=>{
         if(vis==='password')setVis('text')
@@ -23,9 +23,9 @@ function Login() {
                 </div>
                 <div className='my-auto text-md font-medium'>Securewatch</div>
             </div>
-            <div className='font-bold text-lg'>Nice to see you again</div>
+            <div className='font-bold text-lg'>Welcome to SecureWatch</div>
             <form>
-                <label htmlFor="userid" className='text-base'>Login</label>
+                <label htmlFor="userid" className='text-base'>Name</label>
                 <br/>
                 <input type="text" className='w-full rounded-md py-3 px-4 outline-none font-sans bg-[#f2f2f2]' placeholder='Email or phone number'/>
                 <br />
@@ -39,36 +39,10 @@ function Login() {
 </div>
                 </div>
             </form>
-            <div className='flex justify-between'>
-                <div className='flex'>
-                <Switch
-      checked={enabled}
-      onChange={setEnabled}
-      className={`${
-        enabled ? 'bg-blue-600' : 'bg-gray-200'
-      } relative inline-flex h-6 w-11 items-center rounded-full`}
-    >
-      <span className="sr-only">Enable notifications</span>
-      <span
-        className={`${
-          enabled ? 'translate-x-6' : 'translate-x-1'
-        } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-      />
-    </Switch>
-    <div>Remember me</div>
-                </div>
-                <div>Forgot Password?</div>
-            </div>
-            <button className='mx-auto bg-[#28AA61] px-4 py-2 text-white'>Sign in</button>
-            <br />
-                <button className='mx-auto bg-[#000000] px-4 py-2 text-white'>Sign in with google</button>
-                <div className='text-center'>
-                    <span >Don't have an account?</span>
-                    <Link to='/signup' className='text-blue text-[#28AA61]'>&nbsp; Sign up now</Link>
-                </div>
+            <button className='mx-auto bg-[#28AA61] px-4 py-2 text-white'>Continue</button>
         </div>
     </div>
   )
 }
 
-export default Login
+export default Login1
