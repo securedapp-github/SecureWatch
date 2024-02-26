@@ -3,6 +3,7 @@ import c1 from '../images/backg.png'
 import c2 from '../images/ellipse.png'
 import { Switch } from '@headlessui/react'
 import {Link} from 'react-router-dom'
+import google from '../images/google.png'
 
 function Login() {
     const [vis,setVis]=useState('password')
@@ -12,22 +13,22 @@ function Login() {
     }
     const [enabled, setEnabled] = useState(false)
   return (
-    <div className='flex flex-col h-full justify-center items-center md:gap-[50px] md:flex-row lg:gap-[100px]'>
-        <div className='w-[30vw] my-auto'>
+    <div className='flex flex-col h-full justify-center mx-5 md:mx-0 items-center md:gap-[50px] md:flex-row lg:gap-[150px]'>
+        <div className='w-[90vw] md:w-[50vw] lg:w-[30vw] my-auto mb-10 md:mb-0 mt-0'>
         <img src={c1} alt="not found" className='my-auto'/>
         </div>
-        <div className='my-auto w-1/4'>
+        <div className='my-auto w-full md:w-1/3 lg:w-1/4'>
             <div className='flex w-[160px] justify-between rounded-full border border-1 border-[#59E296] py-2 px-3'>
                 <div>
                     <img src={c2} alt="not found" />
                 </div>
                 <div className='my-auto text-md font-medium'>Securewatch</div>
             </div>
-            <div className='font-bold text-lg'>Nice to see you again</div>
-            <form>
+            <div className='font-bold text-lg mt-6'>Nice to see you again</div>
+            <form className='mt-5'>
                 <label htmlFor="userid" className='text-base'>Login</label>
                 <br/>
-                <input type="text" className='w-full rounded-md py-3 px-4 outline-none font-sans bg-[#f2f2f2]' placeholder='Email or phone number'/>
+                <input type="text" className='mb-3  w-full rounded-md py-3 px-4 outline-none font-sans bg-[#f2f2f2]' placeholder='Email or phone number'/>
                 <br />
                 <label htmlFor="password" className='text-base'>Password</label>
                 <br/>
@@ -39,8 +40,8 @@ function Login() {
 </div>
                 </div>
             </form>
-            <div className='flex justify-between'>
-                <div className='flex'>
+            <div className='flex justify-between mt-5'>
+                <div className='flex gap-2'>
                 <Switch
       checked={enabled}
       onChange={setEnabled}
@@ -57,14 +58,18 @@ function Login() {
     </Switch>
     <div>Remember me</div>
                 </div>
-                <div>Forgot Password?</div>
+                <div className='text-[#007AFF]'>Forgot Password?</div>
             </div>
-            <button className='mx-auto bg-[#28AA61] px-4 py-2 text-white'>Sign in</button>
-            <br />
-                <button className='mx-auto bg-[#000000] px-4 py-2 text-white'>Sign in with google</button>
+            <button className='mx-auto bg-[#28AA61] px-4 py-2 text-white my-9 w-full rounded-md'>Sign in</button>
+            <hr />
+                <button className='mx-auto bg-[#000000] px-4 py-2 text-white my-9 w-full rounded-md flex gap-2 justify-center'>
+                  <img src={google} alt="not found" />
+                  <div className=''>
+                  Sign in with google</div>
+                  </button>
                 <div className='text-center'>
                     <span >Don't have an account?</span>
-                    <Link to='/signup' className='text-blue text-[#28AA61]'>&nbsp; Sign up now</Link>
+                    <Link to='/signup' className=' text-[#007AFF]'>&nbsp; Sign up now</Link>
                 </div>
         </div>
     </div>
