@@ -6,17 +6,21 @@ import Login1 from './components/login1.jsx';
 import Verify from './components/verify.jsx';
 import Home from './components/home.jsx';
 import Dashboard from './components/dashboard.jsx';
+import Monitor from './components/monitor.jsx';
+import Monitor_activity from './components/monitor_activity.jsx';
 
 function App() {
   return (
     <BrowserRouter>
     <Routes>
+    <Route path='/monitor_activity' element={<Monitor_activity/>}/>
     <Route path='/login' element={<Login/>}/>
     <Route path='/signup' element={<Signup/>}/>
     <Route path='/login1' element={<Login1/>}/>
     <Route path='verify' element={<Verify/>}/>
     <Route path='/' element={<Home/>}/>
     <Route path='/dashboard' element={<Dashboard/>}/>
+    <Route path='/monitor' element={<Monitor/>}/>
     </Routes>
     </BrowserRouter>
   );
