@@ -6,22 +6,28 @@ import { Switch } from '@headlessui/react'
 function Monitor() {
     const [enabled, setEnabled] = useState(false)
     const [disp,setDisp]=useState('block')
+    const [disp1,setDisp1]=useState('block')
     const handleToggle=()=>{
         if(disp=='none')setDisp('block')
         else setDisp('none')
     }
+    const handleToggle1=()=>{
+        if(disp1=='none')setDisp1('block')
+        else setDisp1('none')
+    }
+
   return (
-    <div className='mt-10' style={{'backgroundColor':'#FCFFFD'}}>
+    <div className='mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
       <Navbar1/>
       <div className='w-4/6 mx-auto mt-20'>
-        <div className='flex justify-between'> 
+        <div className='flex justify-center items-center md:justify-between  flex-col md:flex-row'> 
         <div className='text-4xl font-medium'>Monitor (2)</div>
-        <div className='flex gap-2'>
+        <div className='flex flex-wrap justify-center gap-2 mt-2 md:mt-0'>
             <div className='border border-black rounded-xl font-medium px-3 py-2 my-auto'>See Monitor Activity</div>
             <div className='bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto'>Create Monitor</div>
         </div>
         </div>
-      <div className='flex mt-10 justify-between w-3/5 py-3 px-5 rounded-2xl' style={{'border':'1px solid #7D7D7D'}}>
+      <div className='flex mt-10 justify-between w-3/5 py-3 px-5 rounded-2xl mx-auto' style={{'border':'1px solid #7D7D7D'}}>
         <input type="text" className='outline-none font-medium w-4/5' placeholder='Search by name, network or address...'/>
     <div className='my-auto'>
         <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,14 +36,14 @@ function Monitor() {
 </svg>
 </div>
 </div>
-<div className='mt-10 p-6 flex justify-between rounded-2xl' style={{'border':'1px solid #0CA851',boxShadow: '4px 4px 0px 0px #0CA851'
+<div className='mt-10 p-6 flex justify-between flex-col md:flex-row rounded-2xl' style={{'border':'1px solid #0CA851',boxShadow: '4px 4px 0px 0px #0CA851'
 }}>
     <div>
     <div className='flex gap-3'>
     <div className='text-xl font-semibold'>First Monitor</div>
     <div className='text-[12px] mt-auto text-[#7D7D7D]'>Governance</div>
     </div>
-    <div className='flex gap-4'>
+    <div className='flex gap-4 mt-5 flex-wrap items-center '>
         <div>
             <div className='text-center font-medium'>Networks</div>
             <div className='bg-[#0CA851] px-3 py-2 rounded-md text-[13px] my-auto text-white'>MAINNET</div>
@@ -63,7 +69,7 @@ function Monitor() {
         </div>
     </div>
     </div>
-    <div>
+    <div className='flex flex-row md:flex-col mt-4 gap-1 md:mt-0'>
         <div className='flex justify-end gap-3'>
     <Switch
       checked={enabled}
@@ -87,7 +93,7 @@ function Monitor() {
 </svg>
 </div>
     </div>
-    <div className='px-2 py-1 rounded-2xl mt-1'
+    <div className='px-2 py-1 rounded-2xl'
      style={{'border':'1px solid #0CA851','display':disp}}>
         <div className='mb-2' >Save as template</div>
         <hr />
@@ -95,14 +101,14 @@ function Monitor() {
     </div>
     </div>
 </div>
-<div className='mt-10 p-6 flex justify-between rounded-2xl' style={{'border':'1px solid #0CA851',boxShadow: '4px 4px 0px 0px #0CA851'
+<div className='mt-10 p-6 flex justify-between flex-col md:flex-row  rounded-2xl' style={{'border':'1px solid #0CA851',boxShadow: '4px 4px 0px 0px #0CA851'
 }}>
     <div>
     <div className='flex gap-3'>
     <div className='text-xl font-semibold'>Second Monitor</div>
     <div className='text-[12px] mt-auto text-[#7D7D7D]'>Governance</div>
     </div>
-    <div className='flex gap-4'>
+    <div className='flex gap-4 mt-5 flex-wrap items-center'>
         <div>
             <div className='text-center font-medium'>Networks</div>
             <div className='bg-[#0CA851] px-3 py-2 rounded-md text-[13px] my-auto text-white'>MAINNET</div>
@@ -128,7 +134,7 @@ function Monitor() {
         </div>
     </div>
     </div>
-    <div>
+    <div className='flex flex-row md:flex-col mt-4 gap-1 md:mt-0'>
         <div className='flex justify-end gap-3'>
     <Switch
       checked={enabled}
@@ -144,7 +150,7 @@ function Monitor() {
         } inline-block h-4 w-4 transform rounded-full bg-white transition`}
       />
     </Switch> 
-    <div className='cursor-pointer' onClick={()=>{handleToggle()}}>
+    <div className='cursor-pointer' onClick={()=>{handleToggle1()}}>
     <svg  width="6" height="21" viewBox="0 0 6 21" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle  cx="2.83594" cy="2.86066" r="2.5" fill="#0CA851"/>
 <circle  cx="2.83594" cy="10.3607" r="2.5" fill="#0CA851"/>
@@ -152,8 +158,8 @@ function Monitor() {
 </svg>
 </div>
     </div>
-    <div className='px-2 py-1 rounded-2xl mt-1'
-     style={{'border':'1px solid #0CA851','display':disp}}>
+    <div className='px-2 py-1 rounded-2xl'
+     style={{'border':'1px solid #0CA851','display':disp1}}>
         <div className='mb-2' >Save as template</div>
         <hr />
         <div className='text-center mt-2'>Delete</div>
