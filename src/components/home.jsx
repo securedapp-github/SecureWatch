@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Navbar from './navbar'
 import Home from '../images/home1.png'
 import Security from '../images/security.png'
@@ -16,14 +16,15 @@ import c16 from '../images/c16.png'
 import c17 from '../images/c17.png'
 import c18 from '../images/c18.png'
 import c19 from '../images/c19.jpeg'
+import Footer from './footer'
 
-function home() {
+function Home1() {
+    
   return (
     <>
     <div className='p-8 lg:p-16'  style={{'backgroundColor':'#F5F5F4'}}>
-    <div id='home_heading' className='p-2 md:p-0 rounded-2xl pt-10 flex flex-col justify-center items-center' style={{'border':'1px solid',
-    'borderImageSource': 'linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)'}}>
-      {/* <Navbar/> */}
+    <div id='home_heading' className='p-2 pt-10 rounded-2xl  flex flex-col justify-center items-center'>
+      <Navbar/>
       <button className='rounded-2xl px-4 py-2 text-white bg-black mt-10 flex gap-2'>
         <div> Confidence in every transaction</div>
        <img src={c5} alt="not found" />
@@ -143,10 +144,10 @@ and easy to set up</div>
     </div>
     <div className='mt-2'>Compliance and Reporting</div>
     </div>
-    
 </div>
+    <Footer/>
     </>
   )
 }
 
-export default home
+export default Home1

@@ -5,9 +5,10 @@ function dashboard() {
   return (
     <div className='mt-10'>
       <Navbar1/>
-      <div className='flex justify-around mt-10'>
-        <div className='flex'>
-            <div className='text-3xl text-[#0CA851] font-bold bg-[#A7FFCE] p-2 rounded-lg' >SecureWatch Org</div>
+      <div className='w-4/6 mx-auto'>
+      <div className='flex justify-between flex-col items-center md:flex-row mt-10'>
+        <div className='flex gap-2'>
+            <div className='text-3xl text-[#0CA851] font-bold bg-[#A7FFCE] p-2 rounded-2xl' >SecureWatch Org</div>
             <div className='my-auto'>
             <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_180_3184)">
@@ -20,10 +21,9 @@ function dashboard() {
 </clipPath>
 </defs>
 </svg>
-
             </div>
         </div>
-        <div className='flex'>
+        <div className='flex mt-4 md:mt-0'>
             <div className='my-auto'>
             <span className='text-[#0CA851] font-bold text-xl'>Tenant ID </span>
             <span>#833f1c5e...</span>
@@ -37,7 +37,7 @@ function dashboard() {
             </div>
         </div>
       </div>
-      <div className='flex justify-center gap-10 mt-10'>
+      <div className='flex justify-between flex-col items-center md:flex-row gap-10 mt-10'>
     <div className='p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Deploy</div>
         <div className='flex mt-5'>
@@ -105,16 +105,16 @@ function dashboard() {
         </div>
     </div>
       </div>
-      <div className='flex justify-center gap-10 mt-10'>
-    <div className='p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
+      <div className='flex justify-between gap-10 mt-10 flex-col items-center md:flex-row'>
+    <div className='w-full md:w-1/2 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Incident Response</div>
-        <div className='flex mt-5'>
+        <div className='flex justify-between mt-5'>
+            <div className='flex'>
             <span className='text-5xl mr-10'>02</span>
             <span>
                 <div>CHECK</div>
-                <div>ACTIVE SCENARIOS</div>
-            </span>
-            <span><svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div>ACTIVE SCENARIOS</div></span></div>
+                <span><svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_167_85)">
 <path d="M9.76833 16.654H23.0754" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M16.4219 10.0004L23.0754 16.654L16.4219 23.3075" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
@@ -128,10 +128,10 @@ function dashboard() {
 </span>
         </div>
     </div>
-    <div className='p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
+    <div className='p-3 w-full md:w-1/2 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Actions</div>
-        <div className='flex mt-5'>
-            <div className='flex mr-10'>
+        <div className='flex justify-between mt-5'>
+            <div className='flex'>
             <span className='text-5xl mr-2'>02</span>
             <span>
                 <div>ACTIVE</div>
@@ -160,36 +160,36 @@ function dashboard() {
         </div>
     </div>
       </div>
-      <div className='p-3 rounded-md  mt-10 w-3/4  mx-auto' style={{border:'1px solid #C9C9C9'}}>
+      <div className='p-3 rounded-md  mt-10  mx-auto' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Code</div>
-        <div className='flex mt-5 justify-evenly'>
-            <div className='flex mr-10'>
-            <span className='text-5xl mr-2'>02</span>
-                <div className='my-auto text-3xl'>SUCCESSFULL REPORT</div>
+        <div className='flex mt-5 justify-evenly flex-col items-center md:flex-row'>
+            <div className='flex mr-10 mt-4 md:mt-0'>
+            <span className='text-5xl mr-2 my-auto font-semibold'>02</span>
+                <div className='my-auto text-xl'>SUCCESSFULL REPORT</div>
             </div>
-            <div className='flex'>
-            <span className='text-3xl mr-2'>00</span>
+            <div className='flex mt-4 md:mt-0'>
+            <span className='text-2xl mr-2'>00</span>
             <span>
                 <div className='text-base'>CRITICAL FINDINGS</div>
                 <div className='text-base'>TO RESOLVE</div>
             </span>
             </div>
-            <div className='flex'>
-            <span className='text-3xl mr-2'>00</span>
+            <div className='flex mt-4 md:mt-0'>
+            <span className='text-2xl mr-2'>00</span>
             <span>
                 <div className='text-base'>HIGH FINDINGS</div>
                 <div className='text-base'>TO RESOLVE</div>
             </span>
             </div>
-            <div className='flex'>
-            <span className='text-3xl mr-2'>00</span>
+            <div className='flex mt-4 md:mt-0'>
+            <span className='text-2xl mr-2'>00</span>
             <span>
                 <div className='text-base'>MEDIUM FINDINGS</div>
                 <div className='text-base'>TO RESOLVE</div>
             </span>
             </div>
-            <div className='flex'>
-            <span className='text-3xl mr-2'>00</span>
+            <div className='flex mt-4 md:mt-0'>
+            <span className='text-2xl mr-2'>00</span>
             <span>
                 <div className='text-base'>LOW FINDINGS</div>
                 <div className='text-base'>TO RESOLVE</div>
@@ -208,6 +208,7 @@ function dashboard() {
 </svg>
 </span>
         </div>
+    </div>
     </div>
     </div>
   )

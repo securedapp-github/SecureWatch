@@ -2,15 +2,15 @@ import React from 'react'
 
 function navbar1() {
   return (
-    <div className='flex justify-between bg-black px-5 py-2 mx-auto w-4/6 rounded-full'>
-      <div className='flex'>
+    <div className='flex justify-between items-center flex-col xl:flex-row bg-black p-3 mx-auto w-full sm:w-1/2 xl:w-4/6 rounded-md xl:rounded-full'>
+      <div className='flex gap-2'>
         <div><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle cx="18.1766" cy="18" r="17.4706" fill="#107F41"/>
 </svg>
 </div>
     <div className='text-white my-auto'>Securewatch</div>
       </div>
-      <div className='flex'>
+      <div className='flex gap-2'>
         <div className='my-auto'>
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_165_40)">
@@ -26,7 +26,7 @@ function navbar1() {
 </div>
         <div className='text-white my-auto'>Overview</div>
       </div>
-      <div className='flex'>
+      <div className='flex gap-2'>
         <div className='my-auto'><svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_165_37)">
 <path d="M1.40039 9.99999C1.40039 9.99999 4.70039 3.39999 10.4754 3.39999C16.2504 3.39999 19.5504 9.99999 19.5504 9.99999C19.5504 9.99999 16.2504 16.6 10.4754 16.6C4.70039 16.6 1.40039 9.99999 1.40039 9.99999Z" stroke="#FFF2F2" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/>
@@ -41,7 +41,7 @@ function navbar1() {
 </div>
         <div className='text-white my-auto'>Monitor</div>
       </div>
-      <div className='flex'>
+      <div className='flex gap-2'>
         <div className='my-auto'><svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_165_43)">
 <path d="M4.27539 16.1875C4.27539 15.6405 4.49269 15.1159 4.87948 14.7291C5.26628 14.3423 5.79088 14.125 6.33789 14.125H17.4754" stroke="#FFF2F2" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/>
@@ -56,7 +56,7 @@ function navbar1() {
 </div>
         <div className='text-white my-auto'>Logs</div>
       </div>
-      <div className='bg-white rounded-full px-3 py-2'>prashantd049@gmail.com</div>
+      <div className='bg-white rounded-md xl:rounded-full px-3 py-2 font-semibold'>prashantd049@gmail.com</div>
     </div>
   )
 }

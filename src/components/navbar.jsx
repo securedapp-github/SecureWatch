@@ -2,7 +2,7 @@ import React from 'react'
 
 function navbar() {
   return (
-    <div className='flex justify-between  px-5 py-3 mx-auto w-4/6 rounded-full' style={{'backgroundColor':'#303030F7'}}>
+    <div className='flex flex-col justify-between items-center rounded-md xl:flex-row  px-5 py-3 mx-auto w-full sm:w-1/2 xl:w-4/6 xl:rounded-full' style={{'backgroundColor':'#303030F7'}}>
       <div className='flex gap-2'>
         <div><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle cx="18.1766" cy="18" r="17.4706" fill="#107F41"/>
@@ -32,7 +32,7 @@ function navbar() {
 </div>
       </div>
       <div className='text-white my-auto'>Login</div>
-      <div className='bg-white rounded-full px-3 py-2'>Sign Up to Securewatch</div>
+      <div className='bg-white rounded-md xl:rounded-full px-3 py-2 font-semibold'>Sign Up to Securewatch</div>
     </div>
   )
 }
