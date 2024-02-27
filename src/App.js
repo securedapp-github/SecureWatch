@@ -12,11 +12,13 @@ import Monitor_create from './components/monitor_create.jsx';
 import Events from './components/events.jsx';
 import Functions from './components/functions.jsx'
 import Alerts from './components/alerts.jsx'
+import Logs from './components/logs.jsx';
 
 function App() {
   return (
     <BrowserRouter>
     <Routes>
+    <Route path='/log' element={<Logs/>}/>
     <Route path='/alerts' element={<Alerts/>}/>
     <Route path='/function' element={<Functions/>}/>
     <Route path='/event' element={<Events/>}/>

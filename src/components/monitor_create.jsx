@@ -1,7 +1,9 @@
 import React from 'react'
 import Navbar1 from './navbar1'
+import Modal from 'react-modal';
 
 function monitor_create() {
+  
   return (
     <div className='mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
       <Navbar1/>

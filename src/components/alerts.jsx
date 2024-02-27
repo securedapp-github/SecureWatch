@@ -1,31 +1,30 @@
 import React,{useState} from 'react'
 import Navbar1 from './navbar1'
+import Modal from 'react-modal';
+import Load from '../images/loading.png'
+
+const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
 
 function Alerts() {
-    const [disp1,setDisp1]=useState('none')
-    const [disp2,setDisp2]=useState('none')
-    const [disp3,setDisp3]=useState('none')
-    const [disp4,setDisp4]=useState('none')
-    const [disp5,setDisp5]=useState('none')
-    const handleToggle1=(e)=>{
-        if(e.target.checked)setDisp1('block')
-        else setDisp1('none')
+    
+    const [open,setOpen]=useState(false)
+    function openModal() {
+      setOpen(true);
+      setTimeout(()=>{
+        closeModal();
+      },2000)
     }
-    const handleToggle2=(e)=>{
-        if(e.target.checked)setDisp2('block')
-        else setDisp2('none')
-    }
-    const handleToggle3=(e)=>{
-        if(e.target.checked)setDisp3('block')
-        else setDisp3('none')
-    }
-    const handleToggle4=(e)=>{
-        if(e.target.checked)setDisp4('block')
-        else setDisp4('none')
-    }
-    const handleToggle5=(e)=>{
-        if(e.target.checked)setDisp5('block')
-        else setDisp5('none')
+    function closeModal() {
+      setOpen(false);
     }
   return (
     <div className='mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
@@ -180,7 +179,7 @@ function Alerts() {
             </div>
         </div>
         </div>
-    <button className='py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white'>Save Monitor</button>
+    <button className='py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white' onClick={openModal}>Save Monitor</button>
         </div>
         <div className=' mt-4 md:mt-0 border mx-auto md:mx-0 border-[#0CA851] shadow-md p-5 rounded-xl'>
             <div className='text-lg font-medium'>Monitor Summary</div>
@@ -236,6 +235,15 @@ function Alerts() {
             </div>
         </div>
      </div>
+     <Modal
+        isOpen={open}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+       <div className='text-xl font-medium text-center mt-[30px] mx-[60px] md:mx-[120px]'>Creating Monitor</div>
+       <img src={Load} alt="not found" className='mt-6  mb-[30px] mx-[60px] md:mx-[120px]' />
+      </Modal>
     </div>
   )
 }

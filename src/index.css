@@ -11,6 +11,12 @@ border-image-source: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0
 background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.746419) 66.42%, rgba(255, 255, 255, 0) 100%);
 }
 
+.ReactModal__Content{
+  border:1px solid #0CA851 !important;
+  max-width:500px;
+  border-radius:20px !important;
+  padding:30px 30px !important;
+}
 /* Position and sizing of burger button */
 .bm-burger-button {
     position: fixed;
