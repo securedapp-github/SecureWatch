@@ -10,11 +10,13 @@ import Monitor from './components/monitor.jsx';
 import Monitor_activity from './components/monitor_activity.jsx';
 import Monitor_create from './components/monitor_create.jsx';
 import Events from './components/events.jsx';
+import Functions from './components/functions.jsx'
 
 function App() {
   return (
     <BrowserRouter>
     <Routes>
+    <Route path='/function' element={<Functions/>}/>
     <Route path='/event' element={<Events/>}/>
     <Route path='/monitor_create' element={<Monitor_create/>}/>
     <Route path='/monitor_activity' element={<Monitor_activity/>}/>

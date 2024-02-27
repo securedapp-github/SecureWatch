@@ -1,9 +1,12 @@
 import React,{useState} from 'react'
 import Navbar1 from './navbar1'
 
-function Events() {
+function Functions() {
     const [disp1,setDisp1]=useState('none')
     const [disp2,setDisp2]=useState('none')
+    const [disp3,setDisp3]=useState('none')
+    const [disp4,setDisp4]=useState('none')
+    const [disp5,setDisp5]=useState('none')
     const handleToggle1=(e)=>{
         if(e.target.checked)setDisp1('block')
         else setDisp1('none')
@@ -12,10 +15,22 @@ function Events() {
         if(e.target.checked)setDisp2('block')
         else setDisp2('none')
     }
+    const handleToggle3=(e)=>{
+        if(e.target.checked)setDisp3('block')
+        else setDisp3('none')
+    }
+    const handleToggle4=(e)=>{
+        if(e.target.checked)setDisp4('block')
+        else setDisp4('none')
+    }
+    const handleToggle5=(e)=>{
+        if(e.target.checked)setDisp5('block')
+        else setDisp5('none')
+    }
   return (
     <div className='mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
      <Navbar1/> 
-     <div className='w-full mx-auto mt-10 md:mt-20 flex items-center justify-center flex-col md:flex-row md:gap-10 lg:gap-20 '>
+     <div className='w-full mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20 '>
      <div className=''>
             <div className='flex'>
             <div><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -50,7 +65,7 @@ function Events() {
 <path d="M11.5059 18.6469L16.5765 13.5763L11.5059 8.50562" stroke="black" stroke-width="1.69021" stroke-linecap="round" stroke-linejoin="round"/>
 </svg></div>
             </div>
-            <div className='mt-10 flex gap-2 px-4 py-3 rounded-2xl' style={{'border':'1px solid #0CA851'}}>
+            <div className='mt-10 flex gap-2 px-4 py-3 rounded-2xl' style={{'border':'1px solid #CACACA'}}>
             <div className='my-auto'><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_173_1156)">
 <path d="M18.3327 9.23333V10C18.3317 11.797 17.7498 13.5456 16.6738 14.9849C15.5978 16.4241 14.0854 17.4771 12.3621 17.9866C10.6389 18.4961 8.79707 18.4349 7.11141 17.8122C5.42575 17.1894 3.98656 16.0384 3.00848 14.5309C2.0304 13.0234 1.56584 11.2401 1.68408 9.44693C1.80232 7.6538 2.49702 5.94694 3.66458 4.58089C4.83214 3.21485 6.41 2.26282 8.16284 1.86679C9.91568 1.47076 11.7496 1.65195 13.391 2.38333" stroke="#0CA851" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -65,11 +80,10 @@ function Events() {
             <div className='my-auto'>Events</div>
             <div className='my-auto ml-auto'>
             <svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="0.832031" y="26" width="26" height="26" rx="2.92308" transform="rotate(-90 0.832031 26)" fill="#0CA851"/>
-<path d="M11.5469 18.647L16.6175 13.5763L11.5469 8.50571" stroke="white" stroke-width="1.23515" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M11.5059 18.6469L16.5765 13.5763L11.5059 8.50562" stroke="black" stroke-width="1.69021" stroke-linecap="round" stroke-linejoin="round"/>
 </svg></div>
             </div>
-            <div className='mt-10 flex gap-2 px-4 py-3 rounded-2xl' style={{'border':'1px solid #CACACA'}}>
+            <div className='mt-10 flex gap-2 px-4 py-3 rounded-2xl' style={{'border':'1px solid #0CA851'}}>
             <div className='my-auto'><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_173_1156)">
 <path d="M18.3327 9.23333V10C18.3317 11.797 17.7498 13.5456 16.6738 14.9849C15.5978 16.4241 14.0854 17.4771 12.3621 17.9866C10.6389 18.4961 8.79707 18.4349 7.11141 17.8122C5.42575 17.1894 3.98656 16.0384 3.00848 14.5309C2.0304 13.0234 1.56584 11.2401 1.68408 9.44693C1.80232 7.6538 2.49702 5.94694 3.66458 4.58089C4.83214 3.21485 6.41 2.26282 8.16284 1.86679C9.91568 1.47076 11.7496 1.65195 13.391 2.38333" stroke="#0CA851" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -83,8 +97,10 @@ function Events() {
 </svg></div>
             <div className='my-auto'>Functions</div>
             <div className='ml-auto my-auto'><svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M11.5059 18.6469L16.5765 13.5763L11.5059 8.50562" stroke="black" stroke-width="1.69021" stroke-linecap="round" stroke-linejoin="round"/>
-</svg></div>
+<rect x="0.832031" y="26" width="26" height="26" rx="2.92308" transform="rotate(-90 0.832031 26)" fill="#0CA851"/>
+<path d="M11.5469 18.647L16.6175 13.5763L11.5469 8.50571" stroke="white" stroke-width="1.23515" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+                </div>
             </div>
             <div className='mt-10 flex gap-2 px-4 py-3 rounded-2xl' style={{'border':'1px solid #CACACA'}}>
             <div className='my-auto'><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -116,24 +132,48 @@ function Events() {
             <div className='rounded-lg border-2 border-[#B4B4B4] border-t-0 shadow-md'>
       <div className='p-3'>
         <input type="checkbox" id='val1' value='val1' className='checked:bg-green-600 mr-2' onChange={handleToggle1}/>
-        <label htmlFor="opt1">Approval (address, address, uint256)</label>
+        <label htmlFor="opt1">approve(address,unit256)</label>
         </div>
       <div className='p-3'>
         <input type="checkbox" id='val2' value='val1' className='checked:bg-green-600 mr-2' onChange={handleToggle2}/>
-        <label htmlFor="opt1">Transfer (address, address, uint256)</label>
+        <label htmlFor="opt1">decreaseAllowance(address,unit256)</label>
+        </div>
+      <div className='p-3'>
+        <input type="checkbox" id='val2' value='val1' className='checked:bg-green-600 mr-2' onChange={handleToggle3}/>
+        <label htmlFor="opt1">increaseAllowance(address,unit256)</label>
+        </div>
+      <div className='p-3'>
+        <input type="checkbox" id='val2' value='val1' className='checked:bg-green-600 mr-2' onChange={handleToggle4}/>
+        <label htmlFor="opt1">transfer(address,unit256)</label>
+        </div>
+      <div className='p-3'>
+        <input type="checkbox" id='val2' value='val1' className='checked:bg-green-600 mr-2' onChange={handleToggle5}/>
+        <label htmlFor="opt1">transferFrom(address, address, unit256)</label>
         </div>
         </div>
         <div className='mt-5' style={{display:disp1}}>
-            <div className='font-medium'>Approval (address, address, uint256)</div>
+            <div className='font-medium'>approve(address,unit256)</div>
             <input type="text" className='w-full p-3 rounded-lg outline-none border border-[#4C4C4C]' placeholder='Variables: owner, spender, value'/>
         </div>
         <div className='mt-5' style={{display:disp2}}>
-        <div className='font-medium'>Approval (address, address, uint256)</div>
+        <div className='font-medium'>decreaseAllowance(address,unit256)</div>
+            <input type="text" className='w-full rounded-lg p-3 outline-none border border-[#4C4C4C]' placeholder='Variables: owner, spender, value'/>
+        </div>
+        <div className='mt-5' style={{display:disp3}}>
+        <div className='font-medium'>increaseAllowance(address,unit256)</div>
+            <input type="text" className='w-full rounded-lg p-3 outline-none border border-[#4C4C4C]' placeholder='Variables: owner, spender, value'/>
+        </div>
+        <div className='mt-5' style={{display:disp4}}>
+        <div className='font-medium'>transfer(address,unit256)</div>
+            <input type="text" className='w-full rounded-lg p-3 outline-none border border-[#4C4C4C]' placeholder='Variables: owner, spender, value'/>
+        </div>
+        <div className='mt-5' style={{display:disp5}}>
+        <div className='font-medium'>transferFrom(address, address, unit256)</div>
             <input type="text" className='w-full rounded-lg p-3 outline-none border border-[#4C4C4C]' placeholder='Variables: owner, spender, value'/>
         </div>
     <button className='py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white'>Save Monitor</button>
         </div>
-        <div className='mt-4 md:mt-0 border border-[#0CA851] shadow-md p-5 rounded-xl'>
+        <div className=' mt-4 md:mt-0 border border-[#0CA851] shadow-md p-5 rounded-xl'>
             <div className='text-lg font-medium'>Monitor Summary</div>
             <div className='flex gap-2'>
                 <div>
@@ -175,6 +215,8 @@ function Events() {
                 <div className='text-[13px]'>approve(address,uint256)</div>
                 <div className='text-[13px]'>decreaseAllowance(address,uint256)</div>
                 <div className='text-[13px]'>increaseAllowance(address,uint256)</div>
+                <div className='text-[13px]'>transfer(address,uint256)</div>
+                <div className='text-[13px]'>transferFrom(address,address,uint256)</div>
                 </div>
             </div>
             <div className='mt-3'>
@@ -190,4 +232,4 @@ function Events() {
   )
 }
 
-export default Events
+export default Functions
