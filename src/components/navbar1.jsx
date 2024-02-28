@@ -2,7 +2,7 @@ import React from 'react'
 
 function navbar1() {
   return (
-    <div className='flex justify-between items-center flex-col xl:flex-row bg-black p-3 mx-auto w-full sm:w-1/2 xl:w-4/6 rounded-md xl:rounded-full' style={{'backgroundColor':'#303030F7'}}>
+    <div className='font-poppin flex justify-between items-center flex-col xl:flex-row bg-black p-3 mx-auto w-full sm:w-1/2 xl:w-4/6 rounded-md xl:rounded-full' style={{'backgroundColor':'#303030F7'}}>
       <div className='flex gap-2'>
         <div><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle cx="18.1766" cy="18" r="17.4706" fill="#107F41"/>

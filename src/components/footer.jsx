@@ -8,9 +8,9 @@ function Footer() {
                 <div>
                     <img src={c2} alt="not found" />
                 </div>
-                <div className='my-auto text-md font-medium text-white'>Securewatch</div>
+                <div className='my-auto text-md font-medium text-white font-poppin'>Securewatch</div>
             </div>
-        <div className='text-white my-auto text-center'>All Rights Reserved. © Copyright 2023. SecureWatch - LLC</div>
+        <div className='text-white my-auto text-center font-poppin'>All Rights Reserved. © Copyright 2023. SecureWatch - LLC</div>
     </div>
   )
 }

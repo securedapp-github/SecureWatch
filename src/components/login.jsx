@@ -13,7 +13,7 @@ function Login() {
     }
     const [enabled, setEnabled] = useState(false)
   return (
-    <div className='flex flex-col h-full justify-center mx-5 md:mx-0 items-center md:gap-[50px] md:flex-row lg:gap-[150px]'>
+    <div className='font-poppin flex flex-col h-full justify-center mx-5 md:mx-0 items-center md:gap-[50px] md:flex-row lg:gap-[150px]'>
         <div className='w-[90vw] md:w-[50vw] lg:w-[30vw] my-auto mb-10 md:mb-0 mt-0'>
         <img src={c1} alt="not found" className='my-auto'/>
         </div>

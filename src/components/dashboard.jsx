@@ -8,7 +8,7 @@ function dashboard() {
       <div className='w-4/6 mx-auto'>
       <div className='flex justify-between flex-col items-center md:flex-row mt-10'>
         <div className='flex gap-2'>
-            <div className='text-3xl text-[#0CA851] font-bold bg-[#A7FFCE] p-2 rounded-2xl' >SecureWatch Org</div>
+            <div className='font-poppin text-3xl text-[#0CA851] font-medium bg-[#A7FFCE] p-2 rounded-2xl' >SecureWatch Org</div>
             <div className='my-auto'>
             <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_180_3184)">
@@ -23,7 +23,7 @@ function dashboard() {
 </svg>
             </div>
         </div>
-        <div className='flex mt-4 md:mt-0'>
+        <div className='flex mt-4 md:mt-0 font-poppin'>
             <div className='my-auto'>
             <span className='text-[#0CA851] font-bold text-xl'>Tenant ID </span>
             <span>#833f1c5e...</span>
@@ -37,8 +37,8 @@ function dashboard() {
             </div>
         </div>
       </div>
-      <div className='flex justify-between flex-col items-center md:flex-row gap-10 mt-10'>
-    <div className='p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
+      <div className='font-inter flex justify-between flex-col items-center md:flex-row gap-10 mt-10'>
+    <div className='w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Deploy</div>
         <div className='flex mt-5'>
             <span className='text-5xl mr-10'>04</span>
@@ -60,7 +60,7 @@ function dashboard() {
 </span>
         </div>
     </div>
-    <div className='p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
+    <div className='w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Access Control</div>
         <div className='flex mt-5'>
             <span className='text-5xl mr-10'>00</span>
@@ -82,7 +82,7 @@ function dashboard() {
 </span>
         </div>
     </div>
-    <div className='p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
+    <div className='w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Monitor</div>
         <div className='flex mt-5'>
             <span className='text-5xl mr-10'>02</span>
@@ -105,7 +105,7 @@ function dashboard() {
         </div>
     </div>
       </div>
-      <div className='flex justify-between gap-10 mt-10 flex-col items-center md:flex-row'>
+      <div className='font-inter flex justify-between gap-10 mt-10 flex-col items-center md:flex-row'>
     <div className='w-full md:w-1/2 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Incident Response</div>
         <div className='flex justify-between mt-5'>
@@ -160,7 +160,7 @@ function dashboard() {
         </div>
     </div>
       </div>
-      <div className='p-3 rounded-md  mt-10  mx-auto' style={{border:'1px solid #C9C9C9'}}>
+      <div className='font-inter p-3 rounded-md  mt-10  mx-auto' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Code</div>
         <div className='flex mt-5 justify-evenly flex-col items-center md:flex-row'>
             <div className='flex mr-10 mt-4 md:mt-0'>

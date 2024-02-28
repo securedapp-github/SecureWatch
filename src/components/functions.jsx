@@ -28,7 +28,7 @@ function Functions() {
         else setDisp5('none')
     }
   return (
-    <div className='mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
+    <div className='font-poppin mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
      <Navbar1/> 
      <div className='w-full mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20 '>
      <div className=''>

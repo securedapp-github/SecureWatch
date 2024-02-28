@@ -3,7 +3,7 @@ import Navbar1 from './navbar1'
 
 function logs() {
   return (
-    <div className='mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
+    <div className='font-poppin mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
       <Navbar1/>
       <div className='w-full md:w-4/6 mt-[10vw] mx-auto'>
         <div className='text-3xl md:text-4xl text-center font-medium'>Activity Tracking Simplified</div>

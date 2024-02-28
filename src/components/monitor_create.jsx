@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 function monitor_create() {
   
   return (
-    <div className='mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
+    <div className='font-poppin mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
       <Navbar1/>
       <div className="w-5/6  lg:w-5/6 mx-auto mt-20 flex justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className='w-full md:w-1/4 '>

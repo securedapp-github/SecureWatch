@@ -3,7 +3,7 @@ import Navbar1 from './navbar1'
 
 function monitor_activity() {
   return (
-    <div className='mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
+    <div className='font-poppin mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
       <Navbar1/>
       <div className='w-4/6 mx-auto mt-20'>
         <div className='flex justify-center items-center md:justify-between  flex-col md:flex-row'>
