@@ -31,7 +31,7 @@ function Functions() {
     <div className='font-poppin mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
      <Navbar1/> 
      <div className='w-full mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20 '>
-     <div className=''>
+     <div className='mx-auto md:mx-0'>
             <div className='flex'>
             <div><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_173_1147)">
@@ -173,7 +173,7 @@ function Functions() {
         </div>
     <button className='py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white'>Save Monitor</button>
         </div>
-        <div className=' mt-4 md:mt-0 border border-[#0CA851] shadow-md p-5 rounded-xl'>
+        <div className=' mt-4 mx-auto md:mx-0 md:mt-0 border border-[#0CA851] shadow-md p-5 rounded-xl'>
             <div className='text-lg font-medium'>Monitor Summary</div>
             <div className='flex gap-2'>
                 <div>

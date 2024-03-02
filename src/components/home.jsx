@@ -29,13 +29,13 @@ function Home1() {
         <div className='font-inter'> Confidence in every transaction</div>
        <img src={c5} alt="not found" />
         </button>
-      <div className='text-5xl mt-10 font-poppin'>Empower Your Transactions with </div>
-      <div className='mt-1'>
-        <span className='text-[#107F41] text-5xl font-poppin'>SecureWatch’s</span>
-        <span className='text-5xl font-poppin'> Real-Time Confidence.</span>
+      <div className='text-3xl md:text-5xl mt-10 font-poppin text-center'>Empower Your Transactions with </div>
+      <div className='mt-1 text-center'>
+        <span className='text-[#107F41] text-3xl md:text-5xl font-poppin text-center'>SecureWatch’s</span>
+        <span className='text-3xl md:text-5xl font-poppin text-center'> Real-Time Confidence.</span>
       </div>
-      <div className='text-[#8F8F8F] mt-10 font-inter'>Unlock the Future of Transaction Security – Proactive Monitoring, &hearts;</div>
-      <div className='text-[#8F8F8F] font-inter'>Intuitive Insights, and Seamless Scalability Await You with SecureWatch</div>
+      <div className='text-[#8F8F8F] mt-10 font-inter text-center'>Unlock the Future of Transaction Security – Proactive Monitoring, &hearts;</div>
+      <div className='text-[#8F8F8F] font-inter text-center'>Intuitive Insights, and Seamless Scalability Await You with SecureWatch</div>
       <button className='rounded-2xl px-4 py-2 text-white bg-black mt-10 flex gap-2'>
         <div>
         Start for free</div>

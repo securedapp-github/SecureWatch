@@ -38,7 +38,7 @@ function dashboard() {
         </div>
       </div>
       <div className='font-inter flex justify-between flex-col items-center md:flex-row gap-10 mt-10'>
-    <div className='w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
+    <div className='w-full md:w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Deploy</div>
         <div className='flex mt-5'>
             <span className='text-5xl mr-10'>04</span>
@@ -60,7 +60,7 @@ function dashboard() {
 </span>
         </div>
     </div>
-    <div className='w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
+    <div className='w-full md:w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Access Control</div>
         <div className='flex mt-5'>
             <span className='text-5xl mr-10'>00</span>
@@ -82,7 +82,7 @@ function dashboard() {
 </span>
         </div>
     </div>
-    <div className='w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
+    <div className='w-full md:w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Monitor</div>
         <div className='flex mt-5'>
             <span className='text-5xl mr-10'>02</span>
@@ -130,16 +130,16 @@ function dashboard() {
     </div>
     <div className='p-3 w-full md:w-1/2 rounded-md' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Actions</div>
-        <div className='flex justify-between mt-5'>
+        <div className='flex justify-between  flex-col sm:flex-row mt-5'>
             <div className='flex'>
-            <span className='text-5xl mr-2'>02</span>
+            <span className='text-3xl md:text-5xl mr-2'>02</span>
             <span>
                 <div>ACTIVE</div>
                 <div>ACTIONS</div>
             </span>
             </div>
             <div className='flex'>
-            <span className='text-5xl mr-2'>02</span>
+            <span className='text-3xl md:text-5xl mr-2'>02</span>
             <span>
                 <div>PENDING</div>
                 <div>TX PROPOSALS</div>
@@ -163,12 +163,12 @@ function dashboard() {
       <div className='font-inter p-3 rounded-md  mt-10  mx-auto' style={{border:'1px solid #C9C9C9'}}>
         <div className='text-start'>Code</div>
         <div className='flex mt-5 justify-evenly flex-col items-center md:flex-row'>
-            <div className='flex mr-10 mt-4 md:mt-0'>
-            <span className='text-5xl mr-2 my-auto font-semibold'>02</span>
+            <div className='flex md:mr-10 mt-4 md:mt-0'>
+            <span className='text-5xl  md:mr-2 my-auto font-semibold'>02</span>
                 <div className='my-auto text-xl'>SUCCESSFULL REPORT</div>
             </div>
             <div className='flex mt-4 md:mt-0'>
-            <span className='text-2xl mr-2'>00</span>
+            <span className='text-2xl md:mr-2'>00</span>
             <span>
                 <div className='text-base'>CRITICAL FINDINGS</div>
                 <div className='text-base'>TO RESOLVE</div>
