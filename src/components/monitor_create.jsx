@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import Navbar1 from "./navbar1";
+import Navbar from "./navbar2";
 import Modal from "react-modal";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 function Monitor_create() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { email, token } = location.state || "";
+  const decoded = jwtDecode(token);
+  const user_Id = decoded.userId;
   const [formData, setFormData] = useState({
+    user_id: user_Id,
     name: "",
     category: "",
     network: "",
@@ -27,7 +33,9 @@ function Monitor_create() {
         formData
       );
       console.log(response.data); // Log the response from the API
-      navigate("/event");
+      const m_id = response.data.m_id;
+
+      navigate("/event", { state: { email, m_id } });
       // Optionally, you can show a success message to the user
     } catch (error) {
       console.error("Error:", error.response.data);
@@ -40,7 +48,7 @@ function Monitor_create() {
       className="font-poppin mt-10 mx-2"
       style={{ backgroundColor: "#FCFFFD" }}
     >
-      <Navbar1 />
+      <Navbar email={email} />
       <div className="w-5/6  lg:w-5/6 mx-auto mt-20 flex justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className="w-full md:w-1/4 ">
           <div className="flex">

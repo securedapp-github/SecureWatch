@@ -6,8 +6,13 @@ import Navbar from "./navbar2";
 function Dashboard() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { email, monitor } = location.state || {};
+  const { email, monitor, token } = location.state || {};
   const s = monitor.length;
+  console.log(token);
+
+  function handleClick() {
+    navigate("/monitor", { state: { email, token } });
+  }
 
   //   console.log(monitor);
   //   console.log(s);
@@ -202,7 +207,7 @@ function Dashboard() {
                   <div>CHECK</div>
                   <div>ACTIVE MONITOR</div>
                 </span>
-                <span>
+                <span onClick={handleClick}>
                   <Link to="/monitor">
                     <svg
                       width="33"
@@ -432,186 +437,8 @@ function Dashboard() {
           </div>
         </div>
       </div>
-<<<<<<< HEAD
     </>
   );
-=======
-      <div className='font-inter flex justify-between flex-col items-center md:flex-row gap-10 mt-10'>
-    <div className='w-full md:w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
-        <div className='text-start'>Deploy</div>
-        <div className='flex mt-5'>
-            <span className='text-5xl mr-10'>04</span>
-            <span>
-                <div>CHECK</div>
-                <div>DEPLOYED CONTRACT</div>
-            </span>
-            <span><svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_167_85)">
-<path d="M9.76833 16.654H23.0754" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16.4219 10.0004L23.0754 16.654L16.4219 23.3075" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<clipPath id="clip0_167_85">
-<rect width="22.5829" height="22.5829" fill="white" transform="translate(16.4219 0.685921) rotate(45)"/>
-</clipPath>
-</defs>
-</svg>
-</span>
-        </div>
-    </div>
-    <div className='w-full md:w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
-        <div className='text-start'>Access Control</div>
-        <div className='flex mt-5'>
-            <span className='text-5xl mr-10'>00</span>
-            <span>
-                <div>CHECK</div>
-                <div>MANAGED CONTRACT</div>
-            </span>
-            <span><svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_167_85)">
-<path d="M9.76833 16.654H23.0754" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16.4219 10.0004L23.0754 16.654L16.4219 23.3075" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<clipPath id="clip0_167_85">
-<rect width="22.5829" height="22.5829" fill="white" transform="translate(16.4219 0.685921) rotate(45)"/>
-</clipPath>
-</defs>
-</svg>
-</span>
-        </div>
-    </div>
-    <div className='w-full md:w-1/3 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
-        <div className='text-start'>Monitor</div>
-        <div className='flex mt-5'>
-            <span className='text-5xl mr-10'>02</span>
-            <span>
-                <div>CHECK</div>
-                <div>ACTIVE MONITOR</div>
-            </span>
-            <span><svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_167_85)">
-<path d="M9.76833 16.654H23.0754" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16.4219 10.0004L23.0754 16.654L16.4219 23.3075" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<clipPath id="clip0_167_85">
-<rect width="22.5829" height="22.5829" fill="white" transform="translate(16.4219 0.685921) rotate(45)"/>
-</clipPath>
-</defs>
-</svg>
-</span>
-        </div>
-    </div>
-      </div>
-      <div className='font-inter flex justify-between gap-10 mt-10 flex-col items-center md:flex-row'>
-    <div className='w-full md:w-1/2 p-3 rounded-md' style={{border:'1px solid #C9C9C9'}}>
-        <div className='text-start'>Incident Response</div>
-        <div className='flex justify-between mt-5'>
-            <div className='flex'>
-            <span className='text-5xl mr-10'>02</span>
-            <span>
-                <div>CHECK</div>
-                <div>ACTIVE SCENARIOS</div></span></div>
-                <span><svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_167_85)">
-<path d="M9.76833 16.654H23.0754" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16.4219 10.0004L23.0754 16.654L16.4219 23.3075" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<clipPath id="clip0_167_85">
-<rect width="22.5829" height="22.5829" fill="white" transform="translate(16.4219 0.685921) rotate(45)"/>
-</clipPath>
-</defs>
-</svg>
-</span>
-        </div>
-    </div>
-    <div className='p-3 w-full md:w-1/2 rounded-md' style={{border:'1px solid #C9C9C9'}}>
-        <div className='text-start'>Actions</div>
-        <div className='flex justify-between  flex-col sm:flex-row mt-5'>
-            <div className='flex'>
-            <span className='text-3xl md:text-5xl mr-2'>02</span>
-            <span>
-                <div>ACTIVE</div>
-                <div>ACTIONS</div>
-            </span>
-            </div>
-            <div className='flex'>
-            <span className='text-3xl md:text-5xl mr-2'>02</span>
-            <span>
-                <div>PENDING</div>
-                <div>TX PROPOSALS</div>
-            </span>
-            </div>
-            <span><svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_167_85)">
-<path d="M9.76833 16.654H23.0754" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16.4219 10.0004L23.0754 16.654L16.4219 23.3075" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<clipPath id="clip0_167_85">
-<rect width="22.5829" height="22.5829" fill="white" transform="translate(16.4219 0.685921) rotate(45)"/>
-</clipPath>
-</defs>
-</svg>
-</span>
-        </div>
-    </div>
-      </div>
-      <div className='font-inter p-3 rounded-md  mt-10  mx-auto' style={{border:'1px solid #C9C9C9'}}>
-        <div className='text-start'>Code</div>
-        <div className='flex mt-5 justify-evenly flex-col items-center md:flex-row'>
-            <div className='flex md:mr-10 mt-4 md:mt-0'>
-            <span className='text-5xl  md:mr-2 my-auto font-semibold'>02</span>
-                <div className='my-auto text-xl'>SUCCESSFULL REPORT</div>
-            </div>
-            <div className='flex mt-4 md:mt-0'>
-            <span className='text-2xl md:mr-2'>00</span>
-            <span>
-                <div className='text-base'>CRITICAL FINDINGS</div>
-                <div className='text-base'>TO RESOLVE</div>
-            </span>
-            </div>
-            <div className='flex mt-4 md:mt-0'>
-            <span className='text-2xl mr-2'>00</span>
-            <span>
-                <div className='text-base'>HIGH FINDINGS</div>
-                <div className='text-base'>TO RESOLVE</div>
-            </span>
-            </div>
-            <div className='flex mt-4 md:mt-0'>
-            <span className='text-2xl mr-2'>00</span>
-            <span>
-                <div className='text-base'>MEDIUM FINDINGS</div>
-                <div className='text-base'>TO RESOLVE</div>
-            </span>
-            </div>
-            <div className='flex mt-4 md:mt-0'>
-            <span className='text-2xl mr-2'>00</span>
-            <span>
-                <div className='text-base'>LOW FINDINGS</div>
-                <div className='text-base'>TO RESOLVE</div>
-            </span>
-            </div>
-            <span><svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_167_85)">
-<path d="M9.76833 16.654H23.0754" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16.4219 10.0004L23.0754 16.654L16.4219 23.3075" stroke="black" stroke-width="1.88191" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<clipPath id="clip0_167_85">
-<rect width="22.5829" height="22.5829" fill="white" transform="translate(16.4219 0.685921) rotate(45)"/>
-</clipPath>
-</defs>
-</svg>
-</span>
-        </div>
-    </div>
-    </div>
-    </div>
-  )
->>>>>>> 14ad192abe33cd430e7d1f92a2ebbe92c6dd0d7c
 }
 
 export default Dashboard;

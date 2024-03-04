@@ -34,7 +34,7 @@ function Login() {
         // const s = monitor.length;
         // console.log("abc", s);
         // console.log(typeof monitor);
-        navigate("/dashboard", { state: { email, monitor } });
+        navigate("/dashboard", { state: { email, monitor, token } });
       }
     } catch (error) {
       console.error("Error logging in:", error);

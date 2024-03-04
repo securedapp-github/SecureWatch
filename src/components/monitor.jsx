@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import Navbar1 from "./navbar1";
+import Navbar from "./navbar2";
 import { Switch } from "@headlessui/react";
 import Modal from "react-modal";
 import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const customStyles = {
   content: {
@@ -16,6 +17,15 @@ const customStyles = {
 };
 
 function Monitor() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { email, token } = location.state || "";
+  console.log(token);
+
+  function handleClick() {
+    navigate("/monitor_create", { state: { email, token } });
+  }
+
   const [enabled, setEnabled] = useState(false);
   const [disp, setDisp] = useState("block");
   const [disp1, setDisp1] = useState("block");
@@ -40,7 +50,7 @@ function Monitor() {
       className="font-poppin mt-10 mx-2"
       style={{ backgroundColor: "#FCFFFD" }}
     >
-      <Navbar1 />
+      <Navbar email={email} />
       <div className="w-4/6 mx-auto mt-20">
         <div className="flex justify-center items-center md:justify-between  flex-col md:flex-row">
           <div className="text-4xl font-medium">Monitor (2)</div>
@@ -48,11 +58,12 @@ function Monitor() {
             <div className="border border-black rounded-xl font-medium px-3 py-2 my-auto">
               See Monitor Activity
             </div>
-            <Link to="/monitor_create">
-              <div className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto">
-                Create Monitor
-              </div>
-            </Link>
+            <div
+              className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto"
+              onClick={handleClick}
+            >
+              Create Monitor
+            </div>
           </div>
         </div>
         <div
