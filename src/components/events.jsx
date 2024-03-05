@@ -6,38 +6,47 @@ import { useLocation, useNavigate } from "react-router-dom";
 function Events() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { email, m_id } = location.state || "";
-  //   console.log(email);
-  //   console.log(m_id);
-
+  const { email, m_id, token } = location.state || "";
+  console.log(token);
+  console.log(m_id);
+  const mid = m_id;
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const name = document.getElementById("signatureName").value;
       const approval = document.getElementById("val1").checked;
       const transfer = document.getElementById("val2").checked;
-      const values = { approval, transfer };
+      const values = {
+        approval: approval ? "approval" : "",
+        transfer: transfer ? "transfer" : "",
+      };
 
+      const name = "a";
+      const risk_level = "high";
+      // Create an object to store the input values
       const formData = {
-        m_id,
+        mid,
         name,
-        risk_level: "high",
+        risk_level,
         values,
       };
+
       const response = await axios.post(
         "http://localhost:4000/api/events",
         formData
       );
-      console.log(response.data); // Log the response from the API
-      const m_id = response.data.m_id;
+      console.log(response.data);
 
-      navigate("/monitor", { state: { email, m_id } });
-      // Optionally, you can show a success message to the user
+      navigate("/function", { state: { email, mid, token } });
     } catch (error) {
       console.error("Error:", error.response.data);
-      // Optionally, you can show an error message to the user
     }
   };
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    form.addEventListener("submit", handleSubmit);
+  });
 
   const [disp1, setDisp1] = useState("none");
   const [disp2, setDisp2] = useState("none");
@@ -219,6 +228,9 @@ function Events() {
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
+            onClick={() => {
+              navigate("/function", { state: { email, mid, token } });
+            }}
           >
             <div className="my-auto">
               <svg
@@ -273,6 +285,9 @@ function Events() {
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
+            onClick={() => {
+              navigate("/alerts", { state: { email, mid, token } });
+            }}
           >
             <div className="my-auto">
               <svg

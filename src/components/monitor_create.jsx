@@ -35,7 +35,7 @@ function Monitor_create() {
       console.log(response.data); // Log the response from the API
       const m_id = response.data.m_id;
 
-      navigate("/event", { state: { email, m_id } });
+      navigate("/event", { state: { email, m_id, token } });
       // Optionally, you can show a success message to the user
     } catch (error) {
       console.error("Error:", error.response.data);
