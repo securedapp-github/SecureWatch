@@ -13,24 +13,31 @@ import Events from "./components/events.jsx";
 import Functions from "./components/functions.jsx";
 import Alerts from "./components/alerts.jsx";
 import Logs from "./components/logs.jsx";
+import Protected from "./protected.js";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/log" element={<Logs />} />
-        <Route path="/alerts" element={<Alerts />} />
-        <Route path="/function" element={<Functions />} />
-        <Route path="/event" element={<Events />} />
-        <Route path="/monitor_create" element={<Monitor_create />} />
-        <Route path="/monitor_activity" element={<Monitor_activity />} />
+        <Route path="/alerts" element={<Protected cmp={<Alerts />} />} />
+        <Route path="/function" element={<Protected cmp={<Functions />} />} />
+        <Route path="/event" element={<Protected cmp={<Events />} />} />
+        <Route
+          path="/monitor_create"
+          element={<Protected cmp={<Monitor_create />} />}
+        />
+        <Route
+          path="/monitor_activity"
+          element={<Protected cmp={<Monitor_activity />} />}
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login1" element={<Login1 />} />
         <Route path="verify" element={<Verify />} />
         <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/monitor" element={<Monitor />} />
+        <Route path="/dashboard" element={<Protected cmp={<Dashboard />} />} />
+        <Route path="/monitor" element={<Protected cmp={<Monitor />} />} />
       </Routes>
     </BrowserRouter>
   );

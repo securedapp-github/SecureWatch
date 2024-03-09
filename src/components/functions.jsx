@@ -4,7 +4,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 function Functions() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { email, m_id, token } = location.state || "";
+  console.log(m_id);
   const [disp1, setDisp1] = useState("none");
   const [disp2, setDisp2] = useState("none");
   const [disp3, setDisp3] = useState("none");
@@ -430,8 +432,13 @@ function Functions() {
               placeholder="Variables: owner, spender, value"
             />
           </div>
-          <button className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white">
-            Save Monitor
+          <button
+            className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white"
+            onClick={() => {
+              navigate("/alerts", { state: { email, m_id, token } });
+            }}
+          >
+            continue
           </button>
         </div>
         <div className=" mt-4 mx-auto md:mx-0 md:mt-0 border border-[#0CA851] shadow-md p-5 rounded-xl">

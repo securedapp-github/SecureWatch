@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import c1 from "../images/backg.png";
 import c2 from "../images/ellipse.png";
 import { Switch } from "@headlessui/react";
@@ -23,6 +23,13 @@ function Signup() {
       navigate("/login1", { state: { email } });
     }
   }
+
+  useEffect(() => {
+    const login = localStorage.getItem("login");
+    if (login) {
+      navigate("/dashboard");
+    }
+  }, []);
   const [vis, setVis] = useState("password");
   const handleToggle = () => {
     if (vis === "password") setVis("text");

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import c1 from "../images/backg.png";
 import c2 from "../images/ellipse.png";
@@ -31,6 +31,7 @@ function Login() {
         console.log("Login Successful:", response.data);
         const token = response.data.token;
         const monitor = response.data.monitors;
+        let login = localStorage.setItem("login", true);
         // const s = monitor.length;
         // console.log("abc", s);
         // console.log(typeof monitor);
@@ -42,6 +43,13 @@ function Login() {
       setErrorMessage("Invalid email or password. Please try again.");
     }
   };
+
+  useEffect(() => {
+    const login = localStorage.getItem("login");
+    if (login) {
+      navigate("/dashboard");
+    }
+  }, []);
 
   const [vis, setVis] = useState("password");
   const handleToggle = () => {

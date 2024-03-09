@@ -6,15 +6,15 @@ import Navbar from "./navbar2";
 function Dashboard() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { email, monitor, token } = location.state || {};
-  const s = monitor.length;
+  const { email, monitor = {}, token } = location.state || {};
+  const s = monitor.length || 0;
   console.log(token);
 
   function handleClick() {
-    navigate("/monitor", { state: { email, token } });
+    navigate("/monitor", { state: { email, token, monitor } });
   }
 
-  //   console.log(monitor);
+  // console.log(monitor);
   //   console.log(s);
 
   return (

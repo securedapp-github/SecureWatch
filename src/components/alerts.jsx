@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import axios from "axios";
 import Navbar from "./navbar2";
 import Modal from "react-modal";
 import Load from "../images/loading.png";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 const customStyles = {
   content: {
@@ -16,8 +17,12 @@ const customStyles = {
 };
 
 function Alerts() {
+  const [selectedOption, setSelectedOption] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
+
   const { email, m_id, token } = location.state || "";
+  console.log(m_id);
 
   const [open, setOpen] = useState(false);
   function openModal() {
@@ -29,6 +34,33 @@ function Alerts() {
   function closeModal() {
     setOpen(false);
   }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const type = selectedOption;
+    const mid = m_id;
+    try {
+      const response = await axios.post("http://localhost:4000/api/alerts", {
+        mid,
+        type,
+        email,
+      });
+      console.log(response.data);
+      const monitor = response.data.monitors;
+      const alert = response.data.alerts;
+      console.log(monitor);
+      console.log(alert);
+
+      navigate("/monitor", { state: { email, token, monitor, alert } });
+    } catch (error) {
+      console.error("Error adding alert:", error);
+      // Handle error (e.g., show an error message to the user)
+    }
+  };
+
+  // Function to handle option selection
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+  };
   return (
     <div
       className="font-poppin mt-10 mx-2"
@@ -306,142 +338,162 @@ function Alerts() {
           </div>
         </div>
         <div className="w-full md:w-1/3 lg:w-1/4 mt-5 md:mt-0">
-          <div className="font-medium text-lg">Risk Category</div>
-          <div className="w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
-            <div className="text-lg font-medium">Low Severity</div>
-            <div>
-              <svg
-                width="21"
-                height="22"
-                viewBox="0 0 21 22"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
-                  stroke="black"
-                  stroke-width="1.69021"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="rounded-lg border-2 border-[#B4B4B4] border-t-0 shadow-md">
-            <div className="p-3">
-              <label htmlFor="opt1" className="text-[#8E8E8E] text-[13px]">
-                Low Severity
-              </label>
-            </div>
-            <div className="p-3">
-              <label htmlFor="opt1" className="text-[#8E8E8E] text-[13px]">
-                Medium Severity
-              </label>
-            </div>
-            <div className="p-3">
-              <label htmlFor="opt1" className="text-[#8E8E8E] text-[13px]">
-                High Severity
-              </label>
-            </div>
-          </div>
-          <div className="mt-5">
-            <div className="font-medium">Execute an action</div>
-            <div className="w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
-              <div className="font-medium">None</div>
-              <div>
-                <svg
-                  width="21"
-                  height="22"
-                  viewBox="0 0 21 22"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+          <form onSubmit={handleSubmit}>
+            <div className="font-medium text-lg">
+              Risk Category
+              <div className="w-inherit border-2 border-[#bea4a4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
+                <div className="text-lg font-medium">{selectedOption}</div>
+                <div>
+                  <svg
+                    width="21"
+                    height="22"
+                    viewBox="0 0 21 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
+                      stroke="black"
+                      strokeWidth="1.69021"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="rounded-lg border-2 border-[#B4B4B4] border-t-0 shadow-md">
+                <div
+                  className={`p-3 ${
+                    selectedOption === "Low Severity" ? "bg-gray-200" : ""
+                  }`}
+                  onClick={() => handleOptionSelect("Low Severity")}
                 >
-                  <path
-                    d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
-                    stroke="black"
-                    stroke-width="1.69021"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                  <label htmlFor="opt1" className="text-[#8E8E8E] text-[13px]">
+                    Low Severity
+                  </label>
+                </div>
+                <div
+                  className={`p-3 ${
+                    selectedOption === "Medium Severity" ? "bg-gray-200" : ""
+                  }`}
+                  onClick={() => handleOptionSelect("Medium Severity")}
+                >
+                  <label htmlFor="opt2" className="text-[#8E8E8E] text-[13px]">
+                    Medium Severity
+                  </label>
+                </div>
+                <div
+                  className={`p-3 ${
+                    selectedOption === "High Severity" ? "bg-gray-200" : ""
+                  }`}
+                  onClick={() => handleOptionSelect("High Severity")}
+                >
+                  <label htmlFor="opt3" className="text-[#8E8E8E] text-[13px]">
+                    High Severity
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="mt-5">
-            <div className="font-medium">
-              Execute an Incident Response Scenario
-            </div>
-            <div className="w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
-              <div className="font-medium">None</div>
-              <div>
-                <svg
-                  width="21"
-                  height="22"
-                  viewBox="0 0 21 22"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
-                    stroke="black"
-                    stroke-width="1.69021"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+            <div className="mt-5">
+              <div className="font-medium">Execute an action</div>
+              <div className="w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
+                <div className="font-medium">None</div>
+                <div>
+                  <svg
+                    width="21"
+                    height="22"
+                    viewBox="0 0 21 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
+                      stroke="black"
+                      stroke-width="1.69021"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="flex gap-2">
-            <div className="mt-5 w-1/4">
-              <div className="font-medium">Alert</div>
-              <input
-                type="text"
-                value="1"
-                className="w-full rounded-lg p-3 outline-none border border-black"
-                placeholder="Variables: owner, spender, value"
-              />
-            </div>
-            <div className="mt-5 w-3/4">
+            <div className="mt-5">
               <div className="font-medium">
-                Minimum time between notifications
+                Execute an Incident Response Scenario
               </div>
-              <div className="flex gap-1">
+              <div className="w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
+                <div className="font-medium">None</div>
+                <div>
+                  <svg
+                    width="21"
+                    height="22"
+                    viewBox="0 0 21 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
+                      stroke="black"
+                      stroke-width="1.69021"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <div className="mt-5 w-1/4">
+                <div className="font-medium">Alert</div>
                 <input
                   type="text"
-                  value="0"
-                  className="w-1/2 rounded-lg p-3 outline-none border border-black"
+                  value="1"
+                  className="w-full rounded-lg p-3 outline-none border border-black"
                   placeholder="Variables: owner, spender, value"
                 />
-                <div className="w-1/2 border border-black shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
-                  <div className="font-medium">Minute</div>
-                  <div>
-                    <svg
-                      width="21"
-                      height="22"
-                      viewBox="0 0 21 22"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
-                        stroke="black"
-                        stroke-width="1.69021"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
+              </div>
+              <div className="mt-5 w-3/4">
+                <div className="font-medium">
+                  Minimum time between notifications
+                </div>
+                <div className="flex gap-1">
+                  <input
+                    type="text"
+                    value="0"
+                    className="w-1/2 rounded-lg p-3 outline-none border border-black"
+                    placeholder="Variables: owner, spender, value"
+                  />
+                  <div className="w-1/2 border border-black shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
+                    <div className="font-medium">Minute</div>
+                    <div>
+                      <svg
+                        width="21"
+                        height="22"
+                        viewBox="0 0 21 22"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
+                          stroke="black"
+                          stroke-width="1.69021"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <button
-            className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white"
-            onClick={openModal}
-          >
-            Save Monitor
-          </button>
+
+            <button
+              className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white"
+              onClick={openModal}
+            >
+              Save Monitor
+            </button>
+          </form>
         </div>
         <div className=" mt-4 md:mt-0 border mx-auto md:mx-0 border-[#0CA851] shadow-md p-5 rounded-xl">
           <div className="text-lg font-medium">Monitor Summary</div>

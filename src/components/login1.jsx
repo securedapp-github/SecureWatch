@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import c1 from "../images/backg.png";
 import c2 from "../images/ellipse.png";
-import { Switch } from "@headlessui/react";
-import { Link } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function Login1() {
@@ -31,13 +29,23 @@ function Login1() {
         );
 
         console.log("User signed up successfully:", response.data);
-        navigate("/dashboard", { state: { email } });
+        const token = response.data.token;
+        const monitor = response.data.monitors;
+        let login = localStorage.setItem("login", true);
+        navigate("/dashboard", { state: { email, monitor, token } });
       }
     } catch (error) {
       console.error("Error signing up:", error);
       setErrorMessage(error.response.data.error);
     }
   };
+
+  useEffect(() => {
+    const login = localStorage.getItem("login");
+    if (login) {
+      navigate("/dashboard");
+    }
+  }, []);
 
   const [vis, setVis] = useState("password");
   const handleToggle = () => {

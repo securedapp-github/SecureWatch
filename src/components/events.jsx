@@ -37,7 +37,7 @@ function Events() {
       );
       console.log(response.data);
 
-      navigate("/function", { state: { email, mid, token } });
+      navigate("/function", { state: { email, m_id, token } });
     } catch (error) {
       console.error("Error:", error.response.data);
     }
@@ -412,7 +412,7 @@ function Events() {
               />
             </div>
             <button className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white">
-              Save Monitor
+              continue
             </button>
           </div>
         </form>
