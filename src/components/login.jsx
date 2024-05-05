@@ -19,10 +19,10 @@ function Login() {
       const u_name = event.target.name.value;
       const u_password = event.target.password.value;
       if (u_name === "" || u_password === "") {
-        console.log("Enter the userame and password");
+        setErrorMessage("Enter the userame and password");
       } else {
         const response = await axios.post(
-          "http://localhost:4000/api/auth/login",
+          "https://139-59-5-56.nip.io:3443/login_securewatch",
           {
             email,
             password,
@@ -82,7 +82,8 @@ function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="mb-3  w-full rounded-md py-3 px-4 outline-none font-sans bg-[#f2f2f2]"
-            placeholder="Email or phone number"
+            placeholder="Enter your email"
+            required
           />
           <br />
           <label htmlFor="password" className="text-base">
@@ -98,6 +99,7 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
               className="rounded-md py-3 px-4 outline-none font-sans bg-[#f2f2f2]"
               placeholder="Enter password"
+              required
             />
             <div
               className="my-auto px-4 cursor-pointer"
@@ -141,11 +143,11 @@ function Login() {
             </div>
             <div className="text-[#007AFF]">Forgot Password?</div>
           </div>
-          <button className="mx-auto bg-[#28AA61] px-4 py-2 text-white my-9 w-full rounded-md">
+          <button type="submit" className="mx-auto bg-[#28AA61] px-4 py-2 text-white my-9 w-full rounded-md">
             Sign in
           </button>
 
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          {errorMessage && <p className="text-red-500 mb-3">{errorMessage}</p>}
         </form>
         <hr />
         <button className="mx-auto bg-[#000000] px-4 py-2 text-white my-9 w-full rounded-md flex gap-2 justify-center">

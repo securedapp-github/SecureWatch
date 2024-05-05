@@ -5,29 +5,39 @@ import c2 from "../images/ellipse.png";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function Login1() {
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({});
   const location = useLocation();
   const navigate = useNavigate();
   // const searchParams = new URLSearchParams(location.search);
   const [errorMessage, setErrorMessage] = useState("");
   const email = location.state ? location.state.email : null;
+ 
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });    
+  };
+  console.log("Email:", email);
+  console.log("Name",formData.name);
+  console.log("Password",formData.password)
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     try {
-      const u_name = event.target.name.value;
-      const u_password = event.target.password.value;
-      if (u_name === "" || u_password === "") {
-        console.log("Enter the userame and password");
+      const u_name = formData.name;
+      const u_password = formData.password;
+      if (!email || email==="" ||  u_name === "" || u_password === "" || !u_name || !u_password) {
+        setErrorMessage("Enter the Email, userame and password");
       } else {
         const response = await axios.post(
-          "http://localhost:4000/api/auth/signup",
+          "https://139-59-5-56.nip.io:3443/signup_securewatch",
           {
             name: u_name,
             email,
             password: u_password,
           }
         );
-
+        
         console.log("User signed up successfully:", response.data);
         const token = response.data.token;
         const monitor = response.data.monitors;
@@ -36,7 +46,8 @@ function Login1() {
       }
     } catch (error) {
       console.error("Error signing up:", error);
-      setErrorMessage(error.response.data.error);
+      setLoading(false);
+      setErrorMessage("Error signing up. Please try again.");
     }
   };
 
@@ -78,9 +89,12 @@ function Login1() {
           <input
             type="text"
             className="w-full mt-1 mb-3 rounded-md py-3 px-4 outline-none font-sans bg-[#f2f2f2]"
-            placeholder="Email or phone number"
+            placeholder="Enter your name"
             id="name"
             name="name"
+            onChange={handleChange}
+            autoComplete="off"
+            required
           />
           <br />
           <label htmlFor="password" className="text-base">
@@ -94,6 +108,9 @@ function Login1() {
               name="password"
               className="rounded-md py-3 px-4 outline-none font-sans bg-[#f2f2f2]"
               placeholder="Enter password"
+              onChange={handleChange}
+              autoComplete="off"
+              required
             />
             <div
               className="my-auto px-4 cursor-pointer"
@@ -121,9 +138,9 @@ function Login1() {
             type="submit"
             className="mx-auto bg-[#28AA61] px-4 py-2 text-white mt-10 w-full rounded-md"
           >
-            Continue
+            {loading ? "Please wait..." : "Continue"}
           </button>
-          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          {errorMessage && <p className="text-red-500 text-center mb-3">{errorMessage}</p>}
         </form>
       </div>
     </div>

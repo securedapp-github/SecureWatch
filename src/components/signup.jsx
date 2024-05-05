@@ -7,6 +7,8 @@ import google from "../images/google.png";
 import { useNavigate } from "react-router-dom";
 
 function Signup() {
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [email, setEmail] = useState("");
 
   const navigate = useNavigate();
@@ -16,9 +18,12 @@ function Signup() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
-  function handleClick() {
+  function handleClick(e) {
+    setLoading(true);
+    e.preventDefault();
     if (!isValidEmail(email)) {
-      console.log("Please enter a valid email address.");
+      setErrorMessage("Please enter a valid email address.");
+      setLoading(false);
     } else {
       navigate("/login1", { state: { email } });
     }
@@ -56,18 +61,22 @@ function Signup() {
           <br />
           <input
             type="text"
-            className="w-full rounded-md py-3 px-4 outline-none font-sans bg-[#f2f2f2]"
-            placeholder="Email or phone number"
+            className="w-full rounded-md py-3 px-4 outline-none font-sans bg-[#f2f2f2] mt-4"
+            placeholder="Enter your email"
             value={email}
+            name="email"
+            required
             onChange={(e) => setEmail(e.target.value)}
           />
-        </form>
+        
         <button
           className="mx-auto bg-[#28AA61] px-4 py-2 text-white my-9 w-full rounded-md"
           onClick={handleClick}
         >
-          Sign in
+          {loading ? "Please wait..." : "Sign up"}
         </button>
+        </form>
+        {errorMessage && <p className="text-red-500 mb-3 text-center">{errorMessage}</p>}
         <hr />
         <button className="mx-auto bg-[#000000] px-4 py-2 text-white my-9 w-full rounded-md flex gap-2 justify-center">
           <img src={google} alt="not found" />
