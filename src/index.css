@@ -97,3 +97,32 @@ background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.746419) 66
   .bm-item:hover {
     color: #ffffff;
   }
+  .tooltip-container {
+    position: relative;
+  }
+  
+  .tooltip-text {
+    visibility: hidden;
+    width: 80px;
+    background-color: #fff;
+    color: black;
+    text-align: center;
+    padding: 5px ;
+    border-radius: 6px;
+  
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    top: 50px; /* Place tooltip above the icon */
+    left: 100%;
+    margin-left: -60px; /* Use half of the width to center the tooltip */
+  
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }

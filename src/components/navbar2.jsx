@@ -1,6 +1,12 @@
 import React from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 function navbar2({ email }) {
+  function handleLogout(){
+    localStorage.clear()
+    window.location.href = '/'
+  }
   return (
     <div
       className="font-poppin flex justify-between items-center flex-col xl:flex-row bg-black p-3 mx-auto w-full sm:w-1/2 xl:w-4/6 rounded-md xl:rounded-full"
@@ -137,8 +143,10 @@ function navbar2({ email }) {
         </div>
         <div className="text-white my-auto">Logs</div>
       </div>
-      <div className="bg-white rounded-md xl:rounded-full px-3 py-2 font-semibold mt-2 md:mt-0">
+      <div className="tooltip-container bg-white rounded-md xl:rounded-full px-3 py-2 font-semibold mt-2 md:mt-0 flex items-center gap-3">
         {email}
+        <FontAwesomeIcon icon={faSignOutAlt} className=" text-black cursor-pointer" onClick={handleLogout}  />
+        <span className="tooltip-text">Logout</span>
       </div>
     </div>
   );
