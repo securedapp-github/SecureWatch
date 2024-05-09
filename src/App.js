@@ -13,6 +13,7 @@ import Events from "./components/events.jsx";
 import Functions from "./components/functions.jsx";
 import Alerts from "./components/alerts.jsx";
 import Logs from "./components/logs.jsx";
+import Emailverify from "./components/Emailverify.jsx";
 import Protected from "./protected.js";
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login1" element={<Login1 />} />
+        <Route path="/emailverify" element={<Emailverify />} />
         <Route path="verify" element={<Verify />} />
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Protected cmp={<Dashboard />} />} />

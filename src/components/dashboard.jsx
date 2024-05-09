@@ -2,6 +2,12 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./navbar2";
+import Deploy from '../images/Deploy.png';
+import Sliders from '../images/Sliders.png';
+import Eye from '../images/Eye.png';
+import Grid from '../images/grid.png'
+import Actions from '../images/Actions.png';
+import Code from '../images/code.png';
 
 function Dashboard() {
   const location = useLocation();
@@ -18,8 +24,8 @@ function Dashboard() {
   //   console.log(s);
 
   return (
-    <>
-      <div className="mt-10">
+    
+      <div className="bg-white pt-10 pb-12">
         <Navbar email={email} />
         <div className="w-4/6 mx-auto">
           <div className="flex justify-between flex-col items-center md:flex-row mt-10">
@@ -69,7 +75,7 @@ function Dashboard() {
                 <span className="text-[#0CA851] font-bold text-xl">
                   Tenant ID 
                 </span>
-                <span>#833f1c5e...</span>
+                <span className="text-black">#833f1c5e...</span>
               </div>
               <div className="my-auto">
                 <svg
@@ -97,17 +103,17 @@ function Dashboard() {
               </div>
             </div>
           </div>
-          <div className="font-inter flex justify-between flex-col items-center md:flex-row gap-10 mt-10">
+          <div className="font-inter flex gap-4 justify-center flex-wrap mt-10">
             <div
-              className="w-1/3 p-3 rounded-md"
+              className="w-80 p-3 rounded-md "
               style={{ border: "1px solid #C9C9C9" }}
             >
-              <div className="text-start">Deploy</div>
+              <div className="text-start  flex items-center gap-3"> <img src={Deploy} alt="" /> Deploy</div>
               <div className="flex mt-5">
-                <span className="text-5xl mr-10">04</span>
+                <span className="text-5xl mr-10 text-black">04</span>
                 <span>
-                  <div>CHECK</div>
-                  <div>DEPLOYED CONTRACT</div>
+                  <div className="text-black">CHECK</div>
+                  <div className="text-black">DEPLOYED CONTRACT</div>
                 </span>
                 <span>
                   <svg
@@ -148,15 +154,15 @@ function Dashboard() {
               </div>
             </div>
             <div
-              className="w-1/3 p-3 rounded-md"
+              className="w-80 p-3 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
-              <div className="text-start">Access Control</div>
+              <div className="text-start  flex items-center gap-3"> <img src={Sliders} alt="" /> Access Control</div>
               <div className="flex mt-5">
-                <span className="text-5xl mr-10">00</span>
+                <span className="text-5xl mr-10 text-black">00</span>
                 <span>
-                  <div>CHECK</div>
-                  <div>MANAGED CONTRACT</div>
+                  <div className="text-black">CHECK</div>
+                  <div className="text-black">MANAGED CONTRACT</div>
                 </span>
                 <span>
                   <svg
@@ -197,17 +203,17 @@ function Dashboard() {
               </div>
             </div>
             <div
-              className="w-1/3 p-3 rounded-md"
+              className="w-80 p-3 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
-              <div className="text-start">Monitor</div>
+              <div className="text-start flex items-center gap-3"><img src={Eye} alt="" /> Monitor</div>
               <div className="flex mt-5">
-                <span className="text-5xl mr-10">{s}</span>
+                <span className="text-5xl mr-10 text-black">{s}</span>
                 <span>
-                  <div>CHECK</div>
-                  <div>ACTIVE MONITOR</div>
+                  <div className="text-black">CHECK</div>
+                  <div className="text-black">ACTIVE MONITOR</div>
                 </span>
-                <span onClick={handleClick}>
+                <span onClick={handleClick} className="ms-auto">
                   <Link to="/monitor">
                     <svg
                       width="33"
@@ -253,13 +259,13 @@ function Dashboard() {
               className="w-full md:w-1/2 p-3 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
-              <div className="text-start">Incident Response</div>
+              <div className="text-start flex items-center gap-3 "><img src={Grid} alt="" />Incident Response</div>
               <div className="flex justify-between mt-5">
                 <div className="flex">
-                  <span className="text-5xl mr-10">02</span>
+                  <span className="text-5xl mr-10 text-black ">02</span>
                   <span>
-                    <div>CHECK</div>
-                    <div>ACTIVE SCENARIOS</div>
+                    <div className="text-black">CHECK</div>
+                    <div className="text-black">ACTIVE SCENARIOS</div>
                   </span>
                 </div>
                 <span>
@@ -304,23 +310,24 @@ function Dashboard() {
               className="p-3 w-full md:w-1/2 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
-              <div className="text-start">Actions</div>
-              <div className="flex justify-between mt-5">
+              <div className="text-start flex items-center gap-3"><img src={Actions} alt="" />Actions</div>
+              <div className="flex gap-6 flex-wrap mt-5">
+
                 <div className="flex">
-                  <span className="text-5xl mr-2">02</span>
+                  <span className="text-5xl mr-2 text-black">02</span>
                   <span>
-                    <div>ACTIVE</div>
-                    <div>ACTIONS</div>
+                    <div className="text-black">ACTIVE</div>
+                    <div className="text-black">ACTIONS</div>
                   </span>
                 </div>
                 <div className="flex">
-                  <span className="text-5xl mr-2">02</span>
+                  <span className="text-5xl mr-2 text-black">02</span>
                   <span>
-                    <div>PENDING</div>
-                    <div>TX PROPOSALS</div>
+                    <div className="text-black">PENDING</div>
+                    <div className="text-black">TX PROPOSALS</div>
                   </span>
                 </div>
-                <span>
+                <span >
                   <svg
                     width="33"
                     height="33"
@@ -357,44 +364,46 @@ function Dashboard() {
                   </svg>
                 </span>
               </div>
+
+
             </div>
           </div>
           <div
             className="font-inter p-3 rounded-md  mt-10  mx-auto"
             style={{ border: "1px solid #C9C9C9" }}
           >
-            <div className="text-start">Code</div>
+            <div className="text-start flex items-center gap-3"><img src={Code} alt="" />Code</div>
             <div className="flex mt-5 justify-evenly flex-col items-center md:flex-row">
               <div className="flex mr-10 mt-4 md:mt-0">
-                <span className="text-5xl mr-2 my-auto font-semibold">02</span>
-                <div className="my-auto text-xl">SUCCESSFULL REPORT</div>
+                <span className="text-5xl mr-2 my-auto font-semibold text-black">02</span>
+                <div className="my-auto text-sm text-black">SUCCESSFULL REPORT</div>
               </div>
-              <div className="flex mt-4 md:mt-0">
-                <span className="text-2xl mr-2">00</span>
+              <div className="flex items-center gap-1 mt-4 md:mt-0">
+                <span className="text-4xl font-medium mr-2 text-black">00</span>
                 <span>
-                  <div className="text-base">CRITICAL FINDINGS</div>
-                  <div className="text-base">TO RESOLVE</div>
+                  <div className="text-xs text-black">CRITICAL FINDINGS</div>
+                  <div className="text-xs text-black">TO RESOLVE</div>
                 </span>
               </div>
-              <div className="flex mt-4 md:mt-0">
-                <span className="text-2xl mr-2">00</span>
+              <div className="flex items-center mt-4 md:mt-0">
+                <span className="text-4xl font-medium mr-2 text-black ">00</span>
                 <span>
-                  <div className="text-base">HIGH FINDINGS</div>
-                  <div className="text-base">TO RESOLVE</div>
+                  <div className="text-xs text-black">HIGH FINDINGS</div>
+                  <div className="text-xs text-black">TO RESOLVE</div>
                 </span>
               </div>
-              <div className="flex mt-4 md:mt-0">
-                <span className="text-2xl mr-2">00</span>
+              <div className="flex items-center  mt-4 md:mt-0">
+                <span className="text-4xl font-medium mr-2 text-black">00</span>
                 <span>
-                  <div className="text-base">MEDIUM FINDINGS</div>
-                  <div className="text-base">TO RESOLVE</div>
+                  <div className="text-xs text-black">MEDIUM FINDINGS</div>
+                  <div className="text-xs text-black">TO RESOLVE</div>
                 </span>
               </div>
-              <div className="flex mt-4 md:mt-0">
-                <span className="text-2xl mr-2">00</span>
+              <div className="flex items-center  mt-4 md:mt-0">
+                <span className="text-4xl font-medium mr-2 text-black">00</span>
                 <span>
-                  <div className="text-base">LOW FINDINGS</div>
-                  <div className="text-base">TO RESOLVE</div>
+                  <div className="text-xs text-black">LOW FINDINGS</div>
+                  <div className="text-xs text-black">TO RESOLVE</div>
                 </span>
               </div>
               <span>
@@ -437,7 +446,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
-    </>
+   
   );
 }
 
