@@ -42,7 +42,7 @@ function Signup() {
   };
   const [enabled, setEnabled] = useState(false);
   return (
-    <div className="font-poppin flex flex-col h-full justify-center mx-5 md:mx-0 items-center md:gap-[50px] md:flex-row lg:gap-[150px]">
+    <div className="font-poppin bg-white flex flex-col h-full justify-center mx-5 md:mx-0 items-center md:gap-[50px] md:flex-row lg:gap-[150px]">
       <div className="w-[90vw] md:w-[50vw] lg:w-[30vw] my-auto mb-10 md:mb-0 mt-0">
         <img src={c1} alt="not found" className="my-auto" />
       </div>
@@ -51,11 +51,11 @@ function Signup() {
           <div>
             <img src={c2} alt="not found" />
           </div>
-          <div className="my-auto text-md font-medium">Securewatch</div>
+          <div className="my-auto text-md font-medium text-black">Securewatch</div>
         </div>
-        <div className="font-bold text-lg mt-6">Create Account</div>
+        <div className="font-bold text-lg mt-6 text-black">Create Account</div>
         <form className="mt-6">
-          <label htmlFor="userid" className="text-base">
+          <label htmlFor="userid" className="text-black text-base">
             Use your email or signup with google
           </label>
           <br />
@@ -82,8 +82,8 @@ function Signup() {
           <img src={google} alt="not found" />
           <div className="">Sign in with google</div>
         </button>
-        <div className="text-center">
-          <span>Already have an account?</span>
+        <div className="text-center text-black">
+          <span >Already have an account?</span>
           <Link to="/login" className=" text-[#28AA61]">
             &nbsp; Sign in now
           </Link>

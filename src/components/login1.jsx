@@ -23,6 +23,7 @@ function Login1() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
+    
     try {
       const u_name = formData.name;
       const u_password = formData.password;
@@ -65,7 +66,7 @@ function Login1() {
   };
   const [enabled, setEnabled] = useState(false);
   return (
-    <div className="font-poppin flex flex-col h-full justify-center mx-5 md:mx-0 items-center md:gap-[50px] md:flex-row lg:gap-[150px]">
+    <div className="font-poppin bg-white  flex flex-col h-full justify-center mx-5 md:mx-0 items-center md:gap-[50px] md:flex-row lg:gap-[150px]">
       <div className="w-[90vw] md:w-[50vw] lg:w-[30vw] my-auto mb-10 md:mb-0 mt-0">
         <img src={c1} alt="not found" className="my-auto" />
       </div>
@@ -74,15 +75,15 @@ function Login1() {
           <div>
             <img src={c2} alt="not found" />
           </div>
-          <div className="my-auto text-md font-medium">Securewatch</div>
+          <div className="my-auto text-md font-medium text-black">Securewatch</div>
         </div>
-        <div className="font-bold text-lg mt-6">Welcome to SecureWatch</div>
-        <div className="mt-6 mb-3">
+        <div className="font-bold text-lg mt-6 text-black">Welcome to SecureWatch</div>
+        <div className="mt-6 mb-3 text-black">
           Yay, You have taken first step towards secure. to get started, enter
           your name and set a passward
         </div>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="userid" className="text-base">
+          <label htmlFor="userid" className="text-base text-black">
             Name
           </label>
           <br />
@@ -97,7 +98,7 @@ function Login1() {
             required
           />
           <br />
-          <label htmlFor="password" className="text-base">
+          <label htmlFor="password" className="text-base text-black">
             Password
           </label>
           <br />

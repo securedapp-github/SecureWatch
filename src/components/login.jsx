@@ -58,7 +58,7 @@ function Login() {
   };
   const [enabled, setEnabled] = useState(false);
   return (
-    <div className="font-poppin flex flex-col h-full justify-center mx-5 md:mx-0 items-center md:gap-[50px] md:flex-row lg:gap-[150px]">
+    <div className="font-poppin bg-white  flex flex-col h-full justify-center mx-5 md:mx-0 items-center md:gap-[50px] md:flex-row lg:gap-[150px]">
       <div className="w-[90vw] md:w-[50vw] lg:w-[30vw] my-auto mb-10 md:mb-0 mt-0">
         <img src={c1} alt="not found" className="my-auto" />
       </div>
@@ -67,11 +67,11 @@ function Login() {
           <div>
             <img src={c2} alt="not found" />
           </div>
-          <div className="my-auto text-md font-medium">Securewatch</div>
+          <div className="my-auto text-md font-medium text-black">Securewatch</div>
         </div>
-        <div className="font-bold text-lg mt-6">Nice to see you again</div>
+        <div className="font-bold text-lg mt-6 text-black">Nice to see you again</div>
         <form className="mt-5" onSubmit={handleSubmit}>
-          <label htmlFor="userid" className="text-base">
+          <label htmlFor="userid" className="text-base text-black">
             Login
           </label>
           <br />
@@ -86,7 +86,7 @@ function Login() {
             required
           />
           <br />
-          <label htmlFor="password" className="text-base">
+          <label htmlFor="password" className="text-base text-black">
             Password
           </label>
           <br />
@@ -139,7 +139,7 @@ function Login() {
                   } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                 />
               </Switch>
-              <div>Remember me</div>
+              <div className="text-black">Remember me</div>
             </div>
             <div className="text-[#007AFF]">Forgot Password?</div>
           </div>
@@ -154,7 +154,7 @@ function Login() {
           <img src={google} alt="not found" />
           <div className="">Sign in with google</div>
         </button>
-        <div className="text-center">
+        <div className="text-center text-black">
           <span>Don't have an account?</span>
           <Link to="/signup" className=" text-[#007AFF]">
             &nbsp; Sign up now
