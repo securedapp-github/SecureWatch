@@ -149,11 +149,11 @@ function Login() {
 
           {errorMessage && <p className="text-red-500 mb-3">{errorMessage}</p>}
         </form>
-        <hr />
+        {/* <hr />
         <button className="mx-auto bg-[#000000] px-4 py-2 text-white my-9 w-full rounded-md flex gap-2 justify-center">
           <img src={google} alt="not found" />
           <div className="">Sign in with google</div>
-        </button>
+        </button> */}
         <div className="text-center text-black">
           <span>Don't have an account?</span>
           <Link to="/signup" className=" text-[#007AFF]">
