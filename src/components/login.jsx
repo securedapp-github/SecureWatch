@@ -31,11 +31,18 @@ function Login() {
         console.log("Login Successful:", response.data);
         const token = response.data.token;
         const monitor = response.data.monitors;
+        // console.log(monitor);
+        const Email = response.data.user.email;
+        // console.log(Email);
         let login = localStorage.setItem("login", true);
+        // console.log(login);
+        let Token = localStorage.setItem("token", token);
+        let Monitor = localStorage.setItem("moniter",monitor);
+        let userEmail = localStorage.setItem("email",Email);
         // const s = monitor.length;
         // console.log("abc", s);
         // console.log(typeof monitor);
-        navigate("/dashboard", { state: { email, monitor, token } });
+      navigate("/dashboard", { state: { email, monitor, token } });
       }
     } catch (error) {
       console.error("Error logging in:", error);

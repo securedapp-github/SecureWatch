@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import Monitor_cmp from "./monitor_cmp";
+import axios from "axios";
 
 const customStyles = {
   content: {
@@ -17,11 +18,16 @@ const customStyles = {
   },
 };
 
-function Monitor() {
+const Monitor = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { email, token = "", monitor } = location.state || "";
-  console.log(monitor);
+  const Moniter = localStorage.getItem("moniter");
+  const token = localStorage.getItem("token");
+  const email = localStorage.getItem("email")
+  console.log(token);
+  console.log(email);
+  // const { email, token = "",monitor } = location.state || "";
+  
 
   function handleClick() {
     navigate("/monitor_create", { state: { email, token } });
@@ -48,11 +54,11 @@ function Monitor() {
   }
   return (
     <div
-      className="font-poppin mt-10 mx-2"
-      style={{ backgroundColor: "#FCFFFD" }}
+      className="font-poppin pt-2 bg-white min-h-full"
+      // style={{ backgroundColor: "#FCFFFD" }}
     >
       <Navbar email={email} />
-      <div className="w-4/6 mx-auto mt-20">
+      <div className="w-4/6 mx-auto mt-20 ">
         <div className="flex justify-center items-center md:justify-between  flex-col md:flex-row">
           <div className="text-4xl font-medium">Monitor (2)</div>
           <div className="flex flex-wrap justify-center gap-2 mt-2 md:mt-0">
@@ -73,7 +79,7 @@ function Monitor() {
         >
           <input
             type="text"
-            className="outline-none font-medium w-4/5"
+            className="outline-none font-medium w-4/5 bg-white"
             placeholder="Search by name, network or address..."
           />
           <div className="my-auto">
@@ -104,7 +110,7 @@ function Monitor() {
           </div>
         </div>
       </div>
-      <Monitor_cmp props={monitor} />
+      <Monitor_cmp props={Moniter} />
     </div>
   );
 }

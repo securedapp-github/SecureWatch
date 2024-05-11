@@ -9,7 +9,9 @@ import { jwtDecode } from "jwt-decode";
 function Monitor_create() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { email, token } = location.state || "";
+  // const { email, token } = location.state || "";
+  const token = localStorage.getItem("token");
+  const email = localStorage.getItem("email")
   const decoded = jwtDecode(token);
   const user_Id = decoded.userId;
   const [formData, setFormData] = useState({
@@ -29,7 +31,7 @@ function Monitor_create() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/monitors/",
+        "https://139-59-5-56.nip.io:3443/add_monitor",
         formData
       );
       console.log(response.data); // Log the response from the API

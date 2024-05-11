@@ -14,19 +14,28 @@ function Dashboard() {
   const navigate = useNavigate();
   const { email, monitor = {}, token } = location.state || {};
   const s = monitor.length || 0;
-  console.log(token);
+  // console.log(email);
+
+  const Login = localStorage.getItem("login");
+  console.log(Login);
+  const Token = localStorage.getItem("token");
+  console.log(Token);
+  const Moniter = localStorage.getItem("moniter");
+console.log(Moniter);
+  const userEmail = localStorage.getItem("email")
+console.log(userEmail);
 
   function handleClick() {
     navigate("/monitor", { state: { email, token, monitor } });
   }
 
-  // console.log(monitor);
+// console.log(monitor);
   //   console.log(s);
 
   return (
     
       <div className="bg-white pt-10 pb-12">
-        <Navbar email={email} />
+        <Navbar email={userEmail} />
         <div className="w-4/6 mx-auto">
           <div className="flex justify-between flex-col items-center md:flex-row mt-10">
             <div className="flex gap-2">
