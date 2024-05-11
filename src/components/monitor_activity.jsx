@@ -2,12 +2,13 @@ import React from 'react'
 import Navbar1 from './navbar1'
 
 function monitor_activity() {
+  const moniters = localStorage.getItem("moniter");
   return (
-    <div className='font-poppin mt-10 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
+    <div className='font-poppin pt-10 pb-72 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
       <Navbar1/>
       <div className='w-4/6 mx-auto mt-20'>
         <div className='flex justify-center items-center md:justify-between  flex-col md:flex-row'>
-        <div className='text-4xl font-medium text-center'>Monitor Activity</div>
+        <div className='text-4xl font-medium text-center text-black'>Monitor Activity</div>
         <div className='mt-2 md:mt-0'><svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="44" height="44" rx="8.27511" fill="#0CA851"/>
 <path d="M33 14V20H27" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -15,7 +16,7 @@ function monitor_activity() {
 </svg></div>
         </div>
         <div className='p-0 m-0'>
-        <div className='flex justify-between flex-wrap  bg-[#0CA8519C] font-medium rounded-xl px-4 py-2 mt-10'>
+        <div className='flex justify-between flex-wrap  bg-[#0CA8519C] font-medium rounded-xl px-4 py-2 mt-10 text-black'>
             <div>DAY</div>
             <div>TIME</div>
             <div>NAME</div>
@@ -25,7 +26,37 @@ function monitor_activity() {
             <div>MATCHED ADDRESS</div>
             <div>MATCH REASON</div>
         </div>
-        <div className='flex justify-between flex-wrap bg-[#00000008] border border-[#0CA8519C] font-medium rounded-xl px-4 py-2 mt-4'>
+{moniters.map((moniter, index) => {
+    return (
+        <div key={index} className='flex justify-between flex-wrap bg-[#00000008] border border-[#0CA8519C] font-medium rounded-xl px-4 py-2 mt-4 text-black'>
+            <div>{moniter.day}</div>
+            <div>{moniter.time}</div>
+            <div>{moniter.name}</div>
+            <div>{moniter.network}</div>
+            <div>{moniter.autotask_condition}</div>
+            <div>{moniter.transaction}</div>
+            <div>{moniter.address}</div>
+            <div>{moniter.match_reason}</div>
+        </div>
+    )
+}
+)}
+
+
+        {/* <div className='flex justify-between flex-wrap bg-[#00000008] border border-[#0CA8519C] font-medium rounded-xl px-4 py-2 mt-4 text-black'>
+            <div>Friday</div>
+            <div>12:00</div>
+            <div>First</div>
+            <div>Mainnet</div>
+            <div>High Risk Severity</div>
+            <div>0x4a465....6477</div>
+            <div>0x4a465....6as772</div>
+            <div>Match Reason</div>
+        </div> */}
+
+
+
+        {/* <div className='flex justify-between flex-wrap bg-[#00000008] border border-[#0CA8519C] font-medium rounded-xl px-4 py-2 mt-4 text-black'>
             <div>Friday</div>
             <div>12:00</div>
             <div>First</div>
@@ -35,7 +66,7 @@ function monitor_activity() {
             <div>0x4a465....6as772</div>
             <div>Match Reason</div>
         </div>
-        <div className='flex justify-between flex-wrap bg-[#00000008] border border-[#0CA8519C] font-medium rounded-xl px-4 py-2 mt-4'>
+        <div className='flex justify-between flex-wrap  bg-[#00000008] border border-[#0CA8519C] font-medium rounded-xl px-4 py-2 mt-4 text-black'>
             <div>Friday</div>
             <div>12:00</div>
             <div>First</div>
@@ -44,17 +75,7 @@ function monitor_activity() {
             <div>0x4a465....6477</div>
             <div>0x4a465....6as772</div>
             <div>Match Reason</div>
-        </div>
-        <div className='flex justify-between flex-wrap  bg-[#00000008] border border-[#0CA8519C] font-medium rounded-xl px-4 py-2 mt-4'>
-            <div>Friday</div>
-            <div>12:00</div>
-            <div>First</div>
-            <div>Mainnet</div>
-            <div>High Risk Severity</div>
-            <div>0x4a465....6477</div>
-            <div>0x4a465....6as772</div>
-            <div>Match Reason</div>
-        </div>
+        </div> */}
         </div>
         </div>
     </div>
