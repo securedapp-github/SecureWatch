@@ -113,7 +113,7 @@ function Dashboard() {
                 <span className="text-5xl mr-10 text-black">04</span>
                 <span>
                   <div className="text-black">CHECK</div>
-                  <div className="text-black">DEPLOYED CONTRACT</div>
+                  <div className="text-black">MONITORED CONTRACT</div>
                 </span>
                 <span>
                   <svg
@@ -157,12 +157,12 @@ function Dashboard() {
               className="w-80 p-3 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
-              <div className="text-start  flex items-center gap-3"> <img src={Sliders} alt="" /> Access Control</div>
+              <div className="text-start  flex items-center gap-3"> <img src={Sliders} alt="" /> Onchain Events</div>
               <div className="flex mt-5">
                 <span className="text-5xl mr-10 text-black">00</span>
                 <span>
                   <div className="text-black">CHECK</div>
-                  <div className="text-black">MANAGED CONTRACT</div>
+                  <div className="text-black">CONTRACT EVENTS</div>
                 </span>
                 <span>
                   <svg
