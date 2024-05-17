@@ -14,19 +14,28 @@ function Dashboard() {
   const navigate = useNavigate();
   const { email, monitor = {}, token } = location.state || {};
   const s = monitor.length || 0;
-  console.log(token);
+  // console.log(email);
+
+  const Login = localStorage.getItem("login");
+  console.log(Login);
+  const Token = localStorage.getItem("token");
+  console.log(Token);
+  const Moniter = localStorage.getItem("moniter");
+console.log(Moniter);
+  const userEmail = localStorage.getItem("email")
+console.log(userEmail);
 
   function handleClick() {
     navigate("/monitor", { state: { email, token, monitor } });
   }
 
-  // console.log(monitor);
+// console.log(monitor);
   //   console.log(s);
 
   return (
     
       <div className="bg-white pt-10 pb-12">
-        <Navbar email={email} />
+        <Navbar email={userEmail} />
         <div className="w-4/6 mx-auto">
           <div className="flex justify-between flex-col items-center md:flex-row mt-10">
             <div className="flex gap-2">
@@ -105,15 +114,15 @@ function Dashboard() {
           </div>
           <div className="font-inter flex gap-4 justify-center flex-wrap mt-10">
             <div
-              className="w-80 p-3 rounded-md "
+              className="min-w-64 p-3 rounded-md "
               style={{ border: "1px solid #C9C9C9" }}
             >
               <div className="text-start  flex items-center gap-3"> <img src={Deploy} alt="" /> Deploy</div>
               <div className="flex mt-5">
-                <span className="text-5xl mr-10 text-black">04</span>
+                <span className="text-5xl mr-2 2xl:mr-6  text-black">04</span>
                 <span>
-                  <div className="text-black">CHECK</div>
-                  <div className="text-black">MONITORED CONTRACT</div>
+                  <div className="text-black text-sm 2xl:text-lg">CHECK</div>
+                  <div className="text-black text-sm 2xl:text-lg">DEPLOYED CONTRACT</div>
                 </span>
                 <span>
                   <svg
@@ -154,15 +163,15 @@ function Dashboard() {
               </div>
             </div>
             <div
-              className="w-80 p-3 rounded-md"
+              className="min-w-64 p-3 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
               <div className="text-start  flex items-center gap-3"> <img src={Sliders} alt="" /> Onchain Events</div>
               <div className="flex mt-5">
-                <span className="text-5xl mr-10 text-black">00</span>
+                <span className="text-5xl mr-2 2xl:mr-6 text-black">00</span>
                 <span>
-                  <div className="text-black">CHECK</div>
-                  <div className="text-black">CONTRACT EVENTS</div>
+                  <div className="text-black text-sm 2xl:text-lg">CHECK</div>
+                  <div className="text-black text-sm 2xl:text-lg">MANAGED CONTRACT</div>
                 </span>
                 <span>
                   <svg
@@ -203,15 +212,15 @@ function Dashboard() {
               </div>
             </div>
             <div
-              className="w-80 p-3 rounded-md"
+              className="min-w-64 p-3 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
               <div className="text-start flex items-center gap-3"><img src={Eye} alt="" /> Monitor</div>
               <div className="flex mt-5">
-                <span className="text-5xl mr-10 text-black">{s}</span>
+                <span className="text-5xl mr-2 2xl:mr-6  text-black">{s}</span>
                 <span>
-                  <div className="text-black">CHECK</div>
-                  <div className="text-black">ACTIVE MONITOR</div>
+                  <div className="text-black text-sm 2xl:text-lg">CHECK</div>
+                  <div className="text-black text-sm 2xl:text-lg">ACTIVE MONITOR</div>
                 </span>
                 <span onClick={handleClick} className="ms-auto">
                   <Link to="/monitor">

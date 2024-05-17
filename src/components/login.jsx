@@ -31,11 +31,18 @@ function Login() {
         console.log("Login Successful:", response.data);
         const token = response.data.token;
         const monitor = response.data.monitors;
+        // console.log(monitor);
+        const Email = response.data.user.email;
+        // console.log(Email);
         let login = localStorage.setItem("login", true);
+        // console.log(login);
+        let Token = localStorage.setItem("token", token);
+        let Monitor = localStorage.setItem("moniter",monitor);
+        let userEmail = localStorage.setItem("email",Email);
         // const s = monitor.length;
         // console.log("abc", s);
         // console.log(typeof monitor);
-        navigate("/dashboard", { state: { email, monitor, token } });
+      navigate("/dashboard", { state: { email, monitor, token } });
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -149,11 +156,11 @@ function Login() {
 
           {errorMessage && <p className="text-red-500 mb-3">{errorMessage}</p>}
         </form>
-        <hr />
+        {/* <hr />
         <button className="mx-auto bg-[#000000] px-4 py-2 text-white my-9 w-full rounded-md flex gap-2 justify-center">
           <img src={google} alt="not found" />
           <div className="">Sign in with google</div>
-        </button>
+        </button> */}
         <div className="text-center text-black">
           <span>Don't have an account?</span>
           <Link to="/signup" className=" text-[#007AFF]">
