@@ -1,0 +1,181 @@
+
+.group button {
+  background-color: #238acb;
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease-in-out;
+}
+
+.group button:hover {
+  background-color: #1f22ad;
+  transform: scale(1.1);
+}
+
+.read_button {
+  background-color: #a6b92c !important;
+}
+
+.read_button:hover {
+  background-color: #d08d19 !important;
+}
+
+
+
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #333;
+  text-shadow: 2px 2px #fff;
+  background: linear-gradient(to bottom, #f8f8f8, #ccc);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px #ccc;
+  text-align: center;
+
+}
+
+.group {
+  margin: 10px;
+  /* add a margin of 10px to all sides of the div */
+  /* display: inline-block; */
+  display: flex;
+  /* use flexbox for layout */
+  flex-wrap: wrap;
+  /* allow the children to wrap to a new row when necessary */
+  justify-content: space-between;
+  /* add space between child elements */
+  align-items: center;
+  padding: 10px;
+  background-color: #f5f5f5;
+  /* set a background color for the child elements */
+  border: 1px solid #ddd;
+  /* add a border around the child elements */
+  border-radius: 10px;
+  /* add rounded corners to the child elements */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  /* add a shadow to the child elements */
+  /* flex-basis: calc(33.33% - 20px); set the initial size of the child elements */
+  /* text-align: center;  */
+}
+
+
+
+/* Form container */
+.form-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"] {
+  /* display: block; */
+  /* width: 100%; */
+  padding: 10px;
+  /* margin-bottom: 15px; */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  /* font-size: 16px; */
+  font-family: Arial, sans-serif;
+}
+
+/* Form input fields */
+.form-input {
+  display: block;
+  width: 50%;
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #ddd;
+  color: black;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+}
+
+/* Form submit button */
+.form-submit {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-submit:hover {
+  background-color: #3e8e41;
+  transform: scale(1.1);
+}
+
+.connect_wallet {
+  background-color: #2a99ad;
+  /* Green background color */
+  border: none;
+  /* No border */
+  color: white;
+  /* White text color */
+  padding: 15px 32px;
+  /* Padding */
+  text-align: center;
+  /* Centered text */
+  text-decoration: none;
+  /* No underline */
+  display: inline-block;
+  /* Inline block element */
+  font-size: 16px;
+  /* Font size */
+  border-radius: 8px;
+  /* Rounded corners */
+  transition: background-color 0.3s;
+  /* Transition effect on hover */
+}
+
+.connect_wallet:hover {
+  background-color: #d74bc7;
+  /* Darker green background color on hover */
+}
+
+.wallet-info {
+  background-color: #f2f2f2;
+  /* Background color */
+  padding: 10px;
+  /* Padding */
+  border-radius: 5px;
+  /* Rounded corners */
+  font-family: Arial, sans-serif;
+  /* Font family */
+}
+
+.address {
+  font-size: 16px;
+  /* Font size */
+  color: #333;
+  /* Text color */
+}
+
+.network {
+  font-size: 14px;
+  /* Font size */
+  color: #666;
+  /* Text color */
+  margin-top: 5px;
+  /* Top margin */
+}

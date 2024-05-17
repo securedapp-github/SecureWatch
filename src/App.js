@@ -15,6 +15,7 @@ import Alerts from "./components/alerts.jsx";
 import Logs from "./components/logs.jsx";
 import Emailverify from "./components/Emailverify.jsx";
 import Protected from "./protected.js";
+import Api_builder from "./components/api_builder.jsx";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Protected cmp={<Dashboard />} />} />
         <Route path="/monitor" element={<Protected cmp={<Monitor />} />} />
+        <Route path="/api_builder" element={<Protected cmp={<Api_builder />} />} />
       </Routes>
     </BrowserRouter>
   );

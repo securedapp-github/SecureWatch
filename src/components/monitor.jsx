@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Monitor_cmp from "./monitor_cmp";
 import axios from "axios";
 
+
 const customStyles = {
   content: {
     top: "50%",
@@ -62,15 +63,21 @@ const Monitor = () => {
         <div className="flex justify-center items-center md:justify-between  flex-col md:flex-row">
           <div className="text-4xl font-medium">Monitor (2)</div>
           <div className="flex flex-wrap justify-center gap-2 mt-2 md:mt-0">
-            <div className="border border-black rounded-xl font-medium px-3 py-2 my-auto">
+            <div className="border border-black rounded-xl font-medium px-3 py-2 my-auto cursor-pointer">
               See Monitor Activity
             </div>
             <div
-              className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto"
+              className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto cursor-pointer"
               onClick={handleClick}
             >
               Create Monitor
             </div>
+            <button
+              className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto cursor-pointer"
+              
+            >
+              <Link to="/api_builder" t>Interact with contract</Link>
+            </button>
           </div>
         </div>
         <div
@@ -109,6 +116,9 @@ const Monitor = () => {
             </svg>
           </div>
         </div>
+
+        
+        
       </div>
       <Monitor_cmp props={Moniter} />
     </div>
