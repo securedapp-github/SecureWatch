@@ -74,17 +74,17 @@ const Api_builder = () => {
   };
 
   return (
-    <div className="App bg-white pb-64">
-      <h1>Get Web3 API List</h1>
-      <div className="form-container">
+    <div className="App bg-white pb-72 pt-5">
+      <h1 className='bg-[#363636] text-white text-center font-normal text-2xl py-4 rounded-badge w-[80%] mx-auto'>Get Web3 API List</h1>
+      <div className="flex justify-center gap-6 flex-wrap my-7">
         <button className="connect_wallet" onClick={handleConnectWallet}>Connect Wallet!</button>
-        <div id="wallet-info" className="wallet-info">
-          <span className="address">Wallet Address: {userWalletAddress}</span><br />
-          <span className="network">Network: {network}</span>
+        <div id="wallet-info " className="wallet-info py-3 px-4 border-2">
+          <span className="address text-wrap">Wallet Address: {userWalletAddress}</span><br />
+          <span className="network text-wrap">Network: {network}</span>
         </div>
       </div>
-
-      <form className="form-container" onSubmit={handleSubmit}>
+<div className='w-full flex flex-col justify-center items-center'>
+      <form className="form-container w-full sm:w-[80%] md:w-[70%] lg:w-[50%] bg-slate-600 flex flex-col" onSubmit={handleSubmit}>
         <label>Paste Contract ABI:</label>
         <input
           className="form-input"
@@ -99,9 +99,9 @@ const Api_builder = () => {
           value={address}
           onChange={(e) => setAddress(e.target.value)}
         />
-        <button className="form-submit" type="submit">Submit</button>
+        <button className="form-submit mx-auto" type="submit">Submit</button>
       </form>
-
+      </div>
       <div id="container" className="container">
         {writeFunctions.map((func, idx) => (
           <div className="group" key={idx}>
