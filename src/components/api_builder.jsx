@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import '../App.css';
+import Navbar from "./navbar2";
 
 const Api_builder = () => {
   const [userWalletAddress, setUserWalletAddress] = useState(null);
@@ -10,6 +11,7 @@ const Api_builder = () => {
   const [writeFunctions, setWriteFunctions] = useState([]);
   const [readFunctions, setReadFunctions] = useState([]);
   const [network, setNetwork] = useState(null);
+  const userEmail = localStorage.getItem("email")
 
   useEffect(() => {
     if (window.ethereum) {
@@ -74,8 +76,9 @@ const Api_builder = () => {
   };
 
   return (
-    <div className="App bg-white pb-72 pt-5">
-      <h1 className='bg-[#363636] text-white text-center font-normal text-2xl py-4 rounded-badge w-[80%] mx-auto'>Get Web3 API List</h1>
+    <div className="App bg-white pb-64 pt-5">
+       <Navbar email={userEmail} />
+      <h1 className='  text-center my-10 text-4xl font-medium'>Get Web3 API List</h1>
       <div className="flex justify-center gap-6 flex-wrap my-7">
         <button className="connect_wallet" onClick={handleConnectWallet}>Connect Wallet!</button>
         <div id="wallet-info " className="wallet-info py-3 px-4 border-2">
