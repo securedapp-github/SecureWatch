@@ -37,9 +37,9 @@ console.log(userEmail);
       <div className="bg-white pt-10 pb-12">
         <Navbar email={userEmail} />
         <div className="w-4/6 mx-auto">
-          <div className="flex justify-between flex-col items-center md:flex-row mt-10">
+          <div className="mt-10 flex justify-center items-center gap-6 flex-wrap ">
             <div className="flex gap-2">
-              <div className="font-poppin text-3xl text-[#0CA851] font-medium bg-[#A7FFCE] p-2 rounded-2xl">
+              <div className="font-poppin font-medium text-lg sm:text-ml md:text-2xl lg:text-3xl text-[#0CA851]  bg-[#A7FFCE] p-2 rounded-2xl text-center">
                 SecureWatch Org
               </div>
               <div className="my-auto">
@@ -79,9 +79,10 @@ console.log(userEmail);
                 </svg>
               </div>
             </div>
+
             <div className="flex mt-4 md:mt-0 font-poppin">
               <div className="my-auto">
-                <span className="text-[#0CA851] font-bold text-xl">
+                <span className="text-[#0CA851] font-bold sm:text-xl md:text-2xl">
                   Tenant ID 
                 </span>
                 <span className="text-black">#833f1c5e...</span>
@@ -111,6 +112,7 @@ console.log(userEmail);
                 </svg>
               </div>
             </div>
+
           </div>
           <div className="font-inter flex gap-4 justify-center flex-wrap mt-10">
             <div
@@ -119,12 +121,12 @@ console.log(userEmail);
             >
               <div className="text-start  flex items-center gap-3"> <img src={Deploy} alt="" /> Deploy</div>
               <div className="flex mt-5">
-                <span className="text-5xl mr-2 2xl:mr-6  text-black">04</span>
+                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6  text-black">04</span>
                 <span>
-                  <div className="text-black text-sm 2xl:text-lg">CHECK</div>
-                  <div className="text-black text-sm 2xl:text-lg">DEPLOYED CONTRACT</div>
+                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />DEPLOYED CONTRACT</div>
+                 
                 </span>
-                <span>
+                <span className="cursor-pointer">
                   <svg
                     width="33"
                     height="33"
@@ -168,12 +170,11 @@ console.log(userEmail);
             >
               <div className="text-start  flex items-center gap-3"> <img src={Sliders} alt="" /> Onchain Events</div>
               <div className="flex mt-5">
-                <span className="text-5xl mr-2 2xl:mr-6 text-black">00</span>
+                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6 text-black">00</span>
                 <span>
-                  <div className="text-black text-sm 2xl:text-lg">CHECK</div>
-                  <div className="text-black text-sm 2xl:text-lg">MANAGED CONTRACT</div>
+                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />MANAGED CONTRACT</div>
                 </span>
-                <span>
+                <span className="cursor-pointer">
                   <svg
                     width="33"
                     height="33"
@@ -217,10 +218,9 @@ console.log(userEmail);
             >
               <div className="text-start flex items-center gap-3"><img src={Eye} alt="" /> Monitor</div>
               <div className="flex mt-5">
-                <span className="text-5xl mr-2 2xl:mr-6  text-black">{s}</span>
+                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6  text-black">{s}</span>
                 <span>
-                  <div className="text-black text-sm 2xl:text-lg">CHECK</div>
-                  <div className="text-black text-sm 2xl:text-lg">ACTIVE MONITOR</div>
+                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ACTIVE MONITOR</div>
                 </span>
                 <span onClick={handleClick} className="ms-auto">
                   <Link to="/monitor">
@@ -263,21 +263,20 @@ console.log(userEmail);
               </div>
             </div>
           </div>
-          <div className="font-inter flex justify-between gap-10 mt-10 flex-col items-center md:flex-row">
+          <div className="font-inter flex justify-between gap-10 mt-10 flex-col items-center lg:flex-row">
             <div
-              className="w-full md:w-1/2 p-3 rounded-md"
+              className="min-w-64 lg:w-1/2 p-3 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
               <div className="text-start flex items-center gap-3 "><img src={Grid} alt="" />Incident Response</div>
               <div className="flex justify-between mt-5">
                 <div className="flex">
-                  <span className="text-5xl mr-10 text-black ">02</span>
+                  <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-10 text-black ">02</span>
                   <span>
-                    <div className="text-black">CHECK</div>
-                    <div className="text-black">ACTIVE SCENARIOS</div>
+                    <div className="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-medium">CHECK <br />ACTIVE SCENARIOS</div>
                   </span>
                 </div>
-                <span>
+                <span className="cursor-pointer">
                   <svg
                     width="33"
                     height="33"
@@ -316,27 +315,25 @@ console.log(userEmail);
               </div>
             </div>
             <div
-              className="p-3 w-full md:w-1/2 rounded-md"
+              className="p-3 min-w-64 lg:w-1/2 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
               <div className="text-start flex items-center gap-3"><img src={Actions} alt="" />Actions</div>
               <div className="flex gap-6 flex-wrap mt-5">
 
                 <div className="flex">
-                  <span className="text-5xl mr-2 text-black">02</span>
+                  <span className=" sm:text-3xl md:text-4xl lg:text-5xl mr-2 text-black">02</span>
                   <span>
-                    <div className="text-black">ACTIVE</div>
-                    <div className="text-black">ACTIONS</div>
+                    <div className="text-black text-xs sm:text-sm font-medium">ACTIVE <br />ACTIONS</div>
                   </span>
                 </div>
                 <div className="flex">
-                  <span className="text-5xl mr-2 text-black">02</span>
+                  <span className=" sm:text-3xl md:text-4xl lg:text-5xl mr-2 text-black">02</span>
                   <span>
-                    <div className="text-black">PENDING</div>
-                    <div className="text-black">TX PROPOSALS</div>
+                    <div className="text-black text-xs sm:text-sm font-medium">PENDING <br />TX PROPOSALS</div>
                   </span>
                 </div>
-                <span >
+                <span className="cursor-pointer">
                   <svg
                     width="33"
                     height="33"
@@ -382,76 +379,52 @@ console.log(userEmail);
             style={{ border: "1px solid #C9C9C9" }}
           >
             <div className="text-start flex items-center gap-3"><img src={Code} alt="" />Code</div>
-            <div className="flex mt-5 justify-evenly flex-col items-center md:flex-row">
-              <div className="flex mr-10 mt-4 md:mt-0">
-                <span className="text-5xl mr-2 my-auto font-semibold text-black">02</span>
-                <div className="my-auto text-sm text-black">SUCCESSFULL REPORT</div>
+<div className="flex justify-between items-center mt-3">
+            <div className=" flex gap-5 flex-col md:flex-row md:justify-center md:items-center md:flex-wrap">
+              <div className="flex  mt-4 md:mt-0">
+                <span className="text-lg sm:text-2xl md:text-3xl  mr-2 my-auto font-semibold text-black">02</span>
+                <div className="my-auto text-xs  font-medium text-black">SUCCESSFULL REPORT</div>
               </div>
               <div className="flex items-center gap-1 mt-4 md:mt-0">
-                <span className="text-4xl font-medium mr-2 text-black">00</span>
+                <span className="text-lg sm:text-2xl md:text-3xl  font-medium mr-2 text-black">00</span>
                 <span>
-                  <div className="text-xs text-black">CRITICAL FINDINGS</div>
-                  <div className="text-xs text-black">TO RESOLVE</div>
+                  <div className=" text-black text-xs  font-medium">CRITICAL FINDINGS <br />TO RESOLVE</div>
                 </span>
               </div>
               <div className="flex items-center mt-4 md:mt-0">
-                <span className="text-4xl font-medium mr-2 text-black ">00</span>
+                <span className="text-lg sm:text-2xl md:text-3xl  font-medium mr-2 text-black ">00</span>
                 <span>
-                  <div className="text-xs text-black">HIGH FINDINGS</div>
-                  <div className="text-xs text-black">TO RESOLVE</div>
+                  <div className="text-xs  font-medium text-black">HIGH FINDINGS <br />TO RESOLVE</div>
                 </span>
               </div>
               <div className="flex items-center  mt-4 md:mt-0">
-                <span className="text-4xl font-medium mr-2 text-black">00</span>
+                <span className="text-lg sm:text-2xl md:text-3xl  font-medium mr-2 text-black">00</span>
                 <span>
-                  <div className="text-xs text-black">MEDIUM FINDINGS</div>
-                  <div className="text-xs text-black">TO RESOLVE</div>
+                  <div className="text-xs  font-medium text-black">MEDIUM FINDINGS <br />TO RESOLVE</div>
                 </span>
               </div>
               <div className="flex items-center  mt-4 md:mt-0">
-                <span className="text-4xl font-medium mr-2 text-black">00</span>
+                <span className="text-lg sm:text-2xl md:text-3xl  font-medium mr-2 text-black">00</span>
                 <span>
-                  <div className="text-xs text-black">LOW FINDINGS</div>
-                  <div className="text-xs text-black">TO RESOLVE</div>
+                  <div className="text-xs  font-medium text-black">LOW FINDINGS <br />TO RESOLVE</div>
                 </span>
               </div>
-              <span>
-                <svg
-                  width="33"
-                  height="33"
-                  viewBox="0 0 33 33"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g clip-path="url(#clip0_167_85)">
-                    <path
-                      d="M9.76833 16.654H23.0754"
-                      stroke="black"
-                      stroke-width="1.88191"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M16.4219 10.0004L23.0754 16.654L16.4219 23.3075"
-                      stroke="black"
-                      stroke-width="1.88191"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
+            </div>
+
+            <span>
+                <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clipPath="url(#clip0_167_85)">
+                    <path d="M9.76833 16.654H23.0754" stroke="black" strokeWidth={1.88191} strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M16.4219 10.0004L23.0754 16.654L16.4219 23.3075" stroke="black" strokeWidth={1.88191} strokeLinecap="round" strokeLinejoin="round" />
                   </g>
                   <defs>
                     <clipPath id="clip0_167_85">
-                      <rect
-                        width="22.5829"
-                        height="22.5829"
-                        fill="white"
-                        transform="translate(16.4219 0.685921) rotate(45)"
-                      />
+                      <rect width="22.5829" height="22.5829" fill="white" transform="translate(16.4219 0.685921) rotate(45)" />
                     </clipPath>
                   </defs>
                 </svg>
               </span>
-            </div>
+              </div>
           </div>
         </div>
       </div>
