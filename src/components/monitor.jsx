@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Navbar from "./navbar2";
 import { Switch } from "@headlessui/react";
 import Modal from "react-modal";
@@ -20,14 +20,32 @@ const customStyles = {
 };
 
 const Monitor = () => {
+  const [moniter, setMoniter] = useState([]);
+  useEffect(() => {
+    const fetchMoniter = async () => {
+      const res=await fetch('https://139-59-5-56.nip.io:3443/get_monitor',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          "user_id": 6
+        })
+      });
+      const data = await res.json();
+      setMoniter(data);
+    };
+    fetchMoniter();
+  }, []);
+
+  console.log(moniter);
+
   const location = useLocation();
   const navigate = useNavigate();
-  const Moniter = localStorage.getItem("moniter");
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email")
   console.log(token);
   console.log(email);
-  // const { email, token = "",monitor } = location.state || "";
   
 
   function handleClick() {
@@ -120,7 +138,7 @@ const Monitor = () => {
         
         
       </div>
-      <Monitor_cmp props={Moniter} />
+      <Monitor_cmp props={moniter} />
     </div>
   );
 }

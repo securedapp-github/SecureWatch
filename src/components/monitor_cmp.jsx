@@ -2,6 +2,7 @@ import Modal from "react-modal";
 import React, { useState } from "react";
 import { Switch } from "@headlessui/react";
 
+
 const customStyles = {
   content: {
     top: "50%",
@@ -32,7 +33,8 @@ const Monitor_cmp = (props) => {
   function closeModal() {
     setOpen(false);
   }
-  if (!props || !Array.isArray(props.props) || props.props.length === 0) {
+  console.log(props.props.monitors);
+  if (!props || !Array.isArray(props.props.monitors) || props.props.monitors.length === 0) {
     return (
       <div className="text-center mt-20 text-4xl font-medium">
         Please create a monitor.
@@ -42,13 +44,13 @@ const Monitor_cmp = (props) => {
 
   return (
     <div>
-      {props.props.map((i) => {
+      {props.props.monitors.map((i) => {
         const name = i.name;
         const risk = i.category;
         const network = i.network;
         return (
-          <div>
-            <div className="w-4/6 mx-auto mt-20">
+          <div className="mb-20">
+            <div className="w-4/6 mx-auto mt-20 ">
               <div
                 className="mt-10 p-6 flex justify-between flex-col md:flex-row rounded-2xl"
                 style={{
