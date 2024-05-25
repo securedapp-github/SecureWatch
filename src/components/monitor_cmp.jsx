@@ -15,17 +15,17 @@ const customStyles = {
 };
 const Monitor_cmp = (props) => {
   // const [enabled, setEnabled] = useState(false);
-  const [disp, setDisp] = useState("block");
-  const [disp1, setDisp1] = useState("block");
+  // const [disp, setDisp] = useState("block");
+  // const [disp1, setDisp1] = useState("block");
   const [open, setOpen] = useState(false);
-  const handleToggle = () => {
-    if (disp == "none") setDisp("block");
-    else setDisp("none");
-  };
-  const handleToggle1 = () => {
-    if (disp1 == "none") setDisp1("block");
-    else setDisp1("none");
-  };
+  // const handleToggle = () => {
+  //   if (disp == "none") setDisp("block");
+  //   else setDisp("none");
+  // };
+  // const handleToggle1 = () => {
+  //   if (disp1 == "none") setDisp1("block");
+  //   else setDisp1("none");
+  // };
 
   function openModal() {
     setOpen(true);
@@ -49,7 +49,8 @@ const Monitor_cmp = (props) => {
         const risk = i.category;
         const network = i.network;
         const status = i.status;
-        console.log(network);
+        const mid =i.mid;
+        console.log(mid);
         return (
           <div className="">
             <div className="w-4/6 mx-auto ">
@@ -117,20 +118,40 @@ const Monitor_cmp = (props) => {
                 <div className="flex flex-row md:flex-col mt-4 gap-1 md:mt-0">
                   <div className="flex justify-end gap-3">
                     <Switch
-                      checked={status === "active" ? true : false}
-                      // onChange={setEnabled}
+                      checked={status === 1 ? true : false}
+                      onChange={() => {
+                          const newStatus = status === 0 ? 1 : 0;
+                          fetch('https://139-59-5-56.nip.io:3443/update_monitor', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              moniter_id: mid,
+                              status: newStatus,
+                            }),
+                          })
+                          .then(response => response.json())
+                          .then(data => {
+                            console.log('Success:', data);
+                          })
+                          .catch((error) => {
+                            console.error('Error:', error);
+                          });
+                      }
+                      }
                       className={`${
-                        true ? "bg-[#0CA851]" : "bg-[#B8B8B8]"
+                        status === 1 ? "bg-[#0CA851]" : "bg-[#B8B8B8]"
                       } relative inline-flex h-6 w-11 items-center rounded-full`}
                     >
                       <span className="sr-only">Enable notifications</span>
                       <span
                         className={`${
-                          true ? "translate-x-6" : "translate-x-1"
+                          status === 1 ? "translate-x-6" : "translate-x-1"
                         } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                       />
                     </Switch>
-                    <div
+                    {/* <div
                       className="cursor-pointer"
                       onClick={() => {
                         handleToggle();
@@ -162,11 +183,11 @@ const Monitor_cmp = (props) => {
                           fill="#0CA851"
                         />
                       </svg>
-                    </div>
+                    </div> */}
                   </div>
                   <div
                     className="px-2 py-1 rounded-2xl"
-                    style={{ border: "1px solid #0CA851", display: disp }}
+                    style={{ border: "1px solid #0CA851"}}
                   >
                     <div className="mb-2 cursor-pointer text-black" onClick={openModal}>
                       Save as template
