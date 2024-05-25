@@ -79,7 +79,7 @@ const Monitor = () => {
       <Navbar email={email} />
       <div className="w-4/6 mx-auto mt-20 ">
         <div className="flex justify-center items-center md:justify-between  flex-col md:flex-row">
-          <div className="text-4xl font-medium">Monitor (2)</div>
+          <div className="text-4xl font-medium text-black">Monitor (2)</div>
           <div className="flex flex-wrap justify-center gap-2 mt-2 md:mt-0">
             <div className="border border-black rounded-xl font-medium px-3 py-2 my-auto cursor-pointer">
               See Monitor Activity
