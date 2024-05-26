@@ -20,25 +20,7 @@ const customStyles = {
 };
 
 const Monitor = () => {
-  const [moniter, setMoniter] = useState([]);
-  useEffect(() => {
-    const fetchMoniter = async () => {
-      const res=await fetch('https://139-59-5-56.nip.io:3443/get_monitor',{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json'
-        },
-        body:JSON.stringify({
-          "user_id": 6
-        })
-      });
-      const data = await res.json();
-      setMoniter(data);
-    };
-    fetchMoniter();
-  }, []);
-
-  console.log(moniter);
+  
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -138,7 +120,7 @@ const Monitor = () => {
         
         
       </div>
-      <Monitor_cmp props={moniter} />
+      <Monitor_cmp />
     </div>
   );
 }

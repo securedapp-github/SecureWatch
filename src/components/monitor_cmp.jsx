@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Switch } from "@headlessui/react";
 
 
@@ -14,10 +14,31 @@ const customStyles = {
   },
 };
 const Monitor_cmp = (props) => {
+  const [value, setValue]=useState(10);
+  const [moniter, setMoniter] = useState([]);
+  useEffect(() => {
+    const fetchMoniter = async () => {
+      const res=await fetch('https://139-59-5-56.nip.io:3443/get_monitor',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          "user_id": 6
+        })
+      });
+      const data = await res.json();
+      setMoniter(data);
+    };
+    fetchMoniter();
+  }, [value]);
+
+  console.log(moniter);
   // const [enabled, setEnabled] = useState(false);
   // const [disp, setDisp] = useState("block");
   // const [disp1, setDisp1] = useState("block");
   const [open, setOpen] = useState(false);
+  
   // const handleToggle = () => {
   //   if (disp == "none") setDisp("block");
   //   else setDisp("none");
@@ -33,8 +54,8 @@ const Monitor_cmp = (props) => {
   function closeModal() {
     setOpen(false);
   }
-  console.log(props.props.monitors);
-  if (!props || !Array.isArray(props.props.monitors) || props.props.monitors.length === 0) {
+  console.log(moniter.monitors);
+  if (!moniter || !Array.isArray(moniter.monitors) || moniter.monitors.length === 0) {
     return (
       <div className="text-center mt-20 text-4xl font-medium text-black">
         Please create a monitor.
@@ -44,13 +65,12 @@ const Monitor_cmp = (props) => {
 
   return (
     <div>
-      {props.props.monitors.map((i) => {
+      {moniter.monitors.map((i) => {
         const name = i.name;
         const risk = i.category;
         const network = i.network;
         const status = i.status;
         const mid =i.mid;
-        console.log(mid);
         return (
           <div className="">
             <div className="w-4/6 mx-auto ">
@@ -115,25 +135,31 @@ const Monitor_cmp = (props) => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-row md:flex-col mt-4 gap-1 md:mt-0">
-                  <div className="flex justify-end gap-3">
+                <div className="flex   items-center">
+                  <div className="flex justify-end gap-3 items-center">
                     <Switch
                       checked={status === 1 ? true : false}
                       onChange={() => {
-                          const newStatus = status === 0 ? 1 : 0;
+                        const newStatus = status === 0 ? 1 : 0;
+                        // const newMid = mid.toString();
+                        // console.log('status:', newStatus);
+                        // console.log('mid:', mid);
+                        // console.log('newMid:', newMid);
+                        
                           fetch('https://139-59-5-56.nip.io:3443/update_monitor', {
                             method: 'POST',
                             headers: {
                               'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                              moniter_id: mid,
+                              "monitor_id": mid,
                               status: newStatus,
                             }),
                           })
                           .then(response => response.json())
                           .then(data => {
                             console.log('Success:', data);
+                            setValue(value+1);
                           })
                           .catch((error) => {
                             console.error('Error:', error);
@@ -185,7 +211,7 @@ const Monitor_cmp = (props) => {
                       </svg>
                     </div> */}
                   </div>
-                  <div
+                  {/* <div
                     className="px-2 py-1 rounded-2xl"
                     style={{ border: "1px solid #0CA851"}}
                   >
@@ -194,11 +220,12 @@ const Monitor_cmp = (props) => {
                     </div>
                     <hr />
                     <div className="text-center mt-2 text-black">Delete</div>
-                  </div>
+                  </div> */}
                 </div>
+
               </div>
             </div>
-            <Modal
+            {/* <Modal
               isOpen={open}
               onRequestClose={closeModal}
               style={customStyles}
@@ -237,7 +264,7 @@ const Monitor_cmp = (props) => {
                   Create Template
                 </button>
               </div>
-            </Modal>
+            </Modal> */}
           </div>
         );
       })}

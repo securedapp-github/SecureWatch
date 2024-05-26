@@ -34,7 +34,7 @@ console.log(userEmail);
 
   return (
     
-      <div className="bg-white pt-10 pb-12">
+      <div className="bg-white pt-12">
         <Navbar email={userEmail} />
         <div className="w-4/6 mx-auto">
           <div className="mt-10 flex justify-center items-center gap-6 flex-wrap ">
