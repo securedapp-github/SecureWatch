@@ -20,8 +20,6 @@ const customStyles = {
 };
 
 const Monitor = () => {
-  
-
   const location = useLocation();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");

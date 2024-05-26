@@ -39,7 +39,7 @@ function Alerts() {
     const type = selectedOption;
     const mid = m_id;
     try {
-      const response = await axios.post("http://localhost:4000/api/alerts", {
+      const response = await axios.post("https://139-59-5-56.nip.io:3443/api/alerts", {
         mid,
         type,
         email,
@@ -63,7 +63,7 @@ function Alerts() {
   };
   return (
     <div
-      className="font-poppin mt-10 mx-2"
+      className="font-poppin pt-10 mx-2"
       style={{ backgroundColor: "#FCFFFD" }}
     >
       <Navbar email={email} />

@@ -1,7 +1,8 @@
 import Modal from "react-modal";
 import React, { useState,useEffect } from "react";
 import { Switch } from "@headlessui/react";
-
+import { Context } from "../App";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const customStyles = {
   content: {
@@ -14,6 +15,8 @@ const customStyles = {
   },
 };
 const Monitor_cmp = (props) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [value, setValue]=useState(10);
   const [moniter, setMoniter] = useState([]);
   useEffect(() => {
@@ -54,7 +57,7 @@ const Monitor_cmp = (props) => {
   function closeModal() {
     setOpen(false);
   }
-  console.log(moniter.monitors);
+  // console.log(moniter.monitors);
   if (!moniter || !Array.isArray(moniter.monitors) || moniter.monitors.length === 0) {
     return (
       <div className="text-center mt-20 text-4xl font-medium text-black">
@@ -64,7 +67,7 @@ const Monitor_cmp = (props) => {
   }
 
   return (
-    <div>
+    <div className="w-full flex justify-center items-center flex-col ">
       {moniter.monitors.map((i) => {
         const name = i.name;
         const risk = i.category;
@@ -72,10 +75,14 @@ const Monitor_cmp = (props) => {
         const status = i.status;
         const mid =i.mid;
         return (
-          <div className="">
-            <div className="w-4/6 mx-auto ">
+          <div className="w-full flex justify-center items-center flex-col mx-auto">
+            <div className="w-full mx-auto flex justify-center items-center flex-col ">
+              <button className="w-full mx-auto flex justify-center items-center flex-col"
+              onClick={()=>{
+                navigate("/monitor_alerts", { state: { mid } });
+                }}>
               <div
-                className="mt-10 p-6 flex justify-between flex-col md:flex-row rounded-2xl"
+                className="mt-10 w-[95%] lg:w-4/5 p-6 flex justify-between flex-col md:flex-row rounded-2xl "
                 style={{
                   border: "1px solid #0CA851",
                   boxShadow: "4px 4px 0px 0px #0CA851",
@@ -135,6 +142,7 @@ const Monitor_cmp = (props) => {
                     </div>
                   </div>
                 </div>
+                
                 <div className="flex   items-center">
                   <div className="flex justify-end gap-3 items-center">
                     <Switch
@@ -224,6 +232,8 @@ const Monitor_cmp = (props) => {
                 </div>
 
               </div>
+              </button>
+
             </div>
             {/* <Modal
               isOpen={open}
