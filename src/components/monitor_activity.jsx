@@ -1,11 +1,11 @@
 import React from 'react'
-import Navbar1 from './navbar1'
+import Navbar from "./navbar2";
 
 function monitor_activity() {
   const moniters = localStorage.getItem("moniter");
   return (
     <div className='font-poppin pt-10 pb-72 mx-2' style={{'backgroundColor':'#FCFFFD'}}>
-      <Navbar1/>
+      <Navbar/>
       <div className='w-4/6 mx-auto mt-20'>
         <div className='flex justify-center items-center md:justify-between  flex-col md:flex-row'>
         <div className='text-4xl font-medium text-center text-black'>Monitor Activity</div>

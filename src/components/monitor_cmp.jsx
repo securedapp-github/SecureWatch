@@ -1,7 +1,6 @@
 import Modal from "react-modal";
 import React, { useState,useEffect } from "react";
 import { Switch } from "@headlessui/react";
-import { Context } from "../App";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const customStyles = {
@@ -19,6 +18,7 @@ const Monitor_cmp = (props) => {
   const navigate = useNavigate();
   const [value, setValue]=useState(10);
   const [moniter, setMoniter] = useState([]);
+
   useEffect(() => {
     const fetchMoniter = async () => {
       const res=await fetch('https://139-59-5-56.nip.io:3443/get_monitor',{

@@ -53,7 +53,7 @@ const Monitor = () => {
   }
   return (
     <div
-      className="font-poppin pt-2 bg-white min-h-full"
+      className="font-poppin pt-12 bg-white min-h-full"
       // style={{ backgroundColor: "#FCFFFD" }}
     >
       <Navbar email={email} />
