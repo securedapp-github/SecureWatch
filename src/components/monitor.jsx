@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Navbar from "./navbar2";
 import { Switch } from "@headlessui/react";
 import Modal from "react-modal";
@@ -22,12 +22,10 @@ const customStyles = {
 const Monitor = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const Moniter = localStorage.getItem("moniter");
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email")
   console.log(token);
   console.log(email);
-  // const { email, token = "",monitor } = location.state || "";
   
 
   function handleClick() {
@@ -55,13 +53,13 @@ const Monitor = () => {
   }
   return (
     <div
-      className="font-poppin pt-2 bg-white min-h-full"
+      className="font-poppin pt-12 bg-white min-h-full"
       // style={{ backgroundColor: "#FCFFFD" }}
     >
       <Navbar email={email} />
       <div className="w-4/6 mx-auto mt-20 ">
         <div className="flex justify-center items-center md:justify-between  flex-col md:flex-row">
-          <div className="text-4xl font-medium">Monitor (2)</div>
+          <div className="text-4xl font-medium text-black">Monitor (2)</div>
           <div className="flex flex-wrap justify-center gap-2 mt-2 md:mt-0">
             <div className="border border-black rounded-xl font-medium px-3 py-2 my-auto cursor-pointer">
               See Monitor Activity
@@ -120,7 +118,7 @@ const Monitor = () => {
         
         
       </div>
-      <Monitor_cmp props={Moniter} />
+      <Monitor_cmp />
     </div>
   );
 }

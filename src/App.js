@@ -7,15 +7,17 @@ import Verify from "./components/verify.jsx";
 import Home from "./components/home.jsx";
 import Dashboard from "./components/dashboard.jsx";
 import Monitor from "./components/monitor.jsx";
-import Monitor_activity from "./components/monitor_activity.jsx";
-import Monitor_create from "./components/monitor_create.jsx";
+import MonitorActivity from "./components/monitor_activity.jsx";
+import MonitorCreate from "./components/monitor_create.jsx";
 import Events from "./components/events.jsx";
 import Functions from "./components/functions.jsx";
 import Alerts from "./components/alerts.jsx";
 import Logs from "./components/logs.jsx";
 import Emailverify from "./components/Emailverify.jsx";
 import Protected from "./protected.js";
-import Api_builder from "./components/api_builder.jsx";
+import ApiBuilder from "./components/api_builder.jsx";
+import MonitorAlerts from "./components/monitor_alerts.jsx";
+
 
 function App() {
   return (
@@ -27,11 +29,11 @@ function App() {
         <Route path="/event" element={<Protected cmp={<Events />} />} />
         <Route
           path="/monitor_create"
-          element={<Protected cmp={<Monitor_create />} />}
+          element={<Protected cmp={<MonitorCreate />} />}
         />
         <Route
           path="/monitor_activity"
-          element={<Protected cmp={<Monitor_activity />} />}
+          element={<Protected cmp={<MonitorActivity />} />}
         />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -40,8 +42,9 @@ function App() {
         <Route path="verify" element={<Verify />} />
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Protected cmp={<Dashboard />} />} />
-        <Route path="/monitor" element={<Protected cmp={<Monitor />} />} />
-        <Route path="/api_builder" element={<Protected cmp={<Api_builder />} />} />
+        <Route path="/monitor" element={<Protected cmp={<Monitor   />} />} />
+        <Route path="/api_builder" element={<Protected cmp={<ApiBuilder />} />} />
+        <Route path="/monitor_alerts" element={<MonitorAlerts  />} />
       </Routes>
     </BrowserRouter>
   );
