@@ -136,7 +136,7 @@ function Login() {
                 checked={enabled}
                 onChange={setEnabled}
                 className={`${
-                  enabled ? "bg-blue-600" : "bg-gray-200"
+                  enabled ? "bg-[#28AA61]" : "bg-gray-200"
                 } relative inline-flex h-6 w-11 items-center rounded-full`}
               >
                 <span className="sr-only">Enable notifications</span>
@@ -148,7 +148,9 @@ function Login() {
               </Switch>
               <div className="text-black">Remember me</div>
             </div>
+            <Link to="/forgotpassword" className="text-[#007AFF]">
             <div className="text-[#007AFF]">Forgot Password?</div>
+            </Link>
           </div>
           <button type="submit" className="mx-auto bg-[#28AA61] px-4 py-2 text-white my-9 w-full rounded-md">
             Sign in

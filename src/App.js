@@ -17,7 +17,8 @@ import Emailverify from "./components/Emailverify.jsx";
 import Protected from "./protected.js";
 import ApiBuilder from "./components/api_builder.jsx";
 import MonitorAlerts from "./components/monitor_alerts.jsx";
-
+import Forgotpassword from './components/Forgotpassword.jsx';
+import Otpverify from './components/Otpverify.jsx';
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgotpassword" element={<Forgotpassword />} />
+        <Route path="/otp" element={<Otpverify />} />
         <Route path="/login1" element={<Login1 />} />
         <Route path="/emailverify" element={<Emailverify />} />
         <Route path="verify" element={<Verify />} />

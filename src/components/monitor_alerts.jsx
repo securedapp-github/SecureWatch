@@ -99,11 +99,11 @@ function Monitor_alerts() {
                       <div className=" text-xl font-semibold text-black">Arguemant:</div>
 
                       <div className="ml-1 md:ml-4 flex flex-col gap-2">
-                      <div className=" text-lg font-semibold text-black">From: <span className="text-lg  text-[#7D7D7D] ">{arguemant.slice(9,51)}</span></div>
+                      <div className=" text-lg font-semibold text-black">From: <span className="text-lg  text-[#7D7D7D] line-clamp-5">{arguemant.slice(9,51)}</span></div>
 
-                      <div className=" text-lg font-semibold text-black">To: <span className="text-lg  text-[#7D7D7D] ">{arguemant.slice(59,101)}</span></div>
+                      <div className=" text-lg font-semibold text-black">To: <span className="text-lg  text-[#7D7D7D] line-clamp-5">{arguemant.slice(59,101)}</span></div>
 
-                      <div className=" text-lg font-semibold text-black">Value: <span className="text-lg  text-[#7D7D7D] ">{arguemant.slice(112,133)}</span></div>
+                      <div className=" text-lg font-semibold text-black">Value: <span className="text-lg  text-[#7D7D7D] line-clamp-5">{arguemant.slice(112,133)}</span></div>
 
                 
                       </div>
