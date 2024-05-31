@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate,useLocation } from "react-router-dom";
 import OtpInput from 'react-otp-input';
+import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 
 function Otpverify() {
   const navigate = useNavigate();
@@ -27,19 +28,23 @@ function Otpverify() {
      
     try {
       if (!email) {
-        setErrorMessage("Enter your email address again.");
+       // setErrorMessage("Enter your email address again.");
+        showErrorAlert("Enter your email address again.");
         setLoading(false);
       } 
       else if (!otp || otp.length !== 4) {
-        setErrorMessage("Please enter a valid OTP.");
+        //setErrorMessage("Please enter a valid OTP.");
+        showErrorAlert("Please enter a valid OTP.");
         setLoading(false);
       }
        else if (password.length < 8) {
-        setErrorMessage("Password should be at least 8 characters long.");
+        //setErrorMessage("Password should be at least 8 characters long.");
+        showErrorAlert("Password should be at least 8 characters long.");
         setLoading(false);
       } 
       else if (password !== confirmPassword) {
-        setErrorMessage("Password and confirm password do not match.");
+        //setErrorMessage("Password and confirm password do not match.");
+        showErrorAlert("Password and confirm password do not match.");
         setLoading(false);
       } 
        else {
@@ -53,13 +58,15 @@ function Otpverify() {
           }
         );
       setLoading(false);
+      showSuccessAlert("Password changed successfully, Please Login to continue.");
       navigate("/login");
       console.log("Password changed successfully", response.data);
       }
     } catch (error) {
       console.error("Error while changing Password:", error);
       setLoading(false);
-      setErrorMessage("Something went wrong, Please try again later.");
+      //setErrorMessage("Something went wrong, Please try again later.");
+      showErrorAlert("Something went wrong, Please try again later.");
     }
 
   }

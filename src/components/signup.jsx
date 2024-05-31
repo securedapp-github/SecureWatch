@@ -5,6 +5,7 @@ import { Switch } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import google from "../images/google.png";
 import { useNavigate } from "react-router-dom";
+import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 
 function Signup() {
   const [loading, setLoading] = useState(false);
@@ -22,7 +23,8 @@ function Signup() {
     setLoading(true);
     e.preventDefault();
     if (!isValidEmail(email)) {
-      setErrorMessage("Please enter a valid email address.");
+      //setErrorMessage("Please enter a valid email address.");
+      showErrorAlert("Please enter a valid email address.");
       setLoading(false);
     } else {
       navigate("/login1", { state: { email } });
