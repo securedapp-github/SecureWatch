@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "./navbar2";
 import Modal from "react-modal";
+
 import Load from "../images/loading.png";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-
+Modal.setAppElement("#root");
 const customStyles = {
   content: {
     top: "50%",
@@ -17,12 +18,22 @@ const customStyles = {
 };
 
 function Alerts() {
-  const [selectedOption, setSelectedOption] = useState("");
+  const [emailInput, setEmailInput] = useState(""); // State to handle email inputs
+  const [riskCategory, setRiskCategory] = React.useState("");
+  const [isSaved, setIsSaved] = useState(false);
+
+  // const [selectedOption, setSelectedOption] = useState("");
+  const [actionType, setActionType] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { email, m_id, token } = location.state || "";
-  console.log(m_id);
+  // const { email, m_id, token } = location.state || "";
+  // // console.log(m_id);
+
+  const { name, email, m_id, token, network, address, rk, selectedEventNames } =
+    location.state || {};
+
+  console.log("netwrok in alers is:", network);
 
   const [open, setOpen] = useState(false);
   function openModal() {
@@ -36,38 +47,43 @@ function Alerts() {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const type = selectedOption;
-    const mid = m_id;
-    try {
-      const response = await axios.post("https://139-59-5-56.nip.io:3443/api/alerts", {
-        mid,
-        type,
-        email,
-      });
-      console.log(response.data);
-      const monitor = response.data.monitors;
-      const alert = response.data.alerts;
-      console.log(monitor);
-      console.log(alert);
 
-      navigate("/monitor", { state: { email, token, monitor, alert } });
+    const emails = emailInput.split(",").map((email) => email.trim()); // Process email input for sending
+    const postData = {
+      monitor_id: 12,
+      name: name,
+      alert_data: emails,
+      alert_type: "1",
+      status: 2,
+    };
+
+    try {
+      const response = await axios.post(
+        "https://139-59-5-56.nip.io:3443/update_monitor",
+        postData
+      );
+      console.log(response.data);
+      console.log("email is:", emails);
+      console.log("risk category is:", riskCategory);
+      navigate("/monitor", { state: { email, token } });
     } catch (error) {
-      console.error("Error adding alert:", error);
-      // Handle error (e.g., show an error message to the user)
+      console.error("Error updating monitor:", error);
     }
   };
 
   // Function to handle option selection
-  const handleOptionSelect = (option) => {
-    setSelectedOption(option);
-  };
+  // const handleOptionSelect = (option) => {
+  //   setSelectedOption(option);
+  // };
   return (
     <div
-      className="font-poppin pt-10 mx-2"
+      className="font-poppin pt-2 bg-white min-h-full"
+      // bg-white pt-10 pb-1
+
       style={{ backgroundColor: "#FCFFFD" }}
     >
       <Navbar email={email} />
-      <div className="w-full mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
+      <div className="w-full h-full mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className="mx-auto md:mx-0">
           <div className="flex">
             <div>
@@ -106,11 +122,16 @@ function Alerts() {
                 </defs>
               </svg>
             </div>
-            <div className="text-base text-[#7D7D7D] my-auto">
+            <div
+              className="text-base text-[#7D7D7D] my-auto"
+              style={{ color: "black" }}
+            >
               Back to Monitors
             </div>
           </div>
-          <div className="text-3xl font-medium mt-3">Create Monitor</div>
+          <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
+            Create Monitor
+          </div>
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
@@ -146,7 +167,9 @@ function Alerts() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">General Information</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              General Information
+            </div>
             <div className="my-auto ml-auto">
               <svg
                 width="27"
@@ -200,7 +223,9 @@ function Alerts() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">Events</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              Events
+            </div>
             <div className="my-auto ml-auto">
               <svg
                 width="27"
@@ -254,7 +279,9 @@ function Alerts() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">Functions</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              Functions
+            </div>
             <div className="ml-auto my-auto">
               <svg
                 width="27"
@@ -308,7 +335,9 @@ function Alerts() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">Alerts</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              Alerts
+            </div>
             <div className="my-auto ml-auto">
               <svg
                 width="27"
@@ -339,7 +368,7 @@ function Alerts() {
         </div>
         <div className="w-full md:w-1/3 lg:w-1/4 mt-5 md:mt-0">
           <form onSubmit={handleSubmit}>
-            <div className="font-medium text-lg">
+            {/* <div className="font-medium text-lg">
               Risk Category
               <div className="w-inherit border-2 border-[#bea4a4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
                 <div className="text-lg font-medium">{selectedOption}</div>
@@ -393,11 +422,79 @@ function Alerts() {
                   </label>
                 </div>
               </div>
+            </div> */}
+            <div
+              className="font-medium mt-5 text-lg"
+              style={{ color: "black" }}
+            >
+              Risk Category
             </div>
+            <select
+              style={{ backgroundColor: "white" }}
+              name="category"
+              id="category"
+              // value={formData.category}
+
+              onChange={(e) => setRiskCategory(e.target.value)}
+              defaultValue="none"
+              className="outline-none border-2 border-[#4C4C4C] py-3 rounded-xl  w-full px-3"
+            >
+              <option
+                value="none"
+                selected
+                disabled
+                hidden
+                className="text-xl font-medium"
+              >
+                None
+              </option>
+              <option
+                value="Low Severity"
+                className="text-[13px] text-[#959595] "
+              >
+                Low Severity
+              </option>
+              <option
+                value="Medium Severity"
+                className="text-[13px] text-[#959595]"
+              >
+                Medium Severity
+              </option>
+              <option
+                value="High Severity"
+                className="text-[13px] text-[#959595]"
+              >
+                High Severity
+              </option>
+            </select>
+
             <div className="mt-5">
-              <div className="font-medium">Execute an action</div>
-              <div className="w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
-                <div className="font-medium">None</div>
+              <div className="font-medium" style={{ color: "black" }}>
+                Execute an action
+              </div>
+              <div className="">
+                <div className="font-medium">
+                  <select
+                    style={{ backgroundColor: "white" }}
+                    className="outline-none border-2 border-[#4C4C4C] py-3 rounded-xl  w-full px-3"
+                    value={actionType}
+                    onChange={(e) => setActionType(e.target.value)}
+                  >
+                    <option value="">Select Action</option>
+                    <option value="email">Email</option>
+                    <option value="other">Other Action</option>
+                  </select>
+                  {actionType === "email" && (
+                    <input
+                      style={{ backgroundColor: "white" }}
+                      type="text"
+                      value={emailInput}
+                      onChange={(e) => setEmailInput(e.target.value)}
+                      className="mt-2 w-full border-2 border-gray-300 p-2 rounded-lg"
+                      placeholder="Enter emails, e.g., example1@gmail.com, example2@gmail.com"
+                    />
+                  )}
+                </div>
                 <div>
                   <svg
                     width="21"
@@ -407,17 +504,17 @@ function Alerts() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
-                      stroke="black"
-                      stroke-width="1.69021"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                    // d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
+                    // stroke="black"
+                    // stroke-width="1.69021"
+                    // stroke-linecap="round"
+                    // stroke-linejoin="round"
                     />
                   </svg>
                 </div>
               </div>
             </div>
-            <div className="mt-5">
+            {/* <div className="mt-5">
               <div className="font-medium">
                 Execute an Incident Response Scenario
               </div>
@@ -441,8 +538,8 @@ function Alerts() {
                   </svg>
                 </div>
               </div>
-            </div>
-            <div className="flex gap-2">
+            </div> */}
+            {/* <div className="flex gap-2">
               <div className="mt-5 w-1/4">
                 <div className="font-medium">Alert</div>
                 <input
@@ -485,37 +582,54 @@ function Alerts() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <button
               className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white"
-              onClick={openModal}
+              onClick={() => {
+                openModal();
+                setIsSaved(true);
+              }}
             >
               Save Monitor
             </button>
           </form>
         </div>
         <div className=" mt-4 md:mt-0 border mx-auto md:mx-0 border-[#0CA851] shadow-md p-5 rounded-xl">
-          <div className="text-lg font-medium">Monitor Summary</div>
+          <div className="text-lg font-medium" style={{ color: "black" }}>
+            Monitor Summary
+          </div>
           <div className="flex gap-2">
             <div>
-              <div className="text-center font-medium">Networks</div>
+              <div
+                className="text-center font-medium"
+                style={{ color: "black" }}
+              >
+                Networks
+              </div>
               <div className="text-white bg-[#0CA851] rounded-md p-2 text-[13px]">
-                MAINNET
+                {network}
               </div>
             </div>
             <div>
-              <div className="text-center font-medium">Risk Category</div>
+              <div
+                className="text-center font-medium"
+                style={{ color: "black" }}
+              >
+                Risk Category
+              </div>
               <div className=" bg-[#E9E9E9] rounded-md p-2 text-[13px]">
-                Medium Severity
+                {rk}
               </div>
             </div>
           </div>
           <div className="mt-3">
-            <div className="font-medium">Contracts</div>
+            <div className="font-medium" style={{ color: "black" }}>
+              Contracts
+            </div>
             <div className="flex gap-1">
               <div className=" bg-[#E9E9E9] rounded-md p-2 text-[13px]">
-                0x1d54....49844
+                {address}
               </div>
               <div className="my-auto">
                 <svg
@@ -556,12 +670,23 @@ function Alerts() {
             </div>
           </div>
           <div className="mt-3">
-            <div className="font-medium">Event Conditions</div>
-            <div className="text-[13px]">Approval(address,address,uint256)</div>
-            <div className="text-[13px]">Transfer(address,address,uint256)</div>
+            <div className="font-medium" style={{ color: "black" }}>
+              Event Conditions
+            </div>
+            {selectedEventNames && selectedEventNames.length > 0 ? (
+              selectedEventNames.map((eventName) => (
+                <div key={eventName} className="text-[13px]">
+                  {eventName}
+                </div>
+              ))
+            ) : (
+              <div className="text-[13px]">No events selected</div>
+            )}
           </div>
           <div className="mt-3">
-            <div className="font-medium">Function Conditions</div>
+            <div className="font-medium" style={{ color: "black" }}>
+              Function Conditions
+            </div>
             <div>
               <div className="text-[13px]">approve(address,uint256)</div>
               <div className="text-[13px]">
@@ -577,11 +702,13 @@ function Alerts() {
             </div>
           </div>
           <div className="mt-3">
-            <div className="font-medium">Alerts</div>
+            <div className="font-medium" style={{ color: "black" }}>
+              Alerts
+            </div>
             <div className="flex gap-1 items-center">
               <div className="text-[13px]">Marked as</div>
               <div className=" bg-[#E9E9E9] rounded-md py-1 px-2 text-[13px]">
-                Medium Severity
+                {riskCategory || "Select Severity"}
               </div>
             </div>
           </div>
