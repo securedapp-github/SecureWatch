@@ -6,8 +6,11 @@ import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function Monitor_create() {
-  // const { email, token } = location.state || "";
+  //  const { email, token } = location.state || "";
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
   const decoded = jwtDecode(token);
@@ -30,8 +33,8 @@ function Monitor_create() {
       user_id: parseInt(user_Id),
       network: parseInt(network),
       address: address,
-      // alert_type: 1,
-      // alert_data: contractName,
+      alert_type: 1,
+      alert_data: riskCategory,
       abi: abi,
     };
 
@@ -49,21 +52,30 @@ function Monitor_create() {
       console.log(" ABI  is:", abi);
       console.log(" user id is", user_Id);
 
-      navigate("/event", {
-        state: {
-          name: monitorName,
-          network: networkName,
-          address: address,
-          rk: riskCategory,
-          abi: abi,
-
-          m_id: response.data.m_id, // Assuming API returns an m_id
-          email: email, // Assuming you still need to pass the email
-          token: token,
+      toast.success("Monitor created successfully!", {
+        autoClose: 500,
+        onClose: () => {
+          navigate("/event", {
+            state: {
+              name: monitorName,
+              network: networkName,
+              address: address,
+              rk: riskCategory,
+              abi: abi,
+              m_id: response.data.id,
+              email: email,
+              token: token,
+            },
+          });
         },
       });
+
+      console.log("monnitor id is", response.data.id);
     } catch (error) {
       console.error("API request failed:", error); // Handle error
+      toast.error("Failed to create monitor. Please try again!", {
+        autoClose: 500,
+      });
     }
   };
 
@@ -72,6 +84,17 @@ function Monitor_create() {
       className="font-poppin pt-2 bg-white min-h-full2"
       style={{ backgroundColor: "#FCFFFD" }}
     >
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Navbar email={email} />
       <div className="w-5/6  lg:w-5/6 mx-auto mt-20 flex justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className="w-full md:w-1/4 ">

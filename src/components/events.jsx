@@ -9,6 +9,8 @@ import axios from "axios";
 import Web3 from "web3";
 // import Select from "react-select";
 import Select, { components } from "react-select";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 //
 
 function Events() {
@@ -23,8 +25,8 @@ function Events() {
   const [riskCategoryState, setRiskCategoryState] = useState(rk || "");
   const [abiState, setAbiState] = useState(abi || "");
 
-  console.log(token);
-  console.log(m_id);
+  // console.log(token);
+  // console.log(m_id);
   const mid = m_id;
 
   const [disp1, setDisp1] = useState("none");
@@ -127,7 +129,7 @@ function Events() {
       network: network,
       address: address,
       rk: rk,
-      m_id: m_id,
+      m_id: mid,
       email: email,
       token: token,
       selectedEventNames: Object.keys(selectedEvents), // Storing the names of selected events
@@ -183,7 +185,7 @@ function Events() {
 
         const body = {
           name: eventName,
-          mid: m_id,
+          mid: mid,
           signature: eventSignature,
           arguments: argsObject,
         };
@@ -198,10 +200,18 @@ function Events() {
           console.log("signature is:", eventSignature);
           console.log("network in event is", network);
           console.log("event is:", selectedEventNames);
+          console.log("monitor id is:", m_id);
+          console.log("event name is:", eventName);
           // Navigate to alerts with updated navigation state
-          navigate("/alerts", { state: navigationState });
+          toast.success("Event Added successfully!", {
+            autoClose: 500,
+            onClose: () => {
+              navigate("/alerts", { state: navigationState });
+            },
+          });
         } catch (error) {
           console.error("Error sending event data:", error);
+          toast.error("Failed to Add Event. Please try again!");
         }
       }
     );
@@ -211,6 +221,17 @@ function Events() {
       className="font-poppin pt-2 bg-white min-h-full"
       style={{ backgroundColor: "#FCFFFD" }}
     >
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Navbar email={email} />
       <div className="w-full  mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20">
         <div className="">
