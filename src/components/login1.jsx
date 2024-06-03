@@ -3,6 +3,7 @@ import axios from "axios";
 import c1 from "../images/backg.png";
 import c2 from "../images/ellipse.png";
 import { useNavigate, useLocation } from "react-router-dom";
+import { showErrorAlert,showSuccessAlert } from "./toastifyalert";
 
 function Login1() {
   const [loading, setLoading] = useState(false);
@@ -28,7 +29,8 @@ function Login1() {
       const u_name = formData.name;
       const u_password = formData.password;
       if (!email || email==="" ||  u_name === "" || u_password === "" || !u_name || !u_password) {
-        setErrorMessage("Enter the Email, userame and password");
+       // setErrorMessage("Enter the Email, userame and password");
+        showErrorAlert("Enter the Email, userame and password");
       } else {
         const response = await axios.post(
           "https://139-59-5-56.nip.io:3443/signup_securewatch",
@@ -43,12 +45,14 @@ function Login1() {
         const token = response.data.token;
         const monitor = response.data.monitors;
         let login = localStorage.setItem("login", true);
+        showSuccessAlert("You are signed up successfully.");
         navigate("/dashboard", { state: { email, monitor, token } });
       }
     } catch (error) {
       console.error("Error signing up:", error);
       setLoading(false);
-      setErrorMessage("Error signing up. Please try again.");
+      //setErrorMessage("Error signing up. Please try again.");
+      showErrorAlert("Error signing up. Please try again.");
     }
   };
 

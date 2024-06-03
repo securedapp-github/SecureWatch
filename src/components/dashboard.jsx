@@ -9,6 +9,7 @@ import Grid from '../images/grid.png'
 import Actions from '../images/Actions.png';
 import Code from '../images/code.png';
 
+
 function Dashboard() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -123,7 +124,7 @@ console.log(userEmail);
               <div className="flex mt-5">
                 <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6  text-black">04</span>
                 <span>
-                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />DEPLOYED CONTRACT</div>
+                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ACTIVE LISTENERS</div>
                  
                 </span>
                 <span className="cursor-pointer">
@@ -172,7 +173,7 @@ console.log(userEmail);
               <div className="flex mt-5">
                 <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6 text-black">00</span>
                 <span>
-                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />MANAGED CONTRACT</div>
+                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ACTIVE EVENTS</div>
                 </span>
                 <span className="cursor-pointer">
                   <svg
@@ -268,12 +269,12 @@ console.log(userEmail);
               className="min-w-64 lg:w-1/2 p-3 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
-              <div className="text-start flex items-center gap-3 "><img src={Grid} alt="" />Incident Response</div>
+              <div className="text-start flex items-center gap-3 "><img src={Grid} alt="" />Incident Reported</div>
               <div className="flex justify-between mt-5">
                 <div className="flex">
                   <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-10 text-black ">02</span>
                   <span>
-                    <div className="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-medium">CHECK <br />ACTIVE SCENARIOS</div>
+                    <div className="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-medium">CHECK <br />TOTAL SCENARIOS</div>
                   </span>
                 </div>
                 <span className="cursor-pointer">
@@ -318,17 +319,17 @@ console.log(userEmail);
               className="p-3 min-w-64 lg:w-1/2 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
-              <div className="text-start flex items-center gap-3"><img src={Actions} alt="" />Actions</div>
+              <div className="text-start flex items-center gap-3"><img src={Actions} alt="" />Actions (Coming Soon)</div>
               <div className="flex gap-6 flex-wrap mt-5">
 
                 <div className="flex">
-                  <span className=" sm:text-3xl md:text-4xl lg:text-5xl mr-2 text-black">02</span>
+                  <span className=" sm:text-3xl md:text-4xl lg:text-5xl mr-2 text-black">00</span>
                   <span>
                     <div className="text-black text-xs sm:text-sm font-medium">ACTIVE <br />ACTIONS</div>
                   </span>
                 </div>
                 <div className="flex">
-                  <span className=" sm:text-3xl md:text-4xl lg:text-5xl mr-2 text-black">02</span>
+                  <span className=" sm:text-3xl md:text-4xl lg:text-5xl mr-2 text-black">00</span>
                   <span>
                     <div className="text-black text-xs sm:text-sm font-medium">PENDING <br />TX PROPOSALS</div>
                   </span>
@@ -378,11 +379,11 @@ console.log(userEmail);
             className="font-inter p-3 rounded-md  mt-10  mx-auto"
             style={{ border: "1px solid #C9C9C9" }}
           >
-            <div className="text-start flex items-center gap-3"><img src={Code} alt="" />Code</div>
+            <div className="text-start flex items-center gap-3"><img src={Code} alt="" />Code (Coming Soon)</div>
 <div className="flex justify-between items-center mt-3">
             <div className=" flex gap-5 flex-col md:flex-row md:justify-center md:items-center md:flex-wrap">
               <div className="flex  mt-4 md:mt-0">
-                <span className="text-lg sm:text-2xl md:text-3xl  mr-2 my-auto font-semibold text-black">02</span>
+                <span className="text-lg sm:text-2xl md:text-3xl  mr-2 my-auto font-semibold text-black">00</span>
                 <div className="my-auto text-xs  font-medium text-black">SUCCESSFULL REPORT</div>
               </div>
               <div className="flex items-center gap-1 mt-4 md:mt-0">
