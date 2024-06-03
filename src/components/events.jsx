@@ -1,52 +1,31 @@
-import React, { useState } from "react";
-import axios from "axios";
 import Navbar from "./navbar2";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import * as React from "react";
+// import check from "../images/check-circle.png";
+// import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import Web3 from "web3";
+// import Select from "react-select";
+import Select, { components } from "react-select";
+//
+
 function Events() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { email, m_id, token } = location.state || "";
+  const location = useLocation();
+
+  const { name, email, m_id, token, network, abi, address, rk } =
+    location.state || "";
+  const [networkState, setNetworkState] = useState(network || ""); // Default to 'MAINNET' if not provided
+  //  const [contractNameState, setContractNameState] = useState(alert_data || "");
+  const [addressState, setAddressState] = useState(address || "");
+  const [riskCategoryState, setRiskCategoryState] = useState(rk || "");
+  const [abiState, setAbiState] = useState(abi || "");
+
   console.log(token);
   console.log(m_id);
   const mid = m_id;
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const approval = document.getElementById("val1").checked;
-      const transfer = document.getElementById("val2").checked;
-      const values = {
-        approval: approval ? "approval" : "",
-        transfer: transfer ? "transfer" : "",
-      };
-
-      const name = "a";
-      const risk_level = "high";
-      // Create an object to store the input values
-      const formData = {
-        mid,
-        name,
-        risk_level,
-        values,
-      };
-
-      const response = await axios.post(
-        "http://localhost:4000/api/events",
-        formData
-      );
-      console.log(response.data);
-
-      navigate("/function", { state: { email, m_id, token } });
-    } catch (error) {
-      console.error("Error:", error.response.data);
-    }
-  };
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector("form");
-    form.addEventListener("submit", handleSubmit);
-  });
 
   const [disp1, setDisp1] = useState("none");
   const [disp2, setDisp2] = useState("none");
@@ -58,13 +37,182 @@ function Events() {
     if (e.target.checked) setDisp2("block");
     else setDisp2("none");
   };
+
+  const [eventDetails, setEventDetails] = React.useState([]);
+  const [selectedEvents, setSelectedEvents] = React.useState({});
+  const [selectedEventNames, setSelectedEventNames] = useState([]);
+  React.useEffect(() => {
+    if (!location.state || !location.state.abi) {
+      console.error("ABI is not provided");
+      return;
+    }
+
+    let parsedAbi;
+    try {
+      parsedAbi = JSON.parse(location.state.abi);
+    } catch (error) {
+      console.error("Failed to parse ABI:", error);
+      return;
+    }
+
+    const events = parsedAbi.filter((item) => item.type === "event");
+    setEventDetails(
+      events.map((event) => ({
+        name: event.name,
+        inputs: event.inputs
+          .map((input) => `${input.name}: ${input.type}`)
+          .join(", "),
+      }))
+    );
+  }, [
+    location.state,
+    networkState,
+    // contractNameState,
+    addressState,
+    riskCategoryState,
+    abiState,
+  ]);
+
+  const options = eventDetails.map((event) => ({
+    label: `${event.name} (${event.inputs})`,
+    value: event.name,
+  }));
+
+  // Handle event selection and prompt for arguments
+  const handleEventSelection = (selectedOptions) => {
+    setSelectedEventNames(selectedOptions.map((option) => option.label));
+
+    const newSelection = selectedOptions.reduce(
+      (acc, option) => ({
+        ...acc,
+        [option.value]: {
+          args: "",
+          argDetails: eventDetails
+            .find((event) => event.name === option.value)
+            .inputs.split(", ")
+            .map((arg) => {
+              const [name, type] = arg.split(": ");
+              return name; // Store only argument names
+            })
+            .join(", "), // Join names with commas for the placeholder
+        },
+      }),
+      {}
+    );
+
+    setSelectedEvents(newSelection);
+  };
+
+  const handleArgumentChange = (event, eventName) => {
+    const value = event.target.value;
+    setSelectedEvents((prevEvents) => ({
+      ...prevEvents,
+      [eventName]: {
+        ...prevEvents[eventName],
+        args: value,
+      },
+    }));
+  };
+
+  const web3 = new Web3();
+
+  const handleSaveMonitor = async () => {
+    if (!Array.isArray(eventDetails)) {
+      console.error("eventDetails is not an array:", eventDetails);
+      return; // Exit if eventDetails is not an array
+    }
+
+    let navigationState = {
+      monitorName: name,
+      network: network,
+      address: address,
+      rk: rk,
+      m_id: m_id,
+      email: email,
+      token: token,
+      selectedEventNames: Object.keys(selectedEvents), // Storing the names of selected events
+    };
+
+    Object.entries(selectedEvents).forEach(
+      async ([eventName, eventDetailsEntry]) => {
+        const argsObject = eventDetailsEntry.args
+          .split(",")
+          .reduce((acc, arg, index) => {
+            acc[`arg${index + 1}`] = arg.trim(); // Creates a dynamic key for each argument
+            return acc;
+          }, {});
+
+        const event = eventDetails.find((e) => e.name === eventName);
+        if (!event) {
+          console.error("Event not found in eventDetails:", eventName);
+          return; // Exit if the event is not found
+        }
+
+        // Check if 'inputs' is available and correctly formatted
+        if (!event.inputs || typeof event.inputs !== "string") {
+          console.error(
+            "Event inputs are not correctly formatted:",
+            event.inputs
+          );
+          return;
+        }
+
+        const eventSignatureInputs = event.inputs
+          .split(", ")
+          .map((input) => {
+            const [name, type] = input.split(": ");
+            return type;
+          })
+          .join(",");
+
+        // The correct format for encodeEventSignature: "EventName(type1,type2,...)"
+        const eventSignatureData = `${event.name}(${eventSignatureInputs})`;
+        let eventSignature;
+        try {
+          eventSignature =
+            web3.eth.abi.encodeEventSignature(eventSignatureData);
+        } catch (error) {
+          console.error(
+            "Failed to encode event signature:",
+            error,
+            "with data:",
+            eventSignatureData
+          );
+          return;
+        }
+
+        const body = {
+          name: eventName,
+          mid: m_id,
+          signature: eventSignature,
+          arguments: argsObject,
+        };
+
+        try {
+          const response = await axios.post(
+            "https://139-59-5-56.nip.io:3443/add_event",
+            body
+          );
+          console.log("Event added:", response.data);
+          console.log("Arguments Object:", argsObject);
+          console.log("signature is:", eventSignature);
+          console.log("network in event is", network);
+          console.log("event is:", selectedEventNames);
+          // Navigate to alerts with updated navigation state
+          navigate("/alerts", { state: navigationState });
+        } catch (error) {
+          console.error("Error sending event data:", error);
+        }
+      }
+    );
+  };
   return (
     <div
-      className="font-poppin mt-10 mx-2"
+      className="font-poppin pt-2 bg-white min-h-full"
       style={{ backgroundColor: "#FCFFFD" }}
     >
       <Navbar email={email} />
-      <div className="w-full mx-auto mt-10 md:mt-20 flex items-center justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
+      <div className="w-full  mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20">
         <div className="">
           <div className="flex">
             <div>
@@ -103,11 +251,16 @@ function Events() {
                 </defs>
               </svg>
             </div>
-            <div className="text-base text-[#7D7D7D] my-auto">
+            <div
+              className="text-base text-[#7D7D7D] my-auto"
+              style={{ color: "black" }}
+            >
               Back to Monitors
             </div>
           </div>
-          <div className="text-3xl font-medium mt-3">Create Monitor</div>
+          <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
+            Create Monitor
+          </div>
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
@@ -143,7 +296,9 @@ function Events() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">General Information</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              General Information
+            </div>
             <div className="my-auto ml-auto">
               <svg
                 width="27"
@@ -197,7 +352,9 @@ function Events() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">Events</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              Events
+            </div>
             <div className="my-auto ml-auto">
               <svg
                 width="27"
@@ -263,7 +420,9 @@ function Events() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">Functions</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              Functions
+            </div>
             <div className="ml-auto my-auto">
               <svg
                 width="27"
@@ -320,7 +479,9 @@ function Events() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">Alerts</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              Alerts
+            </div>
             <div className="my-auto ml-auto">
               <svg
                 width="27"
@@ -340,103 +501,131 @@ function Events() {
             </div>
           </div>
         </div>
-        <form onSubmit={handleSubmit}>
-          <div className="mt-5 md:mt-0">
-            <div className="font-medium text-lg">Enter the Signature Name</div>
-            <div className="w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
-              <div className="text-[15px] text-[#8E8E8E]">
-                Type the signature name or select from the dropdown
-              </div>
-              <div>
-                <svg
-                  width="21"
-                  height="22"
-                  viewBox="0 0 21 22"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
-                    stroke="black"
-                    stroke-width="1.69021"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </div>
-            </div>
-            <div className="rounded-lg border-2 border-[#B4B4B4] border-t-0 shadow-md">
-              <div className="p-3">
-                <input
-                  type="checkbox"
-                  id="val1"
-                  value="val1"
-                  className="checked:bg-green-600 mr-2"
-                  onChange={handleToggle1}
-                />
-                <label htmlFor="opt1">
-                  Approval (address, address, uint256)
-                </label>
-              </div>
-              <div className="p-3">
-                <input
-                  type="checkbox"
-                  id="val2"
-                  value="val1"
-                  className="checked:bg-green-600 mr-2"
-                  onChange={handleToggle2}
-                />
-                <label htmlFor="opt1">
-                  Transfer (address, address, uint256)
-                </label>
-              </div>
-            </div>
-            <div className="mt-5" style={{ display: disp1 }}>
-              <div className="font-medium">
-                Approval (address, address, uint256)
-              </div>
-              <input
-                type="text"
-                className="w-full p-3 rounded-lg outline-none border border-[#4C4C4C]"
-                placeholder="Variables: owner, spender, value"
-              />
-            </div>
-            <div className="mt-5" style={{ display: disp2 }}>
-              <div className="font-medium">
-                Approval (address, address, uint256)
-              </div>
-              <input
-                type="text"
-                className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
-                placeholder="Variables: owner, spender, value"
-              />
-            </div>
-            <button className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white">
-              continue
-            </button>
+
+        <div className="w-full md:w-1/3 lg:w-1/4 mt-5 md:mt-0 ">
+          <div className="font-medium text-lg" style={{ color: "black" }}>
+            Enter the Signature Name
           </div>
-        </form>
+          <div className="my-auto ml-auto">
+            {/* w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3 */}
+            <div className="font-medium text-lg"></div>
+            <div>
+              <Select
+                options={options}
+                isMulti
+                closeMenuOnSelect={false}
+                components={{ Option: components.Option }}
+                onChange={handleEventSelection}
+                className=""
+                classNamePrefix="select"
+                placeholder="Search and select events..."
+                noOptionsMessage={() => "No events found"}
+                value={selectedEventNames.map((name) =>
+                  options.find((option) => option.label === name)
+                )} // Set value to reflect current selections
+              />
+            </div>
+          </div>
+          {/* <div className="rounded-lg border-2 border-[#B4B4B4] border-t-0 shadow-md">
+            <div className="p-3">
+              <input
+                type="checkbox"
+                id="val1"
+                value="val1"
+                className="checked:bg-green-600 mr-2"
+                onChange={handleToggle1}
+              />
+              <label htmlFor="opt1">Approval (address, address, uint256)</label>
+            </div>
+            <div className="p-3">
+              <input
+                type="checkbox"
+                id="val2"
+                value="val1"
+                className="checked:bg-green-600 mr-2"
+                onChange={handleToggle2}
+              />
+              <label htmlFor="opt1">Transfer (address, address, uint256)</label>
+            </div>
+          </div>
+          <div className="mt-5" style={{ display: disp1 }}>
+            <div className="font-medium">
+              Approval (address, address, uint256)
+            </div>
+            <input
+              type="text"
+              className="w-full p-3 rounded-lg outline-none border border-[#4C4C4C]"
+              placeholder="Variables: owner, spender, value"
+            />
+          </div>
+          <div className="mt-5" style={{ display: disp2 }}>
+            <div className="font-medium">
+              Approval (address, address, uint256)
+            </div>
+            <input
+              type="text"
+              className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
+              placeholder="Variables: owner, spender, value"
+            />
+          </div> */}
+          <div className="mt-5">
+            {Object.entries(selectedEvents).map(([eventName, eventData]) => (
+              <div key={eventName} className="font-medium">
+                <div className="div-51">{eventName}</div>
+                <input
+                  className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
+                  style={{ backgroundColor: "white" }}
+                  type="text"
+                  value={eventData.args}
+                  onChange={(e) => handleArgumentChange(e, eventName)}
+                  placeholder={` ${eventData.argDetails} `}
+                />
+              </div>
+            ))}
+          </div>
+          <button
+            className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white"
+            onClick={handleSaveMonitor}
+          >
+            Save Monitor
+          </button>
+        </div>
+
         <div className="mt-4 md:mt-0 border border-[#0CA851] shadow-md p-5 rounded-xl">
-          <div className="text-lg font-medium">Monitor Summary</div>
+          <div className="text-lg font-medium" style={{ color: "black" }}>
+            Monitor Summary
+          </div>
           <div className="flex gap-2">
             <div>
-              <div className="text-center font-medium">Networks</div>
+              <div
+                className="text-center font-medium"
+                style={{ color: "black" }}
+              >
+                Networks
+              </div>
               <div className="text-white bg-[#0CA851] rounded-md p-2 text-[13px]">
-                MAINNET
+                {networkState}
               </div>
             </div>
             <div>
-              <div className="text-center font-medium">Risk Category</div>
+              <div
+                className="text-center font-medium"
+                style={{ color: "black" }}
+              >
+                Risk Category
+              </div>
               <div className=" bg-[#E9E9E9] rounded-md p-2 text-[13px]">
-                Medium Severity
+                {rk}
               </div>
             </div>
           </div>
           <div className="mt-3">
-            <div className="font-medium">Contracts</div>
+            <div className="font-medium" style={{ color: "black" }}>
+              Contracts
+            </div>
             <div className="flex gap-1">
               <div className=" bg-[#E9E9E9] rounded-md p-2 text-[13px]">
-                0x1d54....49844
+                {addressState}
               </div>
               <div className="my-auto">
                 <svg
@@ -477,12 +666,27 @@ function Events() {
             </div>
           </div>
           <div className="mt-3">
-            <div className="font-medium">Event Conditions</div>
-            <div className="text-[13px]">Approval(address,address,uint256)</div>
-            <div className="text-[13px]">Transfer(address,address,uint256)</div>
+            <div className="font-medium" style={{ color: "black" }}>
+              Event Conditions
+            </div>
+            {Object.keys(selectedEvents).length > 0 ? (
+              <ul>
+                {Object.entries(selectedEvents).map(
+                  ([eventName, eventData]) => (
+                    <li key={eventName} className="text-[13px]">
+                      {eventName}: {}
+                    </li>
+                  )
+                )}
+              </ul>
+            ) : (
+              <div className="text-[13px]">No events selected</div>
+            )}
           </div>
           <div className="mt-3">
-            <div className="font-medium">Function Conditions</div>
+            <div className="font-medium" style={{ color: "black" }}>
+              Function Conditions
+            </div>
             <div
               className="text-[13px]"
               style={{ display: `${disp1 == "none" ? "block" : "none"}` }}
@@ -500,9 +704,13 @@ function Events() {
             </div>
           </div>
           <div className="mt-3">
-            <div className="font-medium">Alerts</div>
+            <div className="font-medium" style={{ color: "black" }}>
+              Alerts
+            </div>
             <div className="flex gap-1 items-center">
-              <div className="text-[13px]">Marked as</div>
+              <div className="text-[13px]" style={{ color: "black" }}>
+                Marked as
+              </div>
               <div className=" bg-[#E9E9E9] rounded-md py-1 px-2 text-[13px]">
                 Medium Severity
               </div>

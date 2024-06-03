@@ -7,47 +7,69 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 function Monitor_create() {
-  const navigate = useNavigate();
-  const location = useLocation();
   // const { email, token } = location.state || "";
   const token = localStorage.getItem("token");
-  const email = localStorage.getItem("email")
+  const email = localStorage.getItem("email");
   const decoded = jwtDecode(token);
   const user_Id = decoded.userId;
-  const [formData, setFormData] = useState({
-    user_id: user_Id,
-    name: "",
-    category: "",
-    network: "",
-    address: "",
-    abi: "",
-  });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const navigate = useNavigate();
+  const [monitorName, setMonitorName] = React.useState("");
+  const [riskCategory, setRiskCategory] = React.useState("");
+  const [address, setAddress] = React.useState("");
+  const [contractName, setContractName] = React.useState("");
+  const [network, setNetwork] = React.useState("");
+  const [networkName, setNetworkName] = useState("");
+  const [abi, setAbi] = React.useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const data = {
+      name: monitorName,
+      user_id: parseInt(user_Id),
+      network: parseInt(network),
+      address: address,
+      // alert_type: 1,
+      // alert_data: contractName,
+      abi: abi,
+    };
+
     try {
       const response = await axios.post(
         "https://139-59-5-56.nip.io:3443/add_monitor",
-        formData
+        data
       );
-      console.log(response.data); // Log the response from the API
-      const m_id = response.data.m_id;
+      console.log("API response:", response.data);
+      console.log("monitor name is", monitorName);
+      console.log("Risk category is:", riskCategory);
+      console.log("contract name is", contractName);
+      console.log("netwprk name is", network);
+      console.log(" address is:", address);
+      console.log(" ABI  is:", abi);
+      console.log(" user id is", user_Id);
 
-      navigate("/event", { state: { email, m_id, token } });
-      // Optionally, you can show a success message to the user
+      navigate("/event", {
+        state: {
+          name: monitorName,
+          network: networkName,
+          address: address,
+          rk: riskCategory,
+          abi: abi,
+
+          m_id: response.data.m_id, // Assuming API returns an m_id
+          email: email, // Assuming you still need to pass the email
+          token: token,
+        },
+      });
     } catch (error) {
-      console.error("Error:", error.response.data);
-      // Optionally, you can show an error message to the user
+      console.error("API request failed:", error); // Handle error
     }
   };
 
   return (
     <div
-      className="font-poppin mt-10 mx-2"
+      className="font-poppin pt-2 bg-white min-h-full2"
       style={{ backgroundColor: "#FCFFFD" }}
     >
       <Navbar email={email} />
@@ -90,11 +112,16 @@ function Monitor_create() {
                 </defs>
               </svg>
             </div>
-            <div className="text-base text-[#7D7D7D] my-auto">
+            <div
+              className="text-base text-[#7D7D7D] my-auto"
+              style={{ color: "black" }}
+            >
               Back to Monitors
             </div>
           </div>
-          <div className="text-3xl font-medium mt-3">Create Monitor</div>
+          <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
+            Create Monitor
+          </div>
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #0CA851" }}
@@ -130,7 +157,9 @@ function Monitor_create() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">General Information</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              General Information
+            </div>
             <div className="my-auto ml-auto">
               <svg
                 width="27"
@@ -193,7 +222,10 @@ function Monitor_create() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">Events</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              {" "}
+              Events
+            </div>
             <div className="my-auto ml-auto">
               <svg
                 width="27"
@@ -247,7 +279,9 @@ function Monitor_create() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">Functions</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              Functions
+            </div>
             <div className="ml-auto my-auto">
               <svg
                 width="27"
@@ -301,7 +335,9 @@ function Monitor_create() {
                 </defs>
               </svg>
             </div>
-            <div className="my-auto">Alerts</div>
+            <div className="my-auto" style={{ color: "black" }}>
+              Alerts
+            </div>
             <div className="my-auto ml-auto">
               <svg
                 width="27"
@@ -323,25 +359,37 @@ function Monitor_create() {
         </div>
         <div className="mt-4 md:mt-0 w-full md:w-1/2 pb-20">
           <form onSubmit={handleSubmit}>
-            <div className="font-medium text-xl">Name</div>
-            <div className="text-lg text-[#989898] mt-1">
+            <div className="font-medium text-xl" style={{ color: "black" }}>
+              Name
+            </div>
+            <div
+              className="text-lg text-[#989898] mt-1"
+              style={{ color: "black" }}
+            >
               Give your monitor a name to make it easier to identify it. Only
               for display purposes.
             </div>
             <input
+              style={{ backgroundColor: "white" }}
               type="text"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="outline-none border-2 border-[#4C4C4C] w-full rounded-xl p-2 py-3 mt-1"
+              onChange={(e) => setMonitorName(e.target.value)}
+              className="outline-none border-2 border-[#4C4C4C] w-full rounded-xl p-2 py-3 mt-1 "
             />
-            <div className="font-medium mt-5 text-lg">Risk Category</div>
+            <div
+              className="font-medium mt-5 text-lg"
+              style={{ color: "black" }}
+            >
+              Risk Category
+            </div>
             <select
+              style={{ backgroundColor: "white" }}
               name="category"
               id="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="outline-none border-2 border-[#4C4C4C] py-3 rounded-xl  w-full px-3"
+              // value={formData.category}
+
+              onChange={(e) => setRiskCategory(e.target.value)}
+              className="outline-none border-2 border-[] py-3 rounded-xl  w-full px-3"
             >
               <option
                 value="none"
@@ -377,46 +425,99 @@ function Monitor_create() {
                 Technical
               </option>
             </select>
-            <div className="font-medium mt-5 text-lg">Add Address</div>
-            <div className="text-lg text-[#989898] mt-1">
-              Add an address to your address book. If the address is a contract,
-              the ABI and NatSpec will be automatically detected.
+
+            <div
+              className="text-lg font-medium mt-5"
+              style={{ color: "black" }}
+            >
+              Contract Name
             </div>
-            <div className="text-lg font-medium mt-5">Name</div>
             <input
+              style={{ backgroundColor: "white" }}
               type="text"
               placeholder="Enter text"
-              className="py-3 w-full rounded-xl px-3 outline-none border-2 boder-[#4C4C4C]"
+              onChange={(e) => setContractName(e.target.value)}
+              className="outline-none border-2 border-[] py-3 rounded-xl  w-full px-"
             />
-            <div className="text-lg font-medium mt-5">Network</div>
+            {/* #4C4C4C */}
+            <div
+              className="text-lg font-medium mt-5"
+              style={{ color: "black" }}
+            >
+              Network
+            </div>
+            <select
+              style={{ backgroundColor: "white" }}
+              name="category"
+              id="category"
+              // value={formData.category}
+
+              onChange={(e) => {
+                const selectedIndex = e.target.options.selectedIndex;
+                setNetwork(e.target.value);
+                setNetworkName(e.target.options[selectedIndex].text);
+              }}
+              className="outline-none border-2 border-[] py-3 rounded-xl  w-full px-3"
+            >
+              <option
+                value="none"
+                selected
+                disabled
+                hidden
+                className="text-xl font-medium"
+              >
+                None
+              </option>
+              <option value="1" className="text-[13px] text-[#959595] ">
+                Ethereum Mainnet
+              </option>
+              <option value="11155111" className="text-[13px] text-[#959595]">
+                Sepolia Testnet
+              </option>
+              <option value="137" className="text-[13px] text-[#959595]">
+                Polygon Mainnet
+              </option>
+              <option value="80002" className="text-[13px] text-[#959595]">
+                Amoy
+              </option>
+            </select>
+            <div
+              className="text-lg font-medium mt-5 "
+              style={{ color: "black" }}
+            >
+              Address
+            </div>
             <input
               type="text"
-              name="network"
-              value={formData.network}
-              onChange={handleChange}
-              className="py-3 w-full rounded-xl px-3 outline-none border-2 boder-[#4C4C4C]"
-            />
-            <div className="text-lg font-medium mt-5">Address</div>
-            <input
-              type="text"
+              style={{ backgroundColor: "white" }}
               name="address"
-              value={formData.address}
-              onChange={handleChange}
+              value={address} // Bind input to state
+              onChange={(e) => setAddress(e.target.value)}
               placeholder="Enter address (0x.......)"
-              className="py-3 w-full rounded-xl px-3 outline-none border-2 boder-[#4C4C4C]"
+              className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
             />
-            <div className="text-lg font-medium mt-5">ABI</div>
-            <div className="text-lg text-[#989898] mt-1">
+            <div
+              className="text-lg font-medium mt-5"
+              style={{ color: "black" }}
+            >
+              ABI
+            </div>
+            <div
+              className="text-lg text-[#989898] mt-1 "
+              style={{ color: "black" }}
+            >
               Paste your Contract's ABI code here
             </div>
             <textarea
+              style={{ backgroundColor: "white" }}
               name="abi"
               id=""
               cols="30"
               rows="10"
-              value={formData.abi}
-              onChange={handleChange}
-              className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
+              // value={formData.abi}
+              value={abi} // Bind textarea to state
+              onChange={(e) => setAbi(e.target.value)}
+              className="w-full mt-1 outline-none rounded-xl border-2 border-[]"
             ></textarea>
             <div className="text-center">
               <button
