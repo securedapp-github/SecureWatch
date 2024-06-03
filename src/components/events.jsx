@@ -132,19 +132,42 @@ function Events() {
       m_id: mid,
       email: email,
       token: token,
-      selectedEventNames: Object.keys(selectedEvents), // Storing the names of selected events
+      selectedEventNames: Object.entries(selectedEvents).map(
+        ([eventName, eventData]) => {
+          const argTypes = eventDetails
+            .find((e) => e.name === eventName)
+            .inputs.split(", ")
+            .map((arg) => arg.split(": ")[1]) // Extract only the types
+            .join(", "); // Join types with commas
+          return {
+            name: eventName,
+            argTypes: argTypes,
+          };
+        }
+      ), // Storing the names of selected events
     };
 
     Object.entries(selectedEvents).forEach(
       async ([eventName, eventDetailsEntry]) => {
-        const argsObject = eventDetailsEntry.args
+        const argsArray = eventDetailsEntry.args
           .split(",")
-          .reduce((acc, arg, index) => {
-            acc[`arg${index + 1}`] = arg.trim(); // Creates a dynamic key for each argument
-            return acc;
-          }, {});
+          .map((arg) => arg.trim());
 
         const event = eventDetails.find((e) => e.name === eventName);
+        if (!event) return;
+
+        const argDetails = event.inputs.split(", ").map((arg) => {
+          const [name, type] = arg.split(": ");
+          return name;
+        });
+
+        const argsObject = argsArray.reduce((acc, arg, index) => {
+          const argName = argDetails[index]; // Get the actual argument name
+          acc[argName] = arg;
+          return acc;
+        }, {});
+
+        // const event = eventDetails.find((e) => e.name === eventName);
         if (!event) {
           console.error("Event not found in eventDetails:", eventName);
           return; // Exit if the event is not found
@@ -693,11 +716,19 @@ function Events() {
             {Object.keys(selectedEvents).length > 0 ? (
               <ul>
                 {Object.entries(selectedEvents).map(
-                  ([eventName, eventData]) => (
-                    <li key={eventName} className="text-[13px]">
-                      {eventName}: {}
-                    </li>
-                  )
+                  ([eventName, eventData]) => {
+                    const argTypes = eventDetails
+                      .find((e) => e.name === eventName)
+                      .inputs.split(", ")
+                      .map((arg) => arg.split(": ")[1]) // Extract only the types
+                      .join(", "); // Join types with commas
+
+                    return (
+                      <li key={eventName} className="text-[13px]">
+                        {eventName} ({argTypes})
+                      </li>
+                    );
+                  }
                 )}
               </ul>
             ) : (

@@ -51,11 +51,12 @@ function Alerts() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const emails = emailInput.split(",").map((email) => email.trim()); // Process email input for sending
+    const emails = emailInput.split(",").map((email) => email.trim());
+    const emailString = emails.join(",");
     const postData = {
       monitor_id: m_id,
       name: name,
-      alert_data: emails,
+      alert_data: emailString,
       alert_type: "1",
       status: 2,
     };
@@ -695,11 +696,14 @@ function Alerts() {
               Event Conditions
             </div>
             {selectedEventNames && selectedEventNames.length > 0 ? (
-              selectedEventNames.map((eventName) => (
-                <div key={eventName} className="text-[13px]">
-                  {eventName}
-                </div>
-              ))
+              <ul>
+                {selectedEventNames.map((event, index) => (
+                  <li key={index} className="text-[13px]">
+                    {/* Access event name and argTypes from the array */}
+                    {event.name} ({event.argTypes})
+                  </li>
+                ))}
+              </ul>
             ) : (
               <div className="text-[13px]">No events selected</div>
             )}
