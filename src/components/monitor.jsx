@@ -78,7 +78,7 @@ const Monitor = () => {
             </button>
           </div>
         </div>
-        <div
+        {/* <div
           className="flex mt-10 justify-between w-3/5 py-3 px-5 rounded-2xl mx-auto md:mx-0"
           style={{ border: "1px solid #7D7D7D" }}
         >
@@ -113,7 +113,7 @@ const Monitor = () => {
               />
             </svg>
           </div>
-        </div>
+        </div> */}
 
         
         
