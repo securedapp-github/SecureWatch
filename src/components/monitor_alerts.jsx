@@ -30,7 +30,7 @@ function Monitor_alerts() {
     return (
       <div className="pt-10 bg-white">
         <Navbar email={email} />
-        <div className="text-xl lg:text-3xl font-medium text-black text-center  mt-20"> You have no monitor alerts</div> 
+        <div className="text-xl lg:text-3xl font-medium text-black text-center  mt-20">You don't have any monitor alerts.</div> 
       </div>
     );
   }
