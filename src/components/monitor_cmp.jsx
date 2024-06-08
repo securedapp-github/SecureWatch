@@ -2,6 +2,7 @@ import Modal from "react-modal";
 import React, { useState,useEffect } from "react";
 import { Switch } from "@headlessui/react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Edit from '../images/edit.png';
 
 const customStyles = {
   content: {
@@ -74,21 +75,25 @@ const Monitor_cmp = (props) => {
         const network = i.network;
         const status = i.status;
         const mid =i.mid;
+        const created_on = i.created_on;
+        const address = i.address;
         return (
-          <div className="w-full flex justify-center items-center flex-col mx-auto">
+          <div className="w-full flex justify-center items-center flex-col mx-auto ">
             <div className="w-full mx-auto flex justify-center items-center flex-col ">
-              <button className="w-full mx-auto flex justify-center items-center flex-col"
-              onClick={()=>{
-                navigate("/monitor_alerts", { state: { mid } });
-                }}>
+              
               <div
-                className="mt-10 w-[95%] lg:w-4/5 p-6 flex justify-between flex-col md:flex-row rounded-2xl "
+                className="mt-10 w-[95%] lg:w-4/5  flex flex-wrap   rounded-2xl "
                 style={{
                   border: "1px solid #0CA851",
                   boxShadow: "4px 4px 0px 0px #0CA851",
                 }}
               >
-                <div>
+
+<button className="w-[70%] sm:w-[80%] md:w-[90%]  p-6  "
+              onClick={()=>{
+                navigate("/monitor_alerts", { state: { mid } });
+                }}>
+                <div className="">
                   <div className="flex gap-3">
                     <div className="text-xl font-semibold text-black">{name}</div>
                     <div className="text-[12px] mt-auto text-[#7D7D7D]">
@@ -103,9 +108,9 @@ const Monitor_cmp = (props) => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-center font-medium text-black">Monitoring</div>
+                      <div className="text-center font-medium text-black">Created on</div>
                       <div className="bg-[#E9E9E9] px-3 py-2 rounded-md  my-auto flex gap-2">
-                        <div>
+                        {/* <div>
                           <svg
                             width="22"
                             height="22"
@@ -122,29 +127,32 @@ const Monitor_cmp = (props) => {
                               fill="#0CA851"
                             />
                           </svg>
-                        </div>
-                        <div className="my-auto text-[14px] text-black">{name}</div>
+                        </div> */}
+                        <div className="my-auto text-[14px] text-black"><span className="text-md font-medium text-black">Date: </span>{created_on.slice(0,10)} <span><span className="text-md font-medium text-black">Time: </span>{created_on.slice(11,16)}</span> </div>
                       </div>
                     </div>
                     <div>
-                      <div className="text-center font-medium text-black">Conditions</div>
-                      <div className=" px-3 py-2 rounded-md text-[14px] my-auto text-black">
-                        2 events and 3 functions
+                      <div className="text-center font-medium text-black">Contract address</div>
+                      <div className=" px-3 py-2 rounded-md text-[14px] my-auto text-black bg-[#E9E9E9] ">
+                       {`${address.slice(0, 5)}...${address.slice(address.length - 4)}`}
                       </div>
                     </div>
                     <div>
-                      <div className="text-center font-medium text-black">
+                      {/* <div className="text-center font-medium text-black">
                         Alerts Severity
                       </div>
                       <div className="bg-[#E9E9E9] px-3 py-2 rounded-md text-[14px] my-auto text-black">
                         Medium Severity
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
+
+                </button>
                 
-                <div className="flex   items-center">
-                  <div className="flex justify-end gap-3 items-center">
+                <div className="flex   items-center p-6 w-[30%] sm:w-[20%] md:w-[10%] ">
+                  <div className="flex flex-col justify-end gap-7 items-center">
+                  <button><img src={Edit} alt="" className="h-8 w-8" /></button>
                     <Switch
                       checked={status === 1 ? true : false}
                       onChange={() => {
@@ -185,6 +193,7 @@ const Monitor_cmp = (props) => {
                         } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                       />
                     </Switch>
+                    
                     {/* <div
                       className="cursor-pointer"
                       onClick={() => {
@@ -232,9 +241,10 @@ const Monitor_cmp = (props) => {
                 </div>
 
               </div>
-              </button>
+              
 
             </div>
+
             {/* <Modal
               isOpen={open}
               onRequestClose={closeModal}

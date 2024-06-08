@@ -375,7 +375,7 @@ console.log(userEmail);
 
             </div>
           </div>
-          {/* <div
+          <div
             className="font-inter p-3 rounded-md  mt-10  mx-auto"
             style={{ border: "1px solid #C9C9C9" }}
           >
@@ -426,7 +426,7 @@ console.log(userEmail);
                 </svg>
               </span>
               </div>
-          </div> */}
+          </div> 
         </div>
       </div>
    

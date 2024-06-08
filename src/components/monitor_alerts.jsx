@@ -25,6 +25,7 @@ function Monitor_alerts() {
       setAlert(data);
     };
     fetchAlert();
+    console.log("alert",alert);
   }, []);
   if (!alert.alerts||alert.alerts.length===0  ||  alert===undefined){
     return (
@@ -48,78 +49,65 @@ function Monitor_alerts() {
         const created_on= alert.created_on;
         const from_address = alert.from_address;
         const to_address = alert.to_address;
+        const eid = alert.eid;
         return (
           <div className="">
-            <div className="w-[95%] lg:w-4/6 mx-auto ">
+            <div className="w-[95%] lg:w-4/6 mx-auto  flex flex-col mb-14 mt-10">
+
+            <div className="w-full flex gap-4 flex-wrap">
+
+            <div className="text-xl font-semibold text-gray-500 bg-[#E9E9E9] px-3 py-2 rounded-xl border-2 border-gray-300">
+                     Hash : <span className="text-lg  text-black ">{`${hash.slice(0, 5)}...${hash.slice(hash.length - 4)}`}</span>
+                    </div>
+
+                    <div className="flex gap-2 items-center text-gray-500 bg-[#E9E9E9] px-3 py-2 rounded-xl border-2 border-gray-300">
+                      <div className=" text-xl font-semibold text-gray-500">Created on:</div>
+                        <div className="my-auto text-md font-medium text-black">{created_on.slice(0,10)} {created_on.slice(11,16)}
+                      </div>
+                    </div>
+
+                    <div className="text-xl font-semibold text-gray-500  bg-[#E9E9E9] px-3 py-2 rounded-xl border-2 border-gray-300">From: <span className="text-lg mt-auto text-black">{`${from_address.slice(0, 5)}...${from_address.slice(from_address.length - 4)}`}</span> </div>
+
+
+<div className="text-xl font-semibold  text-gray-500 bg-[#E9E9E9] px-3 py-2 rounded-xl border-2 border-gray-300">To: <span className="text-lg mt-auto text-black">{`${to_address.slice(0, 5)}...${to_address.slice(to_address.length - 4)}`}</span></div>
+
+
+            </div>
+
               <div
-                className="mt-10 p-6 flex justify-between flex-col md:flex-row rounded-2xl"
-                style={{
-                  border: "1px solid #0CA851",
-                  boxShadow: "4px 4px 0px 0px #0CA851",
-                }}
+                className="mt-6 p-6 flex justify-between flex-col md:flex-row rounded-2xl border-2 border-gray-300 bg-neutral-100"
+                // style={{
+                //   border: "1px solid #0CA851",
+                //   boxShadow: "4px 4px 0px 0px #0CA851",
+                // }}
               >
                 <div>
                   <div className="flex gap-3 flex-col">
                     {/* <div className="text-xl font-semibold text-black">Monitor id: {id}</div> */}
 
 <div className="flex gap-6 items-center flex-wrap">
-                    <div className="text-xl font-semibold text-black">
-                     Transaction Hash : <span className="text-lg  text-[#7D7D7D]">{`${hash.slice(0, 5)}...${hash.slice(hash.length - 4)}`}</span>
-                    </div>
+                    
 
-                    <div className="flex gap-4 items-center">
-                      <div className=" text-xl font-semibold text-black">Created on:</div>
-                      <div className="bg-[#E9E9E9] px-3 py-2 rounded-md  my-auto flex gap-2">
-                        <div>
-                          <svg
-                            width="22"
-                            height="22"
-                            viewBox="0 0 22 22"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <rect
-                              x="0.759766"
-                              y="0.909415"
-                              width="20.4938"
-                              height="20.4938"
-                              rx="4.55417"
-                              fill="#0CA851"
-                            />
-                          </svg>
-                        </div>
-                        <div className="my-auto text-[14px] text-black">{created_on}</div>
-                      </div>
-                    </div>
+                    
                     </div>
 
                   </div>
 
                   <div className="flex gap-1 flex-col ">
-                      <div className=" text-xl font-semibold text-black">Arguemant:</div>
+                      <div className=" text-xl font-semibold text-gray-500">Event: {eid}</div>
 
-                      <div className="ml-1 md:ml-4 flex flex-col gap-2">
-                      <div className=" text-lg font-semibold text-black">From: <span className="text-lg  text-[#7D7D7D] line-clamp-5">{arguemant.slice(9,51)}</span></div>
+                      <div className=" flex flex-col gap-2">
 
-                      <div className=" text-lg font-semibold text-black">To: <span className="text-lg  text-[#7D7D7D] line-clamp-5">{arguemant.slice(59,101)}</span></div>
+                      <div className=" text-lg font-semibold text-gray-500 flex gap-1">From: <span className="text-lg  text-[#7D7D7D] line-clamp-5">{arguemant.slice(9,51)}</span></div>
 
-                      <div className=" text-lg font-semibold text-black">Value: <span className="text-lg  text-[#7D7D7D] line-clamp-5">{arguemant.slice(112,133)}</span></div>
+                      <div className=" text-lg font-semibold text-gray-500 flex gap-1">To: <span className="text-lg  text-[#7D7D7D] line-clamp-5">{arguemant.slice(59,101)}</span></div>
+
+                      <div className=" text-lg font-semibold text-gray-500 flex gap-1">Value: <span className="text-lg  text-[#7D7D7D] line-clamp-5">{arguemant.slice(112,133)}</span></div>
 
                 
                       </div>
 
 
-<div className="flex flex-col gap-3">
-                    
-
-<div className="flex gap-6">
-<div className="text-xl font-semibold text-black">From: <span className="text-lg mt-auto text-[#7D7D7D]">{`${from_address.slice(0, 5)}...${from_address.slice(from_address.length - 4)}`}</span> </div>
-<div className="text-xl font-semibold text-black">To: <span className="text-lg mt-auto text-[#7D7D7D]">{`${to_address.slice(0, 5)}...${to_address.slice(to_address.length - 4)}`}</span></div>
-</div>
-
-
-
-</div>
 
 
                     <div>
