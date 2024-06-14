@@ -10,7 +10,6 @@ import Monitor from "./components/monitor.jsx";
 import MonitorActivity from "./components/monitor_activity.jsx";
 import MonitorCreate from "./components/monitor_create.jsx";
 import MonitorEdit from "./components/monitor_Edit.jsx";
-import EventEdit from "./components/event_Edit";
 import Events from "./components/events.jsx";
 import Functions from "./components/functions.jsx";
 import Alerts from "./components/alerts.jsx";
@@ -34,10 +33,8 @@ function App() {
           path="/monitor_create"
           element={<Protected cmp={<MonitorCreate />} />}
         />
-        <Route path="/monitor_Edit" element={<MonitorEdit />}>
-          {" "}
-        </Route>
-        <Route path="/event_Edit" element={<EventEdit />}></Route>
+        <Route path="/monitor_Edit" element={<MonitorEdit />}></Route>
+
         <Route
           path="/monitor_activity"
           element={<Protected cmp={<MonitorActivity />} />}

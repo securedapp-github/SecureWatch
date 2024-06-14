@@ -54,22 +54,22 @@ function Monitor_Edit() {
       toast.success("Monitor created successfully!", {
         autoClose: 500,
         onClose: () => {
-          navigate("/event", {
-            state: {
-              name: monitorName || selectedMonitor.name,
-              network: network || selectedMonitor.network,
-              address: address || selectedMonitor.address,
-              rk: riskCategory,
-              abi: abi || selectedMonitor.abi,
-              m_id: selectedMonitor.mid,
-              email: email,
-              token: token,
-            },
-          });
+          // navigate("/event_Edit", {
+          //   state: {
+          //     name: monitorName || selectedMonitor.name,
+          //     network: network || selectedMonitor.network,
+          //     address: address || selectedMonitor.address,
+          //     rk: riskCategory,
+          //     abi: abi || selectedMonitor.abi,
+          //     m_id: selectedMonitor.mid,
+          //     email: email,
+          //     token: token,
+          //   },
+          // });
         },
       });
 
-      console.log("monnitor id is", response.data.id);
+      console.log("response is", response.data);
     } catch (error) {
       console.error("API request failed:", error); // Handle error
       toast.error("Failed to create monitor. Please try again!", {
@@ -100,9 +100,6 @@ function Monitor_Edit() {
 
   // console.log("monitor isa:", moniter);
 
-  const targetMid = 37; // Replace with the actual mid you want
-  const selectedMonitor = moniter.monitors.find((i) => i.mid === targetMid);
-
   if (
     !moniter ||
     !Array.isArray(moniter.monitors) ||
@@ -114,7 +111,8 @@ function Monitor_Edit() {
       </div>
     );
   }
-
+  const targetMid = 37; // Replace with the actual mid you want
+  const selectedMonitor = moniter.monitors.find((i) => i.mid === targetMid);
   // console.log("Selected Monitor:", selectedMonitor);
   // console.log("name is:", selectedMonitor.name);
 
@@ -147,7 +145,7 @@ function Monitor_Edit() {
         pauseOnHover
       />
       <Navbar email={email} />
-      console.log("name is:", name);
+
       <div className="w-5/6  lg:w-5/6 mx-auto mt-20 flex justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className="w-full md:w-1/4 ">
           <div className="flex">
