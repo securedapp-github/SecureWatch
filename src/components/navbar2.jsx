@@ -176,7 +176,7 @@ function Navbar2({ email }) {
       </div>
 
 <div className="flex gap-3 items-center justify-center my-auto">
-      <div className="tooltip-container bg-white rounded-md xl:rounded-full px-3 py-2 font-semibold mt-2 md:mt-0 flex items-center gap-3">
+      <div className="tooltip-container bg-white rounded-full px-3 py-2 font-semibold mt-2 md:mt-0 flex items-center gap-3">
        <span className="hidden sm:block">{email}</span> 
         <FontAwesomeIcon icon={faSignOutAlt} className=" text-black cursor-pointer" onClick={handleLogout}  />
         <span className="tooltip-text">Logout</span>

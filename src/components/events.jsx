@@ -24,7 +24,6 @@ function Events() {
   const [addressState, setAddressState] = useState(address || "");
   const [riskCategoryState, setRiskCategoryState] = useState(rk || "");
   const [abiState, setAbiState] = useState(abi || "");
-
   // console.log(token);
   // console.log(m_id);
   const mid = m_id;
@@ -80,29 +79,26 @@ function Events() {
     value: event.name,
   }));
 
-  // Handle event selection and prompt for arguments
+  // Handle event selection and prompt for arguments (UPDATED)
   const handleEventSelection = (selectedOptions) => {
-    setSelectedEventNames(selectedOptions.map((option) => option.label));
-
-    const newSelection = selectedOptions.reduce(
-      (acc, option) => ({
-        ...acc,
-        [option.value]: {
+    const newSelectedEvents = {};
+    selectedOptions.forEach((option) => {
+      const eventName = option.value;
+      if (!selectedEvents[eventName]) {
+        newSelectedEvents[eventName] = {
           args: "",
           argDetails: eventDetails
-            .find((event) => event.name === option.value)
+            .find((event) => event.name === eventName)
             .inputs.split(", ")
-            .map((arg) => {
-              const [name, type] = arg.split(": ");
-              return name; // Store only argument names
-            })
-            .join(", "), // Join names with commas for the placeholder
-        },
-      }),
-      {}
-    );
-
-    setSelectedEvents(newSelection);
+            .map((arg) => arg.split(": ")[0])
+            .join(", "),
+        };
+      } else {
+        newSelectedEvents[eventName] = selectedEvents[eventName]; // Preserve existing args
+      }
+    });
+    setSelectedEvents(newSelectedEvents);
+    setSelectedEventNames(selectedOptions.map((option) => option.label));
   };
 
   const handleArgumentChange = (event, eventName) => {
@@ -564,9 +560,9 @@ function Events() {
                 classNamePrefix="select"
                 placeholder="Search and select events..."
                 noOptionsMessage={() => "No events found"}
-                value={selectedEventNames.map((name) =>
-                  options.find((option) => option.label === name)
-                )} // Set value to reflect current selections
+                value={options.filter((option) =>
+                  selectedEventNames.includes(option.label)
+                )} // Filter options based on selectedEventNames
               />
             </div>
           </div>
@@ -615,7 +611,7 @@ function Events() {
           <div className="mt-5">
             {Object.entries(selectedEvents).map(([eventName, eventData]) => (
               <div key={eventName} className="font-medium">
-                <div className="div-51">{eventName}</div>
+                <div className="mt-3">{eventName}</div>
                 <input
                   className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
                   style={{ backgroundColor: "white" }}

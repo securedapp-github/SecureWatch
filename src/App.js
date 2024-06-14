@@ -9,6 +9,8 @@ import Dashboard from "./components/dashboard.jsx";
 import Monitor from "./components/monitor.jsx";
 import MonitorActivity from "./components/monitor_activity.jsx";
 import MonitorCreate from "./components/monitor_create.jsx";
+import MonitorEdit from "./components/monitor_Edit.jsx";
+import EventEdit from "./components/event_Edit";
 import Events from "./components/events.jsx";
 import Functions from "./components/functions.jsx";
 import Alerts from "./components/alerts.jsx";
@@ -17,8 +19,8 @@ import Emailverify from "./components/Emailverify.jsx";
 import Protected from "./protected.js";
 import ApiBuilder from "./components/api_builder.jsx";
 import MonitorAlerts from "./components/monitor_alerts.jsx";
-import Forgotpassword from './components/Forgotpassword.jsx';
-import Otpverify from './components/Otpverify.jsx';
+import Forgotpassword from "./components/Forgotpassword.jsx";
+import Otpverify from "./components/Otpverify.jsx";
 
 function App() {
   return (
@@ -32,6 +34,10 @@ function App() {
           path="/monitor_create"
           element={<Protected cmp={<MonitorCreate />} />}
         />
+        <Route path="/monitor_Edit" element={<MonitorEdit />}>
+          {" "}
+        </Route>
+        <Route path="/event_Edit" element={<EventEdit />}></Route>
         <Route
           path="/monitor_activity"
           element={<Protected cmp={<MonitorActivity />} />}
@@ -45,9 +51,12 @@ function App() {
         <Route path="verify" element={<Verify />} />
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Protected cmp={<Dashboard />} />} />
-        <Route path="/monitor" element={<Protected cmp={<Monitor   />} />} />
-        <Route path="/api_builder" element={<Protected cmp={<ApiBuilder />} />} />
-        <Route path="/monitor_alerts" element={<MonitorAlerts  />} />
+        <Route path="/monitor" element={<Protected cmp={<Monitor />} />} />
+        <Route
+          path="/api_builder"
+          element={<Protected cmp={<ApiBuilder />} />}
+        />
+        <Route path="/monitor_alerts" element={<MonitorAlerts />} />
       </Routes>
     </BrowserRouter>
   );

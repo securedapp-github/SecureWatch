@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./navbar2";
 import { Switch } from "@headlessui/react";
 import Modal from "react-modal";
@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import Monitor_cmp from "./monitor_cmp";
 import axios from "axios";
-
 
 const customStyles = {
   content: {
@@ -23,10 +22,9 @@ const Monitor = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const email = localStorage.getItem("email")
+  const email = localStorage.getItem("email");
   console.log(token);
   console.log(email);
-  
 
   function handleClick() {
     navigate("/monitor_create", { state: { email, token } });
@@ -53,7 +51,7 @@ const Monitor = () => {
   }
   return (
     <div
-      className="font-poppin pt-12 bg-white min-h-full"
+      className="font-poppin pt-12 bg-white min-h-full pb-12"
       // style={{ backgroundColor: "#FCFFFD" }}
     >
       <Navbar email={email} />
@@ -70,15 +68,14 @@ const Monitor = () => {
             >
               Create Monitor
             </div>
-            <button
-              className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto cursor-pointer"
-              
-            >
-              <Link to="/api_builder" t>Interact with contract</Link>
+            <button className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto cursor-pointer">
+              <Link to="/api_builder" t>
+                Interact with contract
+              </Link>
             </button>
           </div>
         </div>
-        <div
+        {/* <div
           className="flex mt-10 justify-between w-3/5 py-3 px-5 rounded-2xl mx-auto md:mx-0"
           style={{ border: "1px solid #7D7D7D" }}
         >
@@ -113,14 +110,11 @@ const Monitor = () => {
               />
             </svg>
           </div>
-        </div>
-
-        
-        
+        </div> */}
       </div>
       <Monitor_cmp />
     </div>
   );
-}
+};
 
 export default Monitor;

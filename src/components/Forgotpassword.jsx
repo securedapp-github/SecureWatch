@@ -4,6 +4,7 @@ import c2 from "../images/ellipse.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 
 function Forgotpassword() {
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,8 @@ function Forgotpassword() {
      
     try {
       if (!isValidEmail(email) || email === "" || email === null || email === undefined) {
-        setErrorMessage("Please enter a valid email address.");
+        //setErrorMessage("Please enter a valid email address.");
+        showErrorAlert("Please enter a valid email address.");
         setLoading(false);
       }
        else {
@@ -41,7 +43,8 @@ function Forgotpassword() {
     } catch (error) {
       console.error("Error while sending OTP:", error);
       setLoading(false);
-      setErrorMessage("Error while sending OTP, Please try again later.");
+      //setErrorMessage("Error while sending OTP, Please try again later.");
+      showErrorAlert("Error while sending OTP, Please try again later.");
     }
 
   }

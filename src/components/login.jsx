@@ -6,6 +6,7 @@ import { Switch } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import google from "../images/google.png";
 import { useNavigate } from "react-router-dom";
+import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,8 @@ function Login() {
       const u_name = event.target.name.value;
       const u_password = event.target.password.value;
       if (u_name === "" || u_password === "") {
-        setErrorMessage("Enter the userame and password");
+        //setErrorMessage("Enter the userame and password");
+        showErrorAlert("Invalid email or password.");
       } else {
         const response = await axios.post(
           "https://139-59-5-56.nip.io:3443/login_securewatch",
@@ -28,6 +30,7 @@ function Login() {
             password,
           }
         );
+  
         console.log("Login Successful:", response.data);
         const token = response.data.token;
         const monitor = response.data.monitors;
@@ -42,12 +45,12 @@ function Login() {
         // const s = monitor.length;
         // console.log("abc", s);
         // console.log(typeof monitor);
-      navigate("/dashboard", { state: { email, monitor, token } });
+        showSuccessAlert("Login Successful");
+        navigate("/dashboard", { state: { email, monitor, token } });
       }
     } catch (error) {
-      console.error("Error logging in:", error);
-      // Handle error, e.g., display error message to the user
-      setErrorMessage("Invalid email or password. Please try again.");
+      // setErrorMessage("Invalid email or password.");
+      showErrorAlert("Invalid email or password.");
     }
   };
 
@@ -155,7 +158,6 @@ function Login() {
           <button type="submit" className="mx-auto bg-[#28AA61] px-4 py-2 text-white my-9 w-full rounded-md">
             Sign in
           </button>
-
           {errorMessage && <p className="text-red-500 mb-3">{errorMessage}</p>}
         </form>
         {/* <hr />
