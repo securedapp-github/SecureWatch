@@ -188,7 +188,7 @@ const Monitor_cmp = (props) => {
 
                 <div className="flex   items-center p-6 w-[30%] sm:w-[20%] md:w-[10%] ">
                   <div className="flex flex-col justify-end gap-7 items-center">
-                    <button onClick={handleEditMonitor(mid)}>
+                    <button onClick={() => handleEditMonitor(mid)}>
                       <img src={Edit} alt="" className="h-8 w-8" />
                     </button>
                     <Switch
