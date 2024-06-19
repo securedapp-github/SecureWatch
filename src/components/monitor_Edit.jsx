@@ -54,18 +54,18 @@ function Monitor_Edit() {
       toast.success("Monitor created successfully!", {
         autoClose: 500,
         onClose: () => {
-          // navigate("/event_Edit", {
-          //   state: {
-          //     name: monitorName || selectedMonitor.name,
-          //     network: network || selectedMonitor.network,
-          //     address: address || selectedMonitor.address,
-          //     rk: riskCategory,
-          //     abi: abi || selectedMonitor.abi,
-          //     m_id: selectedMonitor.mid,
-          //     email: email,
-          //     token: token,
-          //   },
-          // });
+          navigate("/event_Edit", {
+            state: {
+              name: monitorName || selectedMonitor.name,
+              network: network || selectedMonitor.network,
+              address: address || selectedMonitor.address,
+              rk: riskCategory,
+              abi: abi || selectedMonitor.abi,
+              m_id: selectedMonitor.mid,
+              email: email,
+              token: token,
+            },
+          });
         },
       });
 
@@ -111,8 +111,9 @@ function Monitor_Edit() {
       </div>
     );
   }
-  const targetMid = 37; // Replace with the actual mid you want
+  const targetMid = 57; // Replace with the actual mid you want
   const selectedMonitor = moniter.monitors.find((i) => i.mid === targetMid);
+  console.log("selcted monitor is:", selectedMonitor);
   // console.log("Selected Monitor:", selectedMonitor);
   // console.log("name is:", selectedMonitor.name);
 

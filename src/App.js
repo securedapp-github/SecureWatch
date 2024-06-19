@@ -11,6 +11,8 @@ import MonitorActivity from "./components/monitor_activity.jsx";
 import MonitorCreate from "./components/monitor_create.jsx";
 import MonitorEdit from "./components/monitor_Edit.jsx";
 import Events from "./components/events.jsx";
+import EventsEdit from "./components/event_Edit.jsx";
+import AlertsEdit from "./components/alerts_Edit.jsx";
 import Functions from "./components/functions.jsx";
 import Alerts from "./components/alerts.jsx";
 import Logs from "./components/logs.jsx";
@@ -27,8 +29,17 @@ function App() {
       <Routes>
         <Route path="/log" element={<Logs />} />
         <Route path="/alerts" element={<Protected cmp={<Alerts />} />} />
+
         <Route path="/function" element={<Protected cmp={<Functions />} />} />
         <Route path="/event" element={<Protected cmp={<Events />} />} />
+        <Route
+          path="/alert_edit"
+          element={<Protected cmp={<AlertsEdit />} />}
+        />
+        <Route
+          path="/event_edit"
+          element={<Protected cmp={<EventsEdit />} />}
+        />
         <Route
           path="/monitor_create"
           element={<Protected cmp={<MonitorCreate />} />}
