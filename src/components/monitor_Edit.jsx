@@ -17,6 +17,10 @@ function Monitor_Edit() {
   const user_Id = decoded.userId;
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const targetMid = query.get("id");
+
   const [monitorName, setMonitorName] = React.useState("");
   const [riskCategory, setRiskCategory] = React.useState("");
   const [address, setAddress] = React.useState("");
@@ -111,7 +115,9 @@ function Monitor_Edit() {
       </div>
     );
   }
-  const targetMid = 57; // Replace with the actual mid you want
+
+  // const targetMid = 37; // Replace with the actual mid you want
+
   const selectedMonitor = moniter.monitors.find((i) => i.mid === targetMid);
   console.log("selcted monitor is:", selectedMonitor);
   // console.log("Selected Monitor:", selectedMonitor);
