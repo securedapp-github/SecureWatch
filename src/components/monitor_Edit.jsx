@@ -118,6 +118,8 @@ function Monitor_Edit() {
 
   const targetMid = 57; // Replace with the actual mid you want
 
+  // const targetMid = 37; // Replace with the actual mid you want
+
   const selectedMonitor = moniter.monitors.find((i) => i.mid === targetMid);
   console.log("selcted monitor is:", selectedMonitor);
   // console.log("Selected Monitor:", selectedMonitor);
