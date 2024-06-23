@@ -312,7 +312,9 @@ function Event_Edit() {
 
         const body = {
           name: eventName,
-          id: m_id,
+          name: eventName,
+          id: eventDetailsEntry.eventId, // Use the stored event ID for update
+
           //   signature: eventSignature,
           arguments: argsToUse, // Use the prioritized arguments here
         };
@@ -359,71 +361,85 @@ function Event_Edit() {
   //     fetchEvent();
   //   }, [value]);
 
+  const [rerender, setRerender] = useState(false);
   React.useEffect(() => {
-    // ... (your fetchMonitor function here, if needed)
-
-    // Fetch existing events for this monitor after getting monitor data
     const fetchEvents = async () => {
       try {
         const res = await fetch("https://139-59-5-56.nip.io:3443/get_event", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mid: m_id }), // Fetch events for this specific monitor
+          body: JSON.stringify({ mid: m_id }),
         });
 
         const data = await res.json();
 
-        // Check if the response is valid and contains an array of monitors
         if (data && Array.isArray(data.monitors)) {
-          setEvent(data); // Update the state with all events
+          setEvent(data);
+
+          const eventsBySignature = data.monitors.reduce((acc, event) => {
+            const eventAbi = eventDetails.find((e) => e.name === event.name);
+
+            if (!eventAbi) {
+              console.warn(`Event ${event.name} not found in ABI`);
+              return acc;
+            }
+
+            const eventSignatureInputs = eventAbi.inputs
+              .split(", ")
+              .map((arg) => arg.split(": ")[1]) // Get the types from eventDetails
+              .join(",");
+
+            const eventSignatureData = `${event.name}(${eventSignatureInputs})`;
+            const eventSignature =
+              web3.eth.abi.encodeEventSignature(eventSignatureData);
+            acc[eventSignature] = event;
+            return acc;
+          }, {});
 
           const fetchedEvents = {};
-          data.monitors.forEach((event) => {
-            // Reconstruct the event signature based on the event name and types
-            const eventSignatureInputs = eventDetails
-              .find((e) => e.name === event.name)
-              ?.inputs.split(", ")
+          eventDetails.forEach((event) => {
+            const eventSignatureInputs = event.inputs
+              .split(", ")
               .map((arg) => arg.split(": ")[1])
               .join(",");
 
             const eventSignatureData = `${event.name}(${eventSignatureInputs})`;
             const eventSignature =
               web3.eth.abi.encodeEventSignature(eventSignatureData);
+            const fetchedEvent = eventsBySignature[eventSignature];
+            if (fetchedEvent) {
+              let parsedArgs = fetchedEvent.arguments;
 
-            // Match fetched events to the events in your ABI
-            if (eventSignature === event.signature) {
-              // Step 1: Parse the arguments if they are stringified JSON
-              let parsedArgs = event.arguments;
+              // Try to parse fetched arguments as JSON, otherwise use it as is
               try {
-                if (typeof event.arguments === "string") {
-                  parsedArgs = JSON.parse(event.arguments);
+                if (typeof fetchedEvent.arguments === "string") {
+                  parsedArgs = JSON.parse(fetchedEvent.arguments);
                 }
               } catch (parseError) {
                 console.error("Error parsing arguments:", parseError);
-                // Optionally, set a default if parsing fails:
-                parsedArgs = {};
               }
+              const argsString =
+                typeof parsedArgs === "object" && parsedArgs !== null
+                  ? Object.values(parsedArgs).join(", ")
+                  : fetchedEvent.arguments;
 
-              // Step 2: Extract and join the values if it's an object, otherwise use the raw value
-              let argsString;
-              if (typeof parsedArgs === "object" && parsedArgs !== null) {
-                argsString = Object.values(parsedArgs).join(", ");
-              } else {
-                argsString = parsedArgs.toString(); // Handle other data types (e.g., numbers, arrays)
-              }
+              // Use conditional check for argDetails
+              const argDetails = fetchedEvent.argDetails
+                ? fetchedEvent.argDetails.split(", ")
+                : eventDetails
+                    .find((e) => e.name === event.name)
+                    ?.inputs.split(", ")
+                    .map((arg) => arg.split(": ")[0])
+                    .join(", ");
 
               fetchedEvents[event.name] = {
                 args: argsString,
-                argDetails: eventDetails
-                  .find((e) => e.name === event.name)
-                  .inputs.split(", ")
-                  .map((arg) => arg.split(": ")[0]) // Extract argument names
-                  .join(", "),
+                argDetails, // This will be either the fetched event.argDetails or from eventDetails
+                eventId: fetchedEvent.id,
               };
             }
           });
 
-          // Update state with fetched events and their labels
           setSelectedEvents(fetchedEvents);
           setSelectedEventNames(
             Object.keys(fetchedEvents).map((name) => {
@@ -439,14 +455,15 @@ function Event_Edit() {
         }
       } catch (error) {
         console.error("Error fetching events:", error);
+      } finally {
+        setRerender(true);
       }
     };
 
-    // Fetch events only if the monitor ID (m_id) is available
     if (m_id) {
       fetchEvents();
     }
-  }, [eventDetails, m_id, value]);
+  }, [eventDetails, m_id, value, rerender]);
   console.log("evetn is:", event);
 
   return (
