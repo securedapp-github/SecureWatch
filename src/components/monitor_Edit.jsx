@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./navbar2";
 import Modal from "react-modal";
 import axios from "axios";
@@ -9,14 +9,19 @@ import { jwtDecode } from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function Monitor_create() {
+function Monitor_Edit() {
   //  const { email, token } = location.state || "";
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
   const decoded = jwtDecode(token);
   const user_Id = decoded.userId;
-
+  console.log("user id = ", user_Id);
   const navigate = useNavigate();
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const targetMids = query.get("id");
+  console.log("MID = ", targetMids);
+
   const [monitorName, setMonitorName] = React.useState("");
   const [riskCategory, setRiskCategory] = React.useState("");
   const [address, setAddress] = React.useState("");
@@ -24,46 +29,46 @@ function Monitor_create() {
   const [network, setNetwork] = React.useState("");
   const [networkName, setNetworkName] = useState("");
   const [abi, setAbi] = React.useState("");
+  const [selectedMonitor, setSelectedMonitor] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = {
-      name: monitorName,
-      user_id: parseInt(user_Id),
-      network: parseInt(network),
-      address: address,
+      monitor_id: selectedMonitor.mid,
+      name: monitorName || selectedMonitor.name,
+      network: network || selectedMonitor.network,
+      address: address || selectedMonitor.address,
       alert_type: 1,
-      alert_data: "",
-      abi: abi,
-      category: riskCategory,
+      abi: abi || selectedMonitor.abi,
     };
-
+    console.log("Data is:", data);
     try {
       const response = await axios.post(
-        "https://139-59-5-56.nip.io:3443/add_monitor",
+        "https://139-59-5-56.nip.io:3443/update_monitor",
         data
       );
-      console.log("API response:", response.data);
-      console.log("monitor name is", monitorName);
-      console.log("Risk category is:", riskCategory);
-      console.log("contract name is", contractName);
-      console.log("netwprk name is", network);
-      console.log(" address is:", address);
-      console.log(" ABI  is:", abi);
-      console.log(" user id is", user_Id);
+      // console.log("API response:", response.data);
+      // console.log("monitor name is", monitorName);
+      // console.log("Risk category is:", riskCategory);
+      // console.log("contract name is", contractName);
+      // console.log("netwprk name is", network);
+      // console.log(" address is:", address);
+      // console.log(" ABI  is:", abi);
+      // console.log(" user id is", user_Id);
 
       toast.success("Monitor created successfully!", {
         autoClose: 500,
         onClose: () => {
-          navigate("/event", {
+          navigate("/event_Edit", {
             state: {
-              name: monitorName,
-              network: networkName,
-              address: address,
+              name: monitorName || selectedMonitor.name,
+              network: network || selectedMonitor.network,
+              address: address || selectedMonitor.address,
               rk: riskCategory,
-              abi: abi,
-              m_id: response.data.id,
+              abi: abi || selectedMonitor.abi,
+              m_id: selectedMonitor.mid,
               email: email,
               token: token,
             },
@@ -71,7 +76,7 @@ function Monitor_create() {
         },
       });
 
-      console.log("monnitor id is", response.data.id);
+      console.log("response is", response.data);
     } catch (error) {
       console.error("API request failed:", error); // Handle error
       toast.error("Failed to create monitor. Please try again!", {
@@ -80,11 +85,94 @@ function Monitor_create() {
     }
   };
 
+  const [value, setValue] = useState(10);
+  const [moniter, setMoniter] = useState([]);
+
+  const setMoniters = async (moniterss) => {
+    console.log("called setMoniters ", moniterss);
+    if (!moniterss || !Array.isArray(moniterss.monitors) || moniterss.monitors.length === 0) {
+      console.log("Monitors array is empty");
+      setLoading(false); 
+      return;
+    }
+    console.log("targetMids = ", targetMids );
+    const _selectedMonitor = moniterss.monitors.find((monitor) => monitor.mid == targetMids);
+    console.log("select monitor = ", _selectedMonitor );
+
+    if (_selectedMonitor) {
+      setSelectedMonitor(_selectedMonitor);
+      setLoading(false); // Update loading state to indicate data is loaded
+    } else {
+      console.log(`Monitor with mid ${targetMids} not found`);
+      setLoading(false); // Update loading state to indicate no matching monitor found
+    }
+  };
+
+
+  useEffect(() => {
+
+  
+
+    const fetchMoniter = async () => {
+      let data;
+      try {
+        console.log("called fetchMoniter ");
+
+        const res = await fetch("https://139-59-5-56.nip.io:3443/get_monitor", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: user_Id,
+          }),
+        });
+        data = await res.json();
+      } catch (error) {
+        console.error("Error fetching monitor data:", error);
+      } finally {
+        setMoniter(data);
+        setMoniters(data);
+
+      }
+    };
+    
+    fetchMoniter();
+  }, [user_Id, value]);
+
+  // console.log("monitor isa:", moniter);
+
+
+ 
+  // console.log("Selected Monitor:", selectedMonitor);
+  // console.log("name is:", selectedMonitor.name);
+
+  // {
+  //   selectedMonitor.network === 80002
+  //     ? "Amoy"
+  //     : selectedMonitor.network === 1
+  //     ? "Ethereum Mainnet"
+  //     : selectedMonitor.network === 11155111
+  //     ? "Sepolia Testnet"
+  //     : selectedMonitor.network === 137
+  //     ? "Polygon Mainnet"
+  //     : "Unknown";
+  // }
+
+  if (loading) {
+    return (
+      <div className="text-center mt-20 text-4xl font-medium text-black">
+        Loading Monitor Details...
+      </div>
+    );
+  }
+
   return (
     <div
       className="font-poppin pt-2 bg-white min-h-full2"
       style={{ backgroundColor: "#FCFFFD" }}
     >
+     
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -97,6 +185,7 @@ function Monitor_create() {
         pauseOnHover
       />
       <Navbar email={email} />
+      {selectedMonitor && (
       <div className="w-5/6  lg:w-5/6 mx-auto mt-20 flex justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className="w-full md:w-1/4 ">
           <div className="flex">
@@ -144,7 +233,7 @@ function Monitor_create() {
             </div>
           </div>
           <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
-            Create Monitor
+            Edit Monitor
           </div>
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
@@ -397,6 +486,7 @@ function Monitor_create() {
               style={{ backgroundColor: "white" }}
               type="text"
               name="name"
+              placeholder={selectedMonitor.name}
               onChange={(e) => setMonitorName(e.target.value)}
               className="outline-none border-2 border-[#4C4C4C] w-full rounded-xl p-2 py-3 mt-1 "
             />
@@ -410,6 +500,7 @@ function Monitor_create() {
               style={{ backgroundColor: "white" }}
               name="category"
               id="category"
+              placeholder={selectedMonitor.c}
               // value={formData.category}
 
               onChange={(e) => setRiskCategory(e.target.value)}
@@ -490,7 +581,15 @@ function Monitor_create() {
                 hidden
                 className="text-xl font-medium"
               >
-                None
+                {selectedMonitor.network === 80002
+                  ? "Amoy"
+                  : selectedMonitor.network === 1
+                  ? "Ethereum Mainnet"
+                  : selectedMonitor.network === 11155111
+                  ? "Sepolia Testnet"
+                  : selectedMonitor.network === 137
+                  ? "Polygon Mainnet"
+                  : "Unknown"}
               </option>
               <option value="1" className="text-[13px] text-[#959595] ">
                 Ethereum Mainnet
@@ -517,7 +616,7 @@ function Monitor_create() {
               name="address"
               value={address} // Bind input to state
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="Enter address (0x.......)"
+              placeholder={selectedMonitor.address}
               className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
             />
             <div
@@ -540,6 +639,7 @@ function Monitor_create() {
               rows="10"
               // value={formData.abi}
               value={abi} // Bind textarea to state
+              placeholder={selectedMonitor.abi}
               onChange={(e) => setAbi(e.target.value)}
               className="w-full mt-1 outline-none rounded-xl border-2 border-[]"
             ></textarea>
@@ -548,14 +648,15 @@ function Monitor_create() {
                 type="submit"
                 className="mt-6 px-6 py-3 bg-[#28AA61] text-white rounded-lg"
               >
-                Create
+                Update Monitor
               </button>
             </div>
           </form>
         </div>
       </div>
+      )}
     </div>
   );
 }
 
-export default Monitor_create;
+export default Monitor_Edit;

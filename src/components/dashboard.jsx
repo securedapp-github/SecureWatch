@@ -40,10 +40,10 @@ console.log(userEmail);
         <div className="w-4/6 mx-auto">
           <div className="mt-10 flex justify-center items-center gap-6 flex-wrap ">
             <div className="flex gap-2">
-              <div className="font-poppin font-medium text-lg sm:text-ml md:text-2xl lg:text-3xl text-[#0CA851]  bg-[#A7FFCE] p-2 rounded-2xl text-center">
+              {/* <div className="font-poppin font-medium text-lg sm:text-ml md:text-2xl lg:text-3xl text-[#0CA851]  bg-[#A7FFCE] p-2 rounded-2xl text-center">
                 SecureWatch Org
-              </div>
-              <div className="my-auto">
+              </div> */}
+              {/* <div className="my-auto">
                 <svg
                   width="21"
                   height="21"
@@ -78,7 +78,7 @@ console.log(userEmail);
                     </clipPath>
                   </defs>
                 </svg>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex mt-4 md:mt-0 font-poppin">
@@ -426,7 +426,7 @@ console.log(userEmail);
                 </svg>
               </span>
               </div>
-          </div>
+          </div> 
         </div>
       </div>
    

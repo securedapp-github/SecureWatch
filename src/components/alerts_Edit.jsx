@@ -1,243 +1,131 @@
-import Navbar from "./navbar2";
-import { useLocation, useNavigate } from "react-router-dom";
-
-import * as React from "react";
-// import check from "../images/check-circle.png";
-// import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import Web3 from "web3";
-// import Select from "react-select";
-import Select, { components } from "react-select";
+import Navbar from "./navbar2";
+import Modal from "react-modal";
+
+import Load from "../images/loading.png";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-//
+Modal.setAppElement("#root");
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
 
-function Events() {
-  const navigate = useNavigate();
+function Alerts_Edit() {
+  const [emailInput, setEmailInput] = useState(""); // State to handle email inputs
+  const [riskCategory, setRiskCategory] = React.useState("");
+  const [isSaved, setIsSaved] = useState(false);
+
+  // const [selectedOption, setSelectedOption] = useState("");
+  const [actionType, setActionType] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const { name, email, m_id, token, network, abi, address, rk } =
-    location.state || "";
-  const [networkState, setNetworkState] = useState(network || ""); // Default to 'MAINNET' if not provided
-  //  const [contractNameState, setContractNameState] = useState(alert_data || "");
-  const [addressState, setAddressState] = useState(address || "");
-  const [riskCategoryState, setRiskCategoryState] = useState(rk || "");
-  const [abiState, setAbiState] = useState(abi || "");
-  // console.log(token);
-  // console.log(m_id);
-  const mid = m_id;
+  // const { email, m_id, token } = location.state || "";
+  // // console.log(m_id);
 
-  const [disp1, setDisp1] = useState("none");
-  const [disp2, setDisp2] = useState("none");
-  const handleToggle1 = (e) => {
-    if (e.target.checked) setDisp1("block");
-    else setDisp1("none");
-  };
-  const handleToggle2 = (e) => {
-    if (e.target.checked) setDisp2("block");
-    else setDisp2("none");
-  };
+  const { name, email, m_id, token, network, address, rk, selectedEventNames } =
+    location.state || {};
 
-  const [eventDetails, setEventDetails] = React.useState([]);
-  const [selectedEvents, setSelectedEvents] = React.useState({});
-  const [selectedEventNames, setSelectedEventNames] = useState([]);
-  React.useEffect(() => {
-    if (!location.state || !location.state.abi) {
-      console.error("ABI is not provided");
-      return;
-    }
+  console.log("netwrok in alers is:", network);
 
-    let parsedAbi;
-    try {
-      parsedAbi = JSON.parse(location.state.abi);
-    } catch (error) {
-      console.error("Failed to parse ABI:", error);
-      return;
-    }
+  const [open, setOpen] = useState(false);
+  function openModal() {
+    setOpen(true);
+    setTimeout(() => {
+      closeModal();
+    }, 2000);
+  }
+  function closeModal() {
+    setOpen(false);
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const events = parsedAbi.filter((item) => item.type === "event");
-    setEventDetails(
-      events.map((event) => ({
-        name: event.name,
-        inputs: event.inputs
-          .map((input) => `${input.name}: ${input.type}`)
-          .join(", "),
-      }))
-    );
-  }, [
-    location.state,
-    networkState,
-    // contractNameState,
-    addressState,
-    riskCategoryState,
-    abiState,
-  ]);
-
-  const options = eventDetails.map((event) => ({
-    label: `${event.name} (${event.inputs})`,
-    value: event.name,
-  }));
-
-  // Handle event selection and prompt for arguments (UPDATED)
-  const handleEventSelection = (selectedOptions) => {
-    const newSelectedEvents = {};
-    selectedOptions.forEach((option) => {
-      const eventName = option.value;
-      if (!selectedEvents[eventName]) {
-        newSelectedEvents[eventName] = {
-          args: "",
-          argDetails: eventDetails
-            .find((event) => event.name === eventName)
-            .inputs.split(", ")
-            .map((arg) => arg.split(": ")[0])
-            .join(", "),
-        };
-      } else {
-        newSelectedEvents[eventName] = selectedEvents[eventName]; // Preserve existing args
-      }
-    });
-    setSelectedEvents(newSelectedEvents);
-    setSelectedEventNames(selectedOptions.map((option) => option.label));
-  };
-
-  const handleArgumentChange = (event, eventName) => {
-    const value = event.target.value;
-    setSelectedEvents((prevEvents) => ({
-      ...prevEvents,
-      [eventName]: {
-        ...prevEvents[eventName],
-        args: value,
-      },
-    }));
-  };
-
-  const web3 = new Web3();
-
-  const handleSaveMonitor = async () => {
-    if (!Array.isArray(eventDetails)) {
-      console.error("eventDetails is not an array:", eventDetails);
-      return; // Exit if eventDetails is not an array
-    }
-
-    let navigationState = {
-      monitorName: name,
-      network: network,
-      address: address,
-      rk: rk,
-      m_id: mid,
-      email: email,
-      token: token,
-      selectedEventNames: Object.entries(selectedEvents).map(
-        ([eventName, eventData]) => {
-          const argTypes = eventDetails
-            .find((e) => e.name === eventName)
-            .inputs.split(", ")
-            .map((arg) => arg.split(": ")[1]) // Extract only the types
-            .join(", "); // Join types with commas
-          return {
-            name: eventName,
-            argTypes: argTypes,
-          };
-        }
-      ), // Storing the names of selected events
+    const emails = emailInput.split(",").map((email) => email.trim());
+    const emailString = emails.join(",");
+    const postData = {
+      monitor_id: 57,
+      name: name,
+      alert_data: emailString || selectedMonitor.alert_data,
+      alert_type: "1",
+      status: 2,
     };
 
-    Object.entries(selectedEvents).forEach(
-      async ([eventName, eventDetailsEntry]) => {
-        const argsArray = eventDetailsEntry.args
-          .split(",")
-          .map((arg) => arg.trim());
-
-        const event = eventDetails.find((e) => e.name === eventName);
-        if (!event) return;
-
-        const argDetails = event.inputs.split(", ").map((arg) => {
-          const [name, type] = arg.split(": ");
-          return name;
-        });
-
-        const argsObject = argsArray.reduce((acc, arg, index) => {
-          const argName = argDetails[index]; // Get the actual argument name
-          acc[argName] = arg;
-          return acc;
-        }, {});
-
-        // const event = eventDetails.find((e) => e.name === eventName);
-        if (!event) {
-          console.error("Event not found in eventDetails:", eventName);
-          return; // Exit if the event is not found
-        }
-
-        // Check if 'inputs' is available and correctly formatted
-        if (!event.inputs || typeof event.inputs !== "string") {
-          console.error(
-            "Event inputs are not correctly formatted:",
-            event.inputs
-          );
-          return;
-        }
-
-        const eventSignatureInputs = event.inputs
-          .split(", ")
-          .map((input) => {
-            const [name, type] = input.split(": ");
-            return type;
-          })
-          .join(",");
-
-        // The correct format for encodeEventSignature: "EventName(type1,type2,...)"
-        const eventSignatureData = `${event.name}(${eventSignatureInputs})`;
-        let eventSignature;
-        try {
-          eventSignature =
-            web3.eth.abi.encodeEventSignature(eventSignatureData);
-        } catch (error) {
-          console.error(
-            "Failed to encode event signature:",
-            error,
-            "with data:",
-            eventSignatureData
-          );
-          return;
-        }
-
-        const body = {
-          name: eventName,
-          mid: mid,
-          signature: eventSignature,
-          arguments: argsObject,
-        };
-
-        try {
-          const response = await axios.post(
-            "https://139-59-5-56.nip.io:3443/add_event",
-            body
-          );
-          console.log("Event added:", response.data);
-          console.log("Arguments Object:", argsObject);
-          console.log("signature is:", eventSignature);
-          console.log("network in event is", network);
-          console.log("event is:", selectedEventNames);
-          console.log("monitor id is:", m_id);
-          console.log("event name is:", eventName);
-          // Navigate to alerts with updated navigation state
-          toast.success("Event Added successfully!", {
-            autoClose: 500,
-            onClose: () => {
-              navigate("/alerts", { state: navigationState });
-            },
-          });
-        } catch (error) {
-          console.error("Error sending event data:", error);
-          toast.error("Failed to Add Event. Please try again!");
-        }
-      }
-    );
+    try {
+      const response = await axios.post(
+        "https://139-59-5-56.nip.io:3443/update_monitor",
+        postData
+      );
+      console.log(response.data);
+      console.log("email is:", emails);
+      console.log("risk category is:", riskCategory);
+      console.log("monitor id is:", m_id);
+      toast.success("Monitor Updated successfully!", {
+        autoClose: 500,
+        onClose: () => {
+          //   navigate("/monitor", { state: { email, token } });
+        },
+      });
+    } catch (error) {
+      console.error("Error updating monitor:", error);
+      toast.error("Failed to Update Monitor. Please try again!");
+    }
   };
+
+  // Function to handle option selection
+  // const handleOptionSelect = (option) => {
+  //   setSelectedOption(option);
+  // };
+
+  const [value, setValue] = useState(10);
+  const [moniter, setMoniter] = useState([]);
+
+  React.useEffect(() => {
+    const fetchMoniter = async () => {
+      const res = await fetch("https://139-59-5-56.nip.io:3443/get_monitor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: 12,
+        }),
+      });
+      const data = await res.json();
+      setMoniter(data);
+    };
+    fetchMoniter();
+  }, [value]);
+  if (
+    !moniter ||
+    !Array.isArray(moniter.monitors) ||
+    moniter.monitors.length === 0
+  ) {
+    return (
+      <div className="text-center mt-20 text-4xl font-medium text-black">
+        {/* Please create a monitor. */}
+      </div>
+    );
+  }
+  const targetMid = m_id; // Replace with the actual mid you want
+  const selectedMonitor = moniter.monitors.find((i) => i.mid === targetMid);
+  console.log("selcted monitor is:", selectedMonitor);
+
   return (
     <div
       className="font-poppin pt-2 bg-white min-h-full"
+      // bg-white pt-10 pb-1
+
       style={{ backgroundColor: "#FCFFFD" }}
     >
       <ToastContainer
@@ -252,8 +140,8 @@ function Events() {
         pauseOnHover
       />
       <Navbar email={email} />
-      <div className="w-full  mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20">
-        <div className="">
+      <div className="w-full h-full mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
+        <div className="mx-auto md:mx-0">
           <div className="flex">
             <div>
               <svg
@@ -359,7 +247,7 @@ function Events() {
           </div>
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
-            style={{ border: "1px solid #0CA851" }}
+            style={{ border: "1px solid #CACACA" }}
           >
             <div className="my-auto">
               <svg
@@ -403,19 +291,10 @@ function Events() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <rect
-                  x="0.832031"
-                  y="26"
-                  width="26"
-                  height="26"
-                  rx="2.92308"
-                  transform="rotate(-90 0.832031 26)"
-                  fill="#0CA851"
-                />
                 <path
-                  d="M11.5469 18.647L16.6175 13.5763L11.5469 8.50571"
-                  stroke="white"
-                  stroke-width="1.23515"
+                  d="M11.5059 18.6469L16.5765 13.5763L11.5059 8.50562"
+                  stroke="black"
+                  stroke-width="1.69021"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
@@ -425,9 +304,6 @@ function Events() {
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
-            onClick={() => {
-              navigate("/function", { state: { email, mid, token } });
-            }}
           >
             <div className="my-auto">
               <svg
@@ -483,10 +359,7 @@ function Events() {
           </div>
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
-            style={{ border: "1px solid #CACACA" }}
-            onClick={() => {
-              navigate("/alerts", { state: { email, mid, token } });
-            }}
+            style={{ border: "1px solid #0CA851" }}
           >
             <div className="my-auto">
               <svg
@@ -530,10 +403,19 @@ function Events() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <rect
+                  x="0.832031"
+                  y="26"
+                  width="26"
+                  height="26"
+                  rx="2.92308"
+                  transform="rotate(-90 0.832031 26)"
+                  fill="#0CA851"
+                />
                 <path
-                  d="M11.5059 18.6469L16.5765 13.5763L11.5059 8.50562"
-                  stroke="black"
-                  stroke-width="1.69021"
+                  d="M11.5469 18.647L16.6175 13.5763L11.5469 8.50571"
+                  stroke="white"
+                  stroke-width="1.23515"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
@@ -541,97 +423,236 @@ function Events() {
             </div>
           </div>
         </div>
+        <div className="w-full md:w-1/3 lg:w-1/4 mt-5 md:mt-0">
+          <form onSubmit={handleSubmit}>
+            {/* <div className="font-medium text-lg">
+              Risk Category
+              <div className="w-inherit border-2 border-[#bea4a4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
+                <div className="text-lg font-medium">{selectedOption}</div>
+                <div>
+                  <svg
+                    width="21"
+                    height="22"
+                    viewBox="0 0 21 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
+                      stroke="black"
+                      strokeWidth="1.69021"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="rounded-lg border-2 border-[#B4B4B4] border-t-0 shadow-md">
+                <div
+                  className={`p-3 ${
+                    selectedOption === "Low Severity" ? "bg-gray-200" : ""
+                  }`}
+                  onClick={() => handleOptionSelect("Low Severity")}
+                >
+                  <label htmlFor="opt1" className="text-[#8E8E8E] text-[13px]">
+                    Low Severity
+                  </label>
+                </div>
+                <div
+                  className={`p-3 ${
+                    selectedOption === "Medium Severity" ? "bg-gray-200" : ""
+                  }`}
+                  onClick={() => handleOptionSelect("Medium Severity")}
+                >
+                  <label htmlFor="opt2" className="text-[#8E8E8E] text-[13px]">
+                    Medium Severity
+                  </label>
+                </div>
+                <div
+                  className={`p-3 ${
+                    selectedOption === "High Severity" ? "bg-gray-200" : ""
+                  }`}
+                  onClick={() => handleOptionSelect("High Severity")}
+                >
+                  <label htmlFor="opt3" className="text-[#8E8E8E] text-[13px]">
+                    High Severity
+                  </label>
+                </div>
+              </div>
+            </div> */}
+            <div
+              className="font-medium mt-5 text-lg"
+              style={{ color: "black" }}
+            >
+              Risk Category
+            </div>
+            <select
+              style={{ backgroundColor: "white" }}
+              name="category"
+              id="category"
+              // value={formData.category}
 
-        <div className="w-full md:w-1/3 lg:w-1/4 mt-5 md:mt-0 ">
-          <div className="font-medium text-lg" style={{ color: "black" }}>
-            Enter the Signature Name
-          </div>
-          <div className="my-auto ml-auto">
-            {/* w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3 */}
-            <div className="font-medium text-lg"></div>
-            <div>
-              <Select
-                options={options}
-                isMulti
-                closeMenuOnSelect={false}
-                components={{ Option: components.Option }}
-                onChange={handleEventSelection}
-                className=""
-                classNamePrefix="select"
-                placeholder="Search and select events..."
-                noOptionsMessage={() => "No events found"}
-                value={options.filter((option) =>
-                  selectedEventNames.includes(option.label)
-                )} // Filter options based on selectedEventNames
-              />
+              onChange={(e) => setRiskCategory(e.target.value)}
+              defaultValue="none"
+              className="outline-none border-2 border-[#4C4C4C] py-3 rounded-xl  w-full px-3"
+            >
+              <option
+                value="none"
+                selected
+                disabled
+                hidden
+                className="text-xl font-medium"
+              >
+                None
+              </option>
+              <option
+                value="Low Severity"
+                className="text-[13px] text-[#959595] "
+              >
+                Low Severity
+              </option>
+              <option
+                value="Medium Severity"
+                className="text-[13px] text-[#959595]"
+              >
+                Medium Severity
+              </option>
+              <option
+                value="High Severity"
+                className="text-[13px] text-[#959595]"
+              >
+                High Severity
+              </option>
+            </select>
+
+            <div className="mt-5">
+              <div className="font-medium" style={{ color: "black" }}>
+                Execute an action
+              </div>
+              <div className="">
+                <div className="font-medium">
+                  <select
+                    style={{ backgroundColor: "white" }}
+                    className="outline-none border-2 border-[#4C4C4C] py-3 rounded-xl  w-full px-3"
+                    value={actionType}
+                    onChange={(e) => setActionType(e.target.value)}
+                  >
+                    <option value="">Select Action</option>
+                    <option value="email">Email</option>
+                    <option value="other">Other Action</option>
+                  </select>
+                  {actionType === "email" && (
+                    <input
+                      style={{ backgroundColor: "white" }}
+                      type="text"
+                      value={emailInput}
+                      onChange={(e) => setEmailInput(e.target.value)}
+                      className="mt-2 w-full border-2 border-gray-300 p-2 rounded-lg"
+                      placeholder={selectedMonitor.alert_data}
+                    />
+                  )}
+                </div>
+                <div>
+                  <svg
+                    width="21"
+                    height="22"
+                    viewBox="0 0 21 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                    // d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
+                    // stroke="black"
+                    // stroke-width="1.69021"
+                    // stroke-linecap="round"
+                    // stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
-          </div>
-          {/* <div className="rounded-lg border-2 border-[#B4B4B4] border-t-0 shadow-md">
-            <div className="p-3">
-              <input
-                type="checkbox"
-                id="val1"
-                value="val1"
-                className="checked:bg-green-600 mr-2"
-                onChange={handleToggle1}
-              />
-              <label htmlFor="opt1">Approval (address, address, uint256)</label>
-            </div>
-            <div className="p-3">
-              <input
-                type="checkbox"
-                id="val2"
-                value="val1"
-                className="checked:bg-green-600 mr-2"
-                onChange={handleToggle2}
-              />
-              <label htmlFor="opt1">Transfer (address, address, uint256)</label>
-            </div>
-          </div>
-          <div className="mt-5" style={{ display: disp1 }}>
-            <div className="font-medium">
-              Approval (address, address, uint256)
-            </div>
-            <input
-              type="text"
-              className="w-full p-3 rounded-lg outline-none border border-[#4C4C4C]"
-              placeholder="Variables: owner, spender, value"
-            />
-          </div>
-          <div className="mt-5" style={{ display: disp2 }}>
-            <div className="font-medium">
-              Approval (address, address, uint256)
-            </div>
-            <input
-              type="text"
-              className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
-              placeholder="Variables: owner, spender, value"
-            />
-          </div> */}
-          <div className="mt-5">
-            {Object.entries(selectedEvents).map(([eventName, eventData]) => (
-              <div key={eventName} className="font-medium">
-                <div className="mt-3">{eventName}</div>
+            {/* <div className="mt-5">
+              <div className="font-medium">
+                Execute an Incident Response Scenario
+              </div>
+              <div className="w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
+                <div className="font-medium">None</div>
+                <div>
+                  <svg
+                    width="21"
+                    height="22"
+                    viewBox="0 0 21 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
+                      stroke="black"
+                      stroke-width="1.69021"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div> */}
+            {/* <div className="flex gap-2">
+              <div className="mt-5 w-1/4">
+                <div className="font-medium">Alert</div>
                 <input
-                  className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
-                  style={{ backgroundColor: "white" }}
                   type="text"
-                  value={eventData.args}
-                  onChange={(e) => handleArgumentChange(e, eventName)}
-                  placeholder={` ${eventData.argDetails} `}
+                  value="1"
+                  className="w-full rounded-lg p-3 outline-none border border-black"
+                  placeholder="Variables: owner, spender, value"
                 />
               </div>
-            ))}
-          </div>
-          <button
-            className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white"
-            onClick={handleSaveMonitor}
-          >
-            Save Monitor
-          </button>
-        </div>
+              <div className="mt-5 w-3/4">
+                <div className="font-medium">
+                  Minimum time between notifications
+                </div>
+                <div className="flex gap-1">
+                  <input
+                    type="text"
+                    value="0"
+                    className="w-1/2 rounded-lg p-3 outline-none border border-black"
+                    placeholder="Variables: owner, spender, value"
+                  />
+                  <div className="w-1/2 border border-black shadow-md p-3 rounded-lg flex px-3 justify-between py-3">
+                    <div className="font-medium">Minute</div>
+                    <div>
+                      <svg
+                        width="21"
+                        height="22"
+                        viewBox="0 0 21 22"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5.52539 8.4642L10.596 13.5348L15.6667 8.4642"
+                          stroke="black"
+                          stroke-width="1.69021"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> */}
 
-        <div className="mt-4 md:mt-0 border border-[#0CA851] shadow-md p-5 rounded-xl">
+            <button
+              className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white"
+              onClick={() => {
+                openModal();
+                setIsSaved(true);
+              }}
+            >
+              Save Monitor
+            </button>
+          </form>
+        </div>
+        <div className=" mt-4 md:mt-0 border mx-auto md:mx-0 border-[#0CA851] shadow-md p-5 rounded-xl">
           <div className="text-lg font-medium" style={{ color: "black" }}>
             Monitor Summary
           </div>
@@ -644,7 +665,16 @@ function Events() {
                 Networks
               </div>
               <div className="text-white bg-[#0CA851] rounded-md p-2 text-[13px]">
-                {networkState}
+                {/* {network} */}
+                {network === 80002
+                  ? "Amoy"
+                  : network === 1
+                  ? "Ethereum Mainnet"
+                  : network === 11155111
+                  ? "Sepolia Testnet"
+                  : network === 137
+                  ? "Polygon Mainnet"
+                  : "Unknown"}
               </div>
             </div>
             <div>
@@ -665,7 +695,7 @@ function Events() {
             </div>
             <div className="flex gap-1">
               <div className=" bg-[#E9E9E9] rounded-md p-2 text-[13px]">
-                {addressState}
+                {address}
               </div>
               <div className="my-auto">
                 <svg
@@ -709,23 +739,14 @@ function Events() {
             <div className="font-medium" style={{ color: "black" }}>
               Event Conditions
             </div>
-            {Object.keys(selectedEvents).length > 0 ? (
+            {selectedEventNames && selectedEventNames.length > 0 ? (
               <ul>
-                {Object.entries(selectedEvents).map(
-                  ([eventName, eventData]) => {
-                    const argTypes = eventDetails
-                      .find((e) => e.name === eventName)
-                      .inputs.split(", ")
-                      .map((arg) => arg.split(": ")[1]) // Extract only the types
-                      .join(", "); // Join types with commas
-
-                    return (
-                      <li key={eventName} className="text-[13px]">
-                        {eventName} ({argTypes})
-                      </li>
-                    );
-                  }
-                )}
+                {selectedEventNames.map((event, index) => (
+                  <li key={index} className="text-[13px]">
+                    {/* Access event name and argTypes from the array */}
+                    {event.name} ({event.argTypes})
+                  </li>
+                ))}
               </ul>
             ) : (
               <div className="text-[13px]">No events selected</div>
@@ -735,19 +756,17 @@ function Events() {
             <div className="font-medium" style={{ color: "black" }}>
               Function Conditions
             </div>
-            <div
-              className="text-[13px]"
-              style={{ display: `${disp1 == "none" ? "block" : "none"}` }}
-            >
-              None
-            </div>
-            <div style={{ display: disp1 }}>
+            <div>
               <div className="text-[13px]">approve(address,uint256)</div>
               <div className="text-[13px]">
                 decreaseAllowance(address,uint256)
               </div>
               <div className="text-[13px]">
                 increaseAllowance(address,uint256)
+              </div>
+              <div className="text-[13px]">transfer(address,uint256)</div>
+              <div className="text-[13px]">
+                transferFrom(address,address,uint256)
               </div>
             </div>
           </div>
@@ -756,18 +775,31 @@ function Events() {
               Alerts
             </div>
             <div className="flex gap-1 items-center">
-              <div className="text-[13px]" style={{ color: "black" }}>
-                Marked as
-              </div>
+              <div className="text-[13px]">Marked as</div>
               <div className=" bg-[#E9E9E9] rounded-md py-1 px-2 text-[13px]">
-                Medium Severity
+                {riskCategory || "Select Severity"}
               </div>
             </div>
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={open}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <div className="text-xl font-medium text-center mt-[30px] mx-[60px] md:mx-[120px]">
+          Creating Monitor
+        </div>
+        <img
+          src={Load}
+          alt="not found"
+          className="mt-6  mb-[30px] mx-[60px] md:mx-[120px]"
+        />
+      </Modal>
     </div>
   );
 }
 
-export default Events;
+export default Alerts_Edit;

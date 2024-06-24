@@ -5,6 +5,9 @@ import Modal from "react-modal";
 
 import Load from "../images/loading.png";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 Modal.setAppElement("#root");
 const customStyles = {
   content: {
@@ -48,11 +51,12 @@ function Alerts() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const emails = emailInput.split(",").map((email) => email.trim()); // Process email input for sending
+    const emails = emailInput.split(",").map((email) => email.trim());
+    const emailString = emails.join(",");
     const postData = {
-      monitor_id: 12,
+      monitor_id: m_id,
       name: name,
-      alert_data: emails,
+      alert_data: emailString,
       alert_type: "1",
       status: 2,
     };
@@ -65,9 +69,16 @@ function Alerts() {
       console.log(response.data);
       console.log("email is:", emails);
       console.log("risk category is:", riskCategory);
-      navigate("/monitor", { state: { email, token } });
+      console.log("monitor id is:", m_id);
+      toast.success("Monitor Updated successfully!", {
+        autoClose: 500,
+        onClose: () => {
+          navigate("/monitor", { state: { email, token } });
+        },
+      });
     } catch (error) {
       console.error("Error updating monitor:", error);
+      toast.error("Failed to Update Monitor. Please try again!");
     }
   };
 
@@ -82,6 +93,17 @@ function Alerts() {
 
       style={{ backgroundColor: "#FCFFFD" }}
     >
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Navbar email={email} />
       <div className="w-full h-full mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className="mx-auto md:mx-0">
@@ -674,11 +696,14 @@ function Alerts() {
               Event Conditions
             </div>
             {selectedEventNames && selectedEventNames.length > 0 ? (
-              selectedEventNames.map((eventName) => (
-                <div key={eventName} className="text-[13px]">
-                  {eventName}
-                </div>
-              ))
+              <ul>
+                {selectedEventNames.map((event, index) => (
+                  <li key={index} className="text-[13px]">
+                    {/* Access event name and argTypes from the array */}
+                    {event.name} ({event.argTypes})
+                  </li>
+                ))}
+              </ul>
             ) : (
               <div className="text-[13px]">No events selected</div>
             )}

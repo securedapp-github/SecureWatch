@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 //
 
-function Events() {
+function Event_Edit() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -25,7 +25,7 @@ function Events() {
   const [riskCategoryState, setRiskCategoryState] = useState(rk || "");
   const [abiState, setAbiState] = useState(abi || "");
   // console.log(token);
-  // console.log(m_id);
+  console.log(m_id);
   const mid = m_id;
 
   const [disp1, setDisp1] = useState("none");
@@ -114,18 +114,141 @@ function Events() {
 
   const web3 = new Web3();
 
+  //   const handleSaveMonitor = async () => {
+  //     if (!Array.isArray(eventDetails)) {
+  //       console.error("eventDetails is not an array:", eventDetails);
+  //       return; // Exit if eventDetails is not an array
+  //     }
+
+  //     let navigationState = {
+  //       monitorName: name,
+  //       network: network,
+  //       address: address,
+  //       rk: rk,
+  //       m_id: mid,
+  //       email: email,
+  //       token: token,
+  //       selectedEventNames: Object.entries(selectedEvents).map(
+  //         ([eventName, eventData]) => {
+  //           const argTypes = eventDetails
+  //             .find((e) => e.name === eventName)
+  //             .inputs.split(", ")
+  //             .map((arg) => arg.split(": ")[1]) // Extract only the types
+  //             .join(", "); // Join types with commas
+  //           return {
+  //             name: eventName,
+  //             argTypes: argTypes,
+  //           };
+  //         }
+  //       ), // Storing the names of selected events
+  //     };
+
+  //     Object.entries(selectedEvents).forEach(
+  //       async ([eventName, eventDetailsEntry]) => {
+  //         const argsArray = eventDetailsEntry.args
+  //           .split(",")
+  //           .map((arg) => arg.trim());
+
+  //         const event = eventDetails.find((e) => e.name === eventName);
+  //         if (!event) return;
+
+  //         const argDetails = event.inputs.split(", ").map((arg) => {
+  //           const [name, type] = arg.split(": ");
+  //           return name;
+  //         });
+
+  //         const argsObject = argsArray.reduce((acc, arg, index) => {
+  //           const argName = argDetails[index]; // Get the actual argument name
+  //           acc[argName] = arg;
+  //           return acc;
+  //         }, {});
+
+  //         // const event = eventDetails.find((e) => e.name === eventName);
+  //         if (!event) {
+  //           console.error("Event not found in eventDetails:", eventName);
+  //           return; // Exit if the event is not found
+  //         }
+
+  //         // Check if 'inputs' is available and correctly formatted
+  //         if (!event.inputs || typeof event.inputs !== "string") {
+  //           console.error(
+  //             "Event inputs are not correctly formatted:",
+  //             event.inputs
+  //           );
+  //           return;
+  //         }
+
+  //         const eventSignatureInputs = event.inputs
+  //           .split(", ")
+  //           .map((input) => {
+  //             const [name, type] = input.split(": ");
+  //             return type;
+  //           })
+  //           .join(",");
+
+  //         // The correct format for encodeEventSignature: "EventName(type1,type2,...)"
+  //         const eventSignatureData = `${event.name}(${eventSignatureInputs})`;
+  //         let eventSignature;
+  //         try {
+  //           eventSignature =
+  //             web3.eth.abi.encodeEventSignature(eventSignatureData);
+  //         } catch (error) {
+  //           console.error(
+  //             "Failed to encode event signature:",
+  //             error,
+  //             "with data:",
+  //             eventSignatureData
+  //           );
+  //           return;
+  //         }
+
+  //         const body = {
+  //           name: eventName,
+  //           mid: 57,
+  //           signature: eventSignature,
+  //           arguments: argsObject,
+  //         };
+
+  //         try {
+  //           const response = await axios.post(
+  //             "https://139-59-5-56.nip.io:3443/update_event",
+  //             body
+  //           );
+  //           console.log("Event added:", response.data);
+  //           console.log("Arguments Object:", argsObject);
+  //           console.log("signature is:", eventSignature);
+  //           console.log("network in event is", network);
+  //           console.log("event is:", selectedEventNames);
+  //           console.log("monitor id is:", m_id);
+  //           console.log("event name is:", eventName);
+  //           // Navigate to alerts with updated navigation state
+  //           toast.success("Event Added successfully!", {
+  //             autoClose: 500,
+  //             onClose: () => {
+  //               navigate("/alerts", { state: navigationState });
+  //             },
+  //           });
+  //         } catch (error) {
+  //           console.error("Error sending event data:", error);
+  //           toast.error("Failed to Add Event. Please try again!");
+  //         }
+  //       }
+  //     );
+  //   };
   const handleSaveMonitor = async () => {
-    if (!Array.isArray(eventDetails)) {
-      console.error("eventDetails is not an array:", eventDetails);
-      return; // Exit if eventDetails is not an array
+    // Ensure eventDetails is an array and contains data
+    if (!Array.isArray(eventDetails) || eventDetails.length === 0) {
+      console.error("eventDetails is not valid:", eventDetails);
+      toast.error("Failed to fetch event details. Please try again!");
+      return; // Exit if eventDetails is invalid
     }
 
-    let navigationState = {
+    const navigationState = {
       monitorName: name,
-      network: network,
-      address: address,
-      rk: rk,
-      m_id: mid,
+      network: networkState,
+      address: addressState,
+      rk: riskCategoryState,
+      m_id: m_id,
       email: email,
       token: token,
       selectedEventNames: Object.entries(selectedEvents).map(
@@ -145,28 +268,34 @@ function Events() {
 
     Object.entries(selectedEvents).forEach(
       async ([eventName, eventDetailsEntry]) => {
-        const argsArray = eventDetailsEntry.args
-          .split(",")
-          .map((arg) => arg.trim());
+        // Logic to prioritize user-entered arguments
+        let argsToUse = {};
+        if (eventDetailsEntry.args.trim() !== "") {
+          // If user has entered something, use that
+          const userArgs = eventDetailsEntry.args
+            .split(",")
+            .map((arg) => arg.trim());
+          const argNames = eventDetailsEntry.argDetails.split(", ");
+          argsToUse = argNames.reduce((acc, argName, index) => {
+            acc[argName] = userArgs[index];
+            return acc;
+          }, {});
+        } else {
+          // Otherwise, fall back to the placeholder arguments
+          try {
+            argsToUse = JSON.parse(eventDetailsEntry.args);
+          } catch (parseError) {
+            console.error("Error parsing placeholder args:", parseError);
+            toast.error(`Invalid placeholder arguments for ${eventName}`);
+            return; // Exit if parsing fails
+          }
+        }
 
         const event = eventDetails.find((e) => e.name === eventName);
-        if (!event) return;
-
-        const argDetails = event.inputs.split(", ").map((arg) => {
-          const [name, type] = arg.split(": ");
-          return name;
-        });
-
-        const argsObject = argsArray.reduce((acc, arg, index) => {
-          const argName = argDetails[index]; // Get the actual argument name
-          acc[argName] = arg;
-          return acc;
-        }, {});
-
-        // const event = eventDetails.find((e) => e.name === eventName);
         if (!event) {
           console.error("Event not found in eventDetails:", eventName);
-          return; // Exit if the event is not found
+          toast.error(`Event ${eventName} not found in contract ABI`);
+          return;
         }
 
         // Check if 'inputs' is available and correctly formatted
@@ -175,57 +304,34 @@ function Events() {
             "Event inputs are not correctly formatted:",
             event.inputs
           );
+          toast.error(`Invalid event input format for ${eventName}`);
           return;
         }
 
-        const eventSignatureInputs = event.inputs
-          .split(", ")
-          .map((input) => {
-            const [name, type] = input.split(": ");
-            return type;
-          })
-          .join(",");
-
-        // The correct format for encodeEventSignature: "EventName(type1,type2,...)"
-        const eventSignatureData = `${event.name}(${eventSignatureInputs})`;
-        let eventSignature;
-        try {
-          eventSignature =
-            web3.eth.abi.encodeEventSignature(eventSignatureData);
-        } catch (error) {
-          console.error(
-            "Failed to encode event signature:",
-            error,
-            "with data:",
-            eventSignatureData
-          );
-          return;
-        }
+        // ... (rest of the event signature generation logic is the same)
 
         const body = {
           name: eventName,
-          mid: mid,
-          signature: eventSignature,
-          arguments: argsObject,
+          name: eventName,
+          id: eventDetailsEntry.eventId, // Use the stored event ID for update
+
+          //   signature: eventSignature,
+          arguments: argsToUse, // Use the prioritized arguments here
         };
+        console.log("arg is:", argsToUse);
 
         try {
           const response = await axios.post(
-            "https://139-59-5-56.nip.io:3443/add_event",
+            "https://139-59-5-56.nip.io:3443/update_event",
             body
           );
           console.log("Event added:", response.data);
-          console.log("Arguments Object:", argsObject);
-          console.log("signature is:", eventSignature);
-          console.log("network in event is", network);
-          console.log("event is:", selectedEventNames);
-          console.log("monitor id is:", m_id);
-          console.log("event name is:", eventName);
-          // Navigate to alerts with updated navigation state
+          // ... (rest of the logs are the same)
+
           toast.success("Event Added successfully!", {
             autoClose: 500,
             onClose: () => {
-              navigate("/alerts", { state: navigationState });
+              navigate("/alert_edit", { state: navigationState });
             },
           });
         } catch (error) {
@@ -235,6 +341,131 @@ function Events() {
       }
     );
   };
+  const [value, setValue] = useState(10);
+  const [event, setEvent] = useState([]);
+
+  //   React.useEffect(() => {
+  //     const fetchEvent = async () => {
+  //       const res = await fetch("https://139-59-5-56.nip.io:3443/get_event", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           mid: 46,
+  //         }),
+  //       });
+  //       const data = await res.json();
+  //       setEvent(data);
+  //     };
+  //     fetchEvent();
+  //   }, [value]);
+
+  const [rerender, setRerender] = useState(false);
+  React.useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch("https://139-59-5-56.nip.io:3443/get_event", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mid: m_id }),
+        });
+
+        const data = await res.json();
+
+        if (data && Array.isArray(data.monitors)) {
+          setEvent(data);
+
+          const eventsBySignature = data.monitors.reduce((acc, event) => {
+            const eventAbi = eventDetails.find((e) => e.name === event.name);
+
+            if (!eventAbi) {
+              console.warn(`Event ${event.name} not found in ABI`);
+              return acc;
+            }
+
+            const eventSignatureInputs = eventAbi.inputs
+              .split(", ")
+              .map((arg) => arg.split(": ")[1]) // Get the types from eventDetails
+              .join(",");
+
+            const eventSignatureData = `${event.name}(${eventSignatureInputs})`;
+            const eventSignature =
+              web3.eth.abi.encodeEventSignature(eventSignatureData);
+            acc[eventSignature] = event;
+            return acc;
+          }, {});
+
+          const fetchedEvents = {};
+          eventDetails.forEach((event) => {
+            const eventSignatureInputs = event.inputs
+              .split(", ")
+              .map((arg) => arg.split(": ")[1])
+              .join(",");
+
+            const eventSignatureData = `${event.name}(${eventSignatureInputs})`;
+            const eventSignature =
+              web3.eth.abi.encodeEventSignature(eventSignatureData);
+            const fetchedEvent = eventsBySignature[eventSignature];
+            if (fetchedEvent) {
+              let parsedArgs = fetchedEvent.arguments;
+
+              // Try to parse fetched arguments as JSON, otherwise use it as is
+              try {
+                if (typeof fetchedEvent.arguments === "string") {
+                  parsedArgs = JSON.parse(fetchedEvent.arguments);
+                }
+              } catch (parseError) {
+                console.error("Error parsing arguments:", parseError);
+              }
+              const argsString =
+                typeof parsedArgs === "object" && parsedArgs !== null
+                  ? Object.values(parsedArgs).join(", ")
+                  : fetchedEvent.arguments;
+
+              // Use conditional check for argDetails
+              const argDetails = fetchedEvent.argDetails
+                ? fetchedEvent.argDetails.split(", ")
+                : eventDetails
+                    .find((e) => e.name === event.name)
+                    ?.inputs.split(", ")
+                    .map((arg) => arg.split(": ")[0])
+                    .join(", ");
+
+              fetchedEvents[event.name] = {
+                args: argsString,
+                argDetails, // This will be either the fetched event.argDetails or from eventDetails
+                eventId: fetchedEvent.id,
+              };
+            }
+          });
+
+          setSelectedEvents(fetchedEvents);
+          setSelectedEventNames(
+            Object.keys(fetchedEvents).map((name) => {
+              const inputs = eventDetails.find((e) => e.name === name)?.inputs;
+              return `${name} (${inputs})`;
+            })
+          );
+        } else {
+          console.error(
+            "API response does not contain an array of monitors:",
+            data
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      } finally {
+        setRerender(true);
+      }
+    };
+
+    if (m_id) {
+      fetchEvents();
+    }
+  }, [eventDetails, m_id, value, rerender]);
+  console.log("evetn is:", event);
+
   return (
     <div
       className="font-poppin pt-2 bg-white min-h-full"
@@ -299,7 +530,7 @@ function Events() {
             </div>
           </div>
           <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
-            Create Monitor
+            Edit Monitor
           </div>
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
@@ -609,19 +840,39 @@ function Events() {
             />
           </div> */}
           <div className="mt-5">
-            {Object.entries(selectedEvents).map(([eventName, eventData]) => (
+            {/* {Object.entries(selectedEvents).map(([eventName, eventData]) => (
               <div key={eventName} className="font-medium">
                 <div className="mt-3">{eventName}</div>
                 <input
                   className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
                   style={{ backgroundColor: "white" }}
                   type="text"
-                  value={eventData.args}
+                  // Directly use eventData.args as the value
+                  value={eventData.args || ""}
                   onChange={(e) => handleArgumentChange(e, eventName)}
-                  placeholder={` ${eventData.argDetails} `}
+                  placeholder={`Variables: ${eventData.argDetails}`}
                 />
               </div>
-            ))}
+            ))} */}
+
+            {Object.entries(selectedEvents).map(([eventName, eventData]) => {
+              const argNames = eventData.argDetails.split(", ");
+              const placeholder = ` ${argNames.join(", ")}`;
+
+              return (
+                <div key={eventName} className="font-medium">
+                  <div className="mt-3">{eventName}</div>
+                  <input
+                    className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
+                    style={{ backgroundColor: "white" }}
+                    // ... (other input properties)
+                    value={eventData.args || " "}
+                    onChange={(e) => handleArgumentChange(e, eventName)}
+                    placeholder={placeholder}
+                  />
+                </div>
+              );
+            })}
           </div>
           <button
             className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white"
@@ -644,7 +895,16 @@ function Events() {
                 Networks
               </div>
               <div className="text-white bg-[#0CA851] rounded-md p-2 text-[13px]">
-                {networkState}
+                {/* {networkState} */}
+                {networkState === 80002
+                  ? "Amoy"
+                  : networkState === 1
+                  ? "Ethereum Mainnet"
+                  : networkState === 11155111
+                  ? "Sepolia Testnet"
+                  : networkState === 137
+                  ? "Polygon Mainnet"
+                  : "Unknown"}
               </div>
             </div>
             <div>
@@ -770,4 +1030,4 @@ function Events() {
   );
 }
 
-export default Events;
+export default Event_Edit;
