@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./navbar2";
 import Modal from "react-modal";
 import axios from "axios";
@@ -15,11 +15,12 @@ function Monitor_Edit() {
   const email = localStorage.getItem("email");
   const decoded = jwtDecode(token);
   const user_Id = decoded.userId;
-
+  console.log("user id = ", user_Id);
   const navigate = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  // const targetMid = query.get("id");
+  const targetMids = query.get("id");
+  console.log("MID = ", targetMids);
 
   const [monitorName, setMonitorName] = React.useState("");
   const [riskCategory, setRiskCategory] = React.useState("");
@@ -28,6 +29,8 @@ function Monitor_Edit() {
   const [network, setNetwork] = React.useState("");
   const [networkName, setNetworkName] = useState("");
   const [abi, setAbi] = React.useState("");
+  const [selectedMonitor, setSelectedMonitor] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,43 +88,62 @@ function Monitor_Edit() {
   const [value, setValue] = useState(10);
   const [moniter, setMoniter] = useState([]);
 
-  React.useEffect(() => {
+  const setMoniters = async (moniterss) => {
+    console.log("called setMoniters ", moniterss);
+    if (!moniterss || !Array.isArray(moniterss.monitors) || moniterss.monitors.length === 0) {
+      console.log("Monitors array is empty");
+      setLoading(false); 
+      return;
+    }
+    console.log("targetMids = ", targetMids );
+    const _selectedMonitor = moniterss.monitors.find((monitor) => monitor.mid == targetMids);
+    console.log("select monitor = ", _selectedMonitor );
+
+    if (_selectedMonitor) {
+      setSelectedMonitor(_selectedMonitor);
+      setLoading(false); // Update loading state to indicate data is loaded
+    } else {
+      console.log(`Monitor with mid ${targetMids} not found`);
+      setLoading(false); // Update loading state to indicate no matching monitor found
+    }
+  };
+
+
+  useEffect(() => {
+
+  
+
     const fetchMoniter = async () => {
-      const res = await fetch("https://139-59-5-56.nip.io:3443/get_monitor", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: 12,
-        }),
-      });
-      const data = await res.json();
-      setMoniter(data);
+      let data;
+      try {
+        console.log("called fetchMoniter ");
+
+        const res = await fetch("https://139-59-5-56.nip.io:3443/get_monitor", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: user_Id,
+          }),
+        });
+        data = await res.json();
+      } catch (error) {
+        console.error("Error fetching monitor data:", error);
+      } finally {
+        setMoniter(data);
+        setMoniters(data);
+
+      }
     };
+    
     fetchMoniter();
-  }, [value]);
+  }, [user_Id, value]);
 
   // console.log("monitor isa:", moniter);
 
-  if (
-    !moniter ||
-    !Array.isArray(moniter.monitors) ||
-    moniter.monitors.length === 0
-  ) {
-    return (
-      <div className="text-center mt-20 text-4xl font-medium text-black">
-        Please create a monitor.
-      </div>
-    );
-  }
 
-  const targetMid = 57; // Replace with the actual mid you want
-
-  // const targetMid = 37; // Replace with the actual mid you want
-
-  const selectedMonitor = moniter.monitors.find((i) => i.mid === targetMid);
-  console.log("selcted monitor is:", selectedMonitor);
+ 
   // console.log("Selected Monitor:", selectedMonitor);
   // console.log("name is:", selectedMonitor.name);
 
@@ -137,11 +159,20 @@ function Monitor_Edit() {
   //     : "Unknown";
   // }
 
+  if (loading) {
+    return (
+      <div className="text-center mt-20 text-4xl font-medium text-black">
+        Loading Monitor Details...
+      </div>
+    );
+  }
+
   return (
     <div
       className="font-poppin pt-2 bg-white min-h-full2"
       style={{ backgroundColor: "#FCFFFD" }}
     >
+     
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -154,7 +185,7 @@ function Monitor_Edit() {
         pauseOnHover
       />
       <Navbar email={email} />
-
+      {selectedMonitor && (
       <div className="w-5/6  lg:w-5/6 mx-auto mt-20 flex justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className="w-full md:w-1/4 ">
           <div className="flex">
@@ -623,6 +654,7 @@ function Monitor_Edit() {
           </form>
         </div>
       </div>
+      )}
     </div>
   );
 }
