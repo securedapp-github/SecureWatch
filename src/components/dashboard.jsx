@@ -8,13 +8,17 @@ import Eye from '../images/Eye.png';
 import Grid from '../images/grid.png'
 import Actions from '../images/Actions.png';
 import Code from '../images/code.png';
+import { useState } from "react";
 
 
 function Dashboard() {
+  const [values, setValues] = useState([]);
+  const [listeners, setListeners] = useState('');
+  const [alert, setAlert]= useState('')
+  const [monitorcount, setMonitorcount] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
   const { email, monitor = {}, token } = location.state || {};
-  const s = monitor.length || 0;
   // console.log(email);
 
   const Login = localStorage.getItem("login");
@@ -32,9 +36,33 @@ console.log(userEmail);
 
 // console.log(monitor);
   //   console.log(s);
+  React.useEffect(() => {
+    const fetchMoniter = async () => {
+      const res=await fetch('https://139-59-5-56.nip.io:3443/get_monitor',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          "user_id": 6
+        })
+      });
+      const data = await res.json();
+      setValues(data);
+      setListeners(data.listeners[0].active_listeners);
+      setAlert(data.alerts[0].alerts)
+      setMonitorcount(data.monitors.length)
+    };
+    fetchMoniter();
+  }, []);
+
+   console.log(values);
+   console.log("Monitors",monitorcount)
+  // console.log("Listeners",values.listeners[0].active_listeners);
+  
+
 
   return (
-    
       <div className="bg-white pt-12">
         <Navbar email={userEmail} />
         <div className="w-4/6 mx-auto">
@@ -122,7 +150,7 @@ console.log(userEmail);
             >
               <div className="text-start  flex items-center gap-3"> <img src={Deploy} alt="" /> Deploy</div>
               <div className="flex mt-5">
-                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6  text-black">04</span>
+                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6  text-black">{listeners}</span>
                 <span>
                   <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ACTIVE LISTENERS</div>
                  
@@ -171,9 +199,9 @@ console.log(userEmail);
             >
               <div className="text-start  flex items-center gap-3"> <img src={Sliders} alt="" /> Onchain Events</div>
               <div className="flex mt-5">
-                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6 text-black">00</span>
+                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6 text-black">{alert}</span>
                 <span>
-                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ACTIVE EVENTS</div>
+                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ACTIVE ALERTS</div>
                 </span>
                 <span className="cursor-pointer">
                   <svg
@@ -219,7 +247,7 @@ console.log(userEmail);
             >
               <div className="text-start flex items-center gap-3"><img src={Eye} alt="" /> Monitor</div>
               <div className="flex mt-5">
-                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6  text-black">{s}</span>
+                <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6  text-black">{monitorcount}</span>
                 <span>
                   <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ACTIVE MONITOR</div>
                 </span>
