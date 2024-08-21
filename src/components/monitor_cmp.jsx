@@ -146,12 +146,12 @@ const Monitor_cmp = () => {
                             <span className="text-md font-medium text-black">
                               Date:{" "}
                             </span>
-                            {created_on.slice(0, 10)}{" "}
+                            {created_on?.slice(0, 10)}{" "}
                             <span>
                               <span className="text-md font-medium text-black">
                                 Time:{" "}
                               </span>
-                              {created_on.slice(11, 16)}
+                              {created_on?.slice(11, 16)}
                             </span>{" "}
                           </div>
                         </div>
@@ -161,7 +161,7 @@ const Monitor_cmp = () => {
                           Contract address
                         </div>
                         <div className=" px-3 py-2 rounded-md text-[14px] my-auto text-black bg-[#E9E9E9] ">
-                          {`${address.slice(0, 5)}...${address.slice(
+                          {`${address?.slice(0, 5)}...${address?.slice(
                             address.length - 4
                           )}`}
                         </div>
