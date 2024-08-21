@@ -13,13 +13,14 @@ import { baseUrl } from "../Constants/data";
 
 
 function Dashboard() {
+  const token = localStorage.getItem("token");
   const [values, setValues] = useState([]);
   const [listeners, setListeners] = useState('');
   const [alert, setAlert]= useState('')
   const [monitorcount, setMonitorcount] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
-  const { email, monitor = {}, token } = location.state || {};
+  const { email, monitor = {} } = location.state || {};
   // console.log(email);
 
   const Login = localStorage.getItem("login");
@@ -42,7 +43,8 @@ console.log(userEmail);
       const res=await fetch( `${baseUrl}/get_monitor`,{
         method:'POST',
         headers:{
-          'Content-Type':'application/json'
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body:JSON.stringify({
           "user_id": 6

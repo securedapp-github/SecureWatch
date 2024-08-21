@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 function Monitor_Edit() {
   //  const { email, token } = location.state || "";
   const token = localStorage.getItem("token");
+  console.log("token is", token);
   const email = localStorage.getItem("email");
   const decoded = jwtDecode(token);
   const user_Id = decoded.userId;
@@ -59,7 +60,12 @@ function Monitor_Edit() {
     try {
       const response = await axios.post(
         `${baseUrl}/update_monitor`,
-        data
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       // console.log("API response:", response.data);
       // console.log("monitor name is", monitorName);
@@ -133,6 +139,7 @@ function Monitor_Edit() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             user_id: user_Id,

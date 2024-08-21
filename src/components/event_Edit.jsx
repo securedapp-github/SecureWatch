@@ -9,7 +9,7 @@ import { baseUrl } from "../Constants/data";
 function Event_Edit() {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const token = localStorage.getItem("token");
   const [options, setOptions] = useState([]);
   const [foundedEvents, setFoundedEvents] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
@@ -18,7 +18,7 @@ function Event_Edit() {
 
   console.log("Selected values:", selectedValues.length);
 
-  const { name, email, m_id, token, network, abi, address, rk, alert_data, alert_type } = location.state || "";
+  const { name, email, m_id, network, abi, address, rk, alert_data, alert_type } = location.state || "";
 
   console.log("alert_data",alert_data);
   console.log("alert_type",alert_type);
@@ -102,6 +102,7 @@ function Event_Edit() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({ mid: m_id }),
         });
@@ -262,7 +263,9 @@ const handleSelectChange = (selectedOptions) => {
         const sendRequest = async (url, method, data) => {
             const response = await fetch(url, {
                 method,
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json",
+                  'Authorization': `Bearer ${token}`,
+                 },
                 body: JSON.stringify(data),
             });
             if (!response.ok) {
@@ -295,7 +298,9 @@ const handleSelectChange = (selectedOptions) => {
         const fetchEventsFromMonitor = async (monitorId) => {
             const response = await fetch(`${baseUrl}/get_event`, {
                 method: 'POST',
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json",
+                  'Authorization': `Bearer ${token}`,
+                 },
                 body: JSON.stringify({ mid: monitorId }),
             });
             if (!response.ok) {

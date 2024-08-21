@@ -6,6 +6,7 @@ import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 import { baseUrl } from "../Constants/data";
 
 function Monitor_alerts() {
+  const token = localStorage.getItem("token");
   const location = useLocation();
   const { mid } = location.state;
   const {network} = location.state;
@@ -21,7 +22,8 @@ function Monitor_alerts() {
       const res=await fetch(`${baseUrl}/get_alerts`,{
         method:'POST',
         headers:{
-          'Content-Type':'application/json'
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body:JSON.stringify({
           "mid": mid

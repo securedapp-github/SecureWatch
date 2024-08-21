@@ -54,6 +54,11 @@ function Monitor_create() {
           alert_data: "",
           abi: abi,
           category: riskCategory,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       // console.log("API response:", response.data);

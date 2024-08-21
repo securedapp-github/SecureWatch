@@ -35,7 +35,7 @@ function Login() {
         console.log("Login Successful:", response.data);
         const token = response.data.token;
         const monitor = response.data.monitors;
-        // console.log(monitor);
+        console.log("token",token);
         const Email = response.data.user.email;
         // console.log(Email);
         let login = localStorage.setItem("login", true);

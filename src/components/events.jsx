@@ -16,8 +16,8 @@ import { baseUrl } from "../Constants/data";
 function Events() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const { name, email, m_id, token, network, abi, address, rk } =
+  const token = localStorage.getItem("token");
+  const { name, email, m_id, network, abi, address, rk } =
     location.state || "";
   const [networkState, setNetworkState] = useState(network || ""); // Default to 'MAINNET' if not provided
   //  const [contractNameState, setContractNameState] = useState(alert_data || "");
@@ -287,7 +287,13 @@ function Events() {
   
       // Send data to the server
       try {
-        const response = await axios.post(`${baseUrl}/add_event`, body);
+        const response = await axios.post(`${baseUrl}/add_event`, body,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         console.log("Event added:", response.data);
         console.log("Arguments Object:", argsObject);
         console.log("Signature is:", eventSignature);

@@ -24,8 +24,8 @@ const customStyles = {
 function Alerts() {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const { name, email, m_id, token, network, address, rk, selectedEventNames } = location.state || {};
+  const token = localStorage.getItem("token");
+  const { name, email, m_id, network, address, rk, selectedEventNames } = location.state || {};
   console.log("name:",name);
   console.log("MID:",m_id);
 
@@ -95,6 +95,7 @@ function Alerts() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: name,

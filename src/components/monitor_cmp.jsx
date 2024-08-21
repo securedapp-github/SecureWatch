@@ -21,6 +21,7 @@ const Monitor_cmp = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState(10);
   const [moniter, setMoniter] = useState([]);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchMoniter = async () => {
@@ -28,6 +29,7 @@ const Monitor_cmp = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
           user_id: 6,
@@ -46,6 +48,7 @@ const Monitor_cmp = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             monitor_id: monitor_id,
@@ -195,6 +198,7 @@ const Monitor_cmp = () => {
                             method: "POST",
                             headers: {
                               "Content-Type": "application/json",
+                              'Authorization': `Bearer ${token}`,
                             },
                             body: JSON.stringify({
                               monitor_id: mid,

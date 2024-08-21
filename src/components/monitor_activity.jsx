@@ -3,6 +3,7 @@ import Navbar from "./navbar2";
 import { baseUrl } from '../Constants/data';
 
 function Monitor_activity() {
+  const token = localStorage.getItem("token");
     const [moniter, setMoniter] = useState([]);
     const [value, setValue] = useState(0);
     useEffect(() => {
@@ -11,6 +12,7 @@ function Monitor_activity() {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({
               user_id: 6,

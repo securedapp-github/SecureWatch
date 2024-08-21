@@ -46,6 +46,7 @@ function Login1() {
         const token = response.data.token;
         const monitor = response.data.monitors;
         let login = localStorage.setItem("login", true);
+        let Token = localStorage.setItem("token", token); 
         showSuccessAlert("You are signed up successfully.");
         navigate("/dashboard", { state: { email, monitor, token } });
       }

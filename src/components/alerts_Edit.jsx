@@ -22,9 +22,10 @@ const customStyles = {
 };
 
 function Alerts_Edit() {
+  const token = localStorage.getItem("token");
   const location = useLocation();
   const navigate = useNavigate();
-  const { name, email, m_id, token, network, address, rk, selectedEventNames, alert_data, alert_type } = location.state || {};
+  const { name, email, m_id, network, address, rk, selectedEventNames, alert_data, alert_type } = location.state || {};
   console.log("Alert Data",alert_data);
   console.log("Alert Type",alert_type);
 
@@ -106,7 +107,13 @@ function Alerts_Edit() {
     try {
       const response = await axios.post(
         `${baseUrl}/update_monitor`,
-        postData
+        postData,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+
       );
       console.log(response.data);
       toast.success("Monitor Updated successfully!", {
