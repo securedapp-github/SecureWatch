@@ -19,9 +19,11 @@ import Logs from "./components/logs.jsx";
 import Emailverify from "./components/Emailverify.jsx";
 import Protected from "./protected.js";
 import ApiBuilder from "./components/api_builder.jsx";
+import Algo_api_builder from "./components/algo_api_builder.jsx";
 import MonitorAlerts from "./components/monitor_alerts.jsx";
 import Forgotpassword from "./components/Forgotpassword.jsx";
 import Otpverify from "./components/Otpverify.jsx";
+import AlgoEvents from "./components/algoevents.jsx";
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
 
         <Route path="/function" element={<Protected cmp={<Functions />} />} />
         <Route path="/event" element={<Protected cmp={<Events />} />} />
+        <Route path="/Algoevents" element={<AlgoEvents />} />
+        
         <Route
           path="/alert_edit"
           element={<Protected cmp={<AlertsEdit />} />}
@@ -63,6 +67,10 @@ function App() {
         <Route
           path="/api_builder"
           element={<Protected cmp={<ApiBuilder />} />}
+        />
+         <Route
+          path="/Algo_api_builder"
+          element={<Protected cmp={<Algo_api_builder />} />}
         />
         <Route path="/monitor_alerts" element={<MonitorAlerts />} />
       </Routes>
