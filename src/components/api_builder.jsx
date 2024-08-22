@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import '../App.css';
 import Navbar from "./navbar2";
+import Connect from './Connect';
 
 const Api_builder = () => {
   const [userWalletAddress, setUserWalletAddress] = useState(null);
@@ -80,7 +81,8 @@ const Api_builder = () => {
        <Navbar email={userEmail} />
       <h1 className='  text-center my-10 text-4xl font-medium text-black'>Get Web3 API List</h1>
       <div className="flex justify-center gap-6 flex-wrap my-7">
-        <button className="connect_wallet" onClick={handleConnectWallet}>Connect Wallet!</button>
+        <Connect/>
+        {/* <button className="connect_wallet" onClick={handleConnectWallet}>Connect Wallet!</button> */}
         <div id="wallet-info " className="wallet-info py-3 px-4 border-2">
           <span className="address text-wrap">Wallet Address: {userWalletAddress}</span><br />
           <span className="network text-wrap">Network: {network}</span>
