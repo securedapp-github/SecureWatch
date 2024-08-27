@@ -24,6 +24,8 @@ import MonitorAlerts from "./components/monitor_alerts.jsx";
 import Forgotpassword from "./components/Forgotpassword.jsx";
 import Otpverify from "./components/Otpverify.jsx";
 import AlgoEvents from "./components/algoevents.jsx";
+import Algo_create from "./components/algomonitor.jsx";
+import AlgoEventsedit from "./components/algoevents_edit.jsx";
 
 function App() {
   return (
@@ -45,8 +47,16 @@ function App() {
           element={<Protected cmp={<EventsEdit />} />}
         />
         <Route
+          path="/AlgoEventsedit"
+          element={<Protected cmp={<AlgoEventsedit />} />}
+        />
+        <Route
           path="/monitor_create"
           element={<Protected cmp={<MonitorCreate />} />}
+        />
+        <Route
+          path="/algomonitor"
+          element={<Protected cmp={<Algo_create />} />}
         />
         <Route path="/monitor_Edit" element={<MonitorEdit />}></Route>
 

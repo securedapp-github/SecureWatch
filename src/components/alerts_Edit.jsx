@@ -36,7 +36,7 @@ function Alerts_Edit() {
   const { name, email, m_id, token, network, address, rk, selectedEventNames } =
     location.state || {};
 
-  console.log("netwrok in alers is:", network);
+  console.log("netwrok in alerts is:", network);
 
   const [open, setOpen] = useState(false);
   function openModal() {
@@ -64,7 +64,10 @@ function Alerts_Edit() {
     try {
       const response = await axios.post(
         "https://139-59-5-56.nip.io:3443/update_monitor",
-        postData
+        postData,{
+          headers: {
+            Authorization: `Bearer ${token}`,}
+        }
       );
       console.log(response.data);
       console.log("email is:", emails);
@@ -95,6 +98,7 @@ function Alerts_Edit() {
       const res = await fetch("https://139-59-5-56.nip.io:3443/get_monitor", {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

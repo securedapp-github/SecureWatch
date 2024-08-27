@@ -5,12 +5,12 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { baseUrl } from "../Constants/data";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Monitor_Edit() {
-  //  const { email, token } = location.state || "";
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
   const decoded = jwtDecode(token);
@@ -18,70 +18,130 @@ function Monitor_Edit() {
   console.log("user id = ", user_Id);
   const navigate = useNavigate();
   const location = useLocation();
+  console.log("location", location);
   const query = new URLSearchParams(location.search);
   const targetMids = query.get("id");
   console.log("MID = ", targetMids);
 
-  const [monitorName, setMonitorName] = React.useState("");
-  const [riskCategory, setRiskCategory] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [contractName, setContractName] = React.useState("");
-  const [network, setNetwork] = React.useState("");
+  const { mid, name, alert_data, alert_type } = location.state || {};
+  console.log("alert data is", alert_data);
+  console.log("alert type is", alert_type);
+  
+  const [monitorName, setMonitorName] = useState(name );
+  const [riskCategory, setRiskCategory] = useState("");
+  const [address, setAddress] = useState("");
+  const [contractName, setContractName] = useState("");
+  const [network, setNetwork] = useState("");
   const [networkName, setNetworkName] = useState("");
-  const [abi, setAbi] = React.useState("");
+  const [abi, setAbi] = useState("");
   const [selectedMonitor, setSelectedMonitor] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAlgorandMonitor, setIsAlgorandMonitor] = useState(false);
+  const [code, setCode] = useState("");
+  const [smartContract, setSmartContract] = useState("");
+
+  const sendSmartContract = () => {
+    axios
+      .post("http://localhost:5000/api/smart-contract", { code },{
+        
+      })
+      .then((response) => {
+        console.log("Smart contract processed:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error sending smart contract:", error);
+      });
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const data = {
-      monitor_id: selectedMonitor.mid,
-      name: monitorName || selectedMonitor.name,
-      network: network || selectedMonitor.network,
-      address: address || selectedMonitor.address,
-      alert_type: 1,
-      abi: abi || selectedMonitor.abi,
+      name: monitorName ||selectedMonitor.name ,
+        user_id: parseInt(user_Id) || selectedMonitor.user_id,
+        network: parseInt(network) || selectedMonitor.network,
+        address: address || selectedMonitor.address,
+        alert_type: 1,
+        alert_data: "",
     };
-    console.log("Data is:", data);
-    try {
-      const response = await axios.post(
-        "https://139-59-5-56.nip.io:3443/update_monitor",
-        data
-      );
-      // console.log("API response:", response.data);
-      // console.log("monitor name is", monitorName);
-      // console.log("Risk category is:", riskCategory);
-      // console.log("contract name is", contractName);
-      // console.log("netwprk name is", network);
-      // console.log(" address is:", address);
-      // console.log(" ABI  is:", abi);
-      // console.log(" user id is", user_Id);
-
-      toast.success("Monitor created successfully!", {
-        autoClose: 500,
-        onClose: () => {
-          navigate("/event_Edit", {
-            state: {
-              name: monitorName || selectedMonitor.name,
-              network: network || selectedMonitor.network,
-              address: address || selectedMonitor.address,
-              rk: riskCategory,
-              abi: abi || selectedMonitor.abi,
-              m_id: selectedMonitor.mid,
-              email: email,
-              token: token,
-            },
-          });
-        },
-      });
-
-      console.log("response is", response.data);
-    } catch (error) {
-      console.error("API request failed:", error); // Handle error
-      toast.error("Failed to create monitor. Please try again!", {
-        autoClose: 500,
-      });
+  
+    if (network === "4160") {
+      // data.smart_Contract = smartContract;
+      // data.code = code || selectedMonitor.code;
+  
+      try {
+        const response = await axios.post("https://139-59-5-56.nip.io:3443/add_monitor", data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        console.log("smart contract code:", data.code);
+  
+        toast.success("Details updated successfully!", {
+          autoClose: 500,
+          onClose: () => {
+            navigate("/AlgoEventsedit", {
+              state: {
+                name: monitorName || selectedMonitor.name,
+                network: network || selectedMonitor.network,
+                address: address || selectedMonitor.address,
+                rk: riskCategory,
+                abi: abi || selectedMonitor.abi,
+                m_id: selectedMonitor.mid,
+                email: email,
+                token: token,
+                alert_data: alert_data || "",
+                alert_type: alert_type || "",
+              },
+            });
+          },
+        });
+  
+        console.log("response is", response.data);
+      } catch (error) {
+        console.error("API request failed:", error); // Handle error
+        toast.error("Failed to create monitor. Please try again!", {
+          autoClose: 500,
+        });
+      }
+    } else {
+      data.abi = abi || selectedMonitor.abi;
+  
+      try {
+        const response = await axios.post(`${baseUrl}/update_monitor`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+  
+        toast.success("Details updated successfully!", {
+          autoClose: 500,
+          onClose: () => {
+            navigate("/event_Edit", {
+              state: {
+                name: monitorName || selectedMonitor.name,
+                network: network || selectedMonitor.network,
+                address: address || selectedMonitor.address,
+                rk: riskCategory,
+                abi: abi || selectedMonitor.abi,
+                m_id: selectedMonitor.mid,
+                email: email,
+                token: token,
+                alert_data: alert_data || "",
+                alert_type: alert_type || "",
+              },
+            });
+          },
+        });
+  
+        console.log("response is", response.data);
+      } catch (error) {
+        console.error("API request failed:", error); // Handle error
+        toast.error("Failed to create monitor. Please try again!", {
+          autoClose: 500,
+        });
+      }
     }
   };
 
@@ -110,17 +170,15 @@ function Monitor_Edit() {
 
 
   useEffect(() => {
-
-  
-
     const fetchMoniter = async () => {
       let data;
       try {
         console.log("called fetchMoniter ");
 
-        const res = await fetch("https://139-59-5-56.nip.io:3443/get_monitor", {
+        const res = await fetch(`${baseUrl}/get_monitor`, {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -139,25 +197,6 @@ function Monitor_Edit() {
     
     fetchMoniter();
   }, [user_Id, value]);
-
-  // console.log("monitor isa:", moniter);
-
-
- 
-  // console.log("Selected Monitor:", selectedMonitor);
-  // console.log("name is:", selectedMonitor.name);
-
-  // {
-  //   selectedMonitor.network === 80002
-  //     ? "Amoy"
-  //     : selectedMonitor.network === 1
-  //     ? "Ethereum Mainnet"
-  //     : selectedMonitor.network === 11155111
-  //     ? "Sepolia Testnet"
-  //     : selectedMonitor.network === 137
-  //     ? "Polygon Mainnet"
-  //     : "Unknown";
-  // }
 
   if (loading) {
     return (
@@ -472,86 +511,19 @@ function Monitor_Edit() {
         </div>
         <div className="mt-4 md:mt-0 w-full md:w-1/2 pb-20">
           <form onSubmit={handleSubmit}>
-            <div className="font-medium text-xl" style={{ color: "black" }}>
-              Name
-            </div>
-            <div
-              className="text-lg text-[#989898] mt-1"
-              style={{ color: "black" }}
-            >
-              Give your monitor a name to make it easier to identify it. Only
-              for display purposes.
-            </div>
-            <input
-              style={{ backgroundColor: "white" }}
-              type="text"
-              name="name"
-              placeholder={selectedMonitor.name}
-              onChange={(e) => setMonitorName(e.target.value)}
-              className="outline-none border-2 border-[#4C4C4C] w-full rounded-xl p-2 py-3 mt-1 "
-            />
-            <div
-              className="font-medium mt-5 text-lg"
-              style={{ color: "black" }}
-            >
-              Risk Category
-            </div>
-            <select
-              style={{ backgroundColor: "white" }}
-              name="category"
-              id="category"
-              placeholder={selectedMonitor.c}
-              // value={formData.category}
-
-              onChange={(e) => setRiskCategory(e.target.value)}
-              className="outline-none border-2 border-[] py-3 rounded-xl  w-full px-3"
-            >
-              <option
-                value="none"
-                selected
-                disabled
-                hidden
-                className="text-xl font-medium"
-              >
-                None
-              </option>
-              <option
-                value="governance"
-                className="text-[13px] text-[#959595] "
-              >
-                Governance
-              </option>
-              <option
-                value="access control"
-                className="text-[13px] text-[#959595]"
-              >
-                Access Control
-              </option>
-              <option
-                value="suspicious activity"
-                className="text-[13px] text-[#959595]"
-              >
-                Suspicious Activity
-              </option>
-              <option value="financial" className="text-[13px] text-[#959595]">
-                Financial
-              </option>
-              <option value="technical" className="text-[13px] text-[#959595]">
-                Technical
-              </option>
-            </select>
-
+        
             <div
               className="text-lg font-medium mt-5"
               style={{ color: "black" }}
             >
-              Contract Name
+              Monitor Name
             </div>
             <input
               style={{ backgroundColor: "white" }}
               type="text"
-              placeholder="Enter text"
+              placeholder= {selectedMonitor.name}
               onChange={(e) => setContractName(e.target.value)}
+              value={monitorName}
               className="outline-none border-2 border-[] py-3 rounded-xl  w-full px-"
             />
             {/* #4C4C4C */}
@@ -589,6 +561,8 @@ function Monitor_Edit() {
                   ? "Sepolia Testnet"
                   : selectedMonitor.network === 137
                   ? "Polygon Mainnet"
+                  : selectedMonitor.network === 4160
+                  ? "Algorand Mainnet"
                   : "Unknown"}
               </option>
               <option value="1" className="text-[13px] text-[#959595] ">
@@ -603,48 +577,83 @@ function Monitor_Edit() {
               <option value="80002" className="text-[13px] text-[#959595]">
                 Amoy
               </option>
+              <option value="4160" className="text-[13px] text-[#959595]">
+                Algorand Mainnet
+              </option>
             </select>
-            <div
-              className="text-lg font-medium mt-5 "
-              style={{ color: "black" }}
-            >
-              Address
-            </div>
-            <input
-              type="text"
+
+
+
+            <div>
+                {network === '4160' ? (
+                    <div className="text-lg font-medium mt-5 "
+                    style={{ color: "black" }}>
+                        <label>App ID:</label>
+                        <input type="text"
               style={{ backgroundColor: "white" }}
               name="address"
               value={address} // Bind input to state
               onChange={(e) => setAddress(e.target.value)}
               placeholder={selectedMonitor.address}
-              className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
-            />
-            <div
-              className="text-lg font-medium mt-5"
-              style={{ color: "black" }}
-            >
-              ABI
-            </div>
-            <div
+              className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]" />
+                    </div>
+                ) : (
+                    <div>
+                         <div className="text-lg font-medium mt-5" style={{ color: "black" }}>
+                  Address
+                </div>
+                        <input  type="text"
+                  style={{ backgroundColor: "white" }}
+                  name="address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Enter address (0x.......)"
+                  className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]" />
+                    </div>
+                )}
+
+                {network === '4160' ? (
+                    <div className="text-lg font-medium mt-5"
+                    style={{ color: "black" }}>
+                        <label>Smart Contract:</label>
+                        <div
               className="text-lg text-[#989898] mt-1 "
               style={{ color: "black" }}
             >
-              Paste your Contract's ABI code here
+              Paste your pyteal smart contract here
             </div>
-            <textarea
-              style={{ backgroundColor: "white" }}
-              name="abi"
-              id=""
+                        <textarea  style={{ backgroundColor: "white" }}
+              
               cols="30"
               rows="10"
               // value={formData.abi}
-              value={abi} // Bind textarea to state
-              placeholder={selectedMonitor.abi}
-              onChange={(e) => setAbi(e.target.value)}
-              className="w-full mt-1 outline-none rounded-xl border-2 border-[]"
-            ></textarea>
+              value={code} // Bind textarea to state
+              placeholder={selectedMonitor.code}
+              onChange={(e) => setCode(e.target.value)}
+              className="w-full mt-1 outline-none rounded-xl border-2 border-[]" />
+                    </div>
+                ) : (
+                    <div>
+                        <div className="text-lg font-medium mt-5" style={{ color: "black" }}>
+                  ABI
+                </div>
+                        <textarea  style={{ backgroundColor: "white" }}
+                  name="abi"
+                  id=""
+                  cols="30"
+                  rows="10"
+                  value={abi}
+                  onChange={(e) => setAbi(e.target.value)}
+                  className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]" />
+                    </div>
+                )}
+            </div>
+
+            
+           
             <div className="text-center">
               <button
+                onClick={sendSmartContract}
                 type="submit"
                 className="mt-6 px-6 py-3 bg-[#28AA61] text-white rounded-lg"
               >

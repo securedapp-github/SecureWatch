@@ -21,7 +21,7 @@ const customStyles = {
 const Monitor = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("Token");
   const email = localStorage.getItem("email");
   console.log(token);
   console.log(email);
@@ -73,6 +73,11 @@ const Monitor = () => {
                 Interact with contract
               </Link>
             </button>
+            <button className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto cursor-pointer">
+              <Link to="/algo_api_builder">
+                Interact with Algorand Contract
+              </Link>
+            </button>
           </div>
         </div>
         {/* <div
@@ -113,6 +118,7 @@ const Monitor = () => {
         </div> */}
       </div>
       <Monitor_cmp />
+      
     </div>
   );
 };
