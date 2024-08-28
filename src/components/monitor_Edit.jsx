@@ -59,24 +59,27 @@ function Monitor_Edit() {
   
     const data = {
       name: monitorName ||selectedMonitor.name ,
-        user_id: parseInt(user_Id) || selectedMonitor.user_id,
-        network: parseInt(network) || selectedMonitor.network,
+      monitor_id: selectedMonitor.mid,
+       // user_id: parseInt(user_Id) || selectedMonitor.user_id,
+       // network: parseInt(network) || selectedMonitor.network,
         address: address || selectedMonitor.address,
-        alert_type: 1,
-        alert_data: "",
+       alert_type: 1,
+        //alert_data: "",
+        abi: abi || selectedMonitor.abi,
     };
+    console.log("data is:", data);
   
     if (network === "4160") {
       // data.smart_Contract = smartContract;
-      // data.code = code || selectedMonitor.code;
+       data.code = code || selectedMonitor.code;
   
       try {
-        const response = await axios.post("https://139-59-5-56.nip.io:3443/add_monitor", data, {
+        const response = await axios.post(`${baseUrl}/update_monitor`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log("smart contract code:", data.code);
+        console.log("smart contract code:", code);
   
         toast.success("Details updated successfully!", {
           autoClose: 500,
@@ -522,7 +525,7 @@ function Monitor_Edit() {
               style={{ backgroundColor: "white" }}
               type="text"
               placeholder= {selectedMonitor.name}
-              onChange={(e) => setContractName(e.target.value)}
+              onChange={(e) => setMonitorName(e.target.value)}
               value={monitorName}
               className="outline-none border-2 border-[] py-3 rounded-xl  w-full px-"
             />
