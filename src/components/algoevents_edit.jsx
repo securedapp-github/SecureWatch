@@ -19,7 +19,19 @@ function AlgoEventsedit() {
     const [selectedEvents, setSelectedEvents] = useState({});
     const [disp1, setDisp1] = useState("none"); // Added missing useState hook
     const [disp2, setDisp2] = useState("none"); // Assuming disp2 is also required
+    console.log(m_id);
+    const mid = m_id;
 
+
+    const handleToggle1 = (e) => {
+      if (e.target.checked) setDisp1("block");       //added
+      else setDisp1("none");
+    };
+
+    const handleToggle2 = (e) => {                      //added
+      if (e.target.checked) setDisp2("block");
+      else setDisp2("none");
+    };
     // Fetch events from the server when the component mounts
     useEffect(() => {
         const fetchEvents = async () => {
@@ -50,6 +62,7 @@ function AlgoEventsedit() {
           };
       });
       setSelectedEvents(newSelectedEvents);
+      setSelectedEvent(selectedOptions.map((option) => option.label));
   };
 
   const handleArgumentChange = (event, eventName) => {
@@ -81,8 +94,10 @@ function AlgoEventsedit() {
               const body = {
                   name: eventName,
                   mid: m_id,
+                  id: eventDetails.value,  //added
                   arguments: argsObject,
               };
+              console.log("args are:", argsObject);   //added
   
               try {
                   const response = await axios.post("https://139-59-5-56.nip.io:3443/add_event", body,{
@@ -107,6 +122,8 @@ function AlgoEventsedit() {
           }
       );
   };
+
+
   return (
     <div
       className="font-poppin pt-2 bg-white min-h-full"
