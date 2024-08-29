@@ -338,7 +338,7 @@ function Alerts() {
                 Risk Category
               </div>
               <div className=" bg-[#E9E9E9] rounded-md p-2 text-[13px]">
-                {rk}
+                {riskCategory}
               </div>
             </div>
           </div>
@@ -348,7 +348,7 @@ function Alerts() {
             </div>
             <div className="flex gap-1">
               <div className=" bg-[#E9E9E9] rounded-md p-2 text-[13px]">
-                {address.slice(0, 6)}...{address.slice(-4)}
+                {address}
               </div>
               <button onClick={copyMessage}>
                 <div className="my-auto">
@@ -375,7 +375,7 @@ function Alerts() {
               <ul>
                 {selectedEventNames.map((event, index) => (
                   <li key={index} className="text-[13px]">
-                    {event.name} ({event.argTypes})
+                    {event} ({event.argTypes})
                   </li>
                 ))}
               </ul>
