@@ -339,15 +339,15 @@ function Alerts_Edit() {
                 Networks
               </div>
               <div className="text-white bg-[#0CA851] rounded-md p-2 text-[13px]">
-                {network === 80002
+                {network === '80002'
                   ? "Amoy"
-                  : network === 1
+                  : network === '1'
                   ? "Ethereum Mainnet"
-                  : network === 11155111
+                  : network === '11155111'
                   ? "Sepolia Testnet"
-                  : network === 137
+                  : network === '137'
                   ? "Polygon Mainnet"
-                  : network === 4160
+                  : network === '4160'
                   ? "Algorand Mainnet"
                   : "Unknown"}
               </div>
@@ -367,7 +367,7 @@ function Alerts_Edit() {
             </div>
             <div className="flex gap-1">
               <div className="bg-[#E9E9E9] rounded-md p-2 text-[13px]">
-                {address.slice(0, 6)}...{address.slice(-4)}
+               {address}
               </div>
               <button onClick={copyMessage}>
                 <div className="my-auto">
@@ -394,7 +394,7 @@ function Alerts_Edit() {
               <ul>
                 {selectedEventNames.map((event, index) => (
                   <li key={index} className="text-[13px]">
-                    {event.name} ({event.argTypes})
+                    {event} ({event.args})
                   </li>
                 ))}
               </ul>
@@ -427,7 +427,7 @@ function Alerts_Edit() {
             <div className="flex gap-1 items-center">
               <div className="text-[13px]">Marked as</div>
               <div className="bg-[#E9E9E9] rounded-md py-1 px-2 text-[13px]">
-                {riskCategory || "Select Severity"}
+                {riskCategory || "select severity"}
               </div>
             </div>
           </div>
