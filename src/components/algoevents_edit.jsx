@@ -15,12 +15,15 @@ function AlgoEventsedit() {
     const { name, email, m_id, token, network, address, rk } = location.state || "";
     const [networkState, setNetworkState] = useState(network || ""); 
     const [addressState, setAddressState] = useState(address || "");
-    const [riskCategoryState, setRiskCategoryState] = useState(rk || "");
+    const [riskCategoryState, setRiskCategoryState] = useState(rk||"");
+    const [riskCategory, setRiskCategory] = useState("");
     const [selectedEvents, setSelectedEvents] = useState({});
     const [disp1, setDisp1] = useState("none"); // Added missing useState hook
     const [disp2, setDisp2] = useState("none"); // Assuming disp2 is also required
     console.log(m_id);
     const mid = m_id;
+    console.log("risk category", rk);
+    console.log("network", networkState);
 
 
     const handleToggle1 = (e) => {
@@ -50,6 +53,7 @@ function AlgoEventsedit() {
         label: eventName,
         value: eventName,
     }));
+   
 
     // Handle event selection and prompt for arguments
     const handleEventSelection = (selectedOptions) => {
@@ -75,6 +79,7 @@ function AlgoEventsedit() {
         },
     }));
 };
+
     const handleSaveMonitor = async () => {
       let navigationState = {
           monitorName: name,
@@ -84,8 +89,10 @@ function AlgoEventsedit() {
           m_id: m_id,
           email: email,
           token: token,
-          selectedEventNames: Object.keys(selectedEvents)
+          selectedEventNames: Object.keys(selectedEvents),
+          //eventData: argsObject
       };
+      //console.log("arguments", arguments);
   
       Object.entries(selectedEvents).forEach(
           async ([eventName, eventDetails]) => {
@@ -480,7 +487,18 @@ function AlgoEventsedit() {
                 Networks
               </div>
               <div className="text-white bg-[#0CA851] rounded-md p-2 text-[13px]">
-                {networkState}
+              {networkState ===
+                              ' 80002'
+                            ? "Amoy"
+                            : networkState === '1'
+                            ? "Ethereum Mainnet"
+                            : networkState === '11155111'
+                            ? "Sepolia Testnet"
+                            : networkState === '137'
+                            ? "Polygon Mainnet"
+                            : networkState === '4160'
+                            ? "Algorand Mainnet"
+                            : "Unknown"}
               </div>
             </div>
             <div>
@@ -586,7 +604,7 @@ function AlgoEventsedit() {
                 Marked as
               </div>
               <div className=" bg-[#E9E9E9] rounded-md py-1 px-2 text-[13px]">
-                Medium Severity
+                {riskCategoryState}
               </div>
             </div>
           </div>
