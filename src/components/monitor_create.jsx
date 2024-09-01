@@ -21,13 +21,12 @@ function Monitor_create() {
   const [monitorName, setMonitorName] = useState("");
   const [riskCategory, setRiskCategory] = useState("");
   const [address, setAddress] = useState("");
-  const [contractName, setContractName] = useState("");
   const [network, setNetwork] = useState("");
   const [networkName, setNetworkName] = useState("");
   const [abi, setAbi] = useState("");
 
-  console.log("Monitor name:",monitorName);
-  console.log("network:",network);
+  console.log("Monitor name: ",monitorName);
+  console.log("Network: ",network);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -73,24 +72,38 @@ function Monitor_create() {
       toast.success("Details updated successfully!", {
         autoClose: 500,
         onClose: () => {
-          navigate("/event", {
-            state: {
-              name: monitorName,
-              network: networkName,
-              address: address,
-              rk: riskCategory,
-              abi: abi,
-              m_id: response.data.id,
-              email: email,
-              token: token,
-            },
-          });
-        },
+          if(network === "900") {
+            navigate("/solevent", {
+              state: {
+                name: monitorName,
+                network: networkName,
+                address: address,
+                rk: riskCategory,
+                abi: abi,
+                m_id: response.data.id,
+                email: email,
+                token: token,
+              }
+            })
+          } else {
+            navigate("/event", {
+              state: {
+                name: monitorName,
+                network: networkName,
+                address: address,
+                rk: riskCategory,
+                abi: abi,
+                m_id: response.data.id,
+                email: email,
+                token: token,
+              }
+            })
+          }
+        }
       });
-
-      console.log("monnitor id is", response.data.id);
+      console.log("Monitor ID is ", response.data.id);
     } catch (error) {
-      console.error("API request failed:", error);
+      console.error("API request failed: ", error);
       toast.error("Failed to create monitor. Please try again!", {
         autoClose: 500,
       });
@@ -455,12 +468,15 @@ function Monitor_create() {
               <option value="80002" className="text-[13px] text-[#959595]">
                 Amoy
               </option>
+              <option value="900" className="text-[13px] text-[#959595]">
+                Solana Mainnet Beta
+              </option>
             </select>
             <div
               className="text-lg font-medium mt-5 "
               style={{ color: "black" }}
             >
-              Address
+              {network === "900" ? "Program ID" : "Address"}
             </div>
             <input
               type="text"
@@ -468,20 +484,20 @@ function Monitor_create() {
               name="address"
               value={address} // Bind input to state
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="Enter address (0x.......)"
+              placeholder={network === "900" ? "Enter Program ID..." : "Enter address (0x.......)"}
               className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
             />
             <div
               className="text-lg font-medium mt-5"
               style={{ color: "black" }}
             >
-              ABI
+              {network === "900" ? "Program" : "ABI"}
             </div>
             <div
               className="text-lg text-[#989898] mt-1 "
               style={{ color: "black" }}
             >
-              Paste your Contract's ABI code here
+              {network === "900" ? "Paste your program code here" : "Paste your Contract's ABI code here"}
             </div>
             <textarea
               style={{ backgroundColor: "white" }}
