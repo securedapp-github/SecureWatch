@@ -21,14 +21,18 @@ function Monitor_Edit() {
   console.log("location", location);
   const query = new URLSearchParams(location.search);
   const targetMids = query.get("id");
+ 
   console.log("MID = ", targetMids);
+ 
+  
 
-  const { mid, name, alert_data, alert_type } = location.state || {};
+  const { mid, name, alert_data, alert_type, riskCategory} = location.state || {};
   console.log("alert data is", alert_data);
   console.log("alert type is", alert_type);
+  console.log("riskcategory", riskCategory);
   
   const [monitorName, setMonitorName] = useState(name );
-  const [riskCategory, setRiskCategory] = useState("");
+  //const [riskCategory, setRiskCategory] = useState("");
   const [address, setAddress] = useState("");
   const [contractName, setContractName] = useState("");
   const [network, setNetwork] = useState("");
@@ -36,9 +40,10 @@ function Monitor_Edit() {
   const [abi, setAbi] = useState("");
   const [selectedMonitor, setSelectedMonitor] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isAlgorandMonitor, setIsAlgorandMonitor] = useState(false);
+  
   const [code, setCode] = useState("");
-  const [smartContract, setSmartContract] = useState("");
+  
+  console.log("smartcontract",abi);
 
   const sendSmartContract = () => {
     axios
@@ -69,9 +74,9 @@ function Monitor_Edit() {
     };
     console.log("data is:", data);
   
-    if (network === "4160") {
+    if (selectedMonitor.network === 4160) {
       // data.smart_Contract = smartContract;
-       data.code = code || selectedMonitor.code;
+       data.abi = code || selectedMonitor.abi;
   
       try {
         const response = await axios.post(`${baseUrl}/update_monitor`, data, {
@@ -79,12 +84,12 @@ function Monitor_Edit() {
             Authorization: `Bearer ${token}`,
           }
         });
-        console.log("smart contract code:", code);
+        console.log("smart contract code:", abi);
   
         toast.success("Details updated successfully!", {
           autoClose: 500,
           onClose: () => {
-            navigate("/AlgoEventsedit", {
+            navigate("/Event_Edit_now", {
               state: {
                 name: monitorName || selectedMonitor.name,
                 network: network || selectedMonitor.network,
@@ -588,7 +593,7 @@ function Monitor_Edit() {
 
 
             <div>
-                {network === '4160' ? (
+                {selectedMonitor.network === 4160  ? (
                     <div className="text-lg font-medium mt-5 "
                     style={{ color: "black" }}>
                         <label>App ID:</label>
@@ -615,7 +620,7 @@ function Monitor_Edit() {
                     </div>
                 )}
 
-                {network === '4160' ? (
+                {selectedMonitor.network === 4160 ? (
                     <div className="text-lg font-medium mt-5"
                     style={{ color: "black" }}>
                         <label>Smart Contract:</label>
@@ -629,10 +634,11 @@ function Monitor_Edit() {
               
               cols="30"
               rows="10"
-              // value={formData.abi}
-              value={code} // Bind textarea to state
-              placeholder={selectedMonitor.code}
+               value={code}
+             // value={code} // Bind textarea to state
+              placeholder={selectedMonitor.abi}
               onChange={(e) => setCode(e.target.value)}
+              
               className="w-full mt-1 outline-none rounded-xl border-2 border-[]" />
                     </div>
                 ) : (
