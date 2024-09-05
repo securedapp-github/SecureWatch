@@ -22,70 +22,98 @@ function Monitor_create() {
   const [riskCategory, setRiskCategory] = useState("");
   const [address, setAddress] = useState("");
   const [network, setNetwork] = useState("");
+  const [code, setCode] = useState("");
   const [networkName, setNetworkName] = useState("");
   const [abi, setAbi] = useState("");
 
   console.log("Monitor name: ",monitorName);
   console.log("Network: ",network);
 
+  const sendSmartContract = () => {
+    axios
+      .post("http://localhost:5000/api/smart-contract", { code },{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then((response) => {
+        console.log("Smart contract processed:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error sending smart contract:", error);
+      });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (monitorName === "" || network === "" || address === "" || abi === "" || monitorName == undefined || network == undefined || address == undefined || abi == undefined) {
+    if (monitorName === "" || network === "" || address === "" ||monitorName == undefined || network == undefined || address == undefined) {
       console.error("Monitor inputs are incomplete.");
       toast.error("Please fill out all monitor fields.");
       return;
     }
 
     try {
-      if (monitorName === "" || network === "" || address === "" || abi === "" || monitorName == undefined || network == undefined || address == undefined || abi == undefined) {
-        console.error("Monitor inputs are incomplete.");
-        toast.error("Please fill out all monitor fields.");
-        return;
-      }
-      const response = await axios.post(
-        `${baseUrl}/add_monitor`,
-        {
-          name: monitorName,
-          user_id: parseInt(user_Id),
-          network: parseInt(network),
-          address: address,
-          alert_type: 1,
-          alert_data: "",
-          abi: abi,
-          category: riskCategory,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      if(network === "900") {
+        const response = await axios.post(
+          `${baseUrl}/add_monitor`,
+          {
+            name: monitorName,
+            user_id: parseInt(user_Id),
+            network: parseInt(network),
+            address: address,
+            alert_type: 1,
+            alert_data: "",
+            abi: code,
+            category: riskCategory,
           },
-        }
-      );
-      // console.log("API response:", response.data);
-      // console.log("monitor name is", monitorName);
-      // console.log("Risk category is:", riskCategory);
-      // console.log("contract name is", contractName);
-      // console.log("netwprk name is", network);
-      // console.log(" address is:", address);
-      // console.log(" ABI  is:", abi);
-      // console.log(" user id is", user_Id);
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      toast.success("Details updated successfully!", {
-        autoClose: 500,
-        onClose: () => {
-          if(network === "900") {
-            navigate("/solevent", {
-              state: {
-                name: monitorName,
-                network: networkName,
-                address: address,
-                rk: riskCategory,
-                abi: abi,
-                m_id: response.data.id,
-                email: email,
-                token: token,
-              }
-            })
-          } else {
+        toast.success("Details updated successfully!", {
+          autoClose: 500,
+          onClose: () => {
+              navigate("/solevent", {
+                state: {
+                  name: monitorName,
+                  network: networkName,
+                  address: address,
+                  rk: riskCategory,
+                  abi: code,
+                  m_id: response.data.id,
+                  email: email,
+                  token: token,
+                },
+              });
+            },
+          });
+        console.log("Monitor ID is ", response.data.id);
+      } else {
+        const response = await axios.post(
+          `${baseUrl}/add_monitor`,
+          {
+            name: monitorName,
+            user_id: parseInt(user_Id),
+            network: parseInt(network),
+            address: address,
+            alert_type: 1,
+            alert_data: "",
+            abi: abi,
+            category: riskCategory,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        toast.success("Details updated successfully!", {
+          autoClose: 500,
+          onClose: () => {
             navigate("/event", {
               state: {
                 name: monitorName,
@@ -97,11 +125,12 @@ function Monitor_create() {
                 email: email,
                 token: token,
               }
-            })
-          }
-        }
-      });
-      console.log("Monitor ID is ", response.data.id);
+            });
+          },
+        });
+        console.log("Monitor ID is ", response.data.id);
+      }
+
     } catch (error) {
       console.error("API request failed: ", error);
       toast.error("Failed to create monitor. Please try again!", {
@@ -506,17 +535,27 @@ function Monitor_create() {
               cols="30"
               rows="10"
               // value={formData.abi}
-              value={abi} // Bind textarea to state
-              onChange={(e) => setAbi(e.target.value)}
+              value={network === "900" ? code : abi} // Bind textarea to state
+              onChange={network === "900" ? ((e) => setCode(e.target.value)) : ((e) => setAbi(e.target.value))}
               className="w-full mt-1 outline-none rounded-xl border-2 border-[]"
             ></textarea>
             <div className="text-center">
-              <button
-                type="submit"
-                className="mt-6 px-6 py-3 bg-[#28AA61] text-white rounded-lg"
-              >
-                Create
-              </button>
+              { network === "900" ? 
+                (<button
+                  onClick={sendSmartContract}
+                  type="submit"
+                  className="mt-6 px-6 py-3 bg-[#28AA61] text-white rounded-lg"
+                  >
+                    Create
+                  </button>)
+                :
+                (<button
+                  type="submit"
+                  className="mt-6 px-6 py-3 bg-[#28AA61] text-white rounded-lg"
+                  >
+                    Create
+                  </button>)
+              }
             </div>
           </form>
         </div>

@@ -8,7 +8,11 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
 app.use(helmet());
 app.use(bodyParser.json());
 
@@ -29,10 +33,10 @@ const extractFunctionNames = (code) => {
 // Function to extract event handlers from the Solana program
 const extractEventHandlers = (code) => {
   const eventHandlers = [];
-  const eventRegex = /(emit|msg)!\(\s*("[^"]+")\s*\)/g;
+  const eventRegex = /(?:msg|emit)!\s*\(\s*"([^"]+)"\s*(?:,\s*[^)]*)?\)/g;
   let match;
   while ((match = eventRegex.exec(code)) !== null) {
-    eventHandlers.push(match[1]);
+    eventHandlers.push(match[1].trim());
   }
   return eventHandlers;
 };
