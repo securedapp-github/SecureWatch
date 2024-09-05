@@ -24,11 +24,12 @@ const customStyles = {
 function Alerts_Edit() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { name, email, m_id, token, network, address, rk, selectedEventNames, alert_data, alert_type } = location.state || {};
+  const { name, email, m_id, token, address, rk, selectedEventNames, alert_data, alert_type, network } = location.state || {};
   console.log("Alert Data",alert_data);
   console.log("Alert Type",alert_type);
 
   const [riskCategory, setRiskCategory] = useState("");
+  const [networkState, setNetworkState] = useState(network || "");
   const [emailInput, setEmailInput] = useState(alert_data || "");
   const [actionType, setActionType] = useState(alert_type=== 1 ?"email":"other" || "default");
   const [isSaved, setIsSaved] = useState(false);
@@ -339,17 +340,17 @@ function Alerts_Edit() {
                 Networks
               </div>
               <div className="text-white bg-[#0CA851] rounded-md p-2 text-[13px]">
-                {network === '80002'
-                  ? "Amoy"
-                  : network === '1'
-                  ? "Ethereum Mainnet"
-                  : network === '11155111'
-                  ? "Sepolia Testnet"
-                  : network === '137'
-                  ? "Polygon Mainnet"
-                  : network === '4160'
-                  ? "Algorand Mainnet"
-                  : "Unknown"}
+              {networkState === 80002
+                    ? "Amoy"
+                    : networkState === 1
+                      ? "Ethereum Mainnet"
+                      : networkState === 11155111
+                        ? "Sepolia Testnet"
+                        : networkState === 137
+                          ? "Polygon Mainnet"
+                          : networkState === 4160
+                          ? "Algorand Mainnet"
+                          : "Unknown"}
               </div>
             </div>
             <div>
@@ -427,7 +428,7 @@ function Alerts_Edit() {
             <div className="flex gap-1 items-center">
               <div className="text-[13px]">Marked as</div>
               <div className="bg-[#E9E9E9] rounded-md py-1 px-2 text-[13px]">
-                {riskCategory || "select severity"}
+                {rk || "select severity"}
               </div>
             </div>
           </div>
