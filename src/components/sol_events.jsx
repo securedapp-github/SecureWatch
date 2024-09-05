@@ -85,7 +85,13 @@ function SolEvents() {
               };
   
               try {
-                  const response = await axios.post("https://139-59-5-56.nip.io:3443/add_event", body);
+                  const response = await axios.post("https://139-59-5-56.nip.io:3443/add_event", body,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  );
                   toast.success("Event Added successfully!", {
                       autoClose: 500,
                       onClose: () => {
