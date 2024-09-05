@@ -11,7 +11,7 @@ import { baseUrl } from "../Constants/data";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function Monitor_create() {
+function MonitorCreate() {
   //  const { email, token } = location.state || "";
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
@@ -22,11 +22,11 @@ function Monitor_create() {
   const [monitorName, setMonitorName] = useState("");
   const [riskCategory, setRiskCategory] = useState("");
   const [address, setAddress] = useState("");
-  const [ContractName, setContractName] = useState("");
+  
   const [network, setNetwork] = useState("");
   const [networkName, setNetworkName] = useState("");
   const [abi, setAbi] = useState("");
-  const [smartContract, setSmartContract] = useState("");
+ // const [smartContract, setSmartContract] = useState("");
   const [events, setEvents] = useState([]);
   const [code, setCode] = useState("");
   const [functions, setFunctions] = useState([]);
@@ -35,6 +35,12 @@ function Monitor_create() {
 
   console.log("Monitor name:", monitorName);
   console.log("network:", network);
+
+  const validateBigEndianArray = (value) => {
+    // Regex to ensure only hex values (0-9, a-f, A-F) are allowed and exactly 16 characters (8 bytes)
+    const hexPattern = /^[0-9A-Fa-f]{16}$/;
+    return hexPattern.test(value);
+  };
 
   const sendSmartContract = () => {
     axios
@@ -48,7 +54,8 @@ function Monitor_create() {
         console.error("Error sending smart contract:", error);
       });
   };
-
+ 
+  console.log("smart contract:", code);
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -67,12 +74,13 @@ function Monitor_create() {
         address: address,
         alert_type: 1,
         alert_data: "",
-        //category: riskCategory,
+        abi: code,
+        category: riskCategory,
       };
   
       // Handle Algorand network specifically (network === 4160)
       if (network === "4160") {
-        data.smart_contract = smartContract;
+        data.abi = code;
         const response = await axios.post("https://139-59-5-56.nip.io:3443/add_monitor", data,{
           headers:{
           Authorization: `Bearer ${token}`}
@@ -89,7 +97,7 @@ function Monitor_create() {
                 network: networkName,
                 address: address,
                 rk: riskCategory,
-                smart_contract: smartContract,
+                abi: code,
                 m_id: response.data.id,
                 email: email,
                 token: token,
@@ -509,7 +517,9 @@ function Monitor_create() {
                   style={{ backgroundColor: "white" }}
                   name="address"
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  maxLength={16}
+                  onChange={(e) =>
+                     setAddress(e.target.value)}
                   placeholder="Enter app id"
                   className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
                 />
@@ -593,4 +603,4 @@ function Monitor_create() {
   );
 }
 
-export default Monitor_create;
+export default MonitorCreate;
