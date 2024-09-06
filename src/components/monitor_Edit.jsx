@@ -89,7 +89,7 @@ function Monitor_Edit() {
         toast.success("Details updated successfully!", {
           autoClose: 500,
           onClose: () => {
-            navigate("/Event_Edit_now", {
+            navigate("/AlgoEventsedit", {
               state: {
                 name: monitorName || selectedMonitor.name,
                 network: network || selectedMonitor.network,
