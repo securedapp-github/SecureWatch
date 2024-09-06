@@ -48,7 +48,7 @@ function AlgoEventsedit() {
 
   const handleArgumentChange = (event, eventName) => {
     const value = event.target.value;
-    setTotalEvents((prevEvents) => ({
+    setEventInputs((prevEvents) => ({
         ...prevEvents,
         [eventName]: {
             ...prevEvents[eventName],
@@ -259,11 +259,7 @@ const handleSelectChange = (selectedOptions) => {
   const abiData = (abiState || '[]');
   const abiEventsMap = abiData;
    
-
-
-
-
-  const navigationState = {
+ const navigationState = {
     monitorName: name,
     network: networkState,
     address: addressState,
@@ -276,13 +272,6 @@ const handleSelectChange = (selectedOptions) => {
   };
 
   const handleSubmit = async () => {
-    
-
-
-
-
-
-
     try {
         const errors = [];
         const processingEvents = [];
@@ -470,43 +459,6 @@ const handleSelectChange = (selectedOptions) => {
         console.error("Unexpected error:", error);
         toast.error("An unexpected error occurred. Please try again!");
     }
-
-
-    Object.entries(selectedValues).forEach(
-      async ([eventName, eventDetails]) => {
-          const argsObject = eventDetails.args.split(",").map((arg) => arg.trim());
-
-          const body = {
-              name: eventName,
-              mid: m_id,
-              arguments: argsObject,
-          };
-
-          try {
-              const response = await axios.post("https://139-59-5-56.nip.io:3443/update_event", body,{
-                headers:{
-                  Authorization: `Bearer ${token}`,
-                  
-                },
-
-              }
-              );
-              console.log("added events:",response.data);
-              toast.success("Event Added successfully!", {
-                  autoClose: 500,
-                 
-              });
-          } catch (error) {
-              console.error("Error sending event data:", error);
-              toast.error("Failed to Add Event. Please try again!");
-          }
-      }
-  );
-
-
-
-
-
 
 };
 
@@ -1309,19 +1261,19 @@ const handleSelectChange = (selectedOptions) => {
             </div>
           </div>
           <div className="mt-5">
-  {Object.entries(selectedValues).map(([eventName, eventData]) => (            //added for now
-    <div key={eventName} className="font-medium mt-3">
-      <div>{eventData}</div>
-      <input
-        className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
-        style={{ backgroundColor: "white" }}
-        type="text"
-        value={eventData.args}
-        onChange={(e) => handleArgumentChange(e, eventName)}
-        placeholder="Enter arguments"
-      />
-    </div>
-  ))}
+    {selectedValues.map((eventName) => (
+      <div key={eventName} className="font-medium mt-3">
+        <div>{eventName}</div>
+        <input
+          className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
+          style={{ backgroundColor: "white" }}
+          type="text"
+          value={eventInputs[eventName]?.args || ""}
+          onChange={(e) => handleInputChange(eventName, 'args', e.target.value)}
+          placeholder="Enter arguments"
+        />
+      </div>
+    ))}
 </div>
 
 
