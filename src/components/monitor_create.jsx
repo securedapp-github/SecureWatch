@@ -23,7 +23,7 @@ function MonitorCreate() {
   const [riskCategory, setRiskCategory] = useState("");
   const [address, setAddress] = useState("");
 
-  const [appId, setAppId] = useState('');
+  //const [appId, setAppId] = useState('');
   
   const [network, setNetwork] = useState("");
   const [networkName, setNetworkName] = useState("");
@@ -38,11 +38,7 @@ function MonitorCreate() {
   console.log("Monitor name:", monitorName);
   console.log("network:", network);
 
-  const validateBigEndianArray = (value) => {
-    // Regex to ensure only hex values (0-9, a-f, A-F) are allowed and exactly 16 characters (8 bytes)
-    const hexPattern = /^[0-9A-Fa-f]{16}$/;
-    return hexPattern.test(value);
-  };
+ 
 
   const sendSmartContract = () => {
     axios
@@ -66,11 +62,11 @@ function MonitorCreate() {
     const sanitizedValue = value.replace(/\D/g, '');
     
     // Ensure the value is within the valid range (0 to 2^64 - 1)
-    const numValue = BigInt(sanitizedValue || '0');
-    const maxValue = BigInt('18446744073709551615');
+    const numValue = (sanitizedValue || '0');
+    const maxValue = ('18446744073709551615');
     
     if (numValue <= maxValue) {
-      setAppId(sanitizedValue);
+      setAddress(sanitizedValue);
     }
   }, []);
 
@@ -79,7 +75,7 @@ function MonitorCreate() {
     e.preventDefault();
   
     // Common validation for all inputs
-    if (!monitorName || !network || !appId ) {
+    if (!monitorName || !network || !address ) {
       console.error("Monitor inputs are incomplete.");
       toast.error("Please fill out all monitor fields.");
       return;
@@ -90,7 +86,7 @@ function MonitorCreate() {
         name: monitorName,
         user_id: parseInt(user_Id),
         network: parseInt(network),
-        appId: appId,
+        address: address,
         alert_type: 1,
         alert_data: "",
         abi: code,
@@ -114,7 +110,7 @@ function MonitorCreate() {
               state: {
                 name: monitorName,
                 network: networkName,
-                address: appId,
+                address: address,
                 rk: riskCategory,
                 abi: code,
                 m_id: response.data.id,
@@ -143,7 +139,7 @@ function MonitorCreate() {
               state: {
                 name: monitorName,
                 network: networkName,
-                address: appId,
+                address: address,
                 rk: riskCategory,
                 abi: abi,
                 m_id: response.data.id,
@@ -534,8 +530,8 @@ function MonitorCreate() {
                 <input
                   type="text"
                   style={{ backgroundColor: "white" }}
-                  name="appId"
-                  value={appId}
+                  name="address"
+                  value={address}
                   onChange={handleAppIdChange}
                   // maxLength={16}
                   // onChange={(e) =>
