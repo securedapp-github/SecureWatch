@@ -84,7 +84,7 @@ function Monitor_Edit() {
       monitor_id: selectedMonitor.mid,
        // user_id: parseInt(user_Id) || selectedMonitor.user_id,
        // network: parseInt(network) || selectedMonitor.network,
-        address: appId || selectedMonitor.appId,
+        address: address || selectedMonitor.address,
        alert_type: 1,
         //alert_data: "",
         abi: abi || selectedMonitor.abi,
