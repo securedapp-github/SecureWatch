@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback  } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./navbar2";
 import Modal from "react-modal";
 import axios from "axios";
@@ -40,7 +40,6 @@ function Monitor_Edit() {
   const [abi, setAbi] = useState("");
   const [selectedMonitor, setSelectedMonitor] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [appId, setAppId] = useState('');
   
   const [code, setCode] = useState("");
   
@@ -60,22 +59,6 @@ function Monitor_Edit() {
   };
 
 
-  const handleAppIdChange = useCallback((e) => {
-    const value = e.target.value;
-    
-    // Remove any non-digit characters
-    const sanitizedValue = value.replace(/\D/g, '');
-    
-    // Ensure the value is within the valid range (0 to 2^64 - 1)
-    const numValue = BigInt(sanitizedValue || '0');
-    const maxValue = BigInt('18446744073709551615');
-    
-    if (numValue <= maxValue) {
-      setAppId(sanitizedValue);
-    }
-  }, []);
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -84,7 +67,7 @@ function Monitor_Edit() {
       monitor_id: selectedMonitor.mid,
        // user_id: parseInt(user_Id) || selectedMonitor.user_id,
        // network: parseInt(network) || selectedMonitor.network,
-        address: appId || selectedMonitor.appId,
+        address: address || selectedMonitor.address,
        alert_type: 1,
         //alert_data: "",
         abi: abi || selectedMonitor.abi,
@@ -616,10 +599,9 @@ function Monitor_Edit() {
                         <label>App ID:</label>
                         <input type="text"
               style={{ backgroundColor: "white" }}
-              name="appId"
-              value={appId} // Bind input to state
-              onChange={handleAppIdChange} 
-              // onChange={(e) => setAddress(e.target.value)}
+              name="address"
+              value={address} // Bind input to state
+              onChange={(e) => setAddress(e.target.value)}
               placeholder={selectedMonitor.address}
               className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]" />
                     </div>
