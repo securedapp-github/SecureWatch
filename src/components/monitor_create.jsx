@@ -62,8 +62,8 @@ function MonitorCreate() {
     const sanitizedValue = value.replace(/\D/g, '');
     
     // Ensure the value is within the valid range (0 to 2^64 - 1)
-    const numValue = (sanitizedValue || '0');
-    const maxValue = ('18446744073709551615');
+    const numValue = BigInt(sanitizedValue || '0');
+    const maxValue = BigInt('18446744073709551615');
     
     if (numValue <= maxValue) {
       setAddress(sanitizedValue);
