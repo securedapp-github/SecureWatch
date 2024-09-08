@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function SolEvents() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
     const location = useLocation();
     const [events, setEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState('');
@@ -85,13 +85,15 @@ function SolEvents() {
               };
   
               try {
-                  const response = await axios.post("https://139-59-5-56.nip.io:3443/add_event", body,
-                    {
-                      headers: {
-                        Authorization: `Bearer ${token}`,
-                      },
-                    }
+                  const response = await axios.post("https://139-59-5-56.nip.io:3443/add_event", body,{
+                    headers:{
+                      Authorization: `Bearer ${token}`,
+                      
+                    },
+
+                  }
                   );
+                  console.log("added events:",response.data);
                   toast.success("Event Added successfully!", {
                       autoClose: 500,
                       onClose: () => {
@@ -417,57 +419,28 @@ function SolEvents() {
             Enter the Signature Name
           </div>
           <div className="my-auto ml-auto">
-            {/* w-inherit border-2 border-[#B4B4B4] shadow-md p-3 rounded-lg flex px-3 justify-between py-3 */}
-            <div className="font-medium text-lg"></div>
-            <div>
-              <Select
-                isMulti
-                options={options}
-                onChange={handleEventSelection}
-                value={options.filter(option => selectedEvents[option.value])}
-              />
-               {Object.entries(selectedEvents).map(([eventName, eventData]) => (
-                    <div key={eventName}>
-                        <label>{eventName} Arguments:</label>
-                        <input
-                            type="text"
-                            value={eventData.args}
-                            onChange={(e) => handleArgumentChange(e, eventName)}
-                        />
-                    </div>
-                ))}
-            </div>
-          </div>
+  <Select
+    isMulti
+    options={options}
+    onChange={handleEventSelection}
+    value={options.filter(option => selectedEvents[option.value])}
+  />
+</div>
 
-          {/* <div className="mt-5">
-            {Object.entries(selectedEvents).map(([eventName, eventData]) => (
-              <div key={eventName} className="font-medium">
-                <div className="mt-3">{eventName}</div>
-                <input
-                  className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
-                  style={{ backgroundColor: "white" }}
-                  type="text"
-                  value={eventData.args}
-                  onChange={(e) => handleArgumentChange(e, eventName)}
-                  placeholder={` ${eventData.argDetails} `}
-                />
-              </div>
-            ))}
-          </div> */}
-          <div className="mt-5">
-    {Object.entries(selectedEvents).map(([eventName, eventData]) => (
-        <div key={eventName} className="font-medium">
-            <div className="mt-3">{eventName}</div>
-            <input
-                className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
-                style={{ backgroundColor: "white" }}
-                type="text"
-                value={eventData.args}
-                onChange={(e) => handleArgumentChange(e, eventName)}
-                placeholder="Enter arguments"
-            />
-        </div>
-    ))}
+<div className="mt-5">
+  {Object.entries(selectedEvents).map(([eventName, eventData]) => (
+    <div key={eventName} className="font-medium mt-3">
+      <div>{eventName}</div>
+      <input
+        className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
+        style={{ backgroundColor: "white" }}
+        type="text"
+        value={eventData.args}
+        onChange={(e) => handleArgumentChange(e, eventName)}
+        placeholder="Enter arguments"
+      />
+    </div>
+  ))}
 </div>
           <button
             className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white"
@@ -606,4 +579,4 @@ function SolEvents() {
   );
 }
 
-export default SolEvents;
+ export default SolEvents;

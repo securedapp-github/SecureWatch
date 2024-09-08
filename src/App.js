@@ -13,6 +13,7 @@ import MonitorEdit from "./components/monitor_Edit.jsx";
 import Events from "./components/events.jsx";
 import SolEvents from "./components/sol_events.jsx";
 import EventsEdit from "./components/event_Edit.jsx";
+import Sol_Event_Edit from "./components/solEventEdit.jsx";
 import AlertsEdit from "./components/alerts_Edit.jsx";
 import Functions from "./components/functions.jsx";
 import Alerts from "./components/alerts.jsx";
@@ -37,6 +38,7 @@ function App() {
         <Route path="/solevent" element={<Protected cmp={<SolEvents />} />} />
         <Route path="/alert_edit" element={<Protected cmp={<AlertsEdit />} />}/>
         <Route path="/event_edit" element={<Protected cmp={<EventsEdit />} />}/>
+        <Route path="/solEventEdit" element={<Protected cmp={<Sol_Event_Edit />} />}/>
         <Route path="/monitor_create" element={<Protected cmp={<MonitorCreate />} />}/>
         <Route path="/monitor_Edit" element={<MonitorEdit />}></Route>
         <Route path="/monitor_activity" element={<Protected cmp={<MonitorActivity />} />}/>

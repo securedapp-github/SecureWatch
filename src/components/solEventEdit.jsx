@@ -4,14 +4,15 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./navbar2";
 import Select from 'react-select'
+import axios from "axios";
 import { baseUrl } from "../Constants/data";
 
-function Event_Edit() {
+function Sol_Events_Edit() {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem("token");
   const [options, setOptions] = useState([]);
-//   const [foundedEvents, setFoundedEvents] = useState([]);
+  const [foundedEvents, setFoundedEvents] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
   const [totalEvents, setTotalEvents] = useState([]);
   const [removedEvents, setRemovedEvents] = useState([]);
@@ -45,43 +46,53 @@ function Event_Edit() {
   const [loading, setLoading] = useState(false);
   const [events, setEvents] = useState({});
 
+  const handleArgumentChange = (event, eventName) => {
+    const value = event.target.value;
+    setEventInputs((prevEvents) => ({
+        ...prevEvents,
+        [eventName]: {
+            ...prevEvents[eventName],
+            args: value,
+        },
+    }));
+};
 
 
 
   useEffect(() => {
+    
+    // if (!location.state || !location.state.abi) {
+    //   console.error("ABI is not provided");
+    //   return;
+    // }
+
+    // let parsedAbi;
+    // try {
+    //   parsedAbi = JSON.parse(location.state.abi);
+    // } catch (error) {
+    //   console.error("Failed to parse ABI:", error);
+    //   return;
+    // }
     const fetchEvents = async () => {
-        try {
-            const response = await axios.get('http://localhost:5000/api/events');
-            setEvents(response.data);
-        } catch (error) {
-            console.error('Error fetching events:', error);
-        }
-    };
-  
-    fetchEvents();
-  //   if (!location.state || !location.state.abi) {
-  //     console.error("ABI is not provided");
-  //     return;
-  //   }
+      try {
+          const response = await axios.get('http://localhost:5000/api/events');
+          setFoundedEvents(response.data);
+      } catch (error) {
+          console.error('Error fetching events:', error);
+      }
+  };
 
-  //   let parsedAbi;
-  //   try {
-  //     parsedAbi = JSON.parse(location.state.abi);
-  //   } catch (error) {
-  //     console.error("Failed to parse ABI:", error);
-  //     return;
-  //   }
+  fetchEvents();
 
-  //   const events = parsedAbi.filter((item) => item.type === "event");
-  //   setFoundedEvents(
-  //     events.map((event) => ({
-  //       name: event.name,
-  //       inputs: event.inputs
-  //         .map((input) => `${input.name}: ${input.type}`)
-  //         .join(", "),
-  //     }))
-  //   );
-  // }
+    //const events = parsedAbi.filter((item) => item.type === "event");
+    // setFoundedEvents(
+    //   events.map((eventName) => ({
+    //     name: eventName,
+    //     inputs: eventName
+    //       .map((input) => `${input.name}: ${input.type}`)
+    //       .join(", "),
+    //   }))
+    // );
   }, [
     location.state,
     networkState,
@@ -91,12 +102,14 @@ function Event_Edit() {
   ]);
 
   useEffect(() => {
-    const parsedOptions = events.map((eventName) => ({
-        label: eventName,
-        value: eventName,
+    const parsedOptions = foundedEvents.map((eventName) => ({
+      label: eventName,
+      value: eventName,
     }));
-  }, []);
-
+    // (${event.inputs})
+    console.log("Parsed options are:", parsedOptions);
+    setTotalEvents(parsedOptions)
+  }, [foundedEvents])
 
 
 
@@ -241,16 +254,10 @@ const handleSelectChange = (selectedOptions) => {
 
 
   // Ensure ABI data is correctly parsed
-  const abiData = JSON.parse(abiState || '[]');
-  const abiEventsMap = abiData.reduce((acc, e) => {
-    acc[e.name] = e;
-    return acc;
-  }, {});
-
-
-
-
-  const navigationState = {
+  const abiData = (abiState || '[]');
+  const abiEventsMap = abiData;
+   
+ const navigationState = {
     monitorName: name,
     network: networkState,
     address: addressState,
@@ -382,7 +389,7 @@ const handleSelectChange = (selectedOptions) => {
                     if (existingEvent.name.trim().toLowerCase() === eventType.trim().toLowerCase()) {
                         console.log(`Updating existing event: ${eventType} with ID: ${existingEvent.id}`);
 
-                        const requestData = { id: existingEvent.id, ...eventData };
+                        const requestData = { id: existingEvent.id, ...eventData , value: eventData.arguments};
 
                         processingEvents.push(
                             sendRequest(`${baseUrl}/update_event`, "POST", requestData)
@@ -450,6 +457,7 @@ const handleSelectChange = (selectedOptions) => {
         console.error("Unexpected error:", error);
         toast.error("An unexpected error occurred. Please try again!");
     }
+
 };
 
   if (
@@ -792,6 +800,8 @@ const handleSelectChange = (selectedOptions) => {
                         ? "Sepolia Testnet"
                         : networkState === 137
                           ? "Polygon Mainnet"
+                          : networkState === 4160
+                          ? "Algorand Mainnet"
                           : "Unknown"}
                 </div>
               </div>
@@ -1248,16 +1258,31 @@ const handleSelectChange = (selectedOptions) => {
               </div>
             </div>
           </div>
+          <div className="mt-5">
+    {selectedValues.map((eventName) => (
+      <div key={eventName} className="font-medium mt-3">
+        <div>{eventName}</div>
+        <input
+          className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
+          style={{ backgroundColor: "white" }}
+          type="text"
+          value={eventInputs[eventName]?.args || ""}
+          onChange={(e) => handleInputChange(eventName, 'args', e.target.value)}
+          placeholder="Enter arguments"
+        />
+      </div>
+    ))}
+</div>
 
 
-          <div className="w-full max-h-[400px] p-5 overflow-y-auto mb-2 edit-event mt-2">
+          {/* <div className="w-full max-h-[400px] p-5 overflow-y-auto mb-2 edit-event mt-2">
             {selectedValues.length === 0 ? (
               <p>No events selected.</p>
             ) : (
               selectedValues.map(eventName => {
                 const abiEvent = abiEventsMap[eventName];
                 if (!abiEvent) {
-                  console.warn(`ABI Event not found for: ${eventName}`);
+                  //console.warn(`ABI Event not found for: ${eventName}`);
                   return null;
                 }
                 console.log("abiEvent", abiEvent);
@@ -1328,7 +1353,7 @@ const handleSelectChange = (selectedOptions) => {
                 );
               })
             )}
-          </div>
+          </div> */}
 
           <button
             className="py-3 w-full bg-[#28AA61]  rounded-lg text-white mt-5"
@@ -1360,7 +1385,11 @@ const handleSelectChange = (selectedOptions) => {
                       ? "Sepolia Testnet"
                       : networkState === 137
                         ? "Polygon Mainnet"
-                        : "Unknown"}
+                        : networkState === 4160
+                          ? "Algorand Mainnet"
+                          : networkState == 900
+                            ? "Solana Mainnet Beta"
+                            : "Unknown"}
               </div>
             </div>
             <div>
@@ -1381,7 +1410,7 @@ const handleSelectChange = (selectedOptions) => {
             </div>
             <div className="flex gap-1">
               <div className=" bg-[#E9E9E9] rounded-md p-2 text-[13px]">
-                {addressState.slice(0, 6) + "..." + addressState.slice(-4)}
+                {addressState}
               </div>
               <button onClick={copyMessage}>
                 <div className="my-auto">
@@ -1478,7 +1507,7 @@ const handleSelectChange = (selectedOptions) => {
                 Marked as
               </div>
               <div className=" bg-[#E9E9E9] rounded-md py-1 px-2 text-[13px]">
-                Medium Severity
+                {alert_data}
               </div>
             </div>
           </div>
@@ -1489,4 +1518,4 @@ const handleSelectChange = (selectedOptions) => {
   );
 }
 
-export default Event_Edit;
+export default Sol_Events_Edit;
