@@ -29,17 +29,14 @@ function Home1() {
   }, []);
   return (
     <>
-      <div className="p-8 lg:p-16" style={{ backgroundColor: "#F5F5F4" }}>
+      <div className=" bg-slate-600" >
         <div
-          id="home_heading"
-          className="p-2 pt-10 rounded-2xl  flex flex-col justify-center items-center"
+          // id="home_heading"
+          className=" flex flex-col justify-center items-cente w-full bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#093975] via-[#021e42] to-[#001938] "
         >
           <Navbar />
-          <button className="rounded-2xl px-4 py-2 text-white bg-black mt-10 flex gap-2">
-            <div className="font-inter"> Confidence in every transaction</div>
-            <img src={c5} alt="not found" />
-          </button>
-          <div className="text-3xl md:text-5xl mt-10 font-poppin text-center">
+          <div className="font-inter text-center text-white mt-80"> Confidence in every transaction</div>
+          <div className="text-3xl md:text-5xl  font-poppin text-center">
             Empower Your Transactions with{" "}
           </div>
           <div className="mt-1 text-center">
@@ -89,73 +86,8 @@ function Home1() {
             <img src={Home} alt="" />
           </div>
         </div>
-        <div className="text-3xl lg:text-5xl text-center my-16 font-inter">
-          Essential Components
-          <span className="text-[#43576C] font-inter">
-            &nbsp; 📡 Monitoring &nbsp;
-          </span>
-          <span className="text-[#D62C1C] font-inter">🚨 Anomalies &nbsp;</span>
-          with Empowering
-          <span className="text-[#02B718] font-inter">
-            &nbsp;📊 Dashboards&nbsp;
-          </span>
-        </div>
-        <div className="grid grid-cols-1 grid-rows-4 w-full md:grid-cols-2 md:grid-rows-2 md:w-4/6 md:mx-auto">
-          <div
-            className="rounded-3xl mx-4"
-            style={{ border: "1px solid #E5E7EB" }}
-          >
-            <img src={c1} alt="" />
-            <div className="text-xl px-4 py-2 font-inter">
-              Fortifying Transaction Integrity
-            </div>
-            <div className="px-4 py-2 pb-4 font-inter">
-              Real-time analysis using advanced algorithms to scrutinize every
-              transaction, ensuring the security of critical transactions within
-              web applications.
-            </div>
-          </div>
-          <div
-            className="rounded-3xl mt-4 md:mt-0 mx-4"
-            style={{ border: "1px solid #E5E7EB" }}
-          >
-            <img src={c2} alt="" />
-            <div className="text-xl px-4 py-2 font-inter">
-              Anomaly Detection System
-            </div>
-            <div className="px-4 py-2 pb-4 font-inter">
-              Constantly adapting this system triggers instant alerts upon
-              detecting deviations, supporting company-level alerting rules and
-              efficient case management.
-            </div>
-          </div>
-          <div
-            className="rounded-3xl mt-4 mx-4"
-            style={{ border: "1px solid #E5E7EB" }}
-          >
-            <img src={c3} alt="" />
-            <div className="text-xl px-4 py-2 font-inter">Secure Dashboard</div>
-            <div className="px-4 py-2 pb-4 font-inter">
-              {" "}
-              A user-friendly dashboard offering customizable views, real-time
-              analytics, and historical data for decision-making in monitoring
-              critical transactions.
-            </div>
-          </div>
-          <div
-            className="rounded-3xl mt-4 mx-4"
-            style={{ border: "1px solid #E5E7EB" }}
-          >
-            <img src={c4} alt="" />
-            <div className="text-xl px-4 py-2 font-inter">
-              Compliance and Reporting
-            </div>
-            <div className="px-4 py-2 pb-4 font-inter">
-              Built-in reporting ensures regulatory compliance, generating
-              comprehensive reports for audits and data integrity commitment.
-            </div>
-          </div>
-        </div>
+        
+       
         <div className="text-3xl md:text-5xl mt-20 text-center font-inter">
           Benefits
         </div>
