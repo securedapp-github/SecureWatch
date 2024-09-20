@@ -1441,35 +1441,34 @@ const currentOptions = category === 1 ? txnOptionsCategory1 : txnOptionsCategory
           </div>
         </div>
 
-        <div className="w-[98%] md:w-[600px]  lg:min-h-96 overflow-auto mb-10">
-          <div className="flex flex-col justify-center items-center gap-6">
-          <div className="font-medium text-lg" style={{ color: "black" }}>
+       <div className="w-[98%] md:w-[600px] lg:min-h-96 mb-10">
+  <div className="flex flex-col justify-center items-center gap-6">
+    <div className="font-medium text-lg" style={{ color: "black" }}>
       Choose Txn Type for receiving alerts:
     </div>
     <div>
       <CustomDropdown
         options={currentOptions}
         onChange={handleTxnTypeSelection}
-        value={currentOptions.filter(option => selectedTxnTypes.includes(option.value))}
+        value={currentOptions.filter((option) => selectedTxnTypes.includes(option.value))}
       />
     </div>
 
-            <div className="font-medium text-lg" style={{ color: "black" }}>
-              Select events
-            </div>
+    <div className="font-medium text-lg" style={{ color: "black" }}>
+      Select methods
+    </div>
 
-            <div className="my-auto   min-w-full">
-              <div className="flex flex-col gap-4 m-3">
-                <Select
-                  isMulti
-                  options={totalEvents}
-                  defaultValue={options}
-                  onChange={handleSelectChange}
-                  value={totalEvents.filter(option => selectedValues.includes(option.value))}
-                />
-              </div>
-            </div>
-          </div>
+    {/* <div className="min-w-full"> */}
+      <div className="flex flex-col gap-4 m-3">
+        <Select
+          isMulti
+          options={totalEvents}
+          defaultValue={options}
+          onChange={handleSelectChange}
+          value={totalEvents.filter((option) => selectedValues.includes(option.value))}
+        />
+      </div>
+    </div>
           <div className="mt-5">
     {/* {selectedValues.map((eventName) => (
       
