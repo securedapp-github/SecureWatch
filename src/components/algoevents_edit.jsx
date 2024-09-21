@@ -1602,7 +1602,7 @@ const currentOptions = category === 1 ? txnOptionsCategory1 : txnOptionsCategory
                          : networkState === 1300
                         ? "Algorand Mainnet"
                          : networkState === 1301
-                        ? "Algorand Mainnet"
+                        ? "Algorand Testnet"
                         : "Unknown"}
               </div>
             </div>
