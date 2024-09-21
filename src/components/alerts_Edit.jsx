@@ -35,36 +35,6 @@ function Alerts_Edit() {
   const [isSaved, setIsSaved] = useState(false);
   const [open, setOpen] = useState(false);
   const [previousData, setPreviousData] = useState({});
-  
-
-  
- 
-  // Fetch monitor data on component mount
-  // useEffect(() => {
-  //   const fetchMonitorData = async () => {
-  //     try {
-  //       const response = await axios.post(
-  //         `${baseUrl}/get_monitor`,
-  //         { monitor_id: m_id }
-  //       );
-  //       const monitorData = response.data;
-  //       setPreviousData(monitorData);
-  //       console.log(monitorData);
-        
-
-  //       // Prefill the form with the retrieved data
-  //       setRiskCategory(monitorData.risk_category || "");
-  //       setEmailInput(monitorData.alert_data || "");
-  //       setActionType(monitorData.alerts[0].alerts ? "email" : "other");
-  //     } catch (error) {
-  //       console.error("Error fetching monitor data:", error);
-  //       toast.error("Failed to fetch monitor data. Please try again!");
-  //     }
-  //   };
-
-  //   fetchMonitorData();
-  // }, [m_id]);
-
 
 
   function openModal() {
@@ -351,7 +321,7 @@ function Alerts_Edit() {
                           : networkState === 1300
                           ? "Algorand Mainnet"
                           : networkState === 1301
-                          ? "Algorand Mainnet"
+                          ? "Algorand Testnet"
                           : "Unknown"}
               </div>
             </div>
