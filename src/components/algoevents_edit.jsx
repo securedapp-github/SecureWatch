@@ -183,7 +183,7 @@ const formatMethodsForApi = () => {
          console.log("events:", events);
          setEvents(events);
 
-        let algoData= JSON.parse( data.monitors[data.monitors.length-1].algo);
+        let algoData= ( data.monitors[data.monitors.length-1].algo);
     
 
 
