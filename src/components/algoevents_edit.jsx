@@ -1441,8 +1441,10 @@ const currentOptions = category === 1 ? txnOptionsCategory1 : txnOptionsCategory
           </div>
         </div>
 
-       <div className="w-[98%] md:w-[600px] lg:min-h-96 mb-10">
-  <div className="flex flex-col justify-center items-center gap-6">
+       <div className="w-full md:w-1/3 lg:w-1/4 mt-5 md:mt-0">
+  <div className="flex flex-col space-y-5">
+    
+    {/* Txn Type Selection */}
     <div className="font-medium text-lg" style={{ color: "black" }}>
       Choose Txn Type for receiving alerts:
     </div>
@@ -1459,7 +1461,7 @@ const currentOptions = category === 1 ? txnOptionsCategory1 : txnOptionsCategory
     </div>
 
     {/* <div className="min-w-full"> */}
-      <div className="flex flex-col gap-4 m-3">
+      <div >
         <Select
           isMulti
           options={totalEvents}
