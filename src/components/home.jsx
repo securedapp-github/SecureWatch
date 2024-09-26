@@ -72,7 +72,7 @@ function Home1() {
           <div className=" mt-5 font-inter text-center dark:text-[#001938] text-white">
             Unlock the Future of Transaction Security – Proactive Monitoring,
           </div>
-          <div className=" font-inter text-center dark:text-[#001938]text-white">
+          <div className=" font-inter text-center dark:text-[#001938] text-white">
             Intuitive Insights, and Seamless Scalability Await You with
             SecureWatch
           </div>
