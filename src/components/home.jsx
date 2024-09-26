@@ -45,35 +45,38 @@ function Home1() {
   return (
     <>
       <div className=" bg-white">
+
+        <div className="">
+
         <div
           // id="home_heading"
-          className=" flex flex-col justify-center items-cente w-full dark:bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#4374b0] via-[#13345f] to-[#001938] "
+          className="relative h-screen flex flex-col  w-full  dark:bg-none bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-[#4374b0] via-[#13345f] to-[#001938]"
         >
           <Navbar />
-          <div className="font-inter text-center text-[#001938] dark:text-white text-2xl">
+          <div className="font-inter text-center dark:text-[#001938] text-white text-2xl mt-12">
             {" "}
             Confidence in every transaction
           </div>
-          <div className="text-3xl md:text-5xl  font-poppin text-center mt-4 text-[#001938] dark:text-white">
+          <div className="text-3xl md:text-5xl  font-poppin text-center mt-4 dark:text-[#001938] text-white">
             Empower Your Transactions with{" "}
           </div>
           <div className="mt-1 text-center">
-            <span className=" text-3xl md:text-5xl font-poppin text-center text-[#001938] dark:text-white">
+            <span className=" text-3xl md:text-5xl font-poppin text-center dark:text-[#001938] text-white">
               SecureWatch’s
             </span>
-            <span className="text-3xl md:text-5xl font-poppin text-center text-[#001938] dark:text-white">
+            <span className="text-3xl md:text-5xl font-poppin text-center dark:text-[#001938] text-white">
               {" "}
               Real-Time Confidence.
             </span>
           </div>
-          <div className=" mt-5 font-inter text-center text-[#001938] dark:text-white">
+          <div className=" mt-5 font-inter text-center dark:text-[#001938] text-white">
             Unlock the Future of Transaction Security – Proactive Monitoring,
           </div>
-          <div className=" font-inter text-center text-[#001938] dark:text-white">
+          <div className=" font-inter text-center dark:text-[#001938]text-white">
             Intuitive Insights, and Seamless Scalability Await You with
             SecureWatch
           </div>
-          <button className="rounded-xl px-4 py-2 text-[#001938] dark:text-white bg-green-600 mt-10 flex justify-center items-center w-40 mx-auto ">
+          <button className="rounded-xl px-4 py-2 dark:text-[#001938] text-black bg-green-600 mt-10 flex justify-center items-center w-40 mx-auto ">
             <Link to="/signup">
               <div>Start for free</div>
             </Link>
@@ -95,23 +98,27 @@ function Home1() {
             </div> */}
           </button>
 
-          <div className="mt-10 mx-auto">
-            <img src={Home} alt="" className="s shadow-2xl" />
-          </div>
+         <div className="mx-auto absolute  -bottom-14 sm:-bottom-24 md:-bottom-40 lg:-bottom-56 xl:-bottom-64 left-1/2 transform -translate-x-1/2">
+         <img src={Home} alt="" className=" shadow-2xl rounded-xl" />
+         </div>
         </div>
 
-        <div className="w-full dark:bg-[#001938]">
-          <h1 className="text-[#001938] dark:text-white text-center font-sans text-4xl pt-16">
+        
+           
+          
+
+        <div className="w-full bg-[#001938] dark:bg-white">
+          <h1 className="dark:text-[#001938] text-white text-center font-sans text-4xl pt-[80px] sm:pt-[150px] md:pt-[220px] lg:pt-[260px] xl:pt-[300px]">
             About Secure <span className="text-green-500">Watch</span>
           </h1>
-          <p className="text-[#001938] dark:text-white text-center font-sans text-lg w-[98%] sm:w-[93%] lg:w-[70%] mx-auto mt-5">
+          <p className="dark:text-[#001938] text-white text-center font-sans text-lg w-[98%] sm:w-[93%] lg:w-[70%] mx-auto mt-5">
             SecureWatch is a cutting-edge real-time monitoring service crafted
             to ensure the security and integrity of critical transactions within
             web applications. It provides businesses with the peace of mind they
             need to operate confidently in the digital landscape by actively
             detecting and responding to potential threats and anomalies.
           </p>
-          <p className="text-[#001938] dark:text-white text-center font-sans text-lg w-[98%] sm:w-[93%] lg:w-[50%] mx-auto mt-5">
+          <p className="dark:text-[#001938] text-white text-center font-sans text-lg w-[98%] sm:w-[93%] lg:w-[50%] mx-auto mt-5">
             Comply with needed regulations and have complete visibility and
             control of your Web3 environment, 24-7, safeguarding client assets &
             stopping illicit finance.
@@ -119,52 +126,52 @@ function Home1() {
 
           <div className="mx-auto w-[60%] h-[1px] bg-slate-500 my-10"></div>
 
-          <p className="text-[#001938] dark:text-white text-center font-sans text-2xl w-[98%] sm:w-[93%] lg:w-[50%] mx-auto mt-">
+          <p className="dark:text-[#001938] text-white text-center font-sans text-2xl w-[98%] sm:w-[93%] lg:w-[50%] mx-auto mt-">
             Essential Components Monitoring Anomalies <br /> with Empowering
             Dashboards{" "}
           </p>
 
           <div className="w-full mt-6 flex justify-center gap-7 flex-wrap pb-20">
-            <div className="w-64 dark:bg-[#0f2744] border-2 border-[#d2e6ff] dark:border-slate-600 flex flex-col justify-start items-start p-5 gap-3 rounded-xl">
-              <FaHandshakeAngle className="text-[#001938] dark:text-white text-5xl" />
-              <p className="text-2xl text-[#001938] dark:text-white font-sans">
+            <div className="w-64 bg-[#0f2744] dark:bg-white border-2 dark:border-[#d2e6ff] border-slate-600 flex flex-col justify-start items-start p-5 gap-3 rounded-xl">
+              <FaHandshakeAngle className="dark:text-[#001938] text-white text-5xl" />
+              <p className="text-2xl dark:text-[#001938] text-white font-sans">
                 Fortifying Transaction Integrity
               </p>
-              <p className="text-[#001938] dark:text-white font-sans">
+              <p className="dark:text-[#001938] text-white font-sans">
                 Real-time analysis using advanced algorithms to scrutinize every
                 transaction, ensuring the security of critical transactions
                 within web applications.
               </p>
             </div>
 
-            <div className="w-64 dark:bg-[#0f2744] border-2 border-[#d2e6ff] dark:border-slate-600 flex flex-col justify-start items-start p-5 gap-3 rounded-xl">
-              <MdSpeed className="text-[#001938] dark:text-white text-5xl" />
-              <p className="text-2xl text-[#001938] dark:text-white font-sans">Secure Dashboard</p>
-              <p className="text-[#001938] dark:text-white font-sans">
+            <div className="w-64 bg-[#0f2744] dark:bg-white border-2 dark:border-[#d2e6ff] border-slate-600 flex flex-col justify-start items-start p-5 gap-3 rounded-xl">
+              <MdSpeed className="dark:text-[#001938] text-white text-5xl" />
+              <p className="text-2xl dark:text-[#001938] text-white font-sans">Secure Dashboard</p>
+              <p className="dark:text-[#001938] text-white font-sans">
                 A user-friendly dashboard offering customizable views, real-time
                 analytics, and historical data for decision-making in monitoring
                 critical transactions.
               </p>
             </div>
 
-            <div className="w-64 dark:bg-[#0f2744] border-2 border-[#d2e6ff] dark:border-slate-600 flex flex-col justify-start items-start p-5 gap-3 rounded-xl">
-              <FaSearch className="text-[#001938] dark:text-white text-4xl" />
-              <p className="text-2xl text-[#001938] dark:text-white font-sans">
+            <div className="w-64 bg-[#0f2744] dark:bg-white border-2 dark:border-[#d2e6ff] border-slate-600 flex flex-col justify-start items-start p-5 gap-3 rounded-xl">
+              <FaSearch className="dark:text-[#001938] text-white text-4xl" />
+              <p className="text-2xl dark:text-[#001938] text-white font-sans">
                 Anomaly Detection System
               </p>
-              <p className="text-[#001938] dark:text-white font-sans">
+              <p className="dark:text-[#001938] text-white font-sans">
                 Constantly adapting this system triggers instant alerts upon
                 detecting deviations, supporting company-level alerting rules
                 and efficient case management.
               </p>
             </div>
 
-            <div className="w-64 dark:bg-[#0f2744] border-2 border-[#d2e6ff] dark:border-slate-600 flex flex-col justify-start items-start p-5 gap-3 rounded-xl">
-              <IoDocumentTextOutline className="text-[#001938] dark:text-white text-5xl" />
-              <p className="text-2xl text-[#001938] dark:text-white font-sans">
+            <div className="w-64 bg-[#0f2744] dark:bg-white border-2 dark:border-[#d2e6ff] border-slate-600 flex flex-col justify-start items-start p-5 gap-3 rounded-xl">
+              <IoDocumentTextOutline className="dark:text-[#001938] text-white text-5xl" />
+              <p className="text-2xl dark:text-[#001938] text-white font-sans">
                 Compliance and Reporting
               </p>
-              <p className="text-[#001938] dark:text-white font-sans">
+              <p className="dark:text-[#001938] text-white font-sans">
                 Built-in reporting ensures regulatory compliance, generating
                 comprehensive reports for audits and data integrity commitment.
               </p>
@@ -172,7 +179,9 @@ function Home1() {
           </div>
         </div>
 
-        <div className="text-3xl md:text-5xl mt-20 text-center font-sans text-[#001938]">
+        </div>
+
+        <div className="text-3xl md:text-5xl mt-20 text-center font-sans text-[#001938] ">
           Benefits
         </div>
         <p className="text-[#001938] font-sans text-center font-medium mt-4">
@@ -251,10 +260,10 @@ function Home1() {
           </div>
         </div>
 
-        <div className="w-full flex flex-col  dark:bg-[#011b3a] bg-[#f2f4f9]">
+        <div className="w-full flex flex-col  bg-[#011b3a] dark:bg-[#f2f4f9]">
           <img src={GraphicTop} alt="" />
 
-          <div className="w-full text-center md:w-1/2 mx-auto text-3xl md:text-4xl mt-14 font-inter text-[#001938] dark:text-white">
+          <div className="w-full text-center md:w-1/2 mx-auto text-3xl md:text-4xl mt-14 font-inter dark:text-[#001938] text-white">
             Try SecureWatch now, <br /> it's free and easy to set up
           </div>
           <div className="w-full mx-auto text-center">
@@ -268,10 +277,10 @@ function Home1() {
           <img src={GraphicBottom} alt="" />
         </div>
 
-        <div className="w-full dark:bg-[#001938] flex items-center justify-around py-20 gap-6 flex-wrap">
+        <div className="w-full bg-[#001938] dark:bg-white flex items-center justify-around py-20 gap-6 flex-wrap">
           <div>
-            <p className="text-[#001938] dark:text-white text-xl">Join our newsletter</p>
-            <p className="text-[#001938] dark:text-white">
+            <p className="dark:text-[#001938] text-white text-xl">Join our newsletter</p>
+            <p className="dark:text-[#001938] text-white">
               {" "}
               Keep up to date with everything Secure Dapp
             </p>
@@ -280,7 +289,7 @@ function Home1() {
           <div className="flex gap-5 flex-wrap justify-center items-center">
             <input
               type="email"
-              className="dark:bg-[#223a58] bg-[#f8fbff] text-[#001938] dark:text-white w-[96%] sm:w-80 border rounded-lg px-4 py-2 dark:border-[#576e8a] border-[#a4cdff] "
+              className="bg-[#223a58] dark:bg-[#f8fbff] dark:text-[#001938] text-white w-[96%] sm:w-80 border rounded-lg px-4 py-2 border-[#576e8a] dark:border-[#a4cdff] "
               placeholder="Enter Your Email "
             />
             <button className="text-black px-4 py-2 bg-green-600 rounded-lg">
@@ -289,77 +298,77 @@ function Home1() {
           </div>
         </div>
 
-        <div className="w-full dark:bg-[#001938] flex justify-center items-center">
-          <div className="w-[80%] h-[1px] bg-[#22365b]"></div>
+        <div className="w-full bg-[#001938] dark:bg-white flex justify-center items-center">
+          <div className="w-[80%] h-[1px] dark:bg-[#22365b] bg-white"></div>
         </div>
 
-        <div className="w-full dark:bg-[#001938] flex justify-around py-16 gap-6 flex-wrap">
+        <div className="w-full dark:bg-white bg-[#001938] flex justify-around py-16 gap-6 flex-wrap">
           <div className="flex gap-6">
-            <a href="#"> <FaInstagram className="text-[#001938] dark:text-white text-3xl" /></a>
-            <a href="#"> <FaFacebook className="text-[#001938] dark:text-white text-3xl" /></a>
-            <a href=""><FaLinkedin className="text-[#001938] dark:text-white text-3xl" /></a>
-            <a href=""><FaYoutube className="text-[#001938] dark:text-white text-3xl" /></a>
+            <a href="#"> <FaInstagram className="dark:text-[#001938] text-white text-3xl" /></a>
+            <a href="#"> <FaFacebook className="dark:text-[#001938] text-white text-3xl" /></a>
+            <a href=""><FaLinkedin className="dark:text-[#001938] text-white text-3xl" /></a>
+            <a href=""><FaYoutube className="dark:text-[#001938] text-white text-3xl" /></a>
           </div>
 
           <div className="flex gap-8 flex-wrap justify-center ">
             <div className="flex flex-col gap-5">
               <div>
-                <p className="text-[#001938] dark:text-white text-xl font-medium">Product</p>
+                <p className="dark:text-[#001938] text-white text-xl font-medium">Product</p>
               </div>
               <div className="flex flex-col gap-3">
-                <p className="text-[#001938] dark:text-white">Solidity Shield Scan</p>
-                <p className="text-[#001938] dark:text-white">Secure Watch</p>
-                <p className="text-[#001938] dark:text-white">Secure Audit</p>
+                <p className="dark:text-[#001938] text-white">Solidity Shield Scan</p>
+                <p className="dark:text-[#001938] text-white">Secure Watch</p>
+                <p className="dark:text-[#001938] text-white">Secure Audit</p>
               </div>
             </div>
 
             <div className="flex flex-col gap-5">
               <div>
-                <p className="text-[#001938] dark:text-white text-xl font-medium">Services</p>
+                <p className="dark:text-[#001938] text-white text-xl font-medium">Services</p>
               </div>
               <div className="flex flex-col gap-3">
-                <p className="text-[#001938] dark:text-white">Features</p>
-                <p className="text-[#001938] dark:text-white">Integrations </p>
-                <p className="text-[#001938] dark:text-white">Pricing</p>
-                <p className="text-[#001938] dark:text-white">Changelog</p>
-                <p className="text-[#001938] dark:text-white">Roadmap</p>
+                <p className="dark:text-[#001938] text-white">Features</p>
+                <p className="dark:text-[#001938] text-white">Integrations </p>
+                <p className="dark:text-[#001938] text-white">Pricing</p>
+                <p className="dark:text-[#001938] text-white">Changelog</p>
+                <p className="dark:text-[#001938] text-white">Roadmap</p>
               </div>
             </div>
 
             <div className="flex flex-col gap-5">
               <div>
-                <p className="text-[#001938] dark:text-white text-xl font-medium">Company</p>
+                <p className="dark:text-[#001938] text-white text-xl font-medium">Company</p>
               </div>
               <div className="flex flex-col gap-3">
-                <p className="text-[#001938] dark:text-white">About Us</p>
+                <p className="dark:text-[#001938] text-white">About Us</p>
               </div>
             </div>
 
             <div className="flex flex-col gap-5">
               <div>
-                <p className="text-[#001938] dark:text-white text-xl font-medium">Resources</p>
+                <p className="dark:text-[#001938] text-white text-xl font-medium">Resources</p>
               </div>
               <div className="flex flex-col gap-3">
-                <p className="text-[#001938] dark:text-white">Blogs</p>
-                <p className="text-[#001938] dark:text-white">Documentation </p>
-                <p className="text-[#001938] dark:text-white">Contact</p>
+                <p className="dark:text-[#001938] text-white">Blogs</p>
+                <p className="dark:text-[#001938] text-white">Documentation </p>
+                <p className="dark:text-[#001938] text-white">Contact</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="w-full dark:bg-[#001938] flex justify-center items-center">
-          <div className="w-[80%] h-[1px] bg-[#22365b]"></div>
+        <div className="w-full bg-[#001938] dark:bg-white flex justify-center items-center">
+          <div className="w-[80%] h-[1px] bg-white dark:bg-[#22365b]"></div>
         </div>
 
-        <div className="w-full dark:bg-[#001938] flex justify-around gap-6 flex-wrap py-16">
+        <div className="w-full dark:bg-white bg-[#001938] flex justify-around gap-6 flex-wrap py-16">
           <div className="flex gap-5 flex-wrap ">
-            <p className="text-[#001938] dark:text-white text-center">Privacy Policy</p>
-            <p className="text-[#001938] dark:text-white text-center">Term of Conditions</p>
+            <p className="dark:text-[#001938] text-white text-center">Privacy Policy</p>
+            <p className="dark:text-[#001938] text-white text-center">Term of Conditions</p>
           </div>
 
           <div>
-            <p className="text-[#001938] dark:text-white text-center">
+            <p className="dark:text-[#001938] text-white text-center">
               All Rights Reserved. © Copyright 2023. SecureWatch - LLC
             </p>
           </div>
