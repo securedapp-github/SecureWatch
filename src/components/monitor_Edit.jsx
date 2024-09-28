@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState, useEffect, useCallback } from "react";
 import { Buffer } from "buffer";
 import Navbar from "./navbar2";
