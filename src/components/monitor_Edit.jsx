@@ -65,7 +65,7 @@ function Monitor_Edit() {
   };
 
   const sendSmartContract = () => {
-    const extractedEvents = extractEventHandlers(code);
+    const extractedEvents = extractEventHandlers(code||selectedMonitor.abi);
     setAlgoEvents(extractedEvents);
     console.log("Extracted events:", extractedEvents);
   };
