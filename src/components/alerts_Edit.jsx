@@ -350,6 +350,10 @@ function Alerts_Edit() {
                   ? "Sepolia Testnet"
                   : network === 137
                   ? "Polygon Mainnet"
+                  : network === 1300
+                  ? "Algorand Mainnet"
+                   : network === 1301
+                  ? "Algorand Testnet"
                   : "Unknown"}
               </div>
             </div>
