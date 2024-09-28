@@ -113,7 +113,7 @@ function Monitor_Edit() {
       address: address || selectedMonitor.address,
       alert_type: 1,
       //alert_data: "",
-      abi: category === 2 ? "Asset_ABI" : abi || selectedMonitor.abi,
+      abi: category === 2 ? "Asset_ABI" : (abi || selectedMonitor.abi),
       category: category || selectedMonitor.category,
     };
     console.log("data is:", data);
@@ -122,7 +122,7 @@ function Monitor_Edit() {
 
     if (selectedMonitor.network === 1300 || selectedMonitor.network === 1301) {
       // data.smart_Contract = smartContract;
-      data.abi =  selectedMonitor.abi||code;
+      data.abi = code;
 
       try {
         const response = await axios.post(`${baseUrl}/update_monitor`, data, {
