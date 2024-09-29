@@ -22,6 +22,7 @@ const Monitor_cmp = () => {
   const [value, setValue] = useState(10);
   const [moniter, setMoniter] = useState([]);
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId") ;
 
   useEffect(() => {
     const fetchMoniter = async () => {
@@ -32,7 +33,7 @@ const Monitor_cmp = () => {
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          user_id: 6,
+          user_id: userId,
         }),
       });
       const data = await res.json();

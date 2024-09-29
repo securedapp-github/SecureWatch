@@ -10,9 +10,11 @@ import Actions from '../images/Actions.png';
 import Code from '../images/code.png';
 import { useState } from "react";
 import { baseUrl } from "../Constants/data";
+import sha256 from 'js-sha256';
 
 
 function Dashboard() {
+  const [hash, setHash] = useState('');
   const token = localStorage.getItem("token");
   const [values, setValues] = useState([]);
   const [listeners, setListeners] = useState('');
@@ -31,6 +33,9 @@ function Dashboard() {
 console.log(Moniter);
   const userEmail = localStorage.getItem("email")
 console.log(userEmail);
+    
+ 
+
 
   function handleClick() {
     navigate("/monitor", { state: { email, token, monitor } });
@@ -39,6 +44,8 @@ console.log(userEmail);
 // console.log(monitor);
   //   console.log(s);
   React.useEffect(() => {
+    const emailHash = sha256(userEmail);
+    setHash(emailHash.substring(0,8));
     const fetchMoniter = async () => {
       const res=await fetch( `${baseUrl}/get_monitor`,{
         method:'POST',
@@ -117,7 +124,7 @@ console.log(userEmail);
                 <span className="text-[#0CA851] font-bold sm:text-xl md:text-2xl">
                   Tenant ID 
                 </span>
-                <span className="text-black">#833f1c5e...</span>
+                <span className="text-black">{hash+"...."}</span>
               </div>
               <div className="my-auto">
                 <svg

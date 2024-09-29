@@ -33,6 +33,9 @@ function Login() {
         );
   
         console.log("Login Successful:", response.data);
+        const userId = response.data.user.id;
+        console.log("userId",userId);
+        localStorage.setItem("userId", userId);
         const token = response.data.token;
         const monitor = response.data.monitors;
         console.log("token",token);
@@ -47,7 +50,7 @@ function Login() {
         // console.log("abc", s);
         // console.log(typeof monitor);
         showSuccessAlert("Login Successful");
-        navigate("/dashboard", { state: { email, monitor, token } });
+        navigate("/dashboard", { state: { userId,email, monitor, token } });
       }
     } catch (error) {
       // setErrorMessage("Invalid email or password.");
