@@ -49,7 +49,6 @@
     ]
   },
   "devDependencies": {
-    "daisyui": "^4.7.2",
-    "eslint": "^8.57.1"
+    "daisyui": "^4.7.2"
   }
 }
