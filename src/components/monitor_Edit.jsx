@@ -95,7 +95,7 @@ function Monitor_Edit() {
     if (newCategory === 2) {
       setCode("Asset_ABI");
     } else {
-      setCode(selectedMonitor.abi || ""); // Reset to original ABI or empty string
+      setCode(selectedMonitor.abi ); // Reset to original ABI or empty string
     }
   };
 
@@ -122,7 +122,7 @@ function Monitor_Edit() {
 
     if (selectedMonitor.network === 1300 || selectedMonitor.network === 1301) {
       // data.smart_Contract = smartContract;
-      data.abi = code;
+      data.abi = code||selectedMonitor.abi;
 
       try {
         const response = await axios.post(`${baseUrl}/update_monitor`, data, {
@@ -142,7 +142,7 @@ function Monitor_Edit() {
                 address: address || selectedMonitor.address,
                 rk: riskCategory,
                 //abi:  abi || selectedMonitor.abi,
-                abi: category === 2 ? "Asset_ABI" : abi,
+                abi: category === 2 ? "Asset_ABI" : (abi||selectedMonitor.abi),
                 m_id: selectedMonitor.mid,
                 email: email,
                 token: token,
