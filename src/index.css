@@ -54,12 +54,12 @@ html,body,#root{
    /* Track color */
   border-radius: 4px;
 }
-#home_heading{
+/* #home_heading{
     border: 1px solid;
 border-image-source: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
 background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.746419) 66.42%, rgba(255, 255, 255, 0) 100%);
 background-color: white;
-}
+} */
 .ReactModal__Content{
   border:1px solid #0CA851 !important;
   max-width:500px;
