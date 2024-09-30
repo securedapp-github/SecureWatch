@@ -16,6 +16,7 @@ import sha256 from 'js-sha256';
 function Dashboard() {
   const [hash, setHash] = useState('');
   const token = localStorage.getItem("token");
+  const User_id = localStorage.getItem("userId");
   const [values, setValues] = useState([]);
   const [listeners, setListeners] = useState('');
   const [alert, setAlert]= useState('')
@@ -54,7 +55,7 @@ console.log(userEmail);
           'Authorization': `Bearer ${token}`,
         },
         body:JSON.stringify({
-          "user_id": 6
+          "user_id": User_id
         })
       });
       const data = await res.json();

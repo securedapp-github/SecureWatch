@@ -59,11 +59,11 @@ const Monitor = () => {
         <div className="flex justify-center items-center md:justify-between  flex-col md:flex-row">
           <div className="text-4xl font-medium text-black">Monitors</div>
           <div className="flex flex-wrap justify-center gap-2 mt-2 md:mt-0">
-            <div className="border border-black rounded-xl font-medium px-3 py-2 my-auto cursor-pointer">
+            {/* <div className="border border-black rounded-xl font-medium px-3 py-2 my-auto cursor-pointer">
               <Link to="/monitor_activity">
               See Monitor Activity
               </Link>
-            </div>
+            </div> */}
             <div
               className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto cursor-pointer"
               onClick={handleClick}
