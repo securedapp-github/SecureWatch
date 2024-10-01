@@ -92,7 +92,7 @@ function Monitor_Edit() {
     setAddress(""); // Clear input when switching between categories
 
     // Set ABI to "Asset_ABI" when Asset ID is selected
-    if (newCategory === 2) {
+    if (newCategory === 1) {
       setCode("Asset_ABI");
     } else {
       setCode(selectedMonitor.abi ); // Reset to original ABI or empty string
@@ -113,7 +113,7 @@ function Monitor_Edit() {
       address: address || selectedMonitor.address,
       alert_type: 1,
       //alert_data: "",
-      abi: category === 2 ? "Asset_ABI" : (abi || selectedMonitor.abi),
+      abi: category === 1 ? "Asset_ABI" : (abi || selectedMonitor.abi),
       category: category || selectedMonitor.category,
     };
     console.log("data is:", data);
@@ -142,7 +142,7 @@ function Monitor_Edit() {
                 address: address || selectedMonitor.address,
                 rk: riskCategory,
                 //abi:  abi || selectedMonitor.abi,
-                abi: category === 2 ? "Asset_ABI" : (abi||selectedMonitor.abi),
+                abi: category === 1 ? "Asset_ABI" : (abi||selectedMonitor.abi),
                 m_id: selectedMonitor.mid,
                 email: email,
                 token: token,
@@ -671,8 +671,8 @@ function Monitor_Edit() {
                       onChange={handleCategoryChange}
                       className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C] bg-white"
                     >
-                      <option value={1}>App ID</option>
-                      <option value={2}>Asset ID</option>
+                      <option value={2}>App ID</option>
+                      <option value={1}>Asset ID</option>
                     </select>
 
                     <input
@@ -685,7 +685,7 @@ function Monitor_Edit() {
                       // onChange={(e) =>
                       //    setAddress(e.target.value)}
                       placeholder={
-                        category === 1 ? "Enter App ID" : "Enter Asset ID"
+                        category === 2 ? "Enter App ID" : "Enter Asset ID"
                       }
                       className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
                     />
@@ -714,7 +714,7 @@ function Monitor_Edit() {
                 selectedMonitor.network === 1301 ||
                 network === "1300" ||
                 network === "1301" ? (
-                  (category === 1 || selectedMonitor.category === "1") && (
+                  (category === 2 || selectedMonitor.category === "2") && (
                     <div
                       className="text-lg font-medium mt-5"
                       style={{ color: "black" }}
