@@ -35,7 +35,7 @@ function Monitor_create() {
   const [functions, setFunctions] = useState([]);
   const Token = localStorage.getItem("token");
   console.log(Token);
-  const [category, setCategory] = useState(1);
+  const [category, setCategory] = useState(2);
 
   console.log("Monitor name:", monitorName);
   console.log("network:", network);
@@ -581,15 +581,15 @@ function Monitor_create() {
           <>
 
                 <div className="text-lg font-medium mt-5" style={{ color: "black" }}>
-                  Algorand Smart Contract
+                  Approval Program:
                 </div>
-                <div className="text-lg text-[#989898] mt-1" style={{ color: "black" }}>
+                {/* <div className="text-lg text-[#989898] mt-1" style={{ color: "black" }}>
                   Paste your algorand smart contract here
-                </div>
+                </div> */}
                 <textarea
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  placeholder="Paste your PyTeal smart contract here"
+                  placeholder="Paste your Approval program here"
                   style={{
                     width: "100%",
                     height: "300px",
