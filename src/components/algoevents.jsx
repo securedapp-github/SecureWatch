@@ -74,7 +74,7 @@ function AlgoEvents() {
     };
     
     const formatTxnTypesForApi = () => {
-      const allOptions = category === 1 ? txnOptionsCategory1 : txnOptionsCategory2;
+      const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
       return allOptions.reduce((acc, option) => {
         acc[option.value] = {
           active: selectedTxnTypes.includes(option.value)
@@ -119,7 +119,7 @@ function AlgoEvents() {
 
     const handleSaveMonitor = async () => {
       let formattedData;
-      if(category === 1){
+      if(category === 2){
        formattedData = formatMethodsForApi();
       }
       else {
@@ -168,7 +168,7 @@ function AlgoEvents() {
 };
   
 
-  const currentOptions = category === 1 ? txnOptionsCategory1 : txnOptionsCategory2;
+  const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
   return (
     <div
       className="font-poppin pt-2 bg-white min-h-full"
@@ -481,7 +481,7 @@ function AlgoEvents() {
   <div className="flex flex-col space-y-5">
     
     {/* Txn Type Selection */}
-    {category === 2 && (
+    {category === 1 && (
       <>
     <div className="font-medium text-lg" style={{ color: "black" }}>
       Choose Txn Type for receiving alerts:
@@ -497,7 +497,7 @@ function AlgoEvents() {
     )}
 
     {/* Signature Name Input */}
-    {category !== 2 && (
+    {category !== 1 && (
           <>
     <div className="font-medium text-lg" style={{ color: "black" }}>
       Select Methods

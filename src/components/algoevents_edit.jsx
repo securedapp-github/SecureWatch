@@ -106,7 +106,7 @@ const handleTxnTypeSelection = (selectedOptions) => {
 
 
 const formatTxnTypesForApi = () => {
-  const allOptions = category === 1 ? txnOptionsCategory1 : txnOptionsCategory2;
+  const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
   return allOptions.reduce((acc, option) => {
     acc[option.value] = {
       active: selectedTxnTypes.includes(option.value)
@@ -264,7 +264,7 @@ const formatMethodsForApi = () => {
         console.log("API Response:", algoData);
 
         // If category is 1, we extract the methods
-        if (category === 1) {
+        if (category === 2) {
           const methods = algoData || {};
           const methodNames = Object.keys(methods).map(methodKey => {
             const decodedKey = atob(methodKey); // Decode base64 to regular string
@@ -284,7 +284,7 @@ const formatMethodsForApi = () => {
         }
 
         // If category is 2, we extract txnTypes
-        if (category === 2) {
+        if (category === 1) {
           const txnTypes = algoData || {}; // Check if txnTypes is in the response
           const selectedTxnTypesFromApi = Object.keys(algoData)
             .filter((key) => algoData[key]?.active === true);
@@ -681,10 +681,10 @@ const handleSubmit = async () => {
 
     // After deleting all unnecessary events, update the last one
     let formattedData;
-    if(category === 2){
+    if(category === 1){
       formattedData = formatTxnTypesForApi();
     }
-    if (category !== 2) {
+    if (category !== 1) {
       formattedData = formatMethodsForApi();
     }
 
@@ -740,7 +740,7 @@ useEffect(() => {
 }, [alert_data]);
 //console.log("Current Options: ", currentOptions);
 console.log("Selected Transaction Types: ", selectedTxnTypes);
-const currentOptions = category === 1 ? txnOptionsCategory1 : txnOptionsCategory2;
+const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
 
   if (
     !selectedTxnTypes ||
@@ -1559,7 +1559,7 @@ const currentOptions = category === 1 ? txnOptionsCategory1 : txnOptionsCategory
     
     {/* Txn Type Selection */}
 
-    {category===2&&(
+    {category===1&&(
       <>
     <div className="font-medium text-lg" style={{ color: "black" }}>
       Choose Txn Type for receiving alerts:
@@ -1579,7 +1579,7 @@ const currentOptions = category === 1 ? txnOptionsCategory1 : txnOptionsCategory
     </div>
     </>
     )}
-   {category ===1 &&(
+   {category ===2 &&(
     <>
     <div className="font-medium text-lg" style={{ color: "black" }}>
       Select Methods

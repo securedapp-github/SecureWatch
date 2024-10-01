@@ -35,7 +35,7 @@ function Monitor_create() {
   const [functions, setFunctions] = useState([]);
   const Token = localStorage.getItem("token");
   console.log(Token);
-  const [category, setCategory] = useState(1);
+  const [category, setCategory] = useState(2);
 
   console.log("Monitor name:", monitorName);
   console.log("network:", network);
@@ -105,14 +105,14 @@ function Monitor_create() {
         address: address,
         alert_type: 1,
         alert_data: "",
-        abi: category === 2 ? "Asset_ABI" : code,
+        abi: category === 1 ? "Asset_ABI" : code,
         //Riskcategory: riskCategory,
         category: parseInt(category),
       };
       console.log("Sending data:", data);
       // Handle Algorand network specifically 
       if (network === "1300"|| network ==="1301") {
-        data.abi = category === 2 ? "Asset_ABI" : code;
+        data.abi = category === 1 ? "Asset_ABI" : code;
         const response = await axios.post("https://139-59-5-56.nip.io:3443/add_monitor", data,{
           headers:{
           Authorization: `Bearer ${token}`}
@@ -130,7 +130,7 @@ function Monitor_create() {
                 network: networkName,
                 address: address,
                 rk: riskCategory,
-                abi: category === 2 ? "Asset_ABI" : code,
+                abi: category === 1 ? "Asset_ABI" : code,
                 m_id: response.data.id,
                 email: email,
                 token: token,
@@ -553,8 +553,8 @@ function Monitor_create() {
                   onChange={handleCategoryChange}
                    className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C] bg-white"
                   >
-                    <option value={1}>App ID</option>
-                    <option value={2}>Asset ID</option>
+                    <option value={2}>App ID</option>
+                    <option value={1}>Asset ID</option>
                   </select>
                   
                 </div>
@@ -569,7 +569,7 @@ function Monitor_create() {
                   value={address}
                   onChange={handleAppIdChange}
                   placeholder={
-                    category === 1
+                    category === 2
                       ? "Enter App ID"
                       : "Enter Asset ID"
                   } 
@@ -577,19 +577,19 @@ function Monitor_create() {
                 />
                 </div>
 
-                {category === 1 && (
+                {category === 2 && (
           <>
 
                 <div className="text-lg font-medium mt-5" style={{ color: "black" }}>
-                  Algorand Smart Contract
+                  Approval Program:
                 </div>
-                <div className="text-lg text-[#989898] mt-1" style={{ color: "black" }}>
+                {/* <div className="text-lg text-[#989898] mt-1" style={{ color: "black" }}>
                   Paste your algorand smart contract here
-                </div>
+                </div> */}
                 <textarea
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  placeholder="Paste your PyTeal smart contract here"
+                  placeholder="Paste your Approval program here"
                   style={{
                     width: "100%",
                     height: "300px",
