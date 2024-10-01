@@ -26,6 +26,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { toast } from "react-toastify";
 import AlgoEvents from "./components/algoevents.jsx";
 import AlgoEventsedit from "./components/algoevents_edit.jsx";
+import Algo_alerts from "./components/algo_alerts.jsx";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
         <Route path="/monitor" element={<Protected cmp={<Monitor />} />} />
         <Route path="/api_builder" element={<Protected cmp={<ApiBuilder />} />}/>
         <Route path="/monitor_alerts" element={<MonitorAlerts />} />
+        <Route path="/algo_alerts" element={<Algo_alerts />} />
          <Route
           path="/AlgoEventsedit"
           element={<Protected cmp={<AlgoEventsedit />} />}
