@@ -196,7 +196,7 @@ function Alerts() {
               </svg>
             </div>
           </div>
-          <div className="mt-10 flex gap-2 px-4 py-3 rounded-2xl" style={{ border: "1px solid #CACACA" }}>
+          {/* <div className="mt-10 flex gap-2 px-4 py-3 rounded-2xl" style={{ border: "1px solid #CACACA" }}>
             <div className="my-auto">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_173_1156)">
@@ -218,7 +218,7 @@ function Alerts() {
                 <path d="M11.5059 18.6469L16.5765 13.5763L11.5059 8.50562" stroke="black" stroke-width="1.69021" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </div>
-          </div>
+          </div> */}
           <div className="mt-10 flex gap-2 px-4 py-3 rounded-2xl" style={{ border: "1px solid #0CA851" }}>
             <div className="my-auto">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -527,7 +527,7 @@ function Events() {
               </svg>
             </div>
           </div>
-          <div
+          {/* <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
             onClick={() => {
@@ -585,7 +585,7 @@ function Events() {
                 />
               </svg>
             </div>
-          </div>
+          </div> */}
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
