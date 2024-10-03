@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./navbar";
-import Home from "../images/home1.png";
+import Home from "../images/hero.gif";
 import Security from "../images/security.png";
 import c1 from "../images/c1.png";
 import c2 from "../images/c2.png";

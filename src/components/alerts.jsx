@@ -7,6 +7,7 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { baseUrl } from "../Constants/data.js";
+import { Link } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
@@ -129,6 +130,7 @@ function Alerts() {
       <Navbar email={email} />
       <div className="w-full h-full mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className="mx-auto md:mx-0">
+        <Link to="/monitor">
           <div className="flex">
             <div>
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -147,6 +149,7 @@ function Alerts() {
               Back to Monitors
             </div>
           </div>
+          </Link>
           <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
             Create Monitor
           </div>

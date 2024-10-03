@@ -203,7 +203,7 @@ function Navbar() {
             </div>
 
             {isMenuOpen && (
-        <div className="absolute right-6 top-20 bg-[#001938] border border-gray-300 rounded-md shadow-lg py-2 px-3 flex flex-col justify-start items-start gap-3" >
+        <div className="z-50 absolute right-6 top-20 bg-[#001938] border border-gray-300 rounded-md shadow-lg py-2 px-3 flex flex-col justify-start items-start gap-3" >
           
 
           <button className="flex items-center gap-1 " onClick={()=>setDropdown1(!dropdown1)}>

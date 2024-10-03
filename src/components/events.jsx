@@ -12,6 +12,7 @@ import Select, { components } from "react-select";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { baseUrl } from "../Constants/data";
+import { Link } from "react-router-dom";
 
 function Events() {
   const navigate = useNavigate();
@@ -359,6 +360,7 @@ function Events() {
       <div className="mt-16 w-full flex justify-center items-center gap-10 flex-wrap ">
 
         <div className="  w-80 ">
+        <Link to="/monitor">
           <div className="flex">
             <div>
               <svg
@@ -403,6 +405,7 @@ function Events() {
               Back to Monitors
             </div>
           </div>
+          </Link>
           <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
             Create Monitor
           </div>
