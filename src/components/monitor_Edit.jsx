@@ -44,6 +44,7 @@ function Monitor_Edit() {
   const [abi, setAbi] = useState("");
   const [selectedMonitor, setSelectedMonitor] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [wait, setWait] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,6 +58,7 @@ function Monitor_Edit() {
       abi: abi || selectedMonitor.abi,
     };
     console.log("Data is:", data);
+    setWait(true);
     try {
       const response = await axios.post(
         `${baseUrl}/update_monitor`,
@@ -75,7 +77,7 @@ function Monitor_Edit() {
       // console.log(" address is:", address);
       // console.log(" ABI  is:", abi);
       // console.log(" user id is", user_Id);
-
+      setWait(false);
       toast.success("Details updated successfully!", {
         autoClose: 500,
         onClose: () => {
@@ -98,6 +100,7 @@ function Monitor_Edit() {
 
       console.log("response is", response.data);
     } catch (error) {
+      setWait(false)
       console.error("API request failed:", error); // Handle error
       toast.error("Failed to create monitor. Please try again!", {
         autoClose: 500,
@@ -179,8 +182,9 @@ function Monitor_Edit() {
 
   if (loading) {
     return (
-      <div className="text-center mt-20 text-4xl font-medium text-black">
-        Loading Monitor Details...
+      <div className="text-center  text-black">
+        <Navbar email={email} />
+        <span className="loading loading-spinner loading-lg text-[#0ca851] mt-20"></span>
       </div>
     );
   }
@@ -503,6 +507,7 @@ function Monitor_Edit() {
               style={{ backgroundColor: "white" }}
               type="text"
               placeholder="Enter text"
+              disabled={wait}
               onChange={(e) => setContractName(e.target.value)}
               value={monitorName}
               className="outline-none border-2 border-[] py-3 rounded-xl  w-full px-"
@@ -519,7 +524,7 @@ function Monitor_Edit() {
               name="category"
               id="category"
               // value={formData.category}
-
+              disabled={wait}
               onChange={(e) => {
                 const selectedIndex = e.target.options.selectedIndex;
                 setNetwork(e.target.value);
@@ -567,6 +572,7 @@ function Monitor_Edit() {
               type="text"
               style={{ backgroundColor: "white" }}
               name="address"
+              disabled={wait}
               value={address} // Bind input to state
               onChange={(e) => setAddress(e.target.value)}
               placeholder={selectedMonitor.address}
@@ -590,6 +596,7 @@ function Monitor_Edit() {
               id=""
               cols="30"
               rows="10"
+              disabled={wait}
               // value={formData.abi}
               value={abi} // Bind textarea to state
               placeholder={selectedMonitor.abi}
@@ -599,6 +606,7 @@ function Monitor_Edit() {
             <div className="text-center">
               <button
                 type="submit"
+                disabled={wait}
                 className="mt-6 px-6 py-3 bg-[#28AA61] text-white rounded-lg"
               >
                 Update Monitor

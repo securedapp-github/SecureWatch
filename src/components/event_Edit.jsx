@@ -16,6 +16,7 @@ function Event_Edit() {
   const [selectedValues, setSelectedValues] = useState([]);
   const [totalEvents, setTotalEvents] = useState([]);
   const [removedEvents, setRemovedEvents] = useState([]);
+  const [waiting, setWaiting] = useState(false);
 
   console.log("Selected values:", selectedValues.length);
 
