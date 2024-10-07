@@ -36,7 +36,7 @@ function Monitor_Edit() {
   // const { address }= location.state;
   // const {network} = location.state;
 
-  
+  const [wait, setWait] = useState(false)
   const [monitorName, setMonitorName] = useState(name || "");
  // const [riskCategory, setRiskCategory] = useState("");
   const [address, setAddress] = useState("");
