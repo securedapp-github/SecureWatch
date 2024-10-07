@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable no-undef */
+import React, { useState, useEffect, useCallback } from "react";
+import { Buffer } from "buffer";
 import Navbar from "./navbar2";
 import Modal from "react-modal";
 import axios from "axios";
@@ -24,10 +26,10 @@ function Monitor_Edit() {
   const targetMids = query.get("id");
   console.log("MID = ", targetMids);
 
+ const { m_id, name, alert_data, alert_type, riskCategory } =
+    location.state || {};
   const { mid } = location.state;
-  const { name } = location.state;
-  const {alert_data}= location.state;
-  const {alert_type}= location.state;
+  const [category, setCategory] = useState();
   console.log("alert data is", alert_data);
   console.log("alert type is", alert_type);
   
@@ -36,7 +38,7 @@ function Monitor_Edit() {
 
   
   const [monitorName, setMonitorName] = useState(name || "");
-  const [riskCategory, setRiskCategory] = useState("");
+ // const [riskCategory, setRiskCategory] = useState("");
   const [address, setAddress] = useState("");
   const [contractName, setContractName] = useState("");
   const [network, setNetwork] = useState("");
@@ -44,67 +46,160 @@ function Monitor_Edit() {
   const [abi, setAbi] = useState("");
   const [selectedMonitor, setSelectedMonitor] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [wait, setWait] = useState(false);
+  const [code, setCode] = useState("");
+  const [Algoevents, setAlgoEvents] = useState([]);
 
-  const handleSubmit = async (e) => {
+   const extractEventHandlers = (code) => {
+    const eventHandlers = [];
+    const eventRegex =
+      /txna ApplicationArgs 0\s*([\s\S]*?)pushbytes 0x([\da-fA-F]+)/g;
+    let match;
+
+    while ((match = eventRegex.exec(code)) !== null) {
+      const hexValue = match[2];
+      const methodName = Buffer.from(hexValue, "hex").toString("utf8");
+      eventHandlers.push(methodName);
+    }
+
+    return eventHandlers;
+  };
+
+  const sendSmartContract = () => {
+    const extractedEvents = extractEventHandlers(code||selectedMonitor.abi);
+    setAlgoEvents(extractedEvents);
+    console.log("Extracted events:", extractedEvents);
+  };
+  console.log("methods are:", Algoevents);
+
+  const handleAppIdChange = useCallback((e) => {
+    const value = e.target.value;
+
+    // Remove any non-digit characters
+    const sanitizedValue = value.replace(/\D/g, "");
+
+    // Ensure the value is within the valid range (0 to 2^64 - 1)
+    const numValue = BigInt(sanitizedValue || "0");
+    const maxValue = BigInt("18446744073709551615");
+
+    if (numValue <= maxValue) {
+      setAddress(sanitizedValue);
+    }
+  }, []);
+
+  const handleCategoryChange = (e) => {
+    const newCategory = parseInt(e.target.value);
+    setCategory(newCategory);
+    setAddress(""); // Clear input when switching between categories
+
+    // Set ABI to "Asset_ABI" when Asset ID is selected
+    if (newCategory === 1) {
+      setCode("Asset_ABI");
+    } else {
+      setCode(selectedMonitor.abi ); // Reset to original ABI or empty string
+    }
+  };
+
+
+
+   const handleSubmit = async (e) => {
     e.preventDefault();
+    // const finalAbi = (category === 2) ? "Asset_ABI" : abi || selectedMonitor.abi;
 
     const data = {
       name: monitorName || selectedMonitor.name,
       monitor_id: selectedMonitor.mid,
-      // network: network || selectedMonitor.network,
+      // user_id: parseInt(user_Id) || selectedMonitor.user_id,
+      // network: parseInt(network) || selectedMonitor.network,
       address: address || selectedMonitor.address,
       alert_type: 1,
-      abi: abi || selectedMonitor.abi,
+      //alert_data: "",
+      abi: category === 1 ? "Asset_ABI" : (abi || selectedMonitor.abi),
+      category: category || selectedMonitor.category,
     };
-    console.log("Data is:", data);
-    setWait(true);
-    try {
-      const response = await axios.post(
-        `${baseUrl}/update_monitor`,
-        data,
-        {
+    console.log("data is:", data);
+    console.log("mid:", selectedMonitor.mid);
+    
+
+    if (selectedMonitor.network === 1300 || selectedMonitor.network === 1301) {
+      // data.smart_Contract = smartContract;
+      data.abi = code||selectedMonitor.abi;
+
+      try {
+        const response = await axios.post(`${baseUrl}/update_monitor`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
-      // console.log("API response:", response.data);
-      // console.log("monitor name is", monitorName);
-      // console.log("Risk category is:", riskCategory);
-      // console.log("contract name is", contractName);
-      // console.log("netwprk name is", network);
-      // console.log(" address is:", address);
-      // console.log(" ABI  is:", abi);
-      // console.log(" user id is", user_Id);
-      setWait(false);
-      toast.success("Details updated successfully!", {
-        autoClose: 500,
-        onClose: () => {
-          navigate("/event_Edit", {
-            state: {
-              name: monitorName || selectedMonitor.name,
-              network: network || selectedMonitor.network,
-              address: address || selectedMonitor.address,
-              rk: riskCategory,
-              abi: abi || selectedMonitor.abi,
-              m_id: selectedMonitor.mid,
-              email: email,
-              token: token,
-              alert_data: alert_data || "",
-              alert_type: alert_type || "",
-            },
-          });
-        },
-      });
+        });
+        console.log("smart contract code:", abi);
 
-      console.log("response is", response.data);
-    } catch (error) {
-      setWait(false)
-      console.error("API request failed:", error); // Handle error
-      toast.error("Failed to create monitor. Please try again!", {
-        autoClose: 500,
-      });
+        toast.success("Details updated successfully!", {
+          autoClose: 500,
+          onClose: () => {
+            navigate("/AlgoEventsedit", {
+              state: {
+                name: monitorName || selectedMonitor.name,
+                network: network || selectedMonitor.network,
+                address: address || selectedMonitor.address,
+                rk: riskCategory,
+                //abi:  abi || selectedMonitor.abi,
+                abi: category === 1 ? "Asset_ABI" : (abi||selectedMonitor.abi),
+                m_id: selectedMonitor.mid,
+                email: email,
+                token: token,
+                alert_data: alert_data || "",
+                alert_type: alert_type || "",
+                category:
+                  parseInt(category) || parseInt(selectedMonitor.category),
+                Algoevents: Algoevents,
+              },
+            });
+          },
+        });
+
+        console.log("response is", response.data);
+      } catch (error) {
+        console.error("API request failed:", error); // Handle error
+        toast.error("Failed to create monitor. Please try again!", {
+          autoClose: 500,
+        });
+      }
+    } else {
+      data.abi = abi || selectedMonitor.abi;
+
+      try {
+        const response = await axios.post(`${baseUrl}/update_monitor`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        toast.success("Details updated successfully!", {
+          autoClose: 500,
+          onClose: () => {
+            navigate("/event_Edit", {
+              state: {
+                name: monitorName || selectedMonitor.name,
+                network: network || selectedMonitor.network,
+                address: address || selectedMonitor.address,
+                rk: riskCategory,
+                abi: abi || selectedMonitor.abi,
+                m_id: selectedMonitor.mid,
+                email: email,
+                token: token,
+                alert_data: alert_data || "",
+                alert_type: alert_type || "",
+              },
+            });
+          },
+        });
+
+        console.log("response is", response.data);
+      } catch (error) {
+        console.error("API request failed:", error); // Handle error
+        toast.error("Failed to create monitor. Please try again!", {
+          autoClose: 500,
+        });
+      }
     }
   };
 
@@ -113,24 +208,34 @@ function Monitor_Edit() {
 
   const setMoniters = async (moniterss) => {
     console.log("called setMoniters ", moniterss);
-    if (!moniterss || !Array.isArray(moniterss.monitors) || moniterss.monitors.length === 0) {
+    if (
+      !moniterss ||
+      !Array.isArray(moniterss.monitors) ||
+      moniterss.monitors.length === 0
+    ) {
       console.log("Monitors array is empty");
-      setLoading(false); 
+      setLoading(false);
       return;
     }
-    console.log("targetMids = ", targetMids );
-    const _selectedMonitor = moniterss.monitors.find((monitor) => monitor.mid == targetMids);
-    console.log("select monitor = ", _selectedMonitor );
+    console.log("targetMids = ", targetMids);
+    const _selectedMonitor = moniterss.monitors.find(
+      (monitor) => monitor.mid == targetMids
+    );
+    console.log("select monitor = ", _selectedMonitor);
 
     if (_selectedMonitor) {
       setSelectedMonitor(_selectedMonitor);
-      setLoading(false); // Update loading state to indicate data is loaded
+      setMonitorName(_selectedMonitor.name);
+      setCategory(_selectedMonitor.category); // Set category based on selected monitor
+      setAddress(_selectedMonitor.address); // Set address based on selected monitor
+      setAbi(_selectedMonitor.abi);
+       setLoading(false); // Update loading state to indicate data is loaded
+      // sendSmartContract(_selectedMonitor.abi);
     } else {
       console.log(`Monitor with mid ${targetMids} not found`);
       setLoading(false); // Update loading state to indicate no matching monitor found
     }
   };
-
 
   useEffect(() => {
     const fetchMoniter = async () => {
@@ -141,44 +246,28 @@ function Monitor_Edit() {
         const res = await fetch(`${baseUrl}/get_monitor`, {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             user_id: user_Id,
           }),
         });
         data = await res.json();
+        console.log("Monitor data fetched:", data);
+
+        // Log the monitors array to see if it contains the correct category value
+        console.log("Monitors array:", data.monitors);
       } catch (error) {
         console.error("Error fetching monitor data:", error);
       } finally {
         setMoniter(data);
         setMoniters(data);
-
       }
     };
-    
+
     fetchMoniter();
   }, [user_Id, value]);
-
-  // console.log("monitor isa:", moniter);
-
-
- 
-  // console.log("Selected Monitor:", selectedMonitor);
-  // console.log("name is:", selectedMonitor.name);
-
-  // {
-  //   selectedMonitor.network === 80002
-  //     ? "Amoy"
-  //     : selectedMonitor.network === 1
-  //     ? "Ethereum Mainnet"
-  //     : selectedMonitor.network === 11155111
-  //     ? "Sepolia Testnet"
-  //     : selectedMonitor.network === 137
-  //     ? "Polygon Mainnet"
-  //     : "Unknown";
-  // }
 
   if (loading) {
     return (
@@ -188,7 +277,6 @@ function Monitor_Edit() {
       </div>
     );
   }
-
   return (
     <div
       className="font-poppin pt-2 bg-white min-h-full2"
@@ -547,6 +635,10 @@ function Monitor_Edit() {
                   ? "Sepolia Testnet"
                   : selectedMonitor.network === 137
                   ? "Polygon Mainnet"
+                   : selectedMonitor.network === 1300
+                    ? "Algorand Mainnet"
+                    : selectedMonitor.network === 1301
+                    ? "Algorand Testnet"
                   : "Unknown"}
               </option>
               <option value="1" className="text-[13px] text-[#959595] ">
@@ -561,60 +653,140 @@ function Monitor_Edit() {
               <option value="80002" className="text-[13px] text-[#959595]">
                 Amoy
               </option>
+              <option value="1300" className="text-[13px] text-[#959595]">
+                  Algorand Mainnet
+                </option>
+                <option value="1301" className="text-[13px] text-[#959595]">
+                  Algorand Testnet
+                </option>
             </select>
-            <div
-              className="text-lg font-medium mt-5 "
-              style={{ color: "black" }}
-            >
-              Address
-            </div>
-            <input
-              type="text"
-              style={{ backgroundColor: "white" }}
-              name="address"
-              disabled={wait}
-              value={address} // Bind input to state
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder={selectedMonitor.address}
-              className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
-            />
-            <div
-              className="text-lg font-medium mt-5"
-              style={{ color: "black" }}
-            >
-              ABI
-            </div>
-            <div
-              className="text-lg text-[#989898] mt-1 "
-              style={{ color: "black" }}
-            >
-              Paste your Contract's ABI code here
-            </div>
-            <textarea
-              style={{ backgroundColor: "white" }}
-              name="abi"
-              id=""
-              cols="30"
-              rows="10"
-              disabled={wait}
-              // value={formData.abi}
-              value={abi} // Bind textarea to state
-              placeholder={selectedMonitor.abi}
-              onChange={(e) => setAbi(e.target.value)}
-              className="w-full mt-1 outline-none rounded-xl border-2 border-[]"
-            ></textarea>
-            <div className="text-center">
-              <button
-                type="submit"
-                disabled={wait}
-                className="mt-6 px-6 py-3 bg-[#28AA61] text-white rounded-lg"
-              >
-                Update Monitor
-              </button>
-            </div>
-          </form>
+ <div>
+                {selectedMonitor.network === 1300 ||
+                selectedMonitor.network === 1301 ||
+                network === "1300" ||
+                network === "1301" ? (
+                  <div
+                    className="text-lg font-medium mt-5 "
+                    style={{ color: "black" }}
+                  >
+                    <label>Select ID type:</label>
+                    <select
+                      value={category || selectedMonitor.category}
+                      onChange={handleCategoryChange}
+                      className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C] bg-white"
+                    >
+                      <option value={2}>App ID</option>
+                      <option value={1}>Asset ID</option>
+                    </select>
+
+                    <input
+                      type="text"
+                      style={{ backgroundColor: "white" }}
+                      name="address"
+                      value={address}
+                      onChange={handleAppIdChange}
+                      // maxLength={16}
+                      // onChange={(e) =>
+                      //    setAddress(e.target.value)}
+                      placeholder={
+                        category === 2 ? "Enter App ID" : "Enter Asset ID"
+                      }
+                      className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <div
+                      className="text-lg font-medium mt-5"
+                      style={{ color: "black" }}
+                    >
+                      Address
+                    </div>
+                    <input
+                      type="text"
+                      style={{ backgroundColor: "white" }}
+                      name="address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="Enter address (0x.......)"
+                      className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
+                    />
+                  </div>
+                )}
+
+                {selectedMonitor.network === 1300 ||
+                selectedMonitor.network === 1301 ||
+                network === "1300" ||
+                network === "1301" ? (
+                  (category === 2 || selectedMonitor.category === "2") && (
+                    <div
+                      className="text-lg font-medium mt-5"
+                      style={{ color: "black" }}
+                    >
+                      <label>Approval Program:</label>
+                      <div
+                        className="text-lg text-[#989898] mt-1 "
+                        style={{ color: "black" }}
+                      >
+                        {/* Paste your pyteal smart contract here */}
+                      </div>
+                      <textarea
+                        style={{
+                          width: "100%",
+                          height: "300px",
+                          backgroundColor: "white",
+                          border: "1px solid #ccc",
+                          borderRadius: "4px",
+                          padding: "10px",
+                          fontSize: "14px",
+                          marginBottom: "10px",
+                        }}
+                        cols="30"
+                        rows="10"
+                        value={code}
+                        // value={code} // Bind textarea to state
+                        placeholder={
+                          selectedMonitor.abi || "paste approval program"
+                        }
+                        onChange={(e) => setCode(e.target.value)}
+                        className="w-full mt-1 outline-none rounded-xl border-2 border-[]"
+                      />
+                    </div>
+                  )
+                ) : (
+                  <div>
+                    <div
+                      className="text-lg font-medium mt-5"
+                      style={{ color: "black" }}
+                    >
+                      ABI
+                    </div>
+                    <textarea
+                      style={{ backgroundColor: "white" }}
+                      name="abi"
+                      id=""
+                      cols="30"
+                      rows="10"
+                      value={abi}
+                      onChange={(e) => setAbi(e.target.value)}
+                      className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="text-center">
+                <button
+                  onClick={sendSmartContract}
+                  type="submit"
+                  className="mt-6 px-6 py-3 bg-[#28AA61] text-white rounded-lg"
+                >
+                  Update Monitor
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
       )}
     </div>
   );

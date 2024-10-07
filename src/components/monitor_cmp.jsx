@@ -126,10 +126,20 @@ const Monitor_cmp = () => {
                   boxShadow: "4px 4px 0px 0px #0CA851",
                 }}
               >
+
                 <button
                   className="w-[70%] sm:w-[80%] md:w-[90%]  p-6  "
+                  // onClick={() => {
+                  //   navigate("/monitor_alerts", { state: { mid, network } });
+                  // }}
                   onClick={() => {
-                    navigate("/monitor_alerts", { state: { mid, network } });
+                    if (network === 1300 || network === 1301) {
+                      // Navigate to algo_alerts page for Algorand Mainnet/Testnet
+                      navigate("/algo_alerts", { state: { mid, network } });
+                    } else {
+                      // Navigate to monitor_alerts for other networks
+                      navigate("/monitor_alerts", { state: { mid, network } });
+                    }
                   }}
                 >
                   <div className="">
@@ -155,6 +165,10 @@ const Monitor_cmp = () => {
                             ? "Sepolia Testnet"
                             : network === 137
                             ? "Polygon Mainnet"
+                            : network === 1300
+                            ? "Algorand Mainnet"
+                            : network === 1301
+                            ? "Algorand Testnet"
                             : "Unknown"}
                         </div>
                       </div>
