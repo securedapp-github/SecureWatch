@@ -92,11 +92,19 @@ function Algo_alerts() {
           console.log(`Transaction Hash: ${txnHash}, Group ID: ${group}`);
 
           // Determine the URL for the transaction or group transaction
+          // const transactionLink = group
+          //   ? `https://allo.info/tx/group/${encodeURIComponent(group)}`
+          //   : txnHash
+          //   ? `https://allo.info/tx/${txnHash}`
+          //   : null; // No link available if neither is present
           const transactionLink = group
-            ? `https://allo.info/tx/group/${encodeURIComponent(group)}`
-            : txnHash
-            ? `https://allo.info/tx/${txnHash}`
-            : null; // No link available if neither is present
+  ? `https://allo.info/tx/group/${encodeURIComponent(group)}` // No change for grouped transactions
+  : txnHash
+  ? network === 1301
+    ? `https://app.dappflow.org/explorer/transaction/${txnHash}` // Use DappFlow for Testnet
+    : `https://allo.info/tx/${txnHash}` // Use allo.info for Mainnet
+  : null; // No link available if neither is present
+
 
           return (
             <div key={index} className="w-[95%] lg:w-4/6 mx-auto flex flex-col mb-14 mt-10">
