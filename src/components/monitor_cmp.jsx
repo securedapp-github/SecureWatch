@@ -20,12 +20,16 @@ const customStyles = {
 const Monitor_cmp = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState(10);
+  const [loading, setLoading] = useState(true);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [moniter, setMoniter] = useState([]);
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId") ;
 
   useEffect(() => {
+    setLoading(true);
     const fetchMoniter = async () => {
+      setLoading(true);
       const res = await fetch(`${baseUrl}/get_monitor`, {
         method: "POST",
         headers: {
@@ -38,11 +42,13 @@ const Monitor_cmp = () => {
       });
       const data = await res.json();
       setMoniter(data);
+      setLoading(false);
     };
     fetchMoniter();
   }, [value]);
 
   const handleDeleteMonitor = async (monitor_id) => {
+    setDeleteLoading(true);
     if (window.confirm("Are you sure you want to delete this monitor?")) {
       try {
         const response = await fetch(`${baseUrl}/delete_monitor`, {
@@ -57,14 +63,17 @@ const Monitor_cmp = () => {
         });
 
         if (response.ok) {
+          setDeleteLoading(false);
           setValue(value + 1); // Trigger re-fetch after deletion
           toast.success("Monitor deleted successfully.");
           // alert("Monitor deleted successfully.");
         } else {
+          setDeleteLoading(false);
           toast.error("Failed to delete monitor. Please try again.")
           // alert("Failed to delete monitor. Please try again.");
         }
       } catch (error) {
+        setDeleteLoading(false);
         toast.error("An error occurred. Please try again.")
         console.error("Error deleting monitor:", error);
         // alert("An error occurred. Please try again.");
@@ -72,11 +81,14 @@ const Monitor_cmp = () => {
     }
   };
 
-  if (
-    !moniter ||
-    !Array.isArray(moniter.monitors) ||
-    moniter.monitors.length === 0
-  ) {
+  if (loading) {
+    return (
+      <div className="text-center mt-20 text-4xl font-medium text-black">
+         <span className="loading loading-spinner loading-lg text-[#0ca851]"></span>
+      </div>
+    );
+  }
+  if (loading === false && !moniter || !Array.isArray(moniter.monitors) || moniter.monitors.length === 0) {
     return (
       <div className="text-center mt-20 text-4xl font-medium text-black">
         Please create a monitor.
@@ -87,7 +99,12 @@ const Monitor_cmp = () => {
   return (
     <div className="w-full flex justify-center items-center flex-col ">
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
-      {moniter.monitors.map((i) => {
+      {loading?(
+        <div className="text-center mt-20 text-4xl font-medium">
+          <span className="loading loading-spinner loading-lg text-[#0ca851]"></span>
+        </div>
+      ):
+      moniter.monitors.map((i) => {
         const name = i.name;
         const risk = i.category;
         const network = i.network;
@@ -191,9 +208,12 @@ const Monitor_cmp = () => {
                 <div className="flex items-center p-6 w-[30%] sm:w-[20%] md:w-[10%] ">
                   <div className="flex flex-col justify-end gap-7 items-center">
                     {/* Dustbin Icon for Deleting Monitor */}
-                    <button onClick={() => handleDeleteMonitor(mid)}>
+                   
+                    
+                      <button onClick={() => handleDeleteMonitor(mid)}>
                       <img src={Trash} alt="Delete Monitor" className="h-8 w-8" />
                     </button>
+                    
                     {/* Edit Icon */}
                     <button onClick={() => {
                       navigate("/monitor_Edit?id=" + mid, {
@@ -247,7 +267,8 @@ const Monitor_cmp = () => {
             </div>
           </div>
         );
-      })}
+      })
+      }
     </div>
   );
 };

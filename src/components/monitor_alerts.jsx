@@ -16,9 +16,11 @@ function Monitor_alerts() {
   const email = localStorage.getItem("email")
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDiv, setActiveDiv] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAlert = async () => {
+      setLoading(true);
       const res=await fetch(`${baseUrl}/get_alerts`,{
         method:'POST',
         headers:{
@@ -31,12 +33,23 @@ function Monitor_alerts() {
       });
       const data = await res.json();
       setAlert(data);
+      setLoading(false)
     };
     fetchAlert();
     console.log("alert",alert);
   }, []);
 
 
+  if (loading){
+    return (
+      <div className="pt-10 bg-white">
+        <Navbar email={email} />
+        <div className="text-lg lg:text-3xl font-medium text-black text-center  mt-20">
+        <span className="loading loading-spinner loading-lg text-[#0ca851]"></span>
+        </div> 
+      </div>
+    );
+  }
   if (!alert.alerts||alert.alerts.length===0  ||  alert===undefined){
     return (
       <div className="pt-10 bg-white">

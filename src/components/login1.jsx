@@ -33,6 +33,7 @@ function Login1() {
        // setErrorMessage("Enter the Email, userame and password");
         showErrorAlert("Enter the Email, userame and password");
       } else {
+      
         const response = await axios.post(
           `${baseUrl}/signup_securewatch`,
           {
@@ -41,17 +42,28 @@ function Login1() {
             password: u_password,
           }
         );
-        
+        console.log("response",response)
+        if (response.status === 400) {
+          //setErrorMessage("User already exists. Please login.");
+          showErrorAlert("User already exists. Please login.");
+          setLoading(false);
+        }
         // console.log("User signed up successfully:", response.data);
-        const token = response.data.token;
-        const monitor = response.data.monitors;
-        let login = localStorage.setItem("login", true);
-        let Token = localStorage.setItem("token", token); 
+        // const token = response.data.token;
+        // const monitor = response.data.monitors;
+        // let login = localStorage.setItem("login", true);
+        // let Token = localStorage.setItem("token", token); 
         showSuccessAlert("You are signed up successfully.");
-        navigate("/dashboard", { state: { email, monitor, token } });
+        navigate("/login");
       }
     } catch (error) {
-      console.error("Error signing up:", error);
+      if (error.response.status === 400) {
+        //setErrorMessage("User already exists. Please login.");
+        showErrorAlert("User already exists. Please login.");
+        setLoading(false);
+        return;
+      }
+      console.log("Error signing up:", error);
       setLoading(false);
       //setErrorMessage("Error signing up. Please try again.");
       showErrorAlert("Error signing up. Please try again.");

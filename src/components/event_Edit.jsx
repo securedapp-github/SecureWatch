@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./navbar2";
 import Select from 'react-select'
 import { baseUrl } from "../Constants/data";
+import { Link } from "react-router-dom";
 
 function Event_Edit() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function Event_Edit() {
   const [selectedValues, setSelectedValues] = useState([]);
   const [totalEvents, setTotalEvents] = useState([]);
   const [removedEvents, setRemovedEvents] = useState([]);
+  const [waiting, setWaiting] = useState(false);
 
   console.log("Selected values:", selectedValues.length);
 
@@ -467,6 +469,7 @@ const handleSelectChange = (selectedOptions) => {
         <div className="w-full mx-auto mt-10 md:mt-20 flex items-center justify-center flex-col gap-7  flex-wrap md:flex-row md:gap-10 lg:gap-20">
 
           <div className="">
+          <Link to="/monitor">
             <div className="flex">
               <div>
                 <svg
@@ -511,6 +514,7 @@ const handleSelectChange = (selectedOptions) => {
                 Back to Monitors
               </div>
             </div>
+            </Link>
             <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
               Edit Monitor
             </div>
@@ -934,6 +938,7 @@ const handleSelectChange = (selectedOptions) => {
       <div className="mt-16 w-full flex justify-center items-center gap-10 flex-wrap">
 
         <div className="w-80 ">
+        <Link to="/monitor">
           <div className="flex">
             <div>
               <svg
@@ -978,6 +983,7 @@ const handleSelectChange = (selectedOptions) => {
               Back to Monitors
             </div>
           </div>
+</Link>
           <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
             Edit Monitor
           </div>
@@ -1102,7 +1108,7 @@ const handleSelectChange = (selectedOptions) => {
               </svg>
             </div>
           </div>
-          <div
+          {/* <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
             onClick={() => {
@@ -1160,7 +1166,7 @@ const handleSelectChange = (selectedOptions) => {
                 />
               </svg>
             </div>
-          </div>
+          </div> */}
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}

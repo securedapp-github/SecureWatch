@@ -36,7 +36,7 @@ function Monitor_Edit() {
   // const { address }= location.state;
   // const {network} = location.state;
 
-  
+  const [wait, setWait] = useState(false)
   const [monitorName, setMonitorName] = useState(name || "");
  // const [riskCategory, setRiskCategory] = useState("");
   const [address, setAddress] = useState("");
@@ -271,8 +271,9 @@ function Monitor_Edit() {
 
   if (loading) {
     return (
-      <div className="text-center mt-20 text-4xl font-medium text-black">
-        Loading Monitor Details...
+      <div className="text-center  text-black">
+        <Navbar email={email} />
+        <span className="loading loading-spinner loading-lg text-[#0ca851] mt-20"></span>
       </div>
     );
   }
@@ -297,6 +298,7 @@ function Monitor_Edit() {
       {selectedMonitor && (
       <div className="w-5/6  lg:w-5/6 mx-auto mt-20 flex justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className="w-full md:w-1/4 ">
+        <Link to="/monitor">
           <div className="flex">
             <div>
               <svg
@@ -341,6 +343,7 @@ function Monitor_Edit() {
               Back to Monitors
             </div>
           </div>
+          </Link>
           <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
             Edit Monitor
           </div>
@@ -466,7 +469,7 @@ function Monitor_Edit() {
               </svg>
             </div>
           </div>
-          <div
+          {/* <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
           >
@@ -521,7 +524,7 @@ function Monitor_Edit() {
                 />
               </svg>
             </div>
-          </div>
+          </div> */}
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
@@ -592,6 +595,7 @@ function Monitor_Edit() {
               style={{ backgroundColor: "white" }}
               type="text"
               placeholder="Enter text"
+              disabled={wait}
               onChange={(e) => setContractName(e.target.value)}
               value={monitorName}
               className="outline-none border-2 border-[] py-3 rounded-xl  w-full px-"
@@ -608,7 +612,7 @@ function Monitor_Edit() {
               name="category"
               id="category"
               // value={formData.category}
-
+              disabled={wait}
               onChange={(e) => {
                 const selectedIndex = e.target.options.selectedIndex;
                 setNetwork(e.target.value);

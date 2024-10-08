@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { baseUrl } from "../Constants/data";
 
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Buffer } from "buffer";
@@ -197,6 +198,7 @@ function Monitor_create() {
       <Navbar email={email} />
       <div className="w-5/6  lg:w-5/6 mx-auto mt-20 flex justify-center flex-col md:flex-row md:gap-10 lg:gap-20 ">
         <div className="w-full lg:w-1/4 ">
+        <Link to="/monitor">
           <div className="flex">
             <div>
               <svg
@@ -241,6 +243,7 @@ function Monitor_create() {
               Back to Monitors
             </div>
           </div>
+          </Link>
           <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
             Create Monitor
           </div>
@@ -367,7 +370,7 @@ function Monitor_create() {
               </svg>
             </div>
           </div>
-          <div
+          {/* <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
           >
@@ -422,7 +425,7 @@ function Monitor_create() {
                 />
               </svg>
             </div>
-          </div>
+          </div> */}
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
