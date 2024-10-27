@@ -27,6 +27,7 @@ import { toast } from "react-toastify";
 import AlgoEvents from "./components/algoevents.jsx";
 import AlgoEventsedit from "./components/algoevents_edit.jsx";
 import Algo_alerts from "./components/algo_alerts.jsx";
+import Logout from "./components/Logout.js";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
           element={<Protected cmp={<AlgoEventsedit />} />}
         />
          <Route path="/Algoevents" element={<AlgoEvents />} />
+         <Route path="/logout" element={<Logout />} />
       </Routes>
     </BrowserRouter>
   );
