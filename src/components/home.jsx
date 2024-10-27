@@ -29,10 +29,10 @@ import { LuShieldClose } from "react-icons/lu";
 import { GrDocumentPerformance } from "react-icons/gr";
 import GraphicTop from "../images/Graphic-top.png";
 import GraphicBottom from "../images/Graphic-bottom.png";
-import { FaInstagram } from "react-icons/fa";
-import { FaFacebook } from "react-icons/fa";
+import { FaDiscord } from "react-icons/fa";
+import { RiTwitterXLine } from "react-icons/ri";
 import { FaLinkedin } from "react-icons/fa";
-import { FaYoutube } from "react-icons/fa";
+import { FaTelegram } from "react-icons/fa";
 
 function Home1() {
   const navigate = useNavigate();
@@ -107,7 +107,7 @@ function Home1() {
            
           
 
-        <div className="w-full bg-[#001938] dark:bg-white">
+        <div className="w-full bg-[#001938] dark:bg-white" id="about">
           <h1 className="dark:text-[#001938] text-white text-center font-sans text-4xl pt-[80px] sm:pt-[150px] md:pt-[220px] lg:pt-[260px] xl:pt-[300px]">
             About Secure <span className="text-green-500">Watch</span>
           </h1>
@@ -181,7 +181,7 @@ function Home1() {
 
         </div>
 
-        <div className="text-3xl md:text-5xl mt-20 text-center font-sans text-[#001938] ">
+        <div className="text-3xl md:text-5xl mt-20 text-center font-sans text-[#001938] " id="features">
           Benefits
         </div>
         <p className="text-[#001938] font-sans text-center font-medium mt-4">
@@ -304,10 +304,10 @@ function Home1() {
 
         <div className="w-full dark:bg-white bg-[#001938] flex justify-around py-16 gap-6 flex-wrap">
           <div className="flex gap-6">
-            <a href="#"> <FaInstagram className="dark:text-[#001938] text-white text-3xl" /></a>
-            <a href="#"> <FaFacebook className="dark:text-[#001938] text-white text-3xl" /></a>
-            <a href=""><FaLinkedin className="dark:text-[#001938] text-white text-3xl" /></a>
-            <a href=""><FaYoutube className="dark:text-[#001938] text-white text-3xl" /></a>
+            <a target="_blank" href="https://discord.com/invite/pqDC8ddnYQ"> <FaDiscord className="dark:text-[#001938] text-white text-3xl" /></a>
+            <a target="_blank" href="https://x.com/secure_dapp"> <RiTwitterXLine className="dark:text-[#001938] text-white text-3xl" /></a>
+            <a target="_blank" href="https://www.linkedin.com/company/securedapp/"><FaLinkedin className="dark:text-[#001938] text-white text-3xl" /></a>
+            <a target="_blank" href="https://telegram.me/securedappcommunity"><FaTelegram className="dark:text-[#001938] text-white text-3xl" /></a>
           </div>
 
           <div className="flex gap-8 flex-wrap justify-center ">
@@ -316,9 +316,9 @@ function Home1() {
                 <p className="dark:text-[#001938] text-white text-xl font-medium">Product</p>
               </div>
               <div className="flex flex-col gap-3">
-                <p className="dark:text-[#001938] text-white">Solidity Shield Scan</p>
-                <p className="dark:text-[#001938] text-white">Secure Watch</p>
-                <p className="dark:text-[#001938] text-white">Secure Audit</p>
+                <a className="dark:text-[#001938] text-white" href="https://securedapp.io/solidity-shield">Solidity Shield Scan</a>
+                <a href="#" className="dark:text-[#001938] text-white">Secure Watch</a>
+                <a href="https://securedapp.io/secure-pad" className="dark:text-[#001938] text-white">Secure Audit</a>
               </div>
             </div>
 
@@ -327,31 +327,31 @@ function Home1() {
                 <p className="dark:text-[#001938] text-white text-xl font-medium">Services</p>
               </div>
               <div className="flex flex-col gap-3">
-                <p className="dark:text-[#001938] text-white">Features</p>
-                <p className="dark:text-[#001938] text-white">Integrations </p>
-                <p className="dark:text-[#001938] text-white">Pricing</p>
-                <p className="dark:text-[#001938] text-white">Changelog</p>
-                <p className="dark:text-[#001938] text-white">Roadmap</p>
+                <a href="#features" className="dark:text-[#001938] text-white">Features</a>
+                {/* <a href="" className="dark:text-[#001938] text-white">Integrations </a> */}
+                <a href="https://securedapp.io/solidity-shield-scan/pricing" className="dark:text-[#001938] text-white">Pricing</a>
+                {/* <a href="" className="dark:text-[#001938] text-white">Changelog</a> */}
+                <a href="#" className="dark:text-[#001938] text-white">Roadmap</a>
               </div>
             </div>
 
             <div className="flex flex-col gap-5">
               <div>
-                <p className="dark:text-[#001938] text-white text-xl font-medium">Company</p>
+                <a href="https://securedapp.io/" className="dark:text-[#001938] text-white text-xl font-medium">Company</a>
               </div>
               <div className="flex flex-col gap-3">
-                <p className="dark:text-[#001938] text-white">About Us</p>
+                <a href="#about" className="dark:text-[#001938] text-white">About Us</a>
               </div>
             </div>
 
             <div className="flex flex-col gap-5">
               <div>
-                <p className="dark:text-[#001938] text-white text-xl font-medium">Resources</p>
+                <a href="https://securedapp.gitbook.io/securedapp-launchpad" className="dark:text-[#001938] text-white text-xl font-medium">Resources</a>
               </div>
               <div className="flex flex-col gap-3">
-                <p className="dark:text-[#001938] text-white">Blogs</p>
-                <p className="dark:text-[#001938] text-white">Documentation </p>
-                <p className="dark:text-[#001938] text-white">Contact</p>
+                <a href="https://securedapp.io/blog" className="dark:text-[#001938] text-white">Blogs</a>
+                <a href="https://securedapp.gitbook.io/securedapp-launchpad" className="dark:text-[#001938] text-white">Documentation </a>
+                <a href="https://securedapp.gitbook.io/securedapp-launchpad/contact-us" className="dark:text-[#001938] text-white">Contact</a>
               </div>
             </div>
           </div>
