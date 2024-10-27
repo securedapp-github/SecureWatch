@@ -65,10 +65,11 @@ function Navbar() {
           </div>
 
           {productIsopen?(
-            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-9 rounded-md  px-4 py-4 flex flex-col justify-center items-start gap-3">
-            <p className="text-white text-nowrap dark:text-[#001938]">Solidity Shield</p>
-            <p className="text-white text-nowrap dark:text-[#001938]">Secure Trace</p>
-            <p className="text-white text-nowrap dark:text-[#001938]">Secure Pad</p>
+            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-7 rounded-md  px-4 py-4 flex flex-col justify-center items-start gap-3">
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/solidity-shield">Solidity Shield</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/secure-watch">Secure Watch</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/secure-trace">Secure Trace</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/secure-pad">Secure Pad</a>
         </div>
           ):null}
         </div>
@@ -93,40 +94,40 @@ function Navbar() {
             </svg>
           </div>
           {serviceIsopen?(
-            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-9 -left-32  rounded-md  px-4 py-4 flex gap-6  flex-nowrap">
+            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-7 -left-32  rounded-md  px-4 py-4 flex gap-6  flex-nowrap">
             <div className="flex flex-col gap-4">
             <p className="text-white text-nowrap dark:text-[#001938] text-lg">Audit</p>
             <div className="flex flex-col gap-2">
-            <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Smart Contract Audit</p>
-            <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Dapp Security Audit</p>
-            <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Token Audit</p>
-            <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">RWA Audit</p>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/smart-contract-audit">Smart Contract Audit</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/dapp-security-audit">Dapp Security Audit</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/token-audit">Token Audit</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/rwa-audit">RWA Audit</a>
             </div>
             </div>
 
             <div className="flex flex-col gap-4">
             <p className="text-white text-nowrap dark:text-[#001938] text-lg">Security</p>
             <div className="flex flex-col gap-3">
-              <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Web3 Security</p>
-              <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Web3 KYC</p>
-              <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Blockchain Forensic</p>
+              <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/web3-security">Web3 Security</a>
+              <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/web3-kyc">Web3 KYC</a>
+              <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/blockchain-forensic">Blockchain Forensic</a>
             </div>
             </div>
             <div className="flex flex-col gap-4">
             <p className="text-white text-nowrap dark:text-[#001938] text-lg">Regulatory Solutions</p>
             <div className="flex flex-col gap-3">
-            <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Crypto Compliance & AML</p>
-            <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Decentralized Identity (DID)</p>
-            <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">DApp Development</p>
-            <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">NFTs Development</p>
-            <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">DeFi Development</p>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/crypto-compliance-aml">Crypto Compliance & AML</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/decentralized-identity-did">Decentralized Identity (DID)</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/dapp-development">DApp Development</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/nfts-development">NFTs Development</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/defi-development">DeFi Development</a>
             </div>
             
             </div>
             <div className="flex flex-col gap-4">
             <p className="text-white text-nowrap dark:text-[#001938] text-lg">Training & Education</p>
             <div>
-              <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">LevelUp Academy</p>
+              <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/levelup-academy">LevelUp Academy</a>
             </div>
             </div>
             
@@ -154,16 +155,16 @@ function Navbar() {
             </svg>
           </div>
           {resourceIsopen?(
-            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-9 rounded-md  px-4 py-4 flex flex-col justify-center items-start gap-3">
-            <p className="text-white text-nowrap dark:text-[#001938]">Blogs</p>
-            <p className="text-white text-nowrap dark:text-[#001938]">About Us</p>
-            <p className="text-white text-nowrap dark:text-[#001938]">Our Authors</p>
-            <p className="text-white text-nowrap dark:text-[#001938]">Media</p>
+            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-7 rounded-md  px-4 py-4 flex flex-col justify-center items-start gap-3">
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/blog">Blogs</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/about">About Us</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/authors">Our Authors</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/media">Media</a>
         </div>
           ):null}
         </div>
         <div className="md:flex items-center gap-1 hidden">
-          <div className="dark:text-[#001938] text-white my-auto font-poppin">Pricing</div>
+          <a className="dark:text-[#001938] text-white my-auto font-poppin" href="https://securedapp.io/solidity-shield-scan/pricing">Pricing</a>
           
         </div>
         </div>
@@ -238,9 +239,10 @@ Product
 
 {dropdown1 && (
   <div className="flex flex-col gap-3">
-    <p className="text-white text-nowrap dark:text-[#001938]">Solidity Shield</p>
-            <p className="text-white text-nowrap dark:text-[#001938]">Secure Trace</p>
-            <p className="text-white text-nowrap dark:text-[#001938]">Secure Pad</p>
+    <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/solidity-shield">Solidity Shield</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/secure-watch">Secure Watch</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/secure-trace">Secure Trace</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/secure-pad">Secure Pad</a>
   </div>
 )}
 
@@ -285,10 +287,10 @@ Product
 
 {audit && (
   <div className="flex flex-col gap-2">
-  <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Smart Contract Audit</p>
-  <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Dapp Security Audit</p>
-  <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Token Audit</p>
-  <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">RWA Audit</p>
+  <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/smart-contract-audit">Smart Contract Audit</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/dapp-security-audit">Dapp Security Audit</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/token-audit">Token Audit</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/rwa-audit">RWA Audit</a>
   </div>
 )}
   
@@ -310,9 +312,9 @@ Product
 
   {security && (
     <div className="flex flex-col gap-3">
-    <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Web3 Security</p>
-    <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Web3 KYC</p>
-    <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Blockchain Forensic</p>
+    <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/web3-security">Web3 Security</a>
+              <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/web3-kyc">Web3 KYC</a>
+              <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/blockchain-forensic">Blockchain Forensic</a>
   </div>
   )}
 
@@ -334,11 +336,11 @@ Product
 
   {regulatory && (
      <div className="flex flex-col gap-3">
-     <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Crypto Compliance & AML</p>
-     <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">Decentralized Identity (DID)</p>
-     <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">DApp Development</p>
-     <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">NFTs Development</p>
-     <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">DeFi Development</p>
+     <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/crypto-compliance-aml">Crypto Compliance & AML</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/decentralized-identity-did">Decentralized Identity (DID)</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/dapp-development">DApp Development</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/nfts-development">NFTs Development</a>
+            <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/defi-development">DeFi Development</a>
      </div>
   )}
 
@@ -360,7 +362,7 @@ Product
 
 {training && (
   <div>
-  <p className="text-slate-100 text-nowrap dark:text-[#001938] text-sm">LevelUp Academy</p>
+  <a className="text-slate-100 text-nowrap dark:text-[#001938] text-sm" href="https://securedapp.io/levelup-academy">LevelUp Academy</a>
 </div>
 )}
 
@@ -391,15 +393,15 @@ Product
 </button>
 {dropdown3 && (
   <div className="flex flex-col gap-3">
-    <p className="text-white text-nowrap dark:text-[#001938]">Blogs</p>
-            <p className="text-white text-nowrap dark:text-[#001938]">About Us</p>
-            <p className="text-white text-nowrap dark:text-[#001938]">Our Authors</p>
-            <p className="text-white text-nowrap dark:text-[#001938]">Media</p>
+     <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/blog">Blogs</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/about">About Us</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/authors">Our Authors</a>
+            <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/media">Media</a>
   </div>
 )}
 
 <div className="flex items-center gap-1 ">
-<div className="text-white my-auto font-poppin">Pricing</div>
+<a className="dark:text-[#001938] text-white my-auto font-poppin" href="https://securedapp.io/solidity-shield-scan/pricing">Pricing</a>
 </div>
 
 <Link to="/login" className="sm:hidden">
