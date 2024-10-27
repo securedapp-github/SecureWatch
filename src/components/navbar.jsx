@@ -41,7 +41,7 @@ function Navbar() {
         
 <div className=" lg:flex gap-7 flex-row dark:bg-[#f7fafe] bg-[#19304c] px-4 py-3 rounded-full border-2 dark:border-[#dfedff] border-slate-500 hidden ">
 
-        <div className="md:flex items-center gap-1 hidden relative cursor-pointer" onMouseOver={()=>setProductIsopen(true)} onMouseOut={()=>setProductIsopen(false)} >
+        <div className="md:flex items-center gap-1 hidden relative cursor-pointer  h-full " onMouseOver={()=>setProductIsopen(true)} onMouseOut={()=>setProductIsopen(false)} >
 
           <div className="dark:text-[#001938] text-white my-auto font-poppin">
             Product
@@ -65,7 +65,7 @@ function Navbar() {
           </div>
 
           {productIsopen?(
-            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-7 rounded-md  px-4 py-4 flex flex-col justify-center items-start gap-3">
+            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-5 rounded-md  px-4 py-4 flex flex-col justify-center items-start gap-3">
             <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/solidity-shield">Solidity Shield</a>
             <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/secure-watch">Secure Watch</a>
             <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/secure-trace">Secure Trace</a>
@@ -94,7 +94,7 @@ function Navbar() {
             </svg>
           </div>
           {serviceIsopen?(
-            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-7 -left-32  rounded-md  px-4 py-4 flex gap-6  flex-nowrap">
+            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-5 -left-32  rounded-md  px-4 py-4 flex gap-6  flex-nowrap">
             <div className="flex flex-col gap-4">
             <p className="text-white text-nowrap dark:text-[#001938] text-lg">Audit</p>
             <div className="flex flex-col gap-2">
@@ -155,7 +155,7 @@ function Navbar() {
             </svg>
           </div>
           {resourceIsopen?(
-            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-7 rounded-md  px-4 py-4 flex flex-col justify-center items-start gap-3">
+            <div className="border dark:bg-[#f7fafe] bg-[#001938] absolute top-5 rounded-md  px-4 py-4 flex flex-col justify-center items-start gap-3">
             <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/blog">Blogs</a>
             <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/about">About Us</a>
             <a className="text-white text-nowrap dark:text-[#001938]" href="https://securedapp.io/authors">Our Authors</a>
