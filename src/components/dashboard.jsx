@@ -34,9 +34,19 @@ function Dashboard() {
 console.log(Moniter);
   const userEmail = localStorage.getItem("email")
 console.log(userEmail);
-    
+  const userCredits = localStorage.getItem("credits");
+  console.log("userCredits",userCredits);
+  const userPlanexpiry = localStorage.getItem("planexpiry");
+  console.log("userPlanexpiry",userPlanexpiry);    
  
-
+   const [credits, setCredits] = useState(userCredits || 0);
+    const [planexpiry, setPlanexpiry] = useState(userPlanexpiry || 0);
+    const planexpiryDate = new Date(planexpiry);
+const formattedPlanExpiry = new Intl.DateTimeFormat('en-IN', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric'
+}).format(planexpiryDate);
 
   function handleClick() {
     navigate("/monitor", { state: { email, token, monitor } });
@@ -159,14 +169,14 @@ console.log(userEmail);
               className="min-w-64 p-3 rounded-md "
               style={{ border: "1px solid #C9C9C9" }}
             >
-              <div className="text-start  flex items-center gap-3"> <img src={Deploy} alt="" /> Deploy</div>
+              <div className="text-start  flex items-center gap-3"> <img src={Deploy} alt="" /> LISTENERS</div>
               <div className="flex mt-5">
                 <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6  text-black">{listeners}</span>
                 <span>
                   <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ACTIVE LISTENERS</div>
                  
                 </span>
-                <span className="cursor-pointer">
+                {/* <span className="cursor-pointer">
                   <svg
                     width="33"
                     height="33"
@@ -201,7 +211,7 @@ console.log(userEmail);
                       </clipPath>
                     </defs>
                   </svg>
-                </span>
+                </span> */}
               </div>
             </div>
             <div
@@ -212,9 +222,9 @@ console.log(userEmail);
               <div className="flex mt-5">
                 <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6 text-black">{alert}</span>
                 <span>
-                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ACTIVE ALERTS</div>
+                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ALL ALERTS</div>
                 </span>
-                <span className="cursor-pointer">
+                {/* <span className="cursor-pointer">
                   <svg
                     width="33"
                     height="33"
@@ -249,7 +259,7 @@ console.log(userEmail);
                       </clipPath>
                     </defs>
                   </svg>
-                </span>
+                </span> */}
               </div>
             </div>
             <div
@@ -260,7 +270,7 @@ console.log(userEmail);
               <div className="flex mt-5">
                 <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 2xl:mr-6  text-black">{monitorcount}</span>
                 <span>
-                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ACTIVE MONITOR</div>
+                  <div className="text-black text-xs sm:text-sm font-medium">CHECK <br />ALL MONITORS</div>
                 </span>
                 <span onClick={handleClick} className="ms-auto">
                   <Link to="/monitor">
@@ -313,10 +323,10 @@ console.log(userEmail);
                 <div className="flex">
                   <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-10 text-black ">02</span>
                   <span>
-                    <div className="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-medium">CHECK <br />TOTAL SCENARIOS</div>
+                    <div className="text-black text-xs sm:text-sm md:text-lg lg:text-xl font-medium">CHECK <br />TOTAL ALERTS</div>
                   </span>
                 </div>
-                <span className="cursor-pointer">
+                {/* <span className="cursor-pointer">
                   <svg
                     width="33"
                     height="33"
@@ -351,29 +361,29 @@ console.log(userEmail);
                       </clipPath>
                     </defs>
                   </svg>
-                </span>
+                </span> */}
               </div>
             </div>
             <div
               className="p-3 min-w-64 lg:w-1/2 rounded-md"
               style={{ border: "1px solid #C9C9C9" }}
             >
-              <div className="text-start flex items-center gap-3"><img src={Actions} alt="" />Actions (Coming Soon)</div>
+              <div className="text-start flex items-center gap-3"><img src={Actions} alt="" />USER PLANS</div>
               <div className="flex gap-6 flex-wrap mt-5">
 
                 <div className="flex">
-                  <span className=" sm:text-3xl md:text-4xl lg:text-5xl mr-2 text-black">00</span>
+                  <span className=" sm:text-3xl font-medium mr-2 text-black">{credits}</span>
                   <span>
-                    <div className="text-black text-xs sm:text-sm font-medium">ACTIVE <br />ACTIONS</div>
+                    <div className="text-black text-xs sm:text-sm font-medium">ACCOUNT <br />CREDITS</div>
                   </span>
                 </div>
                 <div className="flex">
-                  <span className=" sm:text-3xl md:text-4xl lg:text-5xl mr-2 text-black">00</span>
+                  <span className=" sm:text-3xl font-medium mr-2 text-black">{formattedPlanExpiry || planexpiry}</span>
                   <span>
-                    <div className="text-black text-xs sm:text-sm font-medium">PENDING <br />TX PROPOSALS</div>
+                    <div className="text-black text-xs sm:text-sm font-medium">PLAN <br />EXPIRY</div>
                   </span>
                 </div>
-                <span className="cursor-pointer">
+                {/* <span className="cursor-pointer">
                   <svg
                     width="33"
                     height="33"
@@ -408,13 +418,13 @@ console.log(userEmail);
                       </clipPath>
                     </defs>
                   </svg>
-                </span>
+                </span> */}
               </div>
 
 
             </div>
           </div>
-          <div
+          {/* <div
             className="font-inter p-3 rounded-md  mt-10  mx-auto"
             style={{ border: "1px solid #C9C9C9" }}
           >
@@ -465,7 +475,7 @@ console.log(userEmail);
                 </svg>
               </span>
               </div>
-          </div> 
+          </div>  */}
         </div>
       </div>
    

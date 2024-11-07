@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import c1 from "../images/backg.png";
 import c2 from "../images/ellipse.png";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { showErrorAlert,showSuccessAlert } from "./toastifyalert";
 import { baseUrl } from "../Constants/data";
 
@@ -161,6 +161,12 @@ function Login1() {
           </button>
           {errorMessage && <p className="text-red-500 text-center mb-3">{errorMessage}</p>}
         </form>
+        <div className="text-center text-black mt-7">
+          <span >Already have an account?</span>
+          <Link to="/login" className=" text-[#28AA61]">
+            &nbsp; Sign in now
+          </Link>
+        </div>
       </div>
     </div>
   );
