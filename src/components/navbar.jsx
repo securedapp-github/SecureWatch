@@ -36,7 +36,7 @@ function Navbar() {
         
       >
         <div className="flex items-center gap-3 ">
-          <div className="dark:text-[#001938] text-white my-auto font-sans text-4xl"> <span className="text-green-500">Secure</span >Watch</div>
+          <div className="dark:text-[#001938] text-white my-auto logo  text-3xl  sm:text-4xl"> <span >Secure</span >Watch</div>
         </div>
         
 <div className=" lg:flex gap-7 flex-row dark:bg-[#f7fafe] bg-[#19304c] px-4 py-3 rounded-full border-2 dark:border-[#dfedff] border-slate-500 hidden ">
