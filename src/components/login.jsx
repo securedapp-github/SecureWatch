@@ -33,21 +33,30 @@ function Login() {
         );
   
         console.log("Login Successful:", response.data);
+        const userId = response.data.user.id;
+        console.log("userId",userId);
+        localStorage.setItem("userId", userId);
         const token = response.data.token;
         const monitor = response.data.monitors;
-        // console.log(monitor);
+        console.log("token",token);
         const Email = response.data.user.email;
-        // console.log(Email);
+        const credits = response.data.user.credits;
+        const planexpiry = response.data.user.planexpiry;
+        console.log("credits",credits);
+        console.log("planexpiry",planexpiry);
         let login = localStorage.setItem("login", true);
         // console.log(login);
         let Token = localStorage.setItem("token", token);
         let Monitor = localStorage.setItem("moniter",monitor);
         let userEmail = localStorage.setItem("email",Email);
+        let userCredits = localStorage.setItem("credits",credits);
+        let userPlanexpiry = localStorage.setItem("planexpiry",planexpiry);
+
         // const s = monitor.length;
         // console.log("abc", s);
         // console.log(typeof monitor);
         showSuccessAlert("Login Successful");
-        navigate("/dashboard", { state: { email, monitor, token } });
+        navigate("/dashboard", { state: { userId,email, monitor, token } });
       }
     } catch (error) {
       // setErrorMessage("Invalid email or password.");

@@ -24,6 +24,10 @@ import Forgotpassword from "./components/Forgotpassword.jsx";
 import Otpverify from "./components/Otpverify.jsx";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from "react-toastify";
+import AlgoEvents from "./components/algoevents.jsx";
+import AlgoEventsedit from "./components/algoevents_edit.jsx";
+import Algo_alerts from "./components/algo_alerts.jsx";
+import Logout from "./components/Logout.js";
 
 function App() {
   return (
@@ -50,6 +54,13 @@ function App() {
         <Route path="/monitor" element={<Protected cmp={<Monitor />} />} />
         <Route path="/api_builder" element={<Protected cmp={<ApiBuilder />} />}/>
         <Route path="/monitor_alerts" element={<MonitorAlerts />} />
+        <Route path="/algo_alerts" element={<Algo_alerts />} />
+         <Route
+          path="/AlgoEventsedit"
+          element={<Protected cmp={<AlgoEventsedit />} />}
+        />
+         <Route path="/Algoevents" element={<AlgoEvents />} />
+         <Route path="/logout" element={<Logout />} />
       </Routes>
     </BrowserRouter>
   );

@@ -2411,7 +2411,7 @@ body,
   height: 100vh;
 }
 
-#home_heading {
+/* #home_heading {
   border: 1px solid;
   border-image-source: linear-gradient(
     180deg,
@@ -2424,7 +2424,7 @@ body,
     rgba(255, 255, 255, 0.746419) 66.42%,
     rgba(255, 255, 255, 0) 100%
   );
-}
+} */
 
 .ReactModal__Content {
   border: 1px solid #0ca851 !important;

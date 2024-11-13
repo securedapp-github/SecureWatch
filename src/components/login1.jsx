@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import c1 from "../images/backg.png";
 import c2 from "../images/ellipse.png";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { showErrorAlert,showSuccessAlert } from "./toastifyalert";
 import { baseUrl } from "../Constants/data";
 
@@ -33,6 +33,7 @@ function Login1() {
        // setErrorMessage("Enter the Email, userame and password");
         showErrorAlert("Enter the Email, userame and password");
       } else {
+      
         const response = await axios.post(
           `${baseUrl}/signup_securewatch`,
           {
@@ -41,16 +42,28 @@ function Login1() {
             password: u_password,
           }
         );
-        
+        console.log("response",response)
+        if (response.status === 400) {
+          //setErrorMessage("User already exists. Please login.");
+          showErrorAlert("User already exists. Please login.");
+          setLoading(false);
+        }
         // console.log("User signed up successfully:", response.data);
-        const token = response.data.token;
-        const monitor = response.data.monitors;
-        let login = localStorage.setItem("login", true);
+        // const token = response.data.token;
+        // const monitor = response.data.monitors;
+        // let login = localStorage.setItem("login", true);
+        // let Token = localStorage.setItem("token", token); 
         showSuccessAlert("You are signed up successfully.");
-        navigate("/dashboard", { state: { email, monitor, token } });
+        navigate("/login");
       }
     } catch (error) {
-      console.error("Error signing up:", error);
+      if (error.response.status === 400) {
+        //setErrorMessage("User already exists. Please login.");
+        showErrorAlert("User already exists. Please login.");
+        setLoading(false);
+        return;
+      }
+      console.log("Error signing up:", error);
       setLoading(false);
       //setErrorMessage("Error signing up. Please try again.");
       showErrorAlert("Error signing up. Please try again.");
@@ -148,6 +161,12 @@ function Login1() {
           </button>
           {errorMessage && <p className="text-red-500 text-center mb-3">{errorMessage}</p>}
         </form>
+        <div className="text-center text-black mt-7">
+          <span >Already have an account?</span>
+          <Link to="/login" className=" text-[#28AA61]">
+            &nbsp; Sign in now
+          </Link>
+        </div>
       </div>
     </div>
   );

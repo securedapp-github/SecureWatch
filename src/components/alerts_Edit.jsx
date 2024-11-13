@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {baseUrl} from '../Constants/data.js';
+import { Link } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
@@ -22,9 +23,10 @@ const customStyles = {
 };
 
 function Alerts_Edit() {
+  const token = localStorage.getItem("token");
   const location = useLocation();
   const navigate = useNavigate();
-  const { name, email, m_id, token, network, address, rk, selectedEventNames, alert_data, alert_type } = location.state || {};
+  const { name, email, m_id, network, address, rk, selectedEventNames, alert_data, alert_type } = location.state || {};
   console.log("Alert Data",alert_data);
   console.log("Alert Type",alert_type);
 
@@ -106,7 +108,13 @@ function Alerts_Edit() {
     try {
       const response = await axios.post(
         `${baseUrl}/update_monitor`,
-        postData
+        postData,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+
       );
       console.log(response.data);
       toast.success("Monitor Updated successfully!", {
@@ -132,6 +140,7 @@ function Alerts_Edit() {
       <Navbar email={email} />
       <div className="w-full h-full mx-auto mt-10 md:mt-20 flex items-start justify-center flex-col flex-wrap md:flex-row md:gap-10 lg:gap-20 ">
         <div className="mx-auto md:mx-0">
+        <Link to="/monitor">
           <div className="flex">
             <div>
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -150,6 +159,7 @@ function Alerts_Edit() {
               Back to Monitors
             </div>
           </div>
+          </Link>
           <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
             Edit Monitor
           </div>
@@ -199,7 +209,7 @@ function Alerts_Edit() {
               </svg>
             </div>
           </div>
-          <div className="mt-10 flex gap-2 px-4 py-3 rounded-2xl" style={{ border: "1px solid #CACACA" }}>
+          {/* <div className="mt-10 flex gap-2 px-4 py-3 rounded-2xl" style={{ border: "1px solid #CACACA" }}>
             <div className="my-auto">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_173_1156)">
@@ -221,7 +231,7 @@ function Alerts_Edit() {
                 <path d="M11.5059 18.6469L16.5765 13.5763L11.5059 8.50562" stroke="black" stroke-width="1.69021" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </div>
-          </div>
+          </div> */}
           <div className="mt-10 flex gap-2 px-4 py-3 rounded-2xl" style={{ border: "1px solid #0CA851" }}>
             <div className="my-auto">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -343,6 +353,10 @@ function Alerts_Edit() {
                   ? "Sepolia Testnet"
                   : network === 137
                   ? "Polygon Mainnet"
+                  : network === 1300
+                  ? "Algorand Mainnet"
+                   : network === 1301
+                  ? "Algorand Testnet"
                   : "Unknown"}
               </div>
             </div>

@@ -12,12 +12,13 @@ import Select, { components } from "react-select";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { baseUrl } from "../Constants/data";
+import { Link } from "react-router-dom";
 
 function Events() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const { name, email, m_id, token, network, abi, address, rk } =
+  const token = localStorage.getItem("token");
+  const { name, email, m_id, network, abi, address, rk } =
     location.state || "";
   const [networkState, setNetworkState] = useState(network || ""); // Default to 'MAINNET' if not provided
   //  const [contractNameState, setContractNameState] = useState(alert_data || "");
@@ -287,7 +288,13 @@ function Events() {
   
       // Send data to the server
       try {
-        const response = await axios.post(`${baseUrl}/add_event`, body);
+        const response = await axios.post(`${baseUrl}/add_event`, body,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         console.log("Event added:", response.data);
         console.log("Arguments Object:", argsObject);
         console.log("Signature is:", eventSignature);
@@ -353,6 +360,7 @@ function Events() {
       <div className="mt-16 w-full flex justify-center items-center gap-10 flex-wrap ">
 
         <div className="  w-80 ">
+        <Link to="/monitor">
           <div className="flex">
             <div>
               <svg
@@ -397,6 +405,7 @@ function Events() {
               Back to Monitors
             </div>
           </div>
+          </Link>
           <div className="text-3xl font-medium mt-3" style={{ color: "black" }}>
             Create Monitor
           </div>
@@ -521,7 +530,7 @@ function Events() {
               </svg>
             </div>
           </div>
-          <div
+          {/* <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
             onClick={() => {
@@ -579,7 +588,7 @@ function Events() {
                 />
               </svg>
             </div>
-          </div>
+          </div> */}
           <div
             className="mt-10 flex gap-2 px-4 py-3 rounded-2xl"
             style={{ border: "1px solid #CACACA" }}
