@@ -1,5 +1,5 @@
 import "./output.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Login from "./components/login.jsx";
 import Signup from "./components/signup.jsx";
 import Login1 from "./components/login1.jsx";
@@ -28,10 +28,12 @@ import AlgoEvents from "./components/algoevents.jsx";
 import AlgoEventsedit from "./components/algoevents_edit.jsx";
 import Algo_alerts from "./components/algo_alerts.jsx";
 import Logout from "./components/Logout.js";
+import Footer1 from "./components/Footer1.jsx";
 
 function App() {
+  const location = useLocation();
   return (
-    <BrowserRouter>
+    <div>
       <Routes>
         <Route path="/log" element={<Logs />} />
         <Route path="/alerts" element={<Protected cmp={<Alerts />} />} />
@@ -62,8 +64,15 @@ function App() {
          <Route path="/Algoevents" element={<AlgoEvents />} />
          <Route path="/logout" element={<Logout />} />
       </Routes>
-    </BrowserRouter>
+      {location.pathname !== '/' && <Footer1 />}
+    </div>
   );
 }
 
-export default App;
+const AppWrapper = () => (
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
+
+export default AppWrapper;
