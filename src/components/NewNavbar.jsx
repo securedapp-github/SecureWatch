@@ -38,7 +38,7 @@ export default function NewNavbar({ email }) {
           </div>
         </button>
         {isMenuOpen && (
-          <div className="absolute right-12 mt-72 bg-[#F1F8FF] rounded-3xl drop-shadow-lg py-5 px-14 pt-8 flex flex-col justify-center items-center gap-4">
+          <div className="absolute z-50 right-12 mt-72 bg-[#F1F8FF] rounded-3xl drop-shadow-lg py-5 px-14 pt-8 flex flex-col justify-center items-center gap-4">
             <button onClick={()=>setIsMenuOpen(false)} className='a absolute top-2 right-3'>
             <IoClose className='text-black text-2xl' />
             </button>

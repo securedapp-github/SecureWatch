@@ -1,122 +1,60 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "./navbar2";
-import { Switch } from "@headlessui/react";
-import Modal from "react-modal";
-import { Link } from "react-router-dom";
-import { useLocation, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import NewNavbar from "./NewNavbar";
+import Sidebar from "./Sidebar";
+import { FaCirclePlus } from "react-icons/fa6";
 import Monitor_cmp from "./monitor_cmp";
-import axios from "axios";
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
-
-const Monitor = () => {
-  const location = useLocation();
+function Monitor() {
+  const userEmail = localStorage.getItem("email");
+  console.log(userEmail);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
   console.log(token);
   console.log(email);
 
-  function handleClick() {
-    navigate("/monitor_create", { state: { email, token } });
-  }
-
-  const [enabled, setEnabled] = useState(false);
-  const [disp, setDisp] = useState("block");
-  const [disp1, setDisp1] = useState("block");
-  const handleToggle = () => {
-    if (disp == "none") setDisp("block");
-    else setDisp("none");
-  };
-  const handleToggle1 = () => {
-    if (disp1 == "none") setDisp1("block");
-    else setDisp1("none");
-  };
-
-  const [open, setOpen] = useState(false);
-  function openModal() {
-    setOpen(true);
-  }
-  function closeModal() {
-    setOpen(false);
-  }
   return (
-    <div
-      className="font-poppin pt-12 bg-white min-h-full pb-12"
-      // style={{ backgroundColor: "#FCFFFD" }}
-    >
-      <Navbar email={email} />
-      <div className="w-4/6 mx-auto mt-20 ">
-        <div className="flex justify-center items-center md:justify-between  flex-col md:flex-row">
-          <div className="text-4xl font-medium text-black">Monitors</div>
-          <div className="flex flex-wrap justify-center gap-2 mt-2 md:mt-0">
-            {/* <div className="border border-black rounded-xl font-medium px-3 py-2 my-auto cursor-pointer">
-              <Link to="/monitor_activity">
-              See Monitor Activity
-              </Link>
-            </div> */}
-            <div
-              className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto cursor-pointer"
-              onClick={handleClick}
-            >
-              Create Monitor
-            </div>
-            <button className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto cursor-pointer">
-              <Link to="/api_builder" t>
-                Interact with contract
-              </Link>
-            </button>
+    <div className="w-full h-full">
+      <NewNavbar email={userEmail} />
+      <div className="bg-[#FAFAFA] w-full flex h-full">
+        <Sidebar />
+
+        <div className=" h-full flex flex-col gap-5 ml-[100px] w-56">
+          <div className={`mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]`}>
+            <h1 className="text-[#6A6A6A]  font-semibold ">
+              Realtime Security
+            </h1>
+          </div>
+          <div className="flex flex-col gap-5 ml-5">
+            <Link to="/dashboard" className="text-[#6A6A6A]">
+              Overview
+            </Link>
+            <Link to="/monitor" className="text-[#2D5C8F] font-semibold">
+              Monitor
+            </Link>
+            <Link to="/log" className="text-[#6A6A6A] ">
+              Logs
+            </Link>
           </div>
         </div>
-        {/* <div
-          className="flex mt-10 justify-between w-3/5 py-3 px-5 rounded-2xl mx-auto md:mx-0"
-          style={{ border: "1px solid #7D7D7D" }}
-        >
-          <input
-            type="text"
-            className="outline-none font-medium w-4/5 bg-white"
-            placeholder="Search by name, network or address..."
-          />
-          <div className="my-auto">
-            <svg
-              width="19"
-              height="19"
-              viewBox="0 0 19 19"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+
+        <div className="w-full">
+          <div className="w-full flex justify-between items-center px-4 py-4">
+            <p className="text-[#6A6A6A] font-semibold text-lg">Monitors</p>
+            <Link
+              to="/monitor_create"
+              className="flex items-center gap-2 p-0 text-[#6A6A6A] font-medium "
             >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M8.00127 15.0025C11.868 15.0025 15.0025 11.868 15.0025 8.00127C15.0025 4.13457 11.868 1 8.00127 1C4.13457 1 1 4.13457 1 8.00127C1 11.868 4.13457 15.0025 8.00127 15.0025Z"
-                stroke="#7D7D7D"
-                stroke-width="1.7625"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M13.4254 13.4244L17.826 17.825"
-                stroke="#7D7D7D"
-                stroke-width="1.7625"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+              Create Monitor{" "}
+              <FaCirclePlus className="text-5xl text-green-500 p-0" />
+            </Link>
           </div>
-        </div> */}
+          <Monitor_cmp />
+        </div>
       </div>
-      <Monitor_cmp />
     </div>
   );
-};
+}
 
 export default Monitor;
