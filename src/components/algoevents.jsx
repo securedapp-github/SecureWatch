@@ -30,10 +30,6 @@ const CheckboxOption = (props) => {
     </components.Option>
   );
 };
-
-
-
-
 function AlgoEvents() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -48,6 +44,12 @@ function AlgoEvents() {
     const [selectedTxnTypes, setSelectedTxnTypes] = useState([]);
     const [disp1, setDisp1] = useState("none"); // Added missing useState hook
     const [disp2, setDisp2] = useState("none"); // Assuming disp2 is also required
+    const [axferSender, setAxferSender] = useState('');
+const [axferReceiver, setAxferReceiver] = useState('');
+const [axferAmount, setAxferAmount] = useState('');
+const [axferComparison, setAxferComparison] = useState('<'); // Default comparison operator
+//const [axferCommission, setAxferCommission] = useState('');
+
     // console.log("code:",abi);
      console.log("type:", category);
      console.log("mid:", location.state);
@@ -73,15 +75,36 @@ function AlgoEvents() {
       setSelectedTxnTypes(selectedValues);
     };
     
+    // const formatTxnTypesForApi = () => {
+    //   const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
+    //   return allOptions.reduce((acc, option) => {
+    //     acc[option.value] = {
+    //       active: selectedTxnTypes.includes(option.value)
+    //     };
+    //     return acc;
+    //   }, {});
+    // };
     const formatTxnTypesForApi = () => {
       const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
       return allOptions.reduce((acc, option) => {
+        const isAxfer = option.value === "axfer";
+        const formattedAmount = axferAmount
+          ? `${axferComparison}::${axferAmount}`
+          : "";
+    
         acc[option.value] = {
-          active: selectedTxnTypes.includes(option.value)
+          active: selectedTxnTypes.includes(option.value),
+          ...(isAxfer && selectedTxnTypes.includes("axfer") && {
+            sender: axferSender || "",
+            receiver: axferReceiver || "",
+            amount: formattedAmount,
+          }),
         };
         return acc;
       }, {});
     };
+    
+    
 
     const encodeToBase64 = (str) => {
       return Buffer.from(str).toString('base64');
@@ -481,7 +504,7 @@ function AlgoEvents() {
   <div className="flex flex-col space-y-5">
     
     {/* Txn Type Selection */}
-    {category === 1 && (
+    {/* {category === 1 && (
       <>
     <div className="font-medium text-lg" style={{ color: "black" }}>
       Choose Txn Type for receiving alerts:
@@ -494,7 +517,68 @@ function AlgoEvents() {
       />
     </div>
     </>
+    )} */}
+    {/* Txn Type Selection */}
+{category === 1 && (
+  <>
+    <div className="font-medium text-lg" style={{ color: "black" }}>
+      Choose Txn Type for receiving alerts:
+    </div>
+    <div>
+      <CustomDropdown
+        options={currentOptions}
+        onChange={handleTxnTypeSelection}
+        value={currentOptions.filter(option => selectedTxnTypes.includes(option.value))}
+      />
+    </div>
+
+    {/* Conditionally render input fields for axfer */}
+    {selectedTxnTypes.includes("axfer") && (
+      <div className="mt-3">
+        <div className="font-medium" style={{ color: "black" }}>
+          Asset Transfer Transaction (axfer) Details
+        </div>
+        <input
+          type="text"
+          placeholder="Enter sender address"
+          className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] bg-white mt-2"
+          value={axferSender}
+          onChange={(e) => setAxferSender(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Enter receiver address"
+          className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] bg-white mt-2"
+          value={axferReceiver}
+          onChange={(e) => setAxferReceiver(e.target.value)}
+        />
+        <div className="flex items-center gap-2 mt-2">
+      {/* Operator Dropdown */}
+      <select
+        className="w-2/7 rounded-lg p-2 outline-none border border-[#4C4C4C] bg-white"
+        value={axferComparison}
+        onChange={(e) => setAxferComparison(e.target.value)}
+      >
+        <option value="<">&lt;</option>
+        <option value=">">&gt;</option>
+        <option value="=">=</option>
+      </select>
+
+        
+      <input
+        type="number"
+        placeholder="amount"
+        className="w-2/3 rounded-lg p-3 outline-none border border-[#4C4C4C] bg-white"
+        value={axferAmount}
+        onChange={(e) => setAxferAmount(e.target.value)}
+      />
+
+    </div>
+      </div>
     )}
+  </>
+)}
+
 
     {/* Signature Name Input */}
     {category !== 1 && (

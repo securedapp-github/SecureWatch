@@ -49,6 +49,11 @@ function AlgoEventsedit() {
   const [selectedEvents, setSelectedEvents] = useState([]);
   const [allEvents, setAllEvents] = useState({});
   const [monitorData, setMonitorData] = useState(null);
+  const [axferReceiver, setAxferReceiver] = useState('');
+const [axferAmount, setAxferAmount] = useState('');
+const [axferComparison, setAxferComparison] = useState('<'); 
+const [axferSender, setAxferSender] = useState('');
+const [axferActive, setAxferActive] = useState(false);
 
   console.log("Selected values:", selectedValues.length);
 
@@ -102,15 +107,53 @@ const txnOptionsCategory2 = [
 const handleTxnTypeSelection = (selectedOptions) => {
   const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
   setSelectedTxnTypes(selectedValues);
+
+    // Check if "axfer" is selected
+    const isAxferSelected = selectedValues.includes("axfer");
+    setAxferActive(isAxferSelected);
+  
+    // Reset axfer-specific fields if "axfer" is deselected
+    if (!isAxferSelected) {
+      setAxferSender('');
+      setAxferReceiver('');
+      setAxferAmount('');
+      setAxferComparison('=');
+    }
 };
 
+
+// const formatTxnTypesForApi = () => {
+//   const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
+//   return allOptions.reduce((acc, option) => {
+//     acc[option.value] = {
+//       active: selectedTxnTypes.includes(option.value)
+//     };
+//     return acc;
+//   }, {});
+// };
 
 const formatTxnTypesForApi = () => {
   const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
   return allOptions.reduce((acc, option) => {
-    acc[option.value] = {
-      active: selectedTxnTypes.includes(option.value)
-    };
+    const isAxfer = option.value === "axfer";
+
+    // Include axfer object with "active": false if axferActive is false
+    if (isAxfer) {
+      acc[option.value] = {
+        active: axferActive,
+        ...(axferActive && {
+          sender: axferSender || "",
+          receiver: axferReceiver || "",
+          amount: axferAmount ? `${axferComparison}::${axferAmount}` : "",
+        }),
+      };
+    } else {
+      // Handle other transaction types normally
+      acc[option.value] = {
+        active: selectedTxnTypes.includes(option.value),
+      };
+    }
+
     return acc;
   }, {});
 };
@@ -130,27 +173,6 @@ const formatMethodsForApi = () => {
   return methods;
 };
 
-
-  // useEffect(() => {
-    
-  //   const fetchEvents = async () => {
-  //     try {
-  //         const response = await axios.get('http://localhost:5000/api/events');
-  //         setFoundedEvents(response.data);
-  //     } catch (error) {
-  //         console.error('Error fetching events:', error);
-  //     }
-  // };
-
-  // fetchEvents();
-  // }, [
-  //   location.state,
-  //   networkState,
-  //   addressState,
-  //   riskCategoryState,
-  //   abiState,
-  // ]);
-
   useEffect(() => {
     const parsedOptions = Algoevents.map((eventName) => ({
       label: eventName,
@@ -161,76 +183,6 @@ const formatMethodsForApi = () => {
     setTotalEvents(parsedOptions)
   }, [Algoevents])
 
-
-
-  // useEffect(() => {
-  //   const fetchMonitorEvents = async () => {
-  //     try {
-  //       if (!m_id) {
-  //         console.warn('m_id is not set');
-  //         return;
-  //       }
-  //       const res = await fetch(`${baseUrl}/get_event`, {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           'Authorization': `Bearer ${token}`,
-  //         },
-  //         body: JSON.stringify({ mid: m_id }),
-  //       });
-
-  //       if (!res.ok) {
-  //         throw new Error(`HTTP error! status: ${res.status}`);
-  //       }
-  //       const data = await res.json();
-  //       const events = data.monitors || [];
-  //        console.log("events:", events);
-  //        setEvents(events);
-
-  //       let algoData= ( data.monitors[data.monitors.length-1].algo);
-    
-
-
-
-  //        // Log the API response to check transaction types
-  //   console.log("API Response:", algoData);
-
-  //   const txnTypes = algoData || {}; // Check if txnTypes is in the response
-  //   const selectedTxnTypesFromApi = Object.keys(algoData)
-  //   .filter((key) => algoData[key]?.active === true);
-  //   console.log('Selected txn types from API:', selectedTxnTypesFromApi);
-
-  //     // Extract the method names
-  //     const methods = algoData.methods || {};
-  //     const methodNames = Object.keys(algoData).map(methodKey => {
-  //       const decodedKey = atob(methodKey); // Decode base64 to regular string
-  //       return algoData[methodKey].name || decodedKey;
-  //     });
-  //     console.log('Method names for event selection:', methodNames);
-
-
-  //       // Initialize options
-  //       const newOptions = events.map(event => ({
-  //         label: event.name,
-  //         value: event.name,
-  //       }));
-  //       setOptions(newOptions);
-  //       console.log("newoptions",selectedTxnTypesFromApi);
-
-  //       setSelectedTxnTypes(
-  //        selectedTxnTypesFromApi
-  //       );
-  //      // const selectedEventsFromApi = newOptions.filter(option => methodNames.includes(option.value));
-  //       setSelectedValues(methodNames);
-  //      // console.log('Selected events from API:', selectedEventsFromApi);
-
-  //     } catch (error) {
-  //       console.error("Failed to fetch events:", error);
-  //     }
-  //   };
-
-  //   fetchMonitorEvents();
-  // }, [m_id]);
   useEffect(() => {
     const fetchMonitorEvents = async () => {
       try {
@@ -295,10 +247,25 @@ const formatMethodsForApi = () => {
 
         }
 
+        if (algoData.axfer?.active) {
+          setAxferActive(true);
+          setAxferSender(algoData.axfer.sender || '');
+          setAxferReceiver(algoData.axfer.receiver || '');
+          const amountField = algoData.axfer.amount || '';
+          const comparisonMatch = amountField.match(/([<>=])::(.+)/);
+          if (comparisonMatch) {
+            setAxferComparison(comparisonMatch[1] || '=');
+            setAxferAmount(comparisonMatch[2] || '');
+          }
+          
+        }
+
       } catch (error) {
         console.error("Failed to fetch events:", error);
       }
     };
+
+    
 
     fetchMonitorEvents();
   }, [m_id, category]);  // category is now also a dependency
@@ -350,280 +317,7 @@ const handleSelectChange = (selectedOptions) => {
     //category: category
   };
 console.log("monitor data:",events);
-//   const handleSubmit = async () => {
-//     try {
-//         const errors = [];
-//         const processingEvents = [];
-//         let hasChanges = false;
 
-//         // Helper function to send requests
-//         const sendRequest = async (url, method, data) => {
-//             const response = await fetch(url, {
-//                 method,
-//                 headers: { "Content-Type": "application/json",
-//                   'Authorization': `Bearer ${token}`,
-//                  },
-//                 body: JSON.stringify(data),
-//             });
-//             if (!response.ok) {
-//                 throw new Error(`Error fetching data from ${url}`);
-//             }
-//             return response.json(); // Return response JSON for further processing
-//         };
-
-//         // Delete removed events
-//         for (const removedEvent of removedEvents) {
-//             if (removedEvent.id) {
-//                 processingEvents.push(
-//                     sendRequest(`${baseUrl}/delete_event`, "POST", { id: removedEvent.id })
-//                         .then(response => {
-//                             console.log(`Event ${removedEvent.name} deleted successfully!`, response);
-//                             hasChanges = true;
-//                         })
-//                         .catch(error => {
-//                             console.error(`Error deleting ${removedEvent.name}:`, error);
-//                             errors.push({
-//                                 eventType: removedEvent.name,
-//                                 message: `Failed to delete ${removedEvent.name} event. Please try again!`
-//                             });
-//                         })
-//                 );
-//             }
-//         }
-
-//         // Fetch existing events from the monitor
-//         const fetchEventsFromMonitor = async (monitorId) => {
-//             const response = await fetch(`${baseUrl}/get_event`, {
-//                 method: 'POST',
-//                 headers: { "Content-Type": "application/json",
-//                   'Authorization': `Bearer ${token}`,
-//                  },
-//                 body: JSON.stringify({ mid: monitorId }),
-//             });
-//             if (!response.ok) {
-//                 throw new Error('Error fetching event data');
-//             }
-//             return response.json(); // Return response JSON for further processing
-//         };
-
-//         // Fetch events from monitor
-//         const monitorEventsResponse = await fetchEventsFromMonitor(m_id);
-
-//         // Log the entire response to verify structure
-//         console.log("Fetched monitor events response:", monitorEventsResponse);
-
-//         // Extract the monitorEvents array from the response
-//         const monitorEvents = monitorEventsResponse.monitors || []; // Default to empty array if missing
-
-//         // Check if monitorEvents is an array
-//         if (Array.isArray(monitorEvents)) {
-//             // Create a map of existing events by their ID for quick lookup
-//             const eventMap = new Map(monitorEvents.map(event => [event.id, event]));
-
-//             // Log the eventMap to verify its content
-//             console.log("Event map:", Array.from(eventMap.entries()));
-
-//             // Process each selected event dynamically
-//             for (const eventType of selectedValues) {
-//                 const inputs = eventInputs[eventType] || {};
-
-//                 // Log inputs to verify data
-//                 console.log(`Processing eventType: ${eventType}`);
-//                 console.log(`Inputs for ${eventType}:`, inputs);
-
-//                 // Prepare request data
-//                 const eventData = {
-//                     name: eventType,
-//                     arguments: {
-//                         ...inputs,
-//                         value: (inputs.value || "").trim(),
-//                     },
-//                 };
-
-//                 // Get the event ID from inputs and sanitize
-//                 const eventId = (inputs.id || "").trim();
-
-//                 // Debugging logs
-//                 console.log(`Event ID to check: ${eventId}`);
-
-//                 // Find the existing event based on ID or fallback to name
-//                 let existingEvent = null;
-
-//                 // Check if the eventId is a valid number and if it exists in eventMap
-//                 if (eventId && !isNaN(Number(eventId))) {
-//                     existingEvent = eventMap.get(Number(eventId));
-//                 }
-
-//                 if (!existingEvent) {
-//                     // If no event found by ID, try to find by name (fallback method)
-//                     const normalizedEventType = eventType.trim().toLowerCase();
-//                     existingEvent = monitorEvents.find(event => event.name.trim().toLowerCase() === normalizedEventType);
-//                 }
-
-//                 // Log the existing event details
-//                 console.log(`Existing event:`, existingEvent);
-//                 console.log("Existing event arguments:", existingEvent?.arguments);
-//                 console.log("Existing event arguments value:", existingEvent?.arguments?.value);
-
-//                 // If an existing event is found, update it
-//                 if (existingEvent) {
-//                     if (existingEvent.name.trim().toLowerCase() === eventType.trim().toLowerCase()) {
-//                         console.log(`Updating existing event: ${eventType} with ID: ${existingEvent.id}`);
-
-//                         const requestData = { id: existingEvent.id, ...eventData , value: eventData.arguments};
-
-//                         processingEvents.push(
-//                             sendRequest(`${baseUrl}/update_event`, "POST", requestData)
-//                                 .then(response => {
-//                                     console.log(`${eventType} updated successfully!`, response);
-//                                     hasChanges = true;
-//                                 })
-//                                 .catch(error => {
-//                                     console.error(`Error updating ${eventType}:`, error);
-//                                     errors.push({
-//                                         eventType,
-//                                         message: `Failed to update ${eventType} event. Please try again!`
-//                                     });
-//                                 })
-//                         );
-//                     } else {
-//                         console.log(`Event name mismatch: '${eventType}' does not match '${existingEvent.name}'. Skipping.`);
-//                     }
-//                 } else {
-//                     // If no existing event is found, add it as a new event
-//                     console.log(`No matching event found for: ${eventType}. Adding as new.`);
-//                     const requestData = { mid: m_id, ...eventData };
-//                     processingEvents.push(
-//                         sendRequest(`${baseUrl}/add_event`, "POST", requestData)
-//                             .then(response => {
-//                                 toast.success(`${eventType} event added successfully!`);
-//                                 console.log(`${eventType} added successfully!`, response);
-//                                 hasChanges = true;
-//                             })
-//                             .catch(error => {
-//                                 console.error(`Error adding ${eventType}:`, error);
-//                                 errors.push({
-//                                     eventType,
-//                                     message: `Failed to add ${eventType} event. Please try again!`
-//                                 });
-//                             })
-//                     );
-//                 }
-//             }
-
-//             // Wait for all event requests to complete
-//             await Promise.all(processingEvents);
-
-//             // Display success and error toasts
-//             if (hasChanges) {
-//                 selectedValues.forEach(eventType => {
-//                     if (hasChanges) {
-//                         toast.success(`${eventType} event processed successfully!`);
-//                     }
-//                 });
-//                 toast.success("Events processed successfully!", {
-//                     autoClose: 500,
-//                     onClose: () => {
-//                         navigate("/alert_edit", { state: navigationState });
-//                     },
-//                 });
-//             } else {
-//                 toast.error("Failed to process events. Please try again!");
-//                 errors.forEach(({ eventType, message }) => toast.error(message));
-//             }
-//         } else {
-//             console.error("monitorEvents is not an array or is missing.");
-//         }
-//     } catch (error) {
-//         console.error("Unexpected error:", error);
-//         toast.error("An unexpected error occurred. Please try again!");
-//     }
-
-// };
-// const handleSubmit = async () => {
-//   try {
-//       const errors = [];
-//       const processingEvents = [];
-//       let hasChanges = false;
-
-//       // Helper function to send requests
-//       const sendRequest = async (url, method, data) => {
-//           const response = await fetch(url, {
-//               method,
-//               headers: {
-//                   "Content-Type": "application/json",
-//                   'Authorization': `Bearer ${token}`,
-//               },
-//               body: JSON.stringify(data),
-//           });
-//           if (!response.ok) {
-//               throw new Error(`Error fetching data from ${url}`);
-//           }
-//           return response.json(); // Return response JSON for further processing
-//       };
-
-//       for (const removedEvent of removedEvents) {
-//                     if (removedEvent.id) {
-//                         processingEvents.push(
-//                             sendRequest(`${baseUrl}/delete_event`, "POST", { id: removedEvent.id })
-//                                 .then(response => {
-//                                     console.log(`Event ${removedEvent.name} deleted successfully!`, response);
-//                                     hasChanges = true;
-//                                 })
-//                                 .catch(error => {
-//                                     console.error(`Error deleting ${removedEvent.name}:`, error);
-//                                     errors.push({
-//                                         eventType: removedEvent.name,
-//                                         message: `Failed to delete ${removedEvent.name} event. Please try again!`
-//                                     });
-//                                 })
-//                         );
-//                     }
-//                 }
-
-//       const formattedData = formatTxnTypesForApi();
-//       formattedData.methods = formatMethodsForApi();
-
-//       // 3. Create the JSON object to send
-//       const dataToSend = {
-//         name:"Algorand_event",
-//           mid: m_id, // This contains the active transaction types
-//           algo: formattedData,   // This contains the selected methods with base64-encoded names
-//       };
-
-//       // Log the formatted data for debugging
-//       console.log('Data to send:', dataToSend);
-
-//       // 4. Send data to the API
-//       try {
-//           await sendRequest(`${baseUrl}/add_event`, 'POST', {
-//               // mid: m_id,  // Include monitor ID for context
-//               ...dataToSend,
-//           });
-//           toast.success('Transaction types and methods updated successfully!');
-//           hasChanges = true;
-//       } catch (error) {
-//           console.error('Error updating monitor:', error);
-//           errors.push({ message: 'Failed to update monitor. Please try again!' });
-//       }
-
-//       // Handle any changes
-//       if (hasChanges) {
-//           toast.success('Events processed successfully!', {
-//               autoClose: 500,
-//               onClose: () => {
-//                   navigate('/alert_edit', { state: navigationState });
-//               },
-//           });
-//       } else {
-//           toast.error('Failed to process events. Please try again!');
-//           errors.forEach(({ message }) => toast.error(message));
-//       }
-//   } catch (error) {
-//       console.error('Unexpected error:', error);
-//       toast.error('An unexpected error occurred. Please try again!');
-//   }
-// };
 const handleSubmit = async () => {
   try {
     const errors = [];
@@ -649,12 +343,7 @@ const handleSubmit = async () => {
     // Check if 'events' is an array. If it's not, handle it accordingly
     let eventsArray = Array.isArray(events) ? events : Object.values(events);
 
-    // Ensure that eventsArray has valid elements before proceeding
-    // if (eventsArray.length < 2) {
-    //   console.error("Not enough events to delete.");
-    //   return;
-    // }
-
+    
     // Only keep the last event, assuming it's the last one in the array
     const lastEvent = eventsArray[eventsArray.length - 1]; // Access the last event
     const eventsToDelete = eventsArray.slice(0, -1); // All except the last event
@@ -1525,35 +1214,7 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
           </div>
         </div>
 
-        {/* <div className="w-[98%] md:w-[600px]  lg:min-h-96 overflow-auto mb-10">
-          <div className="flex flex-col justify-center items-center gap-6">
-          <div className="font-medium text-lg" style={{ color: "black" }}>
-      Choose Txn Type for receiving alerts:
-    </div>
-    <div>
-      <CustomDropdown
-        options={currentOptions}
-        onChange={handleTxnTypeSelection}
-        value={currentOptions.filter(option => selectedTxnTypes.includes(option.value))}
-      />
-    </div>
-
-            <div className="font-medium text-lg" style={{ color: "black" }}>
-              Select events
-            </div>
-
-            <div className="my-auto   min-w-full">
-              <div className="flex flex-col gap-4 m-3">
-                <Select
-                  isMulti
-                  options={totalEvents}
-                  defaultValue={options}
-                  onChange={handleSelectChange}
-                  value={totalEvents.filter(option => selectedValues.includes(option.value))}
-                />
-              </div>
-            </div>
-          </div> */}
+       
           <div className="w-full md:w-1/3 lg:w-1/4 mt-5 md:mt-0">
   <div className="flex flex-col space-y-5">
     
@@ -1579,6 +1240,70 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
     </div>
     </>
     )}
+    {selectedTxnTypes.includes("axfer") && (
+      <div className="flex flex-col space-y-3">
+        <div className="font-medium text-lg" style={{ color: "black" }}>
+          axfer Transaction Details
+        </div>
+
+        <div>
+          <label>Sender:</label>
+          <input
+            type="text"
+            value={axferSender}
+            onChange={(e) => setAxferSender(e.target.value)}
+            className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] bg-white mt-2"
+          />
+        </div>
+
+        <div>
+          <label>Receiver:</label>
+          <input
+            type="text"
+            value={axferReceiver}
+            onChange={(e) => setAxferReceiver(e.target.value)}
+            className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] bg-white mt-2"
+          />
+        </div>
+        {/* <div>
+      
+      <select
+        value={axferComparison}
+        onChange={(e) => setAxferComparison(e.target.value)}
+        className="w-2/7 rounded-lg p-2 outline-none border border-[#4C4C4C] bg-white"
+      >
+        <option value="<">{"<"}</option>
+        <option value=">">{">"}</option>
+        <option value="=">{"="}</option>
+      </select>
+    </div> */}
+     <label>Amount:</label>
+
+        <div className="flex items-center gap-2 mt-2">
+         
+          <select
+        value={axferComparison}
+        onChange={(e) => setAxferComparison(e.target.value)}
+        className="w rounded-lg p-2 outline-none border border-[#4C4C4C] bg-white"
+      >
+        <option value="<">{"<"}</option>
+        <option value=">">{">"}</option>
+        <option value="=">{"="}</option>
+      </select>
+          <input
+            type="text"
+            value={axferAmount}
+            onChange={(e) => setAxferAmount(e.target.value)}
+            className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] bg-white mt-2"
+          />
+        </div>
+      </div>
+    )}
+
+
+
+
+
    {category ===2 &&(
     <>
     <div className="font-medium text-lg" style={{ color: "black" }}>
