@@ -112,7 +112,7 @@ input[type="text"] {
 }
 
 .connect_wallet {
-  background-color: rgb(12, 168, 81);
+  background-color: #2d5c8f;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -125,7 +125,7 @@ input[type="text"] {
 }
 
 .connect_wallet:hover {
-  background-color: rgb(10, 134, 66);
+  background-color: #2d5c8f;
 }
 
 .wallet-info {
