@@ -9,6 +9,7 @@ import { baseUrl } from "../Constants/data";
 import { components } from 'react-select';
 import Events from "./events";
 import { Buffer } from "buffer";
+import AlgoEvents from "./algoevents";
 
 const CustomDropdown = ({ options, onChange, value }) => {
   return (
@@ -71,7 +72,7 @@ const [axferActive, setAxferActive] = useState(false);
   const [riskCategoryState, setRiskCategoryState] = useState(rk || "");
   const [eventOperators, setEventOperators] = useState({});
   const [abiState, setAbiState] = useState(abi || "");
-  const [eventInputs, setEventInputs] = useState({});
+  const [eventInputs, setEventInputs] = useState([]);
  // const mid = m_id;
 
   const [disp1, setDisp1] = useState("none");
@@ -122,15 +123,7 @@ const handleTxnTypeSelection = (selectedOptions) => {
 };
 
 
-// const formatTxnTypesForApi = () => {
-//   const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
-//   return allOptions.reduce((acc, option) => {
-//     acc[option.value] = {
-//       active: selectedTxnTypes.includes(option.value)
-//     };
-//     return acc;
-//   }, {});
-// };
+
 
 const formatTxnTypesForApi = () => {
   const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
@@ -162,26 +155,34 @@ const encodeToBase64 = (str) => {
   return Buffer.from(str).toString('base64');
 };
 
+
 const formatMethodsForApi = () => {
-  const methods = {};
-  Object.entries(selectedValues).forEach(([eventid,eventName]) => {
-      const base64Name = encodeToBase64(eventName); // Encode method name to Base64
-      methods[base64Name] = {
-          name: eventName
-      };
-  });
-  return methods;
+  return eventInputs.reduce((acc, method) => {
+    const base64Name = encodeToBase64(method.name); // Encode method name to Base64
+
+    // Format arguments as a key-value object
+    const formattedArgs = method.args.reduce((argsAcc, arg) => {
+      const [argName, value] = arg.split(':').map((s) => s.trim()); // Assuming args are in "name: value" format
+      argsAcc[argName] = value || ""; // Default to empty string if value is not provided
+      return argsAcc;
+    }, {});
+
+    acc[base64Name] = {
+      name: method.name,
+      ...formattedArgs,
+    };
+
+    return acc;
+  }, {});
 };
 
-  useEffect(() => {
-    const parsedOptions = Algoevents.map((eventName) => ({
-      label: eventName,
-      value: eventName,
-    }));
-    // (${event.inputs})
-    console.log("Parsed options are:", parsedOptions);
-    setTotalEvents(parsedOptions)
-  }, [Algoevents])
+
+
+const Abioptions = Algoevents.map((event) => ({
+  label: event.name,
+  value: event.name,
+}));
+
 
   useEffect(() => {
     const fetchMonitorEvents = async () => {
@@ -218,21 +219,31 @@ const formatMethodsForApi = () => {
         // If category is 1, we extract the methods
         if (category === 2) {
           const methods = algoData || {};
-          const methodNames = Object.keys(methods).map(methodKey => {
-            const decodedKey = atob(methodKey); // Decode base64 to regular string
-            return methods[methodKey].name || decodedKey;
-          });
-          console.log('Method names for event selection:', methodNames);
+          // const methodNames = Object.keys(methods).map(methodKey => {
+          //   const decodedKey = atob(methodKey); // Decode base64 to regular string
+          //   return methods[methodKey].name || decodedKey;
+          // });
+          // console.log('Method names for event selection:', methodNames);
+          const initialMethods = Object.entries(algoData).map(([key, value]) => ({
+            name: value.name || Buffer.from(key, 'base64').toString('utf-8'),
+            args: Object.entries(value).filter(([argKey]) => argKey !== 'name')
+              .map(([argName, argValue]) => `${argName}: ${argValue}`),
+          }));
+         
+
+          console.log("Initial methods:", initialMethods);
 
           // Initialize options based on events
           const newOptions = events.map(event => ({
             label: event.name,
             value: event.name,
           }));
-          setOptions(newOptions);
+          // setOptions(newOptions);
 
-          // Set selected method names in the dropdown
-          setSelectedValues(methodNames);
+          // // Set selected method names in the dropdown
+          // setSelectedValues(methodNames);
+          setSelectedValues(initialMethods.map(method => method.name)); // Populate dropdown
+          setEventInputs(initialMethods);
         }
 
         // If category is 2, we extract txnTypes
@@ -271,33 +282,78 @@ const formatMethodsForApi = () => {
   }, [m_id, category]);  // category is now also a dependency
 
 
-  useEffect(() => {
-    
-    // console.log("Events are:", events);
-    // console.log("Event Inputs are:", eventInputs);
-    // console.log("Event Operators are:", eventOperators);
-    console.log("Selected values:", selectedValues);
-  }, [events, eventInputs, eventOperators, selectedValues]);
+  const handleArgChange = (eventIndex, argIndex, newValue) => {
+    setEventInputs(prev => {
+      const updatedInputs = [...prev];
+      updatedInputs[eventIndex].args[argIndex] = newValue;
+      return updatedInputs;
+    });
+  };
   
 
+  // useEffect(() => {
+    
+  //   // console.log("Events are:", events);
+  //   // console.log("Event Inputs are:", eventInputs);
+  //   // console.log("Event Operators are:", eventOperators);
+  //   console.log("Selected values:", selectedValues);
+  // }, [events, eventInputs, eventOperators, selectedValues]);
+  
+
+
+// const handleSelectChange = (selectedOptions) => {
+//   const values = selectedOptions.map(option => option.value);
+  
+//   // Identify removed events
+//   const newlyRemovedEvents = selectedValues.filter(value => !values.includes(value));
+
+//   // Add removed events to the removedEvents state
+//   setRemovedEvents(prevRemoved => [
+//       ...prevRemoved,
+//       ...newlyRemovedEvents.map(eventName => {
+//           const eventId = selectedValues.find(event => event.name === eventName)?.id;
+//           return eventId ? { name: eventName, id: eventId } : null;
+//       }).filter(Boolean) // Remove null entries
+//   ]);
+
+//   setSelectedValues(values);
+// };
 
 const handleSelectChange = (selectedOptions) => {
-  const values = selectedOptions.map(option => option.value);
-  
-  // Identify removed events
-  const newlyRemovedEvents = selectedValues.filter(value => !values.includes(value));
+  const selectedMethodNames = selectedOptions.map(option => option.value);
 
-  // Add removed events to the removedEvents state
-  setRemovedEvents(prevRemoved => [
-      ...prevRemoved,
-      ...newlyRemovedEvents.map(eventName => {
-          const eventId = selectedValues.find(event => event.name === eventName)?.id;
-          return eventId ? { name: eventName, id: eventId } : null;
-      }).filter(Boolean) // Remove null entries
-  ]);
+  setEventInputs(prev => {
+    const updatedInputs = selectedMethodNames.map(methodName => {
+      const existingMethod = prev.find(method => method.name === methodName);
 
-  setSelectedValues(values);
+      if (existingMethod) {
+        // Return previously selected method
+        return existingMethod;
+      }
+
+      // Fetch method details from Algoevents
+      const methodDetails = Algoevents.find(event => event.name === methodName);
+
+      return {
+        name: methodName,
+        args: (methodDetails?.args || []).map(arg => `${arg.split(': ')[0]}`), // Placeholder based on the argument name
+      };
+    });
+
+    return updatedInputs;
+  });
+
+  setSelectedValues(selectedMethodNames);
 };
+
+const handleAddArgument = (eventIndex) => {
+  setEventInputs(prev => {
+    const updatedInputs = [...prev];
+    updatedInputs[eventIndex].args.push("newArg: type: value"); // Default placeholder
+    return updatedInputs;
+  });
+};
+
 
 
   // Ensure ABI data is correctly parsed
@@ -840,27 +896,7 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
               <div className="font-medium" style={{ color: "black" }}>
                 Event Conditions
               </div>
-              {/* {Object.keys(selectedEvents).length > 0 ? (
-              <ul>
-                {Object.entries(selectedEvents).map(
-                  ([eventName, eventData]) => {
-                    const argTypes = eventDetails
-                      .find((e) => e.name === eventName)
-                      .inputs.split(", ")
-                      .map((arg) => arg.split(": ")[1]) // Extract only the types
-                      .join(", "); // Join types with commas
-
-                    return (
-                      <li key={eventName} className="text-[13px]">
-                        {eventName} ({argTypes})
-                      </li>
-                    );
-                  }
-                )}
-              </ul>
-            ) : (
-              <div className="text-[13px]">No events selected</div>
-            )} */}
+             
             </div>
             <div className="mt-3">
               <div className="font-medium" style={{ color: "black" }}>
@@ -1265,18 +1301,7 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
             className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] bg-white mt-2"
           />
         </div>
-        {/* <div>
-      
-      <select
-        value={axferComparison}
-        onChange={(e) => setAxferComparison(e.target.value)}
-        className="w-2/7 rounded-lg p-2 outline-none border border-[#4C4C4C] bg-white"
-      >
-        <option value="<">{"<"}</option>
-        <option value=">">{">"}</option>
-        <option value="=">{"="}</option>
-      </select>
-    </div> */}
+       
      <label>Amount:</label>
 
         <div className="flex items-center gap-2 mt-2">
@@ -1310,38 +1335,51 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
       Select Methods
     </div>
 
-    {/* <div className="min-w-full"> */}
-      <div >
-        <Select
-          isMulti
-          options={totalEvents}
-          defaultValue={options}
-          onChange={handleSelectChange}
-          value={totalEvents.filter((option) => selectedValues.includes(option.value))}
-        />
+    
+       <div>
+    <Select
+      options={Abioptions}
+      value={selectedValues.map(val => ({ label: val, value: val }))}
+      onChange={handleSelectChange}
+      isMulti
+    />
+     {Array.isArray(eventInputs) && eventInputs.map((event, eventIndex) => (
+  <div key={eventIndex} className="font-medium mt-3">
+    <div>{event.name}</div>
+    {event.args.length > 0 ? (
+      event.args.map((arg, argIndex) => {
+        const key = arg.split(': ')[0]; // Extract the argument name
+        return (
+          <div key={argIndex}>
+            <label>{key}:</label>
+            <input
+            className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] mt-2"
+            style={{ backgroundColor: "white" }}
+              type="text"
+              placeholder={`Enter ${key} value`} // Placeholder showing the argument name
+              value={event.args[argIndex].split(': ')[1] || ''} // Pre-fill the input if value exists
+              onChange={e => handleArgChange(eventIndex, argIndex, `${key}: ${e.target.value}`)}
+            />
+          </div>
+        );
+      })
+    ) : (
+      <div>
+        <p>No arguments for this method.</p>
       </div>
-      </>
-   )}
+    )}
+  </div>
+         
+      ))}
+    </div>
+  </>
+)}
      
     </div>
   {/* </div> */}
 
           <div className="mt-5">
-    {/* {selectedValues.map((eventName) => (
-      
-      <div key={eventName} className="font-medium mt-3">
-        
-        <div>{eventName}</div>
-        <input
-          className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
-          style={{ backgroundColor: "white" }}
-          type="text"
-          value={eventInputs[eventName]?.args || " "}
-          onChange={(e) => handleInputChange(eventName, 'args', e.target.value)}
-          placeholder={eventInputs.arguments}
-        />
-      </div>
-    ))} */}
+   
 </div>
 
           <button
@@ -1445,27 +1483,7 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
             <div className="font-medium" style={{ color: "black" }}>
               Event Conditions
             </div>
-            {/* {Object.keys(selectedEvents).length > 0 ? (
-              <ul>
-                {Object.entries(selectedEvents).map(
-                  ([eventName, eventData]) => {
-                    const argTypes = eventDetails
-                      .find((e) => e.name === eventName)
-                      .inputs.split(", ")
-                      .map((arg) => arg.split(": ")[1]) // Extract only the types
-                      .join(", "); // Join types with commas
-
-                    return (
-                      <li key={eventName} className="text-[13px]">
-                        {eventName} ({argTypes})
-                      </li>
-                    );
-                  }
-                )}
-              </ul>
-            ) : (
-              <div className="text-[13px]">No events selected</div>
-            )} */}
+           
           </div>
           <div className="mt-3">
             <div className="font-medium" style={{ color: "black" }}>

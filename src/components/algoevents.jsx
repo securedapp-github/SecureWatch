@@ -47,13 +47,16 @@ function AlgoEvents() {
     const [axferSender, setAxferSender] = useState('');
 const [axferReceiver, setAxferReceiver] = useState('');
 const [axferAmount, setAxferAmount] = useState('');
-const [axferComparison, setAxferComparison] = useState('<'); // Default comparison operator
+const [axferComparison, setAxferComparison] = useState('<');
+//const {inputType} = location.state; // Default comparison operator
 //const [axferCommission, setAxferCommission] = useState('');
+
 
     // console.log("code:",abi);
      console.log("type:", category);
      console.log("mid:", location.state);
      console.log("methodsfrom code:",Algoevents);
+    
     // Fetch events from the server when the component mounts
 
     const txnOptionsCategory1 = [
@@ -75,15 +78,6 @@ const [axferComparison, setAxferComparison] = useState('<'); // Default comparis
       setSelectedTxnTypes(selectedValues);
     };
     
-    // const formatTxnTypesForApi = () => {
-    //   const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
-    //   return allOptions.reduce((acc, option) => {
-    //     acc[option.value] = {
-    //       active: selectedTxnTypes.includes(option.value)
-    //     };
-    //     return acc;
-    //   }, {});
-    // };
     const formatTxnTypesForApi = () => {
       const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
       return allOptions.reduce((acc, option) => {
@@ -110,40 +104,101 @@ const [axferComparison, setAxferComparison] = useState('<'); // Default comparis
       return Buffer.from(str).toString('base64');
   };
 
-    const formatMethodsForApi = () => {
-      const methods = {};
-      Object.entries(selectedEvents).forEach(([eventName, eventDetails]) => {
-          const base64Name = encodeToBase64(eventName); // Encode method name to Base64
-          methods[base64Name] = {
-              name: eventName
-          };
+  const ApprovalformatMethodsForApi = () => {
+    const methods = {};
+    Object.entries(selectedEvents).forEach(([eventName, eventDetails]) => {
+        const base64Name = encodeToBase64(eventName); // Encode method name to Base64
+        methods[base64Name] = {
+            name: eventName
+        };
+    });
+    return methods;
+};
+const Approvaloptions = Algoevents.map((eventName) => ({
+    label: eventName,
+    value: eventName,
+}));
+
+  // const AbiformatMethodsForApi = () => {
+  //   const methods = {};
+  //   Object.entries(selectedEvents).forEach(([eventName, eventDetails]) => {
+  //     const base64Name = encodeToBase64(eventName); // Encode method name to Base64
+      
+  //     const formattedArgs = eventDetails.args.map((arg, index) => {
+  //       const userValue = eventDetails.argValues[index] || "value not provided";
+  //       return `${arg}: ${userValue}`; // Include both argument name and user value
+  //     });
+  
+  //     methods[base64Name] = {
+  //       name: eventName,
+  //       args: formattedArgs,
+  //     };
+  //   });
+  //   return methods;
+  // };
+  
+
+  const AbiformatMethodsForApi = () => {
+    const methods = {};
+  
+    Object.entries(selectedEvents).forEach(([eventName, eventDetails]) => {
+      const base64Name = encodeToBase64(eventName); // Encode method name to Base64
+  
+      // Prepare arguments with only name-value pairs
+      const formattedArgs = {};
+      eventDetails.args.forEach((arg, index) => {
+        const [argName] = arg.split(":").map(str => str.trim()); // Extract the argument name
+        formattedArgs[argName] = eventDetails.argValues[index] || ""; // Assign value or empty string
       });
-      return methods;
+  
+      methods[base64Name] = {
+        name: eventName,
+        ...formattedArgs, // Spread arguments as individual properties
+      };
+    });
+  
+    return methods;
   };
-
-
-    const options = Algoevents.map((eventName) => ({
-        label: eventName,
-        value: eventName,
-    }));
+  
+  
+  const Abioptions = Algoevents.map((event) => ({
+    label: event.name,
+    value: event.name,
+  }));
 
     // Handle event selection and prompt for arguments
     const handleEventSelection = (selectedOptions) => {
-      const newSelectedEvents = {};
-      selectedOptions.forEach((option) => {
-          const eventName = option.value;
-          newSelectedEvents[eventName] = {
-              args: "",
-              // Remove the reference to 'inputs' as it no longer exists
+        const newSelectedEvents = {};
+        selectedOptions.forEach((option) => {
+          const method = Algoevents.find(m => m.name === option.value);
+          newSelectedEvents[method.name] = {
+            args: method.args,
+            argValues: Array(method.args.length).fill(""), // Initialize empty values
           };
-      });
-      setSelectedEvents(newSelectedEvents);
-  };
+        });
+        setSelectedEvents(newSelectedEvents);
+      };
 
+      
+      const handleArgumentChange = (e, eventName, argIndex) => {
+        setSelectedEvents((prevEvents) => ({
+          ...prevEvents,
+          [eventName]: {
+            ...prevEvents[eventName],
+            argValues: prevEvents[eventName].argValues.map((val, i) =>
+              i === argIndex ? e.target.value : val
+            ),
+          },
+        }));
+      };
+      
     const handleSaveMonitor = async () => {
       let formattedData;
       if(category === 2){
-       formattedData = formatMethodsForApi();
+        
+       formattedData = AbiformatMethodsForApi();
+    
+       
       }
       else {
         formattedData = formatTxnTypesForApi();
@@ -582,38 +637,63 @@ const [axferComparison, setAxferComparison] = useState('<'); // Default comparis
 
     {/* Signature Name Input */}
     {category !== 1 && (
-          <>
+  <>
     <div className="font-medium text-lg" style={{ color: "black" }}>
       Select Methods
     </div>
     <div>
       <Select
         isMulti
-        options={options}
+       // options={inputType === "Approval Program" ? Approvaloptions : Abioptions}
+       options = {Abioptions}
         onChange={handleEventSelection}
-        value={options.filter(option => selectedEvents[option.value])}
+        value={
+             Abioptions.filter(
+              option => selectedEvents[option.value]
+            )
+          }
+        closeMenuOnSelect={false}
+        hideSelectedOptions={false}
+        components={{
+          Option: (props) => {
+            const { data, innerRef, innerProps } = props;
+            const isSelected = selectedEvents[data.value];
+            return (
+              <div ref={innerRef} {...innerProps} className="flex items-center p-2">
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={() => props.selectOption(data)}
+                  className="mr-2"
+                />
+                {data.label}
+              </div>
+            );
+          },
+        }}
       />
     </div>
-    </>
-        )}
+  </>
+)}
 
-    {/* Argument Input */}
-    <div>
-      {/* {Object.entries(selectedEvents).map(([eventName, eventData]) => (
-        <div key={eventName} className="font-medium mt-3">
-          <div>{eventName}</div>
-          <input
-            className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C]"
-            style={{ backgroundColor: "white" }}
-            type="text"
-            value={eventData.args}
-            onChange={(e) => handleArgumentChange(e, eventName)}
-            placeholder="Enter arguments"
-          />
-        </div>
-      ))} */}
+<div>
+  {Object.entries(selectedEvents).map(([eventName, eventData]) => (
+    <div key={eventName} className="font-medium mt-3">
+      <div>{eventName}</div>
+      {eventData.args.map((arg, index) => (
+        <input
+          key={`${eventName}-arg-${index}`}
+          className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] mt-2"
+          style={{ backgroundColor: "white" }}
+          type="text"
+          value={eventData.argValues?.[index] || ""}
+          onChange={(e) => handleArgumentChange(e, eventName, index)}
+          placeholder={`Enter ${arg}`}
+        />
+      ))}
     </div>
-    </div>
+  ))}
+</div></div>
           <button
             className="py-3 w-full bg-[#28AA61] mt-10 rounded-lg text-white"
             onClick={handleSaveMonitor}
