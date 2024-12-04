@@ -107,7 +107,7 @@ const Monitor_cmp = () => {
   }
 
   return (
-    <div className="w-full flex justify-start ml-4 items-start flex-col ">
+    <div className=" w-full xl:w-[97%] overflow-auto flex justify-center items-center xl:justify-start xl:ml-4 xl:items-start flex-col ">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -124,7 +124,138 @@ const Monitor_cmp = () => {
           <span className="loading loading-spinner loading-lg text-[#2D5C8F]"></span>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-md border-2 border-gray-400 custom-scrollbar bg-white">
+        <div className="w-full flex justify-center items-center">
+          <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10">
+          {moniter.monitors.map((i) => {
+                const name = i.name;
+                const risk = i.category;
+                const network = i.network;
+                const status = i.status;
+                const mid = i.mid;
+                const created_on = i.created_on;
+                const address = i.address;
+                const alert_data = i.alert_data;
+                const alert_type = i.alert_type;
+                return (
+                  <div className="w-full flex p-3 md:p-10 justify-between border-b-2">
+                    <div className="flex flex-col gap-3">
+                    <span className="text-md  text-[#6A6A6A]">
+                        {name}
+                      </span>
+                      <span className="text-md  text-[#6A6A6A]">
+                        {network === 80002
+                          ? "Amoy"
+                          : network === 1
+                          ? "Ethereum Mainnet"
+                          : network === 11155111
+                          ? "Sepolia Testnet"
+                          : network === 137
+                          ? "Polygon Mainnet"
+                          : network === 1300
+                          ? "Algorand Mainnet"
+                          : network === 1301
+                          ? "Algorand Testnet"
+                          : "Unknown"}
+                      </span>
+                      <p className=" text-md text-[#6A6A6A] text-nowrap">
+                      {created_on?.slice(0, 10)}
+                    </p>
+
+                    <p className="  text-[#6A6A6A]">
+                      {created_on?.slice(11, 16)}
+                    </p>
+                    <p className="text-[#2D5C8F] ">
+                      {`${address?.slice(0, 5)}...${address?.slice(
+                        address.length - 4
+                      )}`}
+                    </p>
+                    </div>
+                    <div className=" flex flex-col gap-3 md:gap-5 justify-center items-center">
+                    <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg w-40">
+                        Interact
+                      </button>
+                      <button
+                        className="border-2 border-red-500 text-red-500 px-3 py-[2px] rounded-lg font-medium hover:bg-red-500 hover:text-white w-40"
+                        onClick={() => {
+                          if (network === 1300 || network === 1301) {
+                            // Navigate to algo_alerts page for Algorand Mainnet/Testnet
+                            navigate("/algo_alerts", {
+                              state: { mid, network },
+                            });
+                          } else {
+                            // Navigate to monitor_alerts for other networks
+                            navigate("/monitor_alerts", {
+                              state: { mid, network },
+                            });
+                          }
+                        }}
+                      >
+                        Alerts
+                      </button>
+                      <div className="flex items-center gap-8 justify-center">
+                      <button
+                        onClick={() => {
+                          navigate("/monitor_Edit?id=" + mid, {
+                            state: {
+                              mid,
+                              name,
+                              network,
+                              address,
+                              alert_data,
+                              alert_type,
+                            },
+                          });
+                        }}
+                      >
+                        <FaRegEdit className="text-[#4A4A4A] text-2xl" />
+                      </button>
+
+                      <button onClick={() => handleDeleteMonitor(mid)}>
+                        <BsTrash className="text-[#4A4A4A] text-2xl" />
+                      </button>
+
+                      <Switch
+                        checked={status === 1 ? true : false}
+                        onChange={() => {
+                          const newStatus = status === 0 ? 1 : 0;
+
+                          fetch(`${baseUrl}/update_monitor`, {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                              Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({
+                              monitor_id: mid,
+                              status: newStatus,
+                            }),
+                          })
+                            .then((response) => response.json())
+                            .then((data) => {
+                              console.log("Success:", data);
+                              setValue(value + 1);
+                            })
+                            .catch((error) => {
+                              console.error("Error:", error);
+                            });
+                        }}
+                        className={`${
+                          status === 1 ? "bg-[#2D5C8F]" : "bg-[#B8B8B8]"
+                        } relative inline-flex h-6 w-11 items-center rounded-full`}
+                      >
+                        <span className="sr-only">Enable notifications</span>
+                        <span
+                          className={`${
+                            status === 1 ? "translate-x-6" : "translate-x-1"
+                          } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                        />
+                      </Switch>
+                      </div>
+                    </div>
+                  </div>
+                )})}
+          </div>
+          <div className="overflow-x-auto rounded-md border-2 border-gray-400 custom-scrollbar bg-white hidden xl:block">
           <table className="min-w-full rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table border-gray-400 ">
             <thead>
               <tr className="">
@@ -280,6 +411,7 @@ const Monitor_cmp = () => {
               })}
             </tbody>
           </table>
+        </div>
         </div>
       )}
     </div>

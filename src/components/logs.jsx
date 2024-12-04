@@ -13,9 +13,9 @@ function Logs() {
       <div className="bg-[#FAFAFA] w-full flex h-full">
         <Sidebar />
 
-        <div className=" h-full flex flex-col gap-5 ml-[100px]">
+        <div className=" h-full sm:flex flex-col gap-5 ml-[100px] hidden sm:mt-20">
           <div className={`mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]`}>
-            <h1 className="text-[#6A6A6A]  font-semibold ">
+            <h1 className="text-[#6A6A6A]  font-semibold text-nowrap">
               Realtime Security
             </h1>
           </div>
@@ -32,12 +32,12 @@ function Logs() {
           </div>
         </div>
 
-        <div className=" ml-36 mt-10  w-[440px] flex flex-col gap-6">
-          <h1 className="text-black font-bold text-2xl">
+        <div className="  mt-24 w-full  sm:w-[440px] flex flex-col gap-6">
+          <h1 className="text-black font-bold text-2xl text-center">
             Activity Tracking Simplified
           </h1>
 
-          <p className="text-black">
+          <p className="text-black text-left sm:text-center p-3 mx-auto">
             Our system meticulously maintains a detailed log of all activities,
             providing you with a comprehensive overview of your account's
             operations. From adjustments in settings and configurations to

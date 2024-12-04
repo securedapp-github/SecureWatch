@@ -73,14 +73,14 @@ function Dashboard() {
   console.log("Monitors", monitorcount);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full min-h-full">
       <NewNavbar email={userEmail} />
       <div className="bg-[#FAFAFA] w-full flex h-full">
         <Sidebar />
 
-        <div className=" h-full flex flex-col gap-5 ml-[100px]">
+        <div className=" h-full sm:flex flex-col gap-5 ml-[100px] mt-20 hidden">
           <div className={`mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]`}>
-            <h1 className="text-[#6A6A6A]  font-semibold ">
+            <h1 className="text-[#6A6A6A]  font-semibold text-nowrap">
               Realtime Security
             </h1>
           </div>
@@ -97,11 +97,25 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="w-auto ml-10 ">
-          <div className="mt-10 flex justify-start items-center gap-6 flex-wrap ">
-            <div className="flex mt-4 md:mt-0 font-poppin ">
-              <div className="my-auto">
-                <span className="text-[#6A6A6A] font-bold sm:text-xl md:text-2xl">
+        <div className="sm:w-auto sm:ml-10 mt-20 w-full ">
+
+          <div className="w-full text-center flex flex-col justify-center items-center gap-4 mt-5 sm:hidden">
+            <div className="p-3 border border-[#6A6A6A] rounded-full px-6">
+              <p className="text-[#6A6A6A] text-xl">Realtime Security</p>
+            </div>
+          <span className="text-[#6A6A6A] font-bold text-center  sm:text-xl md:text-2xl">
+                  Tenant ID
+                  <span className="text-[#6A6A6A] text-xl">
+                  {"  " + "#" + hash + "...."}
+                </span>
+                </span>
+                
+          </div>
+
+          <div className="sm:mt-10 flex justify-start items-center gap-6 flex-wrap ">
+            <div className="flex mt-4 md:mt-0 font-poppin text-center">
+              <div className="my-auto  text-center  hidden sm:block">
+                <span className="text-[#6A6A6A] font-bold text-center  sm:text-xl md:text-2xl ">
                   Tenant ID
                 </span>
                 <span className="text-[#6A6A6A] text-xl">
@@ -111,7 +125,7 @@ function Dashboard() {
             </div>
           </div>
 
-          <div className="font-inter flex gap-4 justify-center flex-wrap mt-10 ">
+          <div className="font-inter flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap sm:mt-10 ">
             <div className=" w-[299px] h-[139px] p-4 rounded-md bg-white border-2 shadow-lg border-[#ECECEC]">
               <div className="text-start  flex items-center gap-3 text-[#6A6A6A] ">
                 {" "}
@@ -171,9 +185,55 @@ function Dashboard() {
                 <FaPlay className="text-[#6A6A6A] text-xs" />
               </Link>
             </div>
+            <div className=" w-[299px] h-[139px] p-4 rounded-md xl:hidden bg-white border-2 shadow-lg border-[#ECECEC]">
+              <div className="text-start flex items-center gap-3 text-[#6A6A6A]">
+                Incident Reported
+              </div>
+              <div className="flex justify-between mt-5">
+                <div className="flex">
+                  <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-10 text-[#6A6A6A] ">
+                  {alert}
+                  </span>
+                  <span>
+                    <div className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+                      CHECK <br />
+                      TOTAL ALERTS
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 w-[299px] h-[139px] rounded-md xl:hidden bg-white border-2 shadow-lg border-[#ECECEC] mb-10 xl:mb-0">
+              <div className="text-start flex items-center gap-3 text-[#6A6A6A]">
+                USER PLANS
+              </div>
+              <div className="flex gap-6 mt-5 items-center">
+                <div className="flex items-center">
+                  <span className=" text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-2 text-[#6A6A6A]">
+                    {credits}
+                  </span>
+                  <span>
+                    <div className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+                      ACCOUNT <br />
+                      CREDITS
+                    </div>
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className=" text-xs sm:text-sm font-medium mr-2 text-[#6A6A6A]">
+                    {formattedPlanExpiry || planexpiry}
+                  </span>
+                  <span>
+                    <div className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+                      PLAN EXPIRY
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="font-inter flex gap-4 justify-start flex-wrap mt-10 ">
+          <div className="font-inter xl:flex gap-4 justify-center md:justify-start flex-wrap mt-10 hidden mb-10">
             <div className=" w-[299px] h-[139px] p-4 rounded-md bg-white border-2 shadow-lg border-[#ECECEC]">
               <div className="text-start flex items-center gap-3 text-[#6A6A6A]">
                 Incident Reported
@@ -181,7 +241,7 @@ function Dashboard() {
               <div className="flex justify-between mt-5">
                 <div className="flex">
                   <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mr-10 text-[#6A6A6A] ">
-                    02
+                  {alert}
                   </span>
                   <span>
                     <div className="text-[#6A6A6A] text-xs sm:text-sm font-medium">

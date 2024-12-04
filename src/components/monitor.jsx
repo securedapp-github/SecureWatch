@@ -15,14 +15,14 @@ function Monitor() {
   console.log(email);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full min-h-full">
       <NewNavbar email={userEmail} />
       <div className="bg-[#FAFAFA] w-full flex h-full">
         <Sidebar />
 
-        <div className=" h-full flex flex-col gap-5 ml-[100px] w-56">
+        <div className=" h-full sm:flex flex-col gap-5 ml-[100px] w-56 mt-20 hidden">
           <div className={`mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]`}>
-            <h1 className="text-[#6A6A6A]  font-semibold ">
+            <h1 className="text-[#6A6A6A]  font-semibold text-nowrap">
               Realtime Security
             </h1>
           </div>
@@ -39,7 +39,7 @@ function Monitor() {
           </div>
         </div>
 
-        <div className="w-full">
+        <div className=" mt-20 w-full ">
           <div className="w-full flex justify-between items-center px-4 py-4">
             <p className="text-[#6A6A6A] font-semibold text-lg">Monitors</p>
             <Link

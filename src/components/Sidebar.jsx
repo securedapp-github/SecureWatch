@@ -17,7 +17,7 @@ export default function Sidebar() {
       onMouseLeave={() => setExpand(false)}
       className={`${
         expand ? "bg-white shadow-2xl items-start" : " items-center"
-      } border-r-2 border-r-[#D3D3D3] h-full flex flex-col justify-start  absolute`}
+      } border-r-2 border-r-[#D3D3D3] h-full sm:flex flex-col justify-start  fixed mt-20 hidden`}
     >
       <div
         className={` flex flex-col  gap-7  ${
