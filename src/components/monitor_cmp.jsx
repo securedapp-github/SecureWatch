@@ -5,6 +5,8 @@ import Edit from "../images/edit.png";
 import Trash from "../images/icons8-trash-48.png";
 import { ToastContainer, toast } from "react-toastify";
 import { baseUrl } from "../Constants/data";
+import { FaRegEdit } from "react-icons/fa";
+import { BsTrash } from "react-icons/bs";
 
 const customStyles = {
   content: {
@@ -88,7 +90,7 @@ const Monitor_cmp = () => {
   if (loading) {
     return (
       <div className="text-center mt-20 text-4xl font-medium text-black">
-        <span className="loading loading-spinner loading-lg text-[#0ca851]"></span>
+        <span className="loading loading-spinner loading-lg text-[#2D5C8F]"></span>
       </div>
     );
   }
@@ -105,7 +107,7 @@ const Monitor_cmp = () => {
   }
 
   return (
-    <div className="w-full flex justify-center items-center flex-col ">
+    <div className=" w-full xl:w-[97%] overflow-auto flex justify-center items-center xl:justify-start xl:ml-4 xl:items-start flex-col ">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -119,126 +121,78 @@ const Monitor_cmp = () => {
       />
       {loading ? (
         <div className="text-center mt-20 text-4xl font-medium">
-          <span className="loading loading-spinner loading-lg text-[#0ca851]"></span>
+          <span className="loading loading-spinner loading-lg text-[#2D5C8F]"></span>
         </div>
       ) : (
-        moniter.monitors.map((i) => {
-          const name = i.name;
-          const risk = i.category;
-          const network = i.network;
-          const status = i.status;
-          const mid = i.mid;
-          const created_on = i.created_on;
-          const address = i.address;
-          const alert_data = i.alert_data;
-          const alert_type = i.alert_type;
+        <div className="w-full flex justify-center items-center">
+          <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10">
+          {moniter.monitors.map((i) => {
+                const name = i.name;
+                const risk = i.category;
+                const network = i.network;
+                const status = i.status;
+                const mid = i.mid;
+                const created_on = i.created_on;
+                const address = i.address;
+                const alert_data = i.alert_data;
+                const alert_type = i.alert_type;
+                return (
+                  <div className="w-full flex p-3 md:p-10 justify-between border-b-2">
+                    <div className="flex flex-col gap-3">
+                    <span className="text-md  text-[#6A6A6A]">
+                        {name}
+                      </span>
+                      <span className="text-md  text-[#6A6A6A]">
+                        {network === 80002
+                          ? "Amoy"
+                          : network === 1
+                          ? "Ethereum Mainnet"
+                          : network === 11155111
+                          ? "Sepolia Testnet"
+                          : network === 137
+                          ? "Polygon Mainnet"
+                          : network === 1300
+                          ? "Algorand Mainnet"
+                          : network === 1301
+                          ? "Algorand Testnet"
+                          : "Unknown"}
+                      </span>
+                      <p className=" text-md text-[#6A6A6A] text-nowrap">
+                      {created_on?.slice(0, 10)}
+                    </p>
 
-          return (
-            <div
-              key={mid}
-              className="w-full mx-auto flex justify-center items-center flex-col "
-            >
-              <div className="w-full mx-auto flex justify-center items-center flex-col ">
-                <div
-                  className="mt-10 w-[95%] lg:w-4/5  flex flex-wrap   rounded-2xl "
-                  style={{
-                    border: "1px solid #0CA851",
-                    boxShadow: "4px 4px 0px 0px #0CA851",
-                  }}
-                >
-                  <button
-                    className="w-[70%] sm:w-[80%] md:w-[90%]  p-6  "
-                    // onClick={() => {
-                    //   navigate("/monitor_alerts", { state: { mid, network } });
-                    // }}
-                    onClick={() => {
-                      if (network === 1300 || network === 1301) {
-                        // Navigate to algo_alerts page for Algorand Mainnet/Testnet
-                        navigate("/algo_alerts", { state: { mid, network } });
-                      } else {
-                        // Navigate to monitor_alerts for other networks
-                        navigate("/monitor_alerts", {
-                          state: { mid, network },
-                        });
-                      }
-                    }}
-                  >
-                    <div className="">
-                      <div className="flex gap-3">
-                        <div className="text-xl font-semibold text-black">
-                          {name}
-                        </div>
-                        {/* <div className="text-[12px] mt-auto text-[#7D7D7D]">
-                        {risk}
-                      </div> */}
-                      </div>
-                      <div className="flex gap-4 mt-5 flex-wrap items-center ">
-                        <div>
-                          <div className="text-center font-medium text-black">
-                            Networks
-                          </div>
-                          <div className="bg-[#0CA851] px-3 py-2 rounded-md text-[13px] my-auto text-white">
-                            {network === 80002
-                              ? "Amoy"
-                              : network === 1
-                              ? "Ethereum Mainnet"
-                              : network === 11155111
-                              ? "Sepolia Testnet"
-                              : network === 137
-                              ? "Polygon Mainnet"
-                              : network === 1300
-                              ? "Algorand Mainnet"
-                              : network === 1301
-                              ? "Algorand Testnet"
-                              : "Unknown"}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-center font-medium text-black">
-                            Created on
-                          </div>
-                          <div className="bg-[#E9E9E9] px-3 py-2 rounded-md  my-auto flex gap-2">
-                            <div className="my-auto text-[14px] text-black">
-                              <span className="text-md font-medium text-black">
-                                Date:{" "}
-                              </span>
-                              {created_on?.slice(0, 10)}{" "}
-                              <span>
-                                <span className="text-md font-medium text-black">
-                                  Time:{" "}
-                                </span>
-                                {created_on?.slice(11, 16)}
-                              </span>{" "}
-                            </div>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-center font-medium text-black">
-                            Contract address
-                          </div>
-                          <div className=" px-3 py-2 rounded-md text-[14px] my-auto text-black bg-[#E9E9E9] ">
-                            {`${address?.slice(0, 5)}...${address?.slice(
-                              address.length - 4
-                            )}`}
-                          </div>
-                        </div>
-                      </div>
+                    <p className="  text-[#6A6A6A]">
+                      {created_on?.slice(11, 16)}
+                    </p>
+                    <p className="text-[#2D5C8F] ">
+                      {`${address?.slice(0, 5)}...${address?.slice(
+                        address.length - 4
+                      )}`}
+                    </p>
                     </div>
-                  </button>
-
-                  <div className="flex items-center p-6 w-[30%] sm:w-[20%] md:w-[10%] ">
-                    <div className="flex flex-col justify-end gap-7 items-center">
-                      {/* Dustbin Icon for Deleting Monitor */}
-
-                      <button onClick={() => handleDeleteMonitor(mid)}>
-                        <img
-                          src={Trash}
-                          alt="Delete Monitor"
-                          className="h-8 w-8"
-                        />
+                    <div className=" flex flex-col gap-3 md:gap-5 justify-center items-center">
+                    <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg w-40">
+                        Interact
                       </button>
-
-                      {/* Edit Icon */}
+                      <button
+                        className="border-2 border-red-500 text-red-500 px-3 py-[2px] rounded-lg font-medium hover:bg-red-500 hover:text-white w-40"
+                        onClick={() => {
+                          if (network === 1300 || network === 1301) {
+                            // Navigate to algo_alerts page for Algorand Mainnet/Testnet
+                            navigate("/algo_alerts", {
+                              state: { mid, network },
+                            });
+                          } else {
+                            // Navigate to monitor_alerts for other networks
+                            navigate("/monitor_alerts", {
+                              state: { mid, network },
+                            });
+                          }
+                        }}
+                      >
+                        Alerts
+                      </button>
+                      <div className="flex items-center gap-8 justify-center">
                       <button
                         onClick={() => {
                           navigate("/monitor_Edit?id=" + mid, {
@@ -253,12 +207,13 @@ const Monitor_cmp = () => {
                           });
                         }}
                       >
-                        <img
-                          src={Edit}
-                          alt="Edit Monitor"
-                          className="h-8 w-8"
-                        />
+                        <FaRegEdit className="text-[#4A4A4A] text-2xl" />
                       </button>
+
+                      <button onClick={() => handleDeleteMonitor(mid)}>
+                        <BsTrash className="text-[#4A4A4A] text-2xl" />
+                      </button>
+
                       <Switch
                         checked={status === 1 ? true : false}
                         onChange={() => {
@@ -285,7 +240,7 @@ const Monitor_cmp = () => {
                             });
                         }}
                         className={`${
-                          status === 1 ? "bg-[#0CA851]" : "bg-[#B8B8B8]"
+                          status === 1 ? "bg-[#2D5C8F]" : "bg-[#B8B8B8]"
                         } relative inline-flex h-6 w-11 items-center rounded-full`}
                       >
                         <span className="sr-only">Enable notifications</span>
@@ -295,13 +250,169 @@ const Monitor_cmp = () => {
                           } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                         />
                       </Switch>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          );
-        })
+                )})}
+          </div>
+          <div className="overflow-x-auto rounded-md border-2 border-gray-400 custom-scrollbar bg-white hidden xl:block">
+          <table className="min-w-full rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table border-gray-400 ">
+            <thead>
+              <tr className="">
+                <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg">
+                  Name
+                </th>
+                <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg">
+                  Networks
+                </th>
+                <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg">
+                  Created on
+                </th>
+                <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg">
+                  Time
+                </th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {moniter.monitors.map((i) => {
+                const name = i.name;
+                const risk = i.category;
+                const network = i.network;
+                const status = i.status;
+                const mid = i.mid;
+                const created_on = i.created_on;
+                const address = i.address;
+                const alert_data = i.alert_data;
+                const alert_type = i.alert_type;
+                return (
+                  <tr className="border-gray-400 border-2 border-l-0 border-r-0 last:last:border-0">
+                    <td className="py-4 border-2 border-none flex items-center gap-3">
+                      <span className="text-md mt-auto text-[#6A6A6A]">
+                        {name}
+                      </span>
+                    </td>
+
+                    <td className="py-4 border-2 border-none ">
+                      <span className="text-md mt-auto text-[#6A6A6A]">
+                        {network === 80002
+                          ? "Amoy"
+                          : network === 1
+                          ? "Ethereum Mainnet"
+                          : network === 11155111
+                          ? "Sepolia Testnet"
+                          : network === 137
+                          ? "Polygon Mainnet"
+                          : network === 1300
+                          ? "Algorand Mainnet"
+                          : network === 1301
+                          ? "Algorand Testnet"
+                          : "Unknown"}
+                      </span>
+                    </td>
+
+                    <td className="py-4 border-2 border-none text-md text-[#6A6A6A] text-nowrap">
+                      {created_on?.slice(0, 10)}
+                    </td>
+
+                    <td className="py-4 border-2 border-none pl-4 text-[#6A6A6A]">
+                      {created_on?.slice(11, 16)}
+                    </td>
+
+                    <td className="text-[#2D5C8F] py-4">
+                      {`${address?.slice(0, 5)}...${address?.slice(
+                        address.length - 4
+                      )}`}
+                    </td>
+
+                    <td className="flex gap-8 items-center py-4">
+                      <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg">
+                        Interact
+                      </button>
+                      <button
+                        className="border-2 border-red-500 text-red-500 px-3 py-[2px] rounded-lg font-medium hover:bg-red-500 hover:text-white"
+                        onClick={() => {
+                          if (network === 1300 || network === 1301) {
+                            // Navigate to algo_alerts page for Algorand Mainnet/Testnet
+                            navigate("/algo_alerts", {
+                              state: { mid, network },
+                            });
+                          } else {
+                            // Navigate to monitor_alerts for other networks
+                            navigate("/monitor_alerts", {
+                              state: { mid, network },
+                            });
+                          }
+                        }}
+                      >
+                        Alerts
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate("/monitor_Edit?id=" + mid, {
+                            state: {
+                              mid,
+                              name,
+                              network,
+                              address,
+                              alert_data,
+                              alert_type,
+                            },
+                          });
+                        }}
+                      >
+                        <FaRegEdit className="text-[#4A4A4A] text-2xl" />
+                      </button>
+
+                      <button onClick={() => handleDeleteMonitor(mid)}>
+                        <BsTrash className="text-[#4A4A4A] text-2xl" />
+                      </button>
+
+                      <Switch
+                        checked={status === 1 ? true : false}
+                        onChange={() => {
+                          const newStatus = status === 0 ? 1 : 0;
+
+                          fetch(`${baseUrl}/update_monitor`, {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                              Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({
+                              monitor_id: mid,
+                              status: newStatus,
+                            }),
+                          })
+                            .then((response) => response.json())
+                            .then((data) => {
+                              console.log("Success:", data);
+                              setValue(value + 1);
+                            })
+                            .catch((error) => {
+                              console.error("Error:", error);
+                            });
+                        }}
+                        className={`${
+                          status === 1 ? "bg-[#2D5C8F]" : "bg-[#B8B8B8]"
+                        } relative inline-flex h-6 w-11 items-center rounded-full`}
+                      >
+                        <span className="sr-only">Enable notifications</span>
+                        <span
+                          className={`${
+                            status === 1 ? "translate-x-6" : "translate-x-1"
+                          } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                        />
+                      </Switch>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        </div>
       )}
     </div>
   );
