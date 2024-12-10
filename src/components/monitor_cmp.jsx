@@ -80,6 +80,8 @@ const Monitor_cmp = () => {
       }
     }
   };
+ 
+  
 
   useEffect(() => {
     console.log("Monitors", moniter);
@@ -259,6 +261,26 @@ const Monitor_cmp = () => {
                           className="h-8 w-8"
                         />
                       </button>
+                      {network === 1 || network === 11155111 || network === 137|| network === 80002 ? (
+  <button
+    //onClick={() => handleInteract(mid)}
+    onClick={() => {
+      navigate("/api_builder?id=" + mid, {
+        state: {
+          mid,
+          name,
+          network,
+          address,
+          alert_data,
+          alert_type,
+        },
+      });
+    }}
+    className="bg-[#0CA851] text-white px-4 py-2 rounded-md"
+  >
+    Interact
+  </button>
+) : null}
                       <Switch
                         checked={status === 1 ? true : false}
                         onChange={() => {

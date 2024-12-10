@@ -70,11 +70,12 @@ const Monitor = () => {
             >
               Create Monitor
             </div>
-            <button className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto cursor-pointer">
+            {/* <button className="bg-[#0CA851] rounded-xl text-white font-medium px-7 py-2 my-auto cursor-pointer">
               <Link to="/api_builder" t>
                 Interact with contract
               </Link>
-            </button>
+            </button> */}
+            
           </div>
         </div>
         {/* <div

@@ -24,6 +24,7 @@ function Monitor_create() {
   const [monitorName, setMonitorName] = useState("");
   const [riskCategory, setRiskCategory] = useState("");
   const [address, setAddress] = useState("");
+  const [inputType, setInputType] = useState("ABI");
 
   //const [appId, setAppId] = useState('');
   
@@ -67,7 +68,7 @@ function Monitor_create() {
     }
   }, []);
 
-  const extractEventHandlers = (code) => {
+  const approvalEventHandlers = (code) => {
     const eventHandlers = [];
     const eventRegex = /txna ApplicationArgs 0\s*([\s\S]*?)pushbytes 0x([\da-fA-F]+)/g;
     let match;
@@ -80,12 +81,66 @@ function Monitor_create() {
     
     return eventHandlers;
   };
-  const sendSmartContract = () => {
-    const extractedEvents = extractEventHandlers(code);
-    setAlgoEvents(extractedEvents);
-    console.log("Extracted events:", extractedEvents);
-  };
-  console.log("methods are:",Algoevents);
+
+  // const extractEventHandlers = (code) => {
+  //     const eventHandlers = [];
+  //     const eventRegex = /Txn\.application_args\[0\]\s*==\s*Bytes\("([^"]+)"\)/g;
+  //     let match;
+  //     while ((match = eventRegex.exec(code)) !== null) {
+  //       eventHandlers.push(match[1]);
+  //     }
+  //     return eventHandlers;
+  //   };
+  const extractEventHandlers = (code) => {
+    // Validate and parse if necessary
+    if (typeof code === "string") {
+        try {
+            code = JSON.parse(code);
+        } catch (error) {
+            console.error("Failed to parse code as JSON:", error);
+            return [];
+        }
+    }
+
+    if (!code || !Array.isArray(code.methods)) {
+        console.error("Invalid code format. Expected an object with a methods array.");
+        return [];
+    }
+
+    const methodsInfo = [];
+    code.methods.forEach(method => {
+        const methodInfo = {
+            name: method.name,
+            args: method.args.map(arg => `${arg.name}: ${arg.type}`),
+            returns: method.returns.type
+        };
+        methodsInfo.push(methodInfo);
+    });
+
+    return methodsInfo;
+};
+ 
+  
+const sendSmartContract = () => {
+  console.log("Code value before extraction:", code); // Debugging step
+  const extractedEvents = extractEventHandlers(code);
+  setAlgoEvents(extractedEvents);
+  console.log("Extracted methods and arguments:", extractedEvents);
+};
+
+// const sendSmartContract = () => {
+//   let extractedEvents = [];
+  
+//   if (inputType === "Approval Program") {
+//     extractedEvents = approvalEventHandlers(code);  // For Approval Program
+//   } else {
+//     extractedEvents = extractEventHandlers(code);   // For ABI
+//   }
+
+//   setAlgoEvents(extractedEvents);
+//   console.log("Extracted events:", extractedEvents);
+// };
+
 
 
   const handleSubmit = async (e) => {
@@ -138,6 +193,7 @@ function Monitor_create() {
                 functions: functions,
                 Algoevents: Algoevents,
                 category: parseInt(category),
+                inputType: inputType,
               },
             });
           },
@@ -584,7 +640,7 @@ function Monitor_create() {
           <>
 
                 <div className="text-lg font-medium mt-5" style={{ color: "black" }}>
-                  Approval Program:
+                  ARC-4 Contract ABI:
                 </div>
                 {/* <div className="text-lg text-[#989898] mt-1" style={{ color: "black" }}>
                   Paste your algorand smart contract here
@@ -592,7 +648,7 @@ function Monitor_create() {
                 <textarea
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
-                  placeholder="Paste your Approval program here"
+                  placeholder="Paste Contract ABI here"
                   style={{
                     width: "100%",
                     height: "300px",
