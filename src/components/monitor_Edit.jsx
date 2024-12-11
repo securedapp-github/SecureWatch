@@ -751,7 +751,7 @@ function Monitor_Edit() {
                       className="text-lg font-medium mt-5"
                       style={{ color: "black" }}
                     >
-                      <label>Approval Program:</label>
+                      <label>ARC-4 Contract ABI:</label>
                       <div
                         className="text-lg text-[#989898] mt-1 "
                         style={{ color: "black" }}
