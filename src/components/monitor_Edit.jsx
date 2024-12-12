@@ -49,21 +49,49 @@ function Monitor_Edit() {
   const [code, setCode] = useState("");
   const [Algoevents, setAlgoEvents] = useState([]);
 
-   const extractEventHandlers = (code) => {
-    const eventHandlers = [];
-    const eventRegex =
-      /txna ApplicationArgs 0\s*([\s\S]*?)pushbytes 0x([\da-fA-F]+)/g;
-    let match;
+  //  const extractEventHandlers = (code) => {
+  //   const eventHandlers = [];
+  //   const eventRegex =
+  //     /txna ApplicationArgs 0\s*([\s\S]*?)pushbytes 0x([\da-fA-F]+)/g;
+  //   let match;
 
-    while ((match = eventRegex.exec(code)) !== null) {
-      const hexValue = match[2];
-      const methodName = Buffer.from(hexValue, "hex").toString("utf8");
-      eventHandlers.push(methodName);
+  //   while ((match = eventRegex.exec(code)) !== null) {
+  //     const hexValue = match[2];
+  //     const methodName = Buffer.from(hexValue, "hex").toString("utf8");
+  //     eventHandlers.push(methodName);
+  //   }
+
+  //   return eventHandlers;
+  // };
+  const extractEventHandlers = (code) => {
+    // Validate and parse if necessary
+    if (typeof code === "string") {
+        try {
+            code = JSON.parse(code);
+        } catch (error) {
+            console.error("Failed to parse code as JSON:", error);
+            return [];
+        }
     }
 
-    return eventHandlers;
-  };
+    if (!code || !Array.isArray(code.methods)) {
+        console.error("Invalid code format. Expected an object with a methods array.");
+        return [];
+    }
 
+    const methodsInfo = [];
+    code.methods.forEach(method => {
+        const methodInfo = {
+            name: method.name,
+            args: method.args.map(arg => `${arg.name}: ${arg.type}`),
+            returns: method.returns.type
+        };
+        methodsInfo.push(methodInfo);
+    });
+
+    return methodsInfo;
+};
+  
   const sendSmartContract = () => {
     const extractedEvents = extractEventHandlers(code||selectedMonitor.abi);
     setAlgoEvents(extractedEvents);
@@ -723,7 +751,7 @@ function Monitor_Edit() {
                       className="text-lg font-medium mt-5"
                       style={{ color: "black" }}
                     >
-                      <label>Approval Program:</label>
+                      <label>ARC-4 Contract ABI:</label>
                       <div
                         className="text-lg text-[#989898] mt-1 "
                         style={{ color: "black" }}

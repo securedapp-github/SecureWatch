@@ -171,9 +171,31 @@ const Monitor_cmp = () => {
                     </p>
                     </div>
                     <div className=" flex flex-col gap-3 md:gap-5 justify-center items-center">
-                    <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg w-40">
+
+                    {network === 1 || network === 11155111 || network === 137|| network === 80002 ? (
+  <button
+    //onClick={() => handleInteract(mid)}
+    onClick={() => {
+      navigate("/api_builder?id=" + mid, {
+        state: {
+          mid,
+          name,
+          network,
+          address,
+          alert_data,
+          alert_type,
+        },
+      });
+    }}
+     className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg w-40"
+  >
+    Interact
+  </button>
+) : null}
+
+                    {/* <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg w-40">
                         Interact
-                      </button>
+                      </button> */}
                       <button
                         className="border-2 border-red-500 text-red-500 px-3 py-[2px] rounded-lg font-medium hover:bg-red-500 hover:text-white w-40"
                         onClick={() => {
@@ -327,9 +349,32 @@ const Monitor_cmp = () => {
                     </td>
 
                     <td className="flex gap-8 items-center py-4">
-                      <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg">
+
+                    {network === 1 || network === 11155111 || network === 137|| network === 80002 ? (
+  <button
+    //onClick={() => handleInteract(mid)}
+    onClick={() => {
+      navigate("/api_builder?id=" + mid, {
+        state: {
+          mid,
+          name,
+          network,
+          address,
+          alert_data,
+          alert_type,
+        },
+      });
+    }}
+    className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg"
+  >
+    Interact
+  </button>
+) :  <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg">
+Interact
+</button>}
+                      {/* <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg">
                         Interact
-                      </button>
+                      </button> */}
                       <button
                         className="border-2 border-red-500 text-red-500 px-3 py-[2px] rounded-lg font-medium hover:bg-red-500 hover:text-white"
                         onClick={() => {
