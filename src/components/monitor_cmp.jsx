@@ -171,7 +171,20 @@ const Monitor_cmp = () => {
                     </p>
                     </div>
                     <div className=" flex flex-col gap-3 md:gap-5 justify-center items-center">
-                    <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg w-40">
+                    <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg w-40"
+                    onClick={() => {
+                      navigate("/api_builder?id=" + mid, {
+                        state: {
+                          mid,
+                          name,
+                          network,
+                          address,
+                          alert_data,
+                          alert_type,
+                        },
+                      });
+                    }}
+                    >
                         Interact
                       </button>
                       <button
@@ -327,7 +340,20 @@ const Monitor_cmp = () => {
                     </td>
 
                     <td className="flex gap-8 items-center py-4">
-                      <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg">
+                      <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg"
+                      onClick={() => {
+                        navigate("/api_builder?id=" + mid, {
+                          state: {
+                            mid,
+                            name,
+                            network,
+                            address,
+                            alert_data,
+                            alert_type,
+                          },
+                        });
+                      }}
+                      >
                         Interact
                       </button>
                       <button

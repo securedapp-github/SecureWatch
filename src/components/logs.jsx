@@ -13,7 +13,7 @@ function Logs() {
       <div className="bg-[#FAFAFA] w-full flex h-full">
         <Sidebar />
 
-        <div className=" h-full sm:flex flex-col gap-5 ml-[100px] hidden sm:mt-20">
+        <div className=" h-full sm:flex flex-col gap-5 ml-[100px] hidden sm:mt-20 fixed ">
           <div className={`mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]`}>
             <h1 className="text-[#6A6A6A]  font-semibold text-nowrap">
               Realtime Security
@@ -32,7 +32,7 @@ function Logs() {
           </div>
         </div>
 
-        <div className="  mt-24 w-full  sm:w-[440px] flex flex-col gap-6">
+        <div className="  mt-24 w-full  sm:w-[440px] flex flex-col gap-6 sm:ml-72">
           <h1 className="text-black font-bold text-2xl text-center">
             Activity Tracking Simplified
           </h1>

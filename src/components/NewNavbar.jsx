@@ -38,7 +38,7 @@ export default function NewNavbar({ email }) {
     window.location.href = '/'
   }
   return (
-    <div className=" bg-white w-full px-4 py-5 flex justify-between items-center fixed ">
+    <div className=" bg-white w-full px-4 py-5 flex justify-between items-center fixed z-50">
       <button className="p-0 sm:hidden">
           <BsHeadset className="text-[#535252] text-2xl" />
         </button>
