@@ -223,7 +223,7 @@ function Alerts() {
               </div>
 
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 <div className="my-auto" style={{ color: "black" }}>
@@ -235,7 +235,7 @@ function Alerts() {
                 </div>
               </div>
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 
@@ -250,7 +250,7 @@ function Alerts() {
               </div>
               
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 
@@ -261,6 +261,24 @@ function Alerts() {
                   <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                 </div>
               </div>
+
+              <div className="sm:hidden flex gap-2 items-center justify-around mt-5  w-full">
+    <div className=" flex gap-1 items-center " >
+                <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
+                <p className="text-black">General <br /> Information</p>  
+              </div>
+    <div className=" flex gap-1 items-center" >
+                 <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F] " />
+                 <p className="text-black">Events</p>
+                
+              </div>
+              
+    <div className=" flex gap-1 items-center" >
+    <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F] " />
+    <p className="text-black">Alerts</p>
+                
+              </div>
+</div>
             </div>
   
           <div className="w-[97%] md:w-1/3 lg:w-1/4 mt-5 md:mt-0 mx-auto md:mx-0 sm:bg-inherit sm:border-0  bg-white px-2 border-2 rounded-md py-2">

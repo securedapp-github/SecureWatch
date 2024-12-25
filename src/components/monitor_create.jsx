@@ -28,6 +28,7 @@ function Monitor_create() {
   const [monitorName, setMonitorName] = useState("");
   const [riskCategory, setRiskCategory] = useState("");
   const [address, setAddress] = useState("");
+  const [inputType, setInputType] = useState("ABI");
 
   //const [appId, setAppId] = useState('');
   
@@ -71,7 +72,7 @@ function Monitor_create() {
     }
   }, []);
 
-  const extractEventHandlers = (code) => {
+  const approvalEventHandlers = (code) => {
     const eventHandlers = [];
     const eventRegex = /txna ApplicationArgs 0\s*([\s\S]*?)pushbytes 0x([\da-fA-F]+)/g;
     let match;
@@ -84,12 +85,66 @@ function Monitor_create() {
     
     return eventHandlers;
   };
-  const sendSmartContract = () => {
-    const extractedEvents = extractEventHandlers(code);
-    setAlgoEvents(extractedEvents);
-    console.log("Extracted events:", extractedEvents);
-  };
-  console.log("methods are:",Algoevents);
+
+  // const extractEventHandlers = (code) => {
+  //     const eventHandlers = [];
+  //     const eventRegex = /Txn\.application_args\[0\]\s*==\s*Bytes\("([^"]+)"\)/g;
+  //     let match;
+  //     while ((match = eventRegex.exec(code)) !== null) {
+  //       eventHandlers.push(match[1]);
+  //     }
+  //     return eventHandlers;
+  //   };
+  const extractEventHandlers = (code) => {
+    // Validate and parse if necessary
+    if (typeof code === "string") {
+        try {
+            code = JSON.parse(code);
+        } catch (error) {
+            console.error("Failed to parse code as JSON:", error);
+            return [];
+        }
+    }
+
+    if (!code || !Array.isArray(code.methods)) {
+        console.error("Invalid code format. Expected an object with a methods array.");
+        return [];
+    }
+
+    const methodsInfo = [];
+    code.methods.forEach(method => {
+        const methodInfo = {
+            name: method.name,
+            args: method.args.map(arg => `${arg.name}: ${arg.type}`),
+            returns: method.returns.type
+        };
+        methodsInfo.push(methodInfo);
+    });
+
+    return methodsInfo;
+};
+ 
+  
+const sendSmartContract = () => {
+  console.log("Code value before extraction:", code); // Debugging step
+  const extractedEvents = extractEventHandlers(code);
+  setAlgoEvents(extractedEvents);
+  console.log("Extracted methods and arguments:", extractedEvents);
+};
+
+// const sendSmartContract = () => {
+//   let extractedEvents = [];
+  
+//   if (inputType === "Approval Program") {
+//     extractedEvents = approvalEventHandlers(code);  // For Approval Program
+//   } else {
+//     extractedEvents = extractEventHandlers(code);   // For ABI
+//   }
+
+//   setAlgoEvents(extractedEvents);
+//   console.log("Extracted events:", extractedEvents);
+// };
+
 
 
   const handleSubmit = async (e) => {
@@ -142,6 +197,7 @@ function Monitor_create() {
                 functions: functions,
                 Algoevents: Algoevents,
                 category: parseInt(category),
+                inputType: inputType,
               },
             });
           },
@@ -276,7 +332,7 @@ function Monitor_create() {
               </div>
 
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 <div className="my-auto" style={{ color: "black" }}>
@@ -311,7 +367,7 @@ function Monitor_create() {
                 </div>
               </div>
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"
                 style={{ border: "1px solid #CACACA" }}
               >
                 
@@ -340,7 +396,7 @@ function Monitor_create() {
               </div>
               
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"
                 style={{ border: "1px solid #CACACA" }}
               >
                 
@@ -366,6 +422,23 @@ function Monitor_create() {
                   <IoCheckmarkCircleOutline className="text-2xl " />
                 </div>
               </div>
+              <div className="sm:hidden flex gap-2 items-center justify-around mt-5  w-full">
+    <div className=" flex gap-1 items-center " >
+                <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
+                <p className="text-black">General <br /> Information</p>  
+              </div>
+    <div className=" flex gap-1 items-center" >
+                 <IoCheckmarkCircleOutline className="text-3xl " />
+                 <p className="">Events</p>
+                
+              </div>
+              
+    <div className=" flex gap-1 items-center" >
+    <IoCheckmarkCircleOutline className="text-3xl " />
+    <p className="">Alerts</p>
+                
+              </div>
+</div>
             </div>
     
             <div className="mt-4 lg:mt-0 w-full lg:w-1/2 pb-20">
@@ -490,7 +563,7 @@ function Monitor_create() {
                     />
                      </>
             )}
-                    <div className="text-center w-full bg-green-700">
+                    <div className="text-center w-full ">
                       <button
                         onClick={ sendSmartContract }
                         type="submit"

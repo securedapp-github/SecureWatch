@@ -421,7 +421,7 @@ function Events() {
               </div>
 
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 <div className="my-auto" style={{ color: "black" }}>
@@ -433,7 +433,7 @@ function Events() {
                 </div>
               </div>
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 
@@ -448,7 +448,7 @@ function Events() {
               </div>
               
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"
                 style={{ border: "1px solid #CACACA" }}
               >
                 
@@ -459,6 +459,24 @@ function Events() {
                   <IoCheckmarkCircleOutline className="text-2xl " />
                 </div>
               </div>
+
+              <div className="sm:hidden flex gap-2 items-center justify-around mt-5  w-full">
+    <div className=" flex gap-1 items-center " >
+                <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
+                <p className="text-black">General <br /> Information</p>  
+              </div>
+    <div className=" flex gap-1 items-center" >
+                 <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
+                 <p className="text-black">Events</p>
+                
+              </div>
+              
+    <div className=" flex gap-1 items-center" >
+    <IoCheckmarkCircleOutline className="text-3xl " />
+    <p className="">Alerts</p>
+                
+              </div>
+</div>
             </div>
     
             <div className=" w-[98%] sm:w-[400px] bg-white md:bg-inherit md:border-0 py-2 rounded-md border-2  px-2">

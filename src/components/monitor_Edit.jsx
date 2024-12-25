@@ -55,21 +55,49 @@ function Monitor_Edit() {
   const [code, setCode] = useState("");
   const [Algoevents, setAlgoEvents] = useState([]);
 
-   const extractEventHandlers = (code) => {
-    const eventHandlers = [];
-    const eventRegex =
-      /txna ApplicationArgs 0\s*([\s\S]*?)pushbytes 0x([\da-fA-F]+)/g;
-    let match;
+  //  const extractEventHandlers = (code) => {
+  //   const eventHandlers = [];
+  //   const eventRegex =
+  //     /txna ApplicationArgs 0\s*([\s\S]*?)pushbytes 0x([\da-fA-F]+)/g;
+  //   let match;
 
-    while ((match = eventRegex.exec(code)) !== null) {
-      const hexValue = match[2];
-      const methodName = Buffer.from(hexValue, "hex").toString("utf8");
-      eventHandlers.push(methodName);
+  //   while ((match = eventRegex.exec(code)) !== null) {
+  //     const hexValue = match[2];
+  //     const methodName = Buffer.from(hexValue, "hex").toString("utf8");
+  //     eventHandlers.push(methodName);
+  //   }
+
+  //   return eventHandlers;
+  // };
+  const extractEventHandlers = (code) => {
+    // Validate and parse if necessary
+    if (typeof code === "string") {
+        try {
+            code = JSON.parse(code);
+        } catch (error) {
+            console.error("Failed to parse code as JSON:", error);
+            return [];
+        }
     }
 
-    return eventHandlers;
-  };
+    if (!code || !Array.isArray(code.methods)) {
+        console.error("Invalid code format. Expected an object with a methods array.");
+        return [];
+    }
 
+    const methodsInfo = [];
+    code.methods.forEach(method => {
+        const methodInfo = {
+            name: method.name,
+            args: method.args.map(arg => `${arg.name}: ${arg.type}`),
+            returns: method.returns.type
+        };
+        methodsInfo.push(methodInfo);
+    });
+
+    return methodsInfo;
+};
+  
   const sendSmartContract = () => {
     const extractedEvents = extractEventHandlers(code||selectedMonitor.abi);
     setAlgoEvents(extractedEvents);
@@ -364,42 +392,18 @@ function Monitor_Edit() {
               </div>
     
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 sm:flex gap-2 px-4 py-3 rounded-sm bg-white hidden"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 <div className="my-auto" style={{ color: "black" }}>
                   General Information
                 </div>
                 <div className="my-auto ml-auto">
-                  {/* <svg
-                    width="27"
-                    height="26"
-                    viewBox="0 0 27 26"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="0.832031"
-                      y="26"
-                      width="26"
-                      height="26"
-                      rx="2.92308"
-                      transform="rotate(-90 0.832031 26)"
-                      fill="#2D5C8F"
-                    />
-                    <path
-                      d="M11.5469 18.647L16.6175 13.5763L11.5469 8.50571"
-                      stroke="white"
-                      stroke-width="1.23515"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg> */}
                   <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                 </div>
               </div>
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"
                 style={{ border: "1px solid #CACACA" }}
               >
                 
@@ -428,7 +432,8 @@ function Monitor_Edit() {
               </div>
               
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm"
+                className="mt-5 hidden
+                 sm:flex gap-2 px-4 py-3 rounded-sm"
                 style={{ border: "1px solid #CACACA" }}
               >
                 
@@ -454,6 +459,25 @@ function Monitor_Edit() {
                   <IoCheckmarkCircleOutline className="text-2xl " />
                 </div>
               </div>
+
+<div className="sm:hidden flex gap-2 items-center justify-around mt-5  w-full">
+    <div className=" flex gap-1 items-center " >
+                <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
+                <p className="text-black">General <br /> Information</p>  
+              </div>
+    <div className=" flex gap-1 items-center" >
+                 <IoCheckmarkCircleOutline className="text-3xl " />
+                 <p className="">Events</p>
+                
+              </div>
+              
+    <div className=" flex gap-1 items-center" >
+    <IoCheckmarkCircleOutline className="text-3xl " />
+    <p className="">Alerts</p>
+                
+              </div>
+</div>
+
             </div>
     
             <div className="mt-4 md:mt-0 w-full md:w-1/2 pb-20">

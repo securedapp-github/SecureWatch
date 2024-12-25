@@ -222,7 +222,7 @@ function Alerts_Edit() {
               </div>
     
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 <div className="my-auto" style={{ color: "black" }}>
@@ -234,7 +234,7 @@ function Alerts_Edit() {
                 </div>
               </div>
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 
@@ -249,7 +249,7 @@ function Alerts_Edit() {
               </div>
               
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 
@@ -260,6 +260,24 @@ function Alerts_Edit() {
                   <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                 </div>
               </div>
+
+              <div className="sm:hidden flex gap-2 items-center justify-around mt-5  w-full">
+    <div className=" flex gap-1 items-center " >
+                <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
+                <p className="text-black">General <br /> Information</p>  
+              </div>
+    <div className=" flex gap-1 items-center" >
+                 <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
+                 <p className=" text-black">Events</p>
+                
+              </div>
+              
+    <div className=" flex gap-1 items-center" >
+    <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
+    <p className=" text-black">Alerts</p>
+                
+              </div>
+</div>
             </div>
     
           

@@ -9,6 +9,7 @@ import { baseUrl } from "../Constants/data";
 import { components } from 'react-select';
 import Events from "./events";
 import { Buffer } from "buffer";
+import AlgoEvents from "./algoevents";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
 import { IoMdCheckmarkCircle } from "react-icons/io";
@@ -53,6 +54,11 @@ function AlgoEventsedit() {
   const [selectedEvents, setSelectedEvents] = useState([]);
   const [allEvents, setAllEvents] = useState({});
   const [monitorData, setMonitorData] = useState(null);
+  const [axferReceiver, setAxferReceiver] = useState('');
+const [axferAmount, setAxferAmount] = useState('');
+const [axferComparison, setAxferComparison] = useState('<'); 
+const [axferSender, setAxferSender] = useState('');
+const [axferActive, setAxferActive] = useState(false);
   const userEmail = localStorage.getItem("email");
   console.log(userEmail);
 
@@ -72,7 +78,7 @@ function AlgoEventsedit() {
   const [riskCategoryState, setRiskCategoryState] = useState(rk || "");
   const [eventOperators, setEventOperators] = useState({});
   const [abiState, setAbiState] = useState(abi || "");
-  const [eventInputs, setEventInputs] = useState({});
+  const [eventInputs, setEventInputs] = useState([]);
  // const mid = m_id;
 
   const [disp1, setDisp1] = useState("none");
@@ -108,15 +114,45 @@ const txnOptionsCategory2 = [
 const handleTxnTypeSelection = (selectedOptions) => {
   const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
   setSelectedTxnTypes(selectedValues);
+
+    // Check if "axfer" is selected
+    const isAxferSelected = selectedValues.includes("axfer");
+    setAxferActive(isAxferSelected);
+  
+    // Reset axfer-specific fields if "axfer" is deselected
+    if (!isAxferSelected) {
+      setAxferSender('');
+      setAxferReceiver('');
+      setAxferAmount('');
+      setAxferComparison('=');
+    }
 };
+
+
 
 
 const formatTxnTypesForApi = () => {
   const allOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory2;
   return allOptions.reduce((acc, option) => {
-    acc[option.value] = {
-      active: selectedTxnTypes.includes(option.value)
-    };
+    const isAxfer = option.value === "axfer";
+
+    // Include axfer object with "active": false if axferActive is false
+    if (isAxfer) {
+      acc[option.value] = {
+        active: axferActive,
+        ...(axferActive && {
+          sender: axferSender || "",
+          receiver: axferReceiver || "",
+          amount: axferAmount ? `${axferComparison}::${axferAmount}` : "",
+        }),
+      };
+    } else {
+      // Handle other transaction types normally
+      acc[option.value] = {
+        active: selectedTxnTypes.includes(option.value),
+      };
+    }
+
     return acc;
   }, {});
 };
@@ -125,118 +161,35 @@ const encodeToBase64 = (str) => {
   return Buffer.from(str).toString('base64');
 };
 
+
 const formatMethodsForApi = () => {
-  const methods = {};
-  Object.entries(selectedValues).forEach(([eventid,eventName]) => {
-      const base64Name = encodeToBase64(eventName); // Encode method name to Base64
-      methods[base64Name] = {
-          name: eventName
-      };
-  });
-  return methods;
+  return eventInputs.reduce((acc, method) => {
+    const base64Name = encodeToBase64(method.name); // Encode method name to Base64
+
+    // Format arguments as a key-value object
+    const formattedArgs = method.args.reduce((argsAcc, arg) => {
+      const [argName, value] = arg.split(':').map((s) => s.trim()); // Assuming args are in "name: value" format
+      argsAcc[argName] = value || ""; // Default to empty string if value is not provided
+      return argsAcc;
+    }, {});
+
+    acc[base64Name] = {
+      name: method.name,
+      ...formattedArgs,
+    };
+
+    return acc;
+  }, {});
 };
 
 
-  // useEffect(() => {
-    
-  //   const fetchEvents = async () => {
-  //     try {
-  //         const response = await axios.get('http://localhost:5000/api/events');
-  //         setFoundedEvents(response.data);
-  //     } catch (error) {
-  //         console.error('Error fetching events:', error);
-  //     }
-  // };
 
-  // fetchEvents();
-  // }, [
-  //   location.state,
-  //   networkState,
-  //   addressState,
-  //   riskCategoryState,
-  //   abiState,
-  // ]);
-
-  useEffect(() => {
-    const parsedOptions = Algoevents.map((eventName) => ({
-      label: eventName,
-      value: eventName,
-    }));
-    // (${event.inputs})
-    console.log("Parsed options are:", parsedOptions);
-    setTotalEvents(parsedOptions)
-  }, [Algoevents])
+const Abioptions = Algoevents.map((event) => ({
+  label: event.name,
+  value: event.name,
+}));
 
 
-
-  // useEffect(() => {
-  //   const fetchMonitorEvents = async () => {
-  //     try {
-  //       if (!m_id) {
-  //         console.warn('m_id is not set');
-  //         return;
-  //       }
-  //       const res = await fetch(`${baseUrl}/get_event`, {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           'Authorization': `Bearer ${token}`,
-  //         },
-  //         body: JSON.stringify({ mid: m_id }),
-  //       });
-
-  //       if (!res.ok) {
-  //         throw new Error(`HTTP error! status: ${res.status}`);
-  //       }
-  //       const data = await res.json();
-  //       const events = data.monitors || [];
-  //        console.log("events:", events);
-  //        setEvents(events);
-
-  //       let algoData= ( data.monitors[data.monitors.length-1].algo);
-    
-
-
-
-  //        // Log the API response to check transaction types
-  //   console.log("API Response:", algoData);
-
-  //   const txnTypes = algoData || {}; // Check if txnTypes is in the response
-  //   const selectedTxnTypesFromApi = Object.keys(algoData)
-  //   .filter((key) => algoData[key]?.active === true);
-  //   console.log('Selected txn types from API:', selectedTxnTypesFromApi);
-
-  //     // Extract the method names
-  //     const methods = algoData.methods || {};
-  //     const methodNames = Object.keys(algoData).map(methodKey => {
-  //       const decodedKey = atob(methodKey); // Decode base64 to regular string
-  //       return algoData[methodKey].name || decodedKey;
-  //     });
-  //     console.log('Method names for event selection:', methodNames);
-
-
-  //       // Initialize options
-  //       const newOptions = events.map(event => ({
-  //         label: event.name,
-  //         value: event.name,
-  //       }));
-  //       setOptions(newOptions);
-  //       console.log("newoptions",selectedTxnTypesFromApi);
-
-  //       setSelectedTxnTypes(
-  //        selectedTxnTypesFromApi
-  //       );
-  //      // const selectedEventsFromApi = newOptions.filter(option => methodNames.includes(option.value));
-  //       setSelectedValues(methodNames);
-  //      // console.log('Selected events from API:', selectedEventsFromApi);
-
-  //     } catch (error) {
-  //       console.error("Failed to fetch events:", error);
-  //     }
-  //   };
-
-  //   fetchMonitorEvents();
-  // }, [m_id]);
   useEffect(() => {
     const fetchMonitorEvents = async () => {
       try {
@@ -272,21 +225,31 @@ const formatMethodsForApi = () => {
         // If category is 1, we extract the methods
         if (category === 2) {
           const methods = algoData || {};
-          const methodNames = Object.keys(methods).map(methodKey => {
-            const decodedKey = atob(methodKey); // Decode base64 to regular string
-            return methods[methodKey].name || decodedKey;
-          });
-          console.log('Method names for event selection:', methodNames);
+          // const methodNames = Object.keys(methods).map(methodKey => {
+          //   const decodedKey = atob(methodKey); // Decode base64 to regular string
+          //   return methods[methodKey].name || decodedKey;
+          // });
+          // console.log('Method names for event selection:', methodNames);
+          const initialMethods = Object.entries(algoData).map(([key, value]) => ({
+            name: value.name || Buffer.from(key, 'base64').toString('utf-8'),
+            args: Object.entries(value).filter(([argKey]) => argKey !== 'name')
+              .map(([argName, argValue]) => `${argName}: ${argValue}`),
+          }));
+         
+
+          console.log("Initial methods:", initialMethods);
 
           // Initialize options based on events
           const newOptions = events.map(event => ({
             label: event.name,
             value: event.name,
           }));
-          setOptions(newOptions);
+          // setOptions(newOptions);
 
-          // Set selected method names in the dropdown
-          setSelectedValues(methodNames);
+          // // Set selected method names in the dropdown
+          // setSelectedValues(methodNames);
+          setSelectedValues(initialMethods.map(method => method.name)); // Populate dropdown
+          setEventInputs(initialMethods);
         }
 
         // If category is 2, we extract txnTypes
@@ -301,42 +264,102 @@ const formatMethodsForApi = () => {
 
         }
 
+        if (algoData.axfer?.active) {
+          setAxferActive(true);
+          setAxferSender(algoData.axfer.sender || '');
+          setAxferReceiver(algoData.axfer.receiver || '');
+          const amountField = algoData.axfer.amount || '';
+          const comparisonMatch = amountField.match(/([<>=])::(.+)/);
+          if (comparisonMatch) {
+            setAxferComparison(comparisonMatch[1] || '=');
+            setAxferAmount(comparisonMatch[2] || '');
+          }
+          
+        }
+
       } catch (error) {
         console.error("Failed to fetch events:", error);
       }
     };
 
+    
+
     fetchMonitorEvents();
   }, [m_id, category]);  // category is now also a dependency
 
 
-  useEffect(() => {
-    
-    // console.log("Events are:", events);
-    // console.log("Event Inputs are:", eventInputs);
-    // console.log("Event Operators are:", eventOperators);
-    console.log("Selected values:", selectedValues);
-  }, [events, eventInputs, eventOperators, selectedValues]);
+  const handleArgChange = (eventIndex, argIndex, newValue) => {
+    setEventInputs(prev => {
+      const updatedInputs = [...prev];
+      updatedInputs[eventIndex].args[argIndex] = newValue;
+      return updatedInputs;
+    });
+  };
   
 
+  // useEffect(() => {
+    
+  //   // console.log("Events are:", events);
+  //   // console.log("Event Inputs are:", eventInputs);
+  //   // console.log("Event Operators are:", eventOperators);
+  //   console.log("Selected values:", selectedValues);
+  // }, [events, eventInputs, eventOperators, selectedValues]);
+  
+
+
+// const handleSelectChange = (selectedOptions) => {
+//   const values = selectedOptions.map(option => option.value);
+  
+//   // Identify removed events
+//   const newlyRemovedEvents = selectedValues.filter(value => !values.includes(value));
+
+//   // Add removed events to the removedEvents state
+//   setRemovedEvents(prevRemoved => [
+//       ...prevRemoved,
+//       ...newlyRemovedEvents.map(eventName => {
+//           const eventId = selectedValues.find(event => event.name === eventName)?.id;
+//           return eventId ? { name: eventName, id: eventId } : null;
+//       }).filter(Boolean) // Remove null entries
+//   ]);
+
+//   setSelectedValues(values);
+// };
 
 const handleSelectChange = (selectedOptions) => {
-  const values = selectedOptions.map(option => option.value);
-  
-  // Identify removed events
-  const newlyRemovedEvents = selectedValues.filter(value => !values.includes(value));
+  const selectedMethodNames = selectedOptions.map(option => option.value);
 
-  // Add removed events to the removedEvents state
-  setRemovedEvents(prevRemoved => [
-      ...prevRemoved,
-      ...newlyRemovedEvents.map(eventName => {
-          const eventId = selectedValues.find(event => event.name === eventName)?.id;
-          return eventId ? { name: eventName, id: eventId } : null;
-      }).filter(Boolean) // Remove null entries
-  ]);
+  setEventInputs(prev => {
+    const updatedInputs = selectedMethodNames.map(methodName => {
+      const existingMethod = prev.find(method => method.name === methodName);
 
-  setSelectedValues(values);
+      if (existingMethod) {
+        // Return previously selected method
+        return existingMethod;
+      }
+
+      // Fetch method details from Algoevents
+      const methodDetails = Algoevents.find(event => event.name === methodName);
+
+      return {
+        name: methodName,
+        args: (methodDetails?.args || []).map(arg => `${arg.split(': ')[0]}`), // Placeholder based on the argument name
+      };
+    });
+
+    return updatedInputs;
+  });
+
+  setSelectedValues(selectedMethodNames);
 };
+
+const handleAddArgument = (eventIndex) => {
+  setEventInputs(prev => {
+    const updatedInputs = [...prev];
+    updatedInputs[eventIndex].args.push("newArg: type: value"); // Default placeholder
+    return updatedInputs;
+  });
+};
+
 
 
   // Ensure ABI data is correctly parsed
@@ -356,280 +379,7 @@ const handleSelectChange = (selectedOptions) => {
     //category: category
   };
 console.log("monitor data:",events);
-//   const handleSubmit = async () => {
-//     try {
-//         const errors = [];
-//         const processingEvents = [];
-//         let hasChanges = false;
 
-//         // Helper function to send requests
-//         const sendRequest = async (url, method, data) => {
-//             const response = await fetch(url, {
-//                 method,
-//                 headers: { "Content-Type": "application/json",
-//                   'Authorization': `Bearer ${token}`,
-//                  },
-//                 body: JSON.stringify(data),
-//             });
-//             if (!response.ok) {
-//                 throw new Error(`Error fetching data from ${url}`);
-//             }
-//             return response.json(); // Return response JSON for further processing
-//         };
-
-//         // Delete removed events
-//         for (const removedEvent of removedEvents) {
-//             if (removedEvent.id) {
-//                 processingEvents.push(
-//                     sendRequest(`${baseUrl}/delete_event`, "POST", { id: removedEvent.id })
-//                         .then(response => {
-//                             console.log(`Event ${removedEvent.name} deleted successfully!`, response);
-//                             hasChanges = true;
-//                         })
-//                         .catch(error => {
-//                             console.error(`Error deleting ${removedEvent.name}:`, error);
-//                             errors.push({
-//                                 eventType: removedEvent.name,
-//                                 message: `Failed to delete ${removedEvent.name} event. Please try again!`
-//                             });
-//                         })
-//                 );
-//             }
-//         }
-
-//         // Fetch existing events from the monitor
-//         const fetchEventsFromMonitor = async (monitorId) => {
-//             const response = await fetch(`${baseUrl}/get_event`, {
-//                 method: 'POST',
-//                 headers: { "Content-Type": "application/json",
-//                   'Authorization': `Bearer ${token}`,
-//                  },
-//                 body: JSON.stringify({ mid: monitorId }),
-//             });
-//             if (!response.ok) {
-//                 throw new Error('Error fetching event data');
-//             }
-//             return response.json(); // Return response JSON for further processing
-//         };
-
-//         // Fetch events from monitor
-//         const monitorEventsResponse = await fetchEventsFromMonitor(m_id);
-
-//         // Log the entire response to verify structure
-//         console.log("Fetched monitor events response:", monitorEventsResponse);
-
-//         // Extract the monitorEvents array from the response
-//         const monitorEvents = monitorEventsResponse.monitors || []; // Default to empty array if missing
-
-//         // Check if monitorEvents is an array
-//         if (Array.isArray(monitorEvents)) {
-//             // Create a map of existing events by their ID for quick lookup
-//             const eventMap = new Map(monitorEvents.map(event => [event.id, event]));
-
-//             // Log the eventMap to verify its content
-//             console.log("Event map:", Array.from(eventMap.entries()));
-
-//             // Process each selected event dynamically
-//             for (const eventType of selectedValues) {
-//                 const inputs = eventInputs[eventType] || {};
-
-//                 // Log inputs to verify data
-//                 console.log(`Processing eventType: ${eventType}`);
-//                 console.log(`Inputs for ${eventType}:`, inputs);
-
-//                 // Prepare request data
-//                 const eventData = {
-//                     name: eventType,
-//                     arguments: {
-//                         ...inputs,
-//                         value: (inputs.value || "").trim(),
-//                     },
-//                 };
-
-//                 // Get the event ID from inputs and sanitize
-//                 const eventId = (inputs.id || "").trim();
-
-//                 // Debugging logs
-//                 console.log(`Event ID to check: ${eventId}`);
-
-//                 // Find the existing event based on ID or fallback to name
-//                 let existingEvent = null;
-
-//                 // Check if the eventId is a valid number and if it exists in eventMap
-//                 if (eventId && !isNaN(Number(eventId))) {
-//                     existingEvent = eventMap.get(Number(eventId));
-//                 }
-
-//                 if (!existingEvent) {
-//                     // If no event found by ID, try to find by name (fallback method)
-//                     const normalizedEventType = eventType.trim().toLowerCase();
-//                     existingEvent = monitorEvents.find(event => event.name.trim().toLowerCase() === normalizedEventType);
-//                 }
-
-//                 // Log the existing event details
-//                 console.log(`Existing event:`, existingEvent);
-//                 console.log("Existing event arguments:", existingEvent?.arguments);
-//                 console.log("Existing event arguments value:", existingEvent?.arguments?.value);
-
-//                 // If an existing event is found, update it
-//                 if (existingEvent) {
-//                     if (existingEvent.name.trim().toLowerCase() === eventType.trim().toLowerCase()) {
-//                         console.log(`Updating existing event: ${eventType} with ID: ${existingEvent.id}`);
-
-//                         const requestData = { id: existingEvent.id, ...eventData , value: eventData.arguments};
-
-//                         processingEvents.push(
-//                             sendRequest(`${baseUrl}/update_event`, "POST", requestData)
-//                                 .then(response => {
-//                                     console.log(`${eventType} updated successfully!`, response);
-//                                     hasChanges = true;
-//                                 })
-//                                 .catch(error => {
-//                                     console.error(`Error updating ${eventType}:`, error);
-//                                     errors.push({
-//                                         eventType,
-//                                         message: `Failed to update ${eventType} event. Please try again!`
-//                                     });
-//                                 })
-//                         );
-//                     } else {
-//                         console.log(`Event name mismatch: '${eventType}' does not match '${existingEvent.name}'. Skipping.`);
-//                     }
-//                 } else {
-//                     // If no existing event is found, add it as a new event
-//                     console.log(`No matching event found for: ${eventType}. Adding as new.`);
-//                     const requestData = { mid: m_id, ...eventData };
-//                     processingEvents.push(
-//                         sendRequest(`${baseUrl}/add_event`, "POST", requestData)
-//                             .then(response => {
-//                                 toast.success(`${eventType} event added successfully!`);
-//                                 console.log(`${eventType} added successfully!`, response);
-//                                 hasChanges = true;
-//                             })
-//                             .catch(error => {
-//                                 console.error(`Error adding ${eventType}:`, error);
-//                                 errors.push({
-//                                     eventType,
-//                                     message: `Failed to add ${eventType} event. Please try again!`
-//                                 });
-//                             })
-//                     );
-//                 }
-//             }
-
-//             // Wait for all event requests to complete
-//             await Promise.all(processingEvents);
-
-//             // Display success and error toasts
-//             if (hasChanges) {
-//                 selectedValues.forEach(eventType => {
-//                     if (hasChanges) {
-//                         toast.success(`${eventType} event processed successfully!`);
-//                     }
-//                 });
-//                 toast.success("Events processed successfully!", {
-//                     autoClose: 500,
-//                     onClose: () => {
-//                         navigate("/alert_edit", { state: navigationState });
-//                     },
-//                 });
-//             } else {
-//                 toast.error("Failed to process events. Please try again!");
-//                 errors.forEach(({ eventType, message }) => toast.error(message));
-//             }
-//         } else {
-//             console.error("monitorEvents is not an array or is missing.");
-//         }
-//     } catch (error) {
-//         console.error("Unexpected error:", error);
-//         toast.error("An unexpected error occurred. Please try again!");
-//     }
-
-// };
-// const handleSubmit = async () => {
-//   try {
-//       const errors = [];
-//       const processingEvents = [];
-//       let hasChanges = false;
-
-//       // Helper function to send requests
-//       const sendRequest = async (url, method, data) => {
-//           const response = await fetch(url, {
-//               method,
-//               headers: {
-//                   "Content-Type": "application/json",
-//                   'Authorization': `Bearer ${token}`,
-//               },
-//               body: JSON.stringify(data),
-//           });
-//           if (!response.ok) {
-//               throw new Error(`Error fetching data from ${url}`);
-//           }
-//           return response.json(); // Return response JSON for further processing
-//       };
-
-//       for (const removedEvent of removedEvents) {
-//                     if (removedEvent.id) {
-//                         processingEvents.push(
-//                             sendRequest(`${baseUrl}/delete_event`, "POST", { id: removedEvent.id })
-//                                 .then(response => {
-//                                     console.log(`Event ${removedEvent.name} deleted successfully!`, response);
-//                                     hasChanges = true;
-//                                 })
-//                                 .catch(error => {
-//                                     console.error(`Error deleting ${removedEvent.name}:`, error);
-//                                     errors.push({
-//                                         eventType: removedEvent.name,
-//                                         message: `Failed to delete ${removedEvent.name} event. Please try again!`
-//                                     });
-//                                 })
-//                         );
-//                     }
-//                 }
-
-//       const formattedData = formatTxnTypesForApi();
-//       formattedData.methods = formatMethodsForApi();
-
-//       // 3. Create the JSON object to send
-//       const dataToSend = {
-//         name:"Algorand_event",
-//           mid: m_id, // This contains the active transaction types
-//           algo: formattedData,   // This contains the selected methods with base64-encoded names
-//       };
-
-//       // Log the formatted data for debugging
-//       console.log('Data to send:', dataToSend);
-
-//       // 4. Send data to the API
-//       try {
-//           await sendRequest(`${baseUrl}/add_event`, 'POST', {
-//               // mid: m_id,  // Include monitor ID for context
-//               ...dataToSend,
-//           });
-//           toast.success('Transaction types and methods updated successfully!');
-//           hasChanges = true;
-//       } catch (error) {
-//           console.error('Error updating monitor:', error);
-//           errors.push({ message: 'Failed to update monitor. Please try again!' });
-//       }
-
-//       // Handle any changes
-//       if (hasChanges) {
-//           toast.success('Events processed successfully!', {
-//               autoClose: 500,
-//               onClose: () => {
-//                   navigate('/alert_edit', { state: navigationState });
-//               },
-//           });
-//       } else {
-//           toast.error('Failed to process events. Please try again!');
-//           errors.forEach(({ message }) => toast.error(message));
-//       }
-//   } catch (error) {
-//       console.error('Unexpected error:', error);
-//       toast.error('An unexpected error occurred. Please try again!');
-//   }
-// };
 const handleSubmit = async () => {
   try {
     const errors = [];
@@ -655,12 +405,7 @@ const handleSubmit = async () => {
     // Check if 'events' is an array. If it's not, handle it accordingly
     let eventsArray = Array.isArray(events) ? events : Object.values(events);
 
-    // Ensure that eventsArray has valid elements before proceeding
-    // if (eventsArray.length < 2) {
-    //   console.error("Not enough events to delete.");
-    //   return;
-    // }
-
+    
     // Only keep the last event, assuming it's the last one in the array
     const lastEvent = eventsArray[eventsArray.length - 1]; // Access the last event
     const eventsToDelete = eventsArray.slice(0, -1); // All except the last event
@@ -1157,27 +902,7 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
               <div className="font-medium" style={{ color: "black" }}>
                 Event Conditions
               </div>
-              {/* {Object.keys(selectedEvents).length > 0 ? (
-              <ul>
-                {Object.entries(selectedEvents).map(
-                  ([eventName, eventData]) => {
-                    const argTypes = eventDetails
-                      .find((e) => e.name === eventName)
-                      .inputs.split(", ")
-                      .map((arg) => arg.split(": ")[1]) // Extract only the types
-                      .join(", "); // Join types with commas
-
-                    return (
-                      <li key={eventName} className="text-[13px]">
-                        {eventName} ({argTypes})
-                      </li>
-                    );
-                  }
-                )}
-              </ul>
-            ) : (
-              <div className="text-[13px]">No events selected</div>
-            )} */}
+             
             </div>
             <div className="mt-3">
               <div className="font-medium" style={{ color: "black" }}>
@@ -1305,7 +1030,7 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
               </div>
     
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 <div className="my-auto" style={{ color: "black" }}>
@@ -1317,7 +1042,7 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
                 </div>
               </div>
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm bg-white"
+                className="mt-5 hidden  sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
                 style={{ border: "1px solid #2D5C8F" }}
               >
                 
@@ -1332,7 +1057,7 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
               </div>
               
               <div
-                className="mt-5 flex gap-2 px-4 py-3 rounded-sm"
+                className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"
                 style={{ border: "1px solid #CACACA" }}
               >
                 
@@ -1343,10 +1068,28 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
                   <IoCheckmarkCircleOutline className="text-2xl " />
                 </div>
               </div>
+
+              <div className="sm:hidden flex gap-2 items-center justify-around mt-5  w-full">
+    <div className=" flex gap-1 items-center " >
+                <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
+                <p className="text-black">General <br /> Information</p>  
+              </div>
+    <div className=" flex gap-1 items-center" >
+                 <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
+                 <p className="text-black">Events</p>
+                
+              </div>
+              
+    <div className=" flex gap-1 items-center" >
+    <IoCheckmarkCircleOutline className="text-3xl " />
+    <p className="">Alerts</p>
+                
+              </div>
+</div>
             </div>
     
     
-           
+    
     
             <div className="w-[98%] sm:w-[400px] bg-white md:bg-inherit md:border-0 py-2 rounded-md border-2  px-2">
       <div className="flex flex-col space-y-5">
@@ -1373,24 +1116,99 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
         </div>
         </>
         )}
-       {category ===2 &&(
+         {selectedTxnTypes.includes("axfer") && (
+          <div className="flex flex-col space-y-3">
+            <div className="font-medium text-lg" style={{ color: "black" }}>
+              axfer Transaction Details
+            </div>
+    
+            <div>
+              <label>Sender:</label>
+              <input
+                type="text"
+                value={axferSender}
+                onChange={(e) => setAxferSender(e.target.value)}
+                className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] bg-white mt-2"
+              />
+            </div>
+    
+            <div>
+              <label>Receiver:</label>
+              <input
+                type="text"
+                value={axferReceiver}
+                onChange={(e) => setAxferReceiver(e.target.value)}
+                className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] bg-white mt-2"
+              />
+            </div>
+           
+         <label>Amount:</label>
+    
+            <div className="flex items-center gap-2 mt-2">
+             
+              <select
+            value={axferComparison}
+            onChange={(e) => setAxferComparison(e.target.value)}
+            className="w rounded-lg p-2 outline-none border border-[#4C4C4C] bg-white"
+          >
+            <option value="<">{"<"}</option>
+            <option value=">">{">"}</option>
+            <option value="=">{"="}</option>
+          </select>
+              <input
+                type="text"
+                value={axferAmount}
+                onChange={(e) => setAxferAmount(e.target.value)}
+                className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] bg-white mt-2"
+              />
+            </div>
+          </div>
+        )}
+      {category ===2 &&(
         <>
         <div className="font-medium text-lg" style={{ color: "black" }}>
           Select Methods
         </div>
     
-        {/* <div className="min-w-full"> */}
-          <div >
-            <Select
-              isMulti
-              options={totalEvents}
-              defaultValue={options}
-              onChange={handleSelectChange}
-              value={totalEvents.filter((option) => selectedValues.includes(option.value))}
-            />
+        
+           <div>
+        <Select
+          options={Abioptions}
+          value={selectedValues.map(val => ({ label: val, value: val }))}
+          onChange={handleSelectChange}
+          isMulti
+        />
+         {Array.isArray(eventInputs) && eventInputs.map((event, eventIndex) => (
+      <div key={eventIndex} className="font-medium mt-3">
+        <div>{event.name}</div>
+        {event.args.length > 0 ? (
+          event.args.map((arg, argIndex) => {
+            const key = arg.split(': ')[0]; // Extract the argument name
+            return (
+              <div key={argIndex}>
+                <label>{key}:</label>
+                <input
+                className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] mt-2"
+                style={{ backgroundColor: "white" }}
+                  type="text"
+                  placeholder={`Enter ${key} value`} // Placeholder showing the argument name
+                  value={event.args[argIndex].split(': ')[1] || ''} // Pre-fill the input if value exists
+                  onChange={e => handleArgChange(eventIndex, argIndex, `${key}: ${e.target.value}`)}
+                />
+              </div>
+            );
+          })
+        ) : (
+          <div>
+            <p>No arguments for this method.</p>
           </div>
-          </>
-       )}
+        )}
+      </div>
+             
+          ))}
+        </div>
+      </>
+    )}
          
         </div>
       {/* </div> */}
@@ -1420,8 +1238,6 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
                 Save Monitor
               </button>
             </div>
-    
-    
     
             <div className="border border-[#2D5C8F]  shadow-md p-4  rounded-xl w-80   mb-10 xl:mb-0">
               <div className="text-lg font-medium text-[#2D5C8F]" >
