@@ -28,7 +28,8 @@ import AlgoEvents from "./components/algoevents.jsx";
 import AlgoEventsedit from "./components/algoevents_edit.jsx";
 import Algo_alerts from "./components/algo_alerts.jsx";
 import Logout from "./components/Logout.js";
-
+import Admin from "./components/Admin.jsx";
+import AdminAddUser from "./components/AdminAddUser.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -52,6 +53,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Protected cmp={<Dashboard />} />} />
         <Route path="/monitor" element={<Protected cmp={<Monitor />} />} />
+        <Route path="/admin" element={<Protected cmp={<Admin />} />} />
+        <Route path="/admin_add_user" element={<Protected cmp={<AdminAddUser />} />} />
         <Route path="/api_builder" element={<Protected cmp={<ApiBuilder />} />}/>
         <Route path="/monitor_alerts" element={<MonitorAlerts />} />
         <Route path="/algo_alerts" element={<Algo_alerts />} />
