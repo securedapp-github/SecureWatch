@@ -46,24 +46,24 @@ export default function Sidebar() {
             expand ? "items-start ml-5 " : "items-center "
           } justify-center gap-7 `}
         >
-          <button className={`${expand ? "flex items-center gap-3" : ""}`}>
+          <a href="https://securedapp.io/solidity-shield" className={`${expand ? "flex items-center gap-3" : ""}`}>
             <GrDocumentText className="text-2xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
               {expand ? "Security Audit" : ""}
             </span>{" "}
-          </button>
+          </a>
           <button className={`${expand ? "flex items-center gap-3" : ""}`}>
             <FaRegCalendarAlt className="text-2xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
               {expand ? "Historic events" : ""}
             </span>{" "}
           </button>
-          <button className={`${expand ? "flex items-center gap-2" : ""}`}>
+          <a href="https://securedapp.io/secure-trace" className={`${expand ? "flex items-center gap-2" : ""}`}>
             <PiSquaresFourBold className="text-3xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
               {expand ? "Blockchain Forensics" : ""}
             </span>{" "}
-          </button>
+          </a>
           <button className={`${expand ? "flex items-center gap-2" : ""}`}>
             <RiPieChartLine className="text-3xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">

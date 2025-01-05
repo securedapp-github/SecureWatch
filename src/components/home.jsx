@@ -198,7 +198,7 @@ function Home1() {
               <p className="text-[#001938]">
                 Identify and address potential security threats in real-time
                 with advanced algorithms and continuous monitoring, ensuring the
-                integrity of critical transactions
+                integrity of critical transactions.
               </p>
             </div>
           </div>
@@ -210,9 +210,7 @@ function Home1() {
                 Proactive Security
               </p>
               <p className="text-[#001938]">
-                Identify and address potential security threats in real-time
-                with advanced algorithms and continuous monitoring, ensuring the
-                integrity of critical transactions
+              Build trust with your users by safeguarding their critical transactions, providing a secure environment that fosters confidence and loyalty.
               </p>
             </div>
           </div>
@@ -224,9 +222,7 @@ function Home1() {
                 Proactive Security
               </p>
               <p className="text-[#001938]">
-                Identify and address potential security threats in real-time
-                with advanced algorithms and continuous monitoring, ensuring the
-                integrity of critical transactions
+              Focus on business growth while SecureWatch takes care of transaction security, providing you peace of mind and allowing you to concentrate on strategic objectives.
               </p>
             </div>
           </div>
