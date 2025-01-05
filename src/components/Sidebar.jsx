@@ -7,9 +7,12 @@ import { RiPieChartLine } from "react-icons/ri";
 import { IoPersonSharp } from "react-icons/io5";
 import { LuNetwork } from "react-icons/lu";
 import SecureDapp from "../images/SecureDapp.png";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
   const [expand, setExpand] = useState(false);
+  const location = useLocation();
+  const isAdminRoute = location.pathname === "/admin";
   return (
     <div
       id="sidebar"
@@ -17,7 +20,7 @@ export default function Sidebar() {
       onMouseLeave={() => setExpand(false)}
       className={`${
         expand ? "bg-white shadow-2xl items-start" : " items-center"
-      } border-r-2 border-r-[#D3D3D3] h-full sm:flex flex-col justify-start  fixed mt-20 hidden z-50`}
+      } border-r-2 border-r-[#D3D3D3] h-full ${isAdminRoute ? "lg:flex" : "sm:flex"} flex-col justify-start  fixed mt-20 hidden z-50 `}
     >
       <div
         className={` flex flex-col  gap-7  ${
@@ -67,10 +70,10 @@ export default function Sidebar() {
               {expand ? "Analytics & Report" : ""}
             </span>{" "}
           </button>
-          <button className={`${expand ? "flex items-center gap-2" : ""}`}>
+          <Link to="/admin" className={`${expand ? "flex items-center gap-2" : ""}`}>
             <IoPersonSharp className="text-3xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">{expand ? "Admin" : ""}</span>{" "}
-          </button>
+          </Link>
           <button className={`${expand ? "flex items-center gap-2" : ""}`}>
             <LuNetwork className="text-3xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
