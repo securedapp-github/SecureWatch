@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useState } from "react";
-import Navbar from "./navbar2";
 import { useLocation, useNavigate,Link } from "react-router-dom";
 import axios from "axios";
 import Web3 from "web3";

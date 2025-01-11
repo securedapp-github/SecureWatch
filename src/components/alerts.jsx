@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Navbar from "./navbar2";
 import Modal from "react-modal";
 import Load from "../images/loading.png";
 import { Navigate, useLocation, useNavigate,Link } from "react-router-dom";

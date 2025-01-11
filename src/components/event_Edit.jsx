@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Navbar from "./navbar2";
 import Select from 'react-select'
 import { baseUrl } from "../Constants/data";
 import { Link } from "react-router-dom";

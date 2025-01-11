@@ -49,7 +49,7 @@ function App() {
         <Route path="/otp" element={<Otpverify />} />
         <Route path="/login1" element={<Login1 />} />
         <Route path="/emailverify" element={<Emailverify />} />
-        <Route path="verify" element={<Verify />} />
+        <Route path="/verify" element={<Verify />} />
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Protected cmp={<Dashboard />} />} />
         <Route path="/monitor" element={<Protected cmp={<Monitor />} />} />

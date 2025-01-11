@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import Navbar from "./navbar2";
 import { FaCaretDown, FaCopy } from "react-icons/fa";
 import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 import { baseUrl } from "../Constants/data";

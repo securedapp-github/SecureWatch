@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "./navbar2";
+import Navbar from "./NewNavbar";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function Functions() {
