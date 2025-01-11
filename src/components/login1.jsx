@@ -154,7 +154,7 @@ function Login1() {
                 <p className="text-red-500 mb-3">{errorMessage}</p>
               )}
 
-              <div className="grid grid-cols-3 gap-3 md:gap-4 ">
+              {/* <div className="grid grid-cols-3 gap-3 md:gap-4 ">
                 <button className="flex items-center justify-center p-2.5 md:p-3 border-2 rounded-lg hover:bg-gray-50 transition">
                   <img src={Google} alt="Google Logo" />
                 </button>
@@ -164,7 +164,7 @@ function Login1() {
                 <button className="flex items-center justify-center p-2.5 md:p-3 border-2 rounded-lg hover:bg-gray-50 transition">
                   <FaGithub className="w-5 h-5 md:w-6 md:h-6 text-black" />
                 </button>
-              </div>
+              </div> */}
             </form>
           </div>
         </div>
