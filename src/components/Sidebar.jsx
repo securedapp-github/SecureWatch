@@ -19,7 +19,7 @@ export default function Sidebar() {
       onMouseOver={() => setExpand(true)}
       onMouseLeave={() => setExpand(false)}
       className={`${
-        expand ? "bg-white shadow-2xl items-start" : " items-center"
+        expand ? "bg-white shadow-2xl items-start" : "bg-[#FAFAFA] items-center"
       } border-r-2 border-r-[#D3D3D3] h-full ${isAdminRoute ? "lg:flex" : "sm:flex"} flex-col justify-start  fixed mt-20 hidden z-50 `}
     >
       <div
@@ -52,34 +52,34 @@ export default function Sidebar() {
               {expand ? "Security Audit" : ""}
             </span>{" "}
           </a>
-          <button className={`${expand ? "flex items-center gap-3" : ""}`}>
+          <Link to="/comingsoon" className={`${expand ? "flex items-center gap-3" : ""}`}>
             <FaRegCalendarAlt className="text-2xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
               {expand ? "Historic events" : ""}
             </span>{" "}
-          </button>
+          </Link>
           <a href="https://securedapp.io/secure-trace" className={`${expand ? "flex items-center gap-2" : ""}`}>
             <PiSquaresFourBold className="text-3xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
               {expand ? "Blockchain Forensics" : ""}
             </span>{" "}
           </a>
-          <button className={`${expand ? "flex items-center gap-2" : ""}`}>
+          <Link to="/comingsoon" className={`${expand ? "flex items-center gap-2" : ""}`}>
             <RiPieChartLine className="text-3xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
               {expand ? "Analytics & Report" : ""}
             </span>{" "}
-          </button>
+          </Link>
           <Link to="/admin" className={`${expand ? "flex items-center gap-2" : ""}`}>
             <IoPersonSharp className="text-3xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">{expand ? "Admin" : ""}</span>{" "}
           </Link>
-          <button className={`${expand ? "flex items-center gap-2" : ""}`}>
+          <Link to="/comingsoon" className={`${expand ? "flex items-center gap-2" : ""}`}>
             <LuNetwork className="text-3xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
               {expand ? "Integration Hub" : ""}
             </span>{" "}
-          </button>
+          </Link>
         </div>
       </div>
       <div className="mt-24 m-5 flex gap-1 items-center justify-start">
