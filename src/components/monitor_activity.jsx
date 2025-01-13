@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import Navbar from "./navbar2";
+import Navbar from "./NewNavbar";
 import { baseUrl } from '../Constants/data';
 
 function Monitor_activity() {

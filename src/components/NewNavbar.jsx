@@ -87,27 +87,27 @@ export default function NewNavbar({ email }) {
 
         
         <div className='w-full  pl-8 pr-5 border-t py-4'>
-        <button className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><GrDocumentText className='text-[#6A6A6A] text-2xl' /> Security Audit</span> <FaPlus className='text-[#6A6A6A] text-lg' /></button>
+        <a href="https://securedapp.io/solidity-shield" className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><GrDocumentText className='text-[#6A6A6A] text-2xl' /> Security Audit</span> <FaPlus className='text-[#6A6A6A] text-lg' /></a>
         </div>
 
         <div className='w-full  pl-8 pr-5 border-t py-4'>
-        <button className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><FaRegCalendarAlt className='text-[#6A6A6A] text-2xl' /> Historic events</span> <FaPlus className='text-[#6A6A6A] text-lg' /></button>
+        <Link to="/comingsoon" className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><FaRegCalendarAlt className='text-[#6A6A6A] text-2xl' /> Historic events</span> <FaPlus className='text-[#6A6A6A] text-lg' /></Link>
         </div>
 
         <div className='w-full  pl-8 pr-5 border-t py-4'>
-        <button className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><PiSquaresFourBold className='text-[#6A6A6A] text-2xl' /> Blockchain Forensics</span> <FaPlus className='text-[#6A6A6A] text-lg' /></button>
+        <a href="https://securedapp.io/secure-trace" className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><PiSquaresFourBold className='text-[#6A6A6A] text-2xl' /> Blockchain Forensics</span> <FaPlus className='text-[#6A6A6A] text-lg' /></a>
         </div>
 
         <div className='w-full  pl-8 pr-5 border-t py-4'>
-        <button className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><RiPieChartLine className='text-[#6A6A6A] text-2xl' /> Analytics & Report</span> <FaPlus className='text-[#6A6A6A] text-lg' /></button>
+        <Link to="/comingsoon" className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><RiPieChartLine className='text-[#6A6A6A] text-2xl' /> Analytics & Report</span> <FaPlus className='text-[#6A6A6A] text-lg' /></Link>
         </div>
 
 <div className='w-full  pl-8 pr-5 border-t py-4'>
-        <button className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><IoPersonSharp className='text-[#6A6A6A] text-2xl' /> Admin</span> </button>
+        <Link to="/admin" className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><IoPersonSharp className='text-[#6A6A6A] text-2xl' /> Admin</span> </Link>
 </div>
 
 <div className='w-full  pl-8 pr-5 border-t border-b py-4'>
-        <button className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><LuNetwork className='text-[#6A6A6A] text-2xl' /> Integration Hub</span> </button>
+        <Link to="/comingsoon" className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><LuNetwork className='text-[#6A6A6A] text-2xl' /> Integration Hub</span> </Link>
         </div>
           </div>
 

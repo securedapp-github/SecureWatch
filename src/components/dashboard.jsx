@@ -32,13 +32,28 @@ function Dashboard() {
   console.log("userPlanexpiry", userPlanexpiry);
 
   const [credits, setCredits] = useState(userCredits || 0);
-  const [planexpiry, setPlanexpiry] = useState(userPlanexpiry || 0);
-  const planexpiryDate = new Date(planexpiry);
-  const formattedPlanExpiry = new Intl.DateTimeFormat("en-IN", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(planexpiryDate);
+  const [planexpiry, setPlanexpiry] = useState(userPlanexpiry || null);
+  // const [formattedPlanExpiry, setFormattedPlanExpiry] = useState(null);
+  
+  // if (userPlanexpiry){
+  //   const planexpiryDate = new Date(planexpiry);
+  //   const formattedPlanExpiry = new Intl.DateTimeFormat("en-IN", {
+  //     day: "2-digit",
+  //     month: "2-digit",
+  //     year: "numeric",
+  //   }).format(planexpiryDate);
+  //   setFormattedPlanExpiry(formattedPlanExpiry);
+  // }
+  const isValidDate = (dateString) => {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
+  };
 
   function handleClick() {
     navigate("/monitor", { state: { email, token, monitor } });
@@ -219,16 +234,18 @@ function Dashboard() {
                     </div>
                   </span>
                 </div>
-                <div className="flex flex-col">
-                  <span className=" text-xs sm:text-sm font-medium mr-2 text-[#6A6A6A]">
-                    {formattedPlanExpiry || planexpiry}
-                  </span>
-                  <span>
-                    <div className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
-                      PLAN EXPIRY
-                    </div>
-                  </span>
-                </div>
+                {planexpiry && isValidDate(planexpiry) ? (
+        <div className="flex flex-col">
+          <span className="text-xs sm:text-sm font-medium mr-2 text-[#6A6A6A]">
+            {formatDate(planexpiry)}
+          </span>
+          <span>
+            <div className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+              PLAN EXPIRY
+            </div>
+          </span>
+        </div>
+      ) : null}
               </div>
             </div>
           </div>
@@ -268,16 +285,18 @@ function Dashboard() {
                     </div>
                   </span>
                 </div>
-                <div className="flex flex-col">
-                  <span className=" text-xs sm:text-sm font-medium mr-2 text-[#6A6A6A]">
-                    {formattedPlanExpiry || planexpiry}
-                  </span>
-                  <span>
-                    <div className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
-                      PLAN EXPIRY
-                    </div>
-                  </span>
-                </div>
+                {planexpiry && isValidDate(planexpiry) ? (
+        <div className="flex flex-col">
+          <span className="text-xs sm:text-sm font-medium mr-2 text-[#6A6A6A] ">
+            {formatDate(planexpiry)}
+          </span>
+          <span>
+            <div className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+              PLAN EXPIRY
+            </div>
+          </span>
+        </div>
+      ) : null}
               </div>
             </div>
           </div>

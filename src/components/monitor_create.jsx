@@ -1,6 +1,5 @@
 //if ever facing bad request error, try re logging in. Due to token expiration, bad request error may come.
 import React, { useState, useCallback } from "react";
-import Navbar from "./navbar2";
 import axios from "axios";
 import {Link, useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";

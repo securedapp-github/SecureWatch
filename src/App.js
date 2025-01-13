@@ -30,11 +30,13 @@ import Algo_alerts from "./components/algo_alerts.jsx";
 import Logout from "./components/Logout.js";
 import Admin from "./components/Admin.jsx";
 import AdminAddUser from "./components/AdminAddUser.jsx";
+import CommingSoon from "./components/CommingSoon.jsx";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/log" element={<Logs />} />
+        <Route path="/comingsoon" element={<CommingSoon />} />
         <Route path="/alerts" element={<Protected cmp={<Alerts />} />} />
         <Route path="/function" element={<Protected cmp={<Functions />} />} />
         <Route path="/event" element={<Protected cmp={<Events />} />} />
@@ -49,7 +51,7 @@ function App() {
         <Route path="/otp" element={<Otpverify />} />
         <Route path="/login1" element={<Login1 />} />
         <Route path="/emailverify" element={<Emailverify />} />
-        <Route path="verify" element={<Verify />} />
+        <Route path="/verify" element={<Verify />} />
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Protected cmp={<Dashboard />} />} />
         <Route path="/monitor" element={<Protected cmp={<Monitor />} />} />

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Web3 from "web3";
 import "../App.css";
-import Navbar from "./navbar2";
 import Connect from "./Connect";
 import { Link, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
