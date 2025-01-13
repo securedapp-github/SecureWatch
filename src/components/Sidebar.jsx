@@ -29,12 +29,12 @@ export default function Sidebar() {
       >
         {expand ? (
           <div className="flex flex-col justify-center">
-            <button className="bg-[#2d5c8f] rounded-r-full p-3 text-white flex items-center gap-3 pr-14 py-4">
+            <Link to="/dashboard" className="bg-[#2d5c8f] rounded-r-full p-3 text-white flex items-center gap-3 pr-14 py-4">
               <TbClockHour9 className="text-white text-2xl" /> Realtime Security
-            </button>
+            </Link>
           </div>
         ) : (
-          <div className="flex flex-col justify-center">
+          <div to="/dashboard" className="flex flex-col justify-center">
             <button className="bg-[#2d5c8f] rounded-full p-3">
               <TbClockHour9 className="text-white text-2xl" />
             </button>
