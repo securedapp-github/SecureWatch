@@ -13,11 +13,14 @@ import { IoPersonSharp } from "react-icons/io5";
 import { LuNetwork } from "react-icons/lu";
 import SecureDapp from "../images/SecureDapp.png";
 import { Link } from 'react-router-dom';
+import { MdPhoneIphone } from "react-icons/md";
+import { MdOutlineEmail } from "react-icons/md";
 
 export default function NewNavbar({ email }) {
   const [toggleMenu, setToggleMenu] = useState(false);
   const [expandRealtimeSecurity, setExpandRealtimeSecurity] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSupportMenuOpen, setIsSupportMenuOpen] = useState(false);
   const toggleMenu1 = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -39,9 +42,16 @@ export default function NewNavbar({ email }) {
   }
   return (
     <div className=" bg-white w-full px-4 py-5 flex justify-between items-center fixed z-50">
-      <button className="p-0 sm:hidden">
+      <button className="p-0 sm:hidden" onClick={()=>setIsSupportMenuOpen(!isSupportMenuOpen)}>
           <BsHeadset className="text-[#535252] text-2xl" />
         </button>
+        {isSupportMenuOpen && (
+          <div className='absolute sm:hidden customShadow z-50 left-12 mt-32   bg-white rounded-md  py-3 w-56  flex flex-col justify-center items-start gap-3'>    
+              <p className='text-black flex gap-3 items-center text-sm pl-5'> <MdPhoneIphone className='text-black text-sm' /> 9606015868</p>
+              <div className='w-full h-[0.5px] bg-slate-300'></div>
+              <p className='text-black flex gap-3 items-center text-sm pl-5'><MdOutlineEmail className='text-black text-sm' /> hello@securedapp.in</p>
+          </div>)  
+        }
       <h1 className="logo text-black text-xl sm:text-3xl">Securewatch</h1>
       {toggleMenu
       ?<AiOutlineClose fontSize={28} className='text-black cursor-pointer sm:hidden ' onClick={()=>{setToggleMenu(false)}} />
@@ -122,9 +132,16 @@ export default function NewNavbar({ email }) {
       }
 
       <div className="sm:flex items-center gap-7 hidden ">
-        <button className="p-0">
+        <button className="p-0" onClick={()=>setIsSupportMenuOpen(!isSupportMenuOpen)}>
           <BsHeadset className="text-[#535252] text-2xl" />
         </button>
+        {isSupportMenuOpen && (
+          <div className='hidden  absolute customShadow z-50 right-12 mt-32   bg-white rounded-md  py-3 w-56  sm:flex flex-col justify-center items-start gap-3'>    
+              <p className='text-black flex gap-3 items-center text-sm pl-5'> <MdPhoneIphone className='text-black text-sm' /> 9606015868</p>
+              <div className='w-full h-[0.5px] bg-slate-300'></div>
+              <p className='text-black flex gap-3 items-center text-sm pl-5'><MdOutlineEmail className='text-black text-sm' /> hello@securedapp.in</p>
+          </div>)  
+        }
         <button className="p-0 shadow-lg rounded-full " onClick={toggleMenu1}>
           <div className="avatar placeholder">
             <div className="bg-[#2d5c8f] text-white w-10 rounded-full">
