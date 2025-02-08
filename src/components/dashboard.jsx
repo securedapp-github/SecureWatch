@@ -30,6 +30,10 @@ function Dashboard() {
   console.log("userCredits", userCredits);
   const userPlanexpiry = localStorage.getItem("planexpiry");
   console.log("userPlanexpiry", userPlanexpiry);
+  const parent_id = localStorage.getItem("parent_id");
+  console.log("dashboard parent_id", parent_id);
+  const is_admin = localStorage.getItem("is_admin") ;
+  console.log("dashboard is_admin", is_admin);
 
   const [credits, setCredits] = useState(userCredits || 0);
   const [planexpiry, setPlanexpiry] = useState(userPlanexpiry || null);

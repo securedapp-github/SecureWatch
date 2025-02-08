@@ -36,6 +36,12 @@ function Login() {
         console.log("Login Successful:", response.data);
         const userId = response.data.user.id;
         console.log("userId", userId);
+        const parent_id = response.data.user.parent_id;
+        localStorage.setItem("parent_id", parent_id);
+        // console.log("parent_id", parent_id);
+        const is_admin = response.data.user.is_admin;
+        localStorage.setItem("is_admin", is_admin);
+        // console.log("is_admin", is_admin);
         localStorage.setItem("userId", userId);
         const token = response.data.token;
         const monitor = response.data.monitors;
@@ -54,7 +60,7 @@ function Login() {
         let userPlanexpiry = localStorage.setItem("planexpiry", planexpiry);
 
         showSuccessAlert("Login Successful");
-        navigate("/dashboard", { state: { userId, email, monitor, token } });
+        navigate("/dashboard", { state: { userId, email, monitor, token, parent_id, is_admin } });
       }
     } catch (error) {
       // setErrorMessage("Invalid email or password.");
