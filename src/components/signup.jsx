@@ -68,7 +68,7 @@ function Signup() {
           </div>
           <div className="w-full md:w-1/2  flex justify-center items-center py-4">
             <form className="flex flex-col gap-6 w-full md:w-[80%] ">
-              <p className="text-black">Use your email or signup with google</p>
+              <p className="text-black">Use your email</p>
               <div>
                 <input
                   value={email}

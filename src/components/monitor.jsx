@@ -11,6 +11,7 @@ function Monitor() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
+  const is_admin = localStorage.getItem("is_admin");
   console.log(token);
   console.log(email);
 
@@ -42,13 +43,16 @@ function Monitor() {
         <div className=" mt-20 w-full sm:ml-80  min-h-full">
           <div className="w-full flex justify-between items-center px-4 py-4">
             <p className="text-[#6A6A6A] font-semibold text-lg">Monitors</p>
-            <Link
+            {is_admin== 1 && (
+              <Link
               to="/monitor_create"
               className="flex items-center gap-2 p-0 text-[#6A6A6A] font-medium "
             >
               Create Monitor{" "}
               <FaCirclePlus className="text-5xl text-green-500 p-0" />
             </Link>
+            )}
+            
           </div>
           <Monitor_cmp />
         </div>
