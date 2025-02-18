@@ -20,7 +20,7 @@ export default function Sidebar() {
       onMouseLeave={() => setExpand(false)}
       className={`${
         expand ? "bg-white shadow-2xl items-start" : "bg-[#FAFAFA] items-center"
-      } border-r-2 border-r-[#D3D3D3] h-full ${isAdminRoute ? "lg:flex" : "sm:flex"} flex-col justify-start  fixed mt-20 hidden z-50 `}
+      } border-r-2 border-r-[#D3D3D3] border-t-2 border-t-[#D3D3D3] h-full ${isAdminRoute ? "lg:flex" : "sm:flex"} flex-col justify-start  fixed mt-20 hidden z-50 `}
     >
       <div
         className={` flex flex-col  gap-7  ${
