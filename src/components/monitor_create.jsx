@@ -147,7 +147,7 @@ function Monitor_create() {
     e.preventDefault();
 
     // Common validation for all inputs
-    if (!monitorName || !network || !address) {
+    if (!monitorName || !network || !address ||(category !=1 && !abi)) {
       console.error("Monitor inputs are incomplete.");
       toast.error("Please fill out all monitor fields.");
       return;

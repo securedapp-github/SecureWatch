@@ -26,6 +26,9 @@ function Logs() {
             <Link to="/monitor" className="text-[#6A6A6A]">
               Monitor
             </Link>
+            <Link to="/wallet_security" className="text-[#6A6A6A]">
+                        Wallet Security
+                        </Link>
             <Link to="/log" className="text-[#2D5C8F] font-semibold">
               Logs
             </Link>

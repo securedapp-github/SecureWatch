@@ -31,6 +31,10 @@ import Logout from "./components/Logout.js";
 import Admin from "./components/Admin.jsx";
 import AdminAddUser from "./components/AdminAddUser.jsx";
 import CommingSoon from "./components/CommingSoon.jsx";
+import Wallet_Security from "./components/Wallet_Security.jsx";
+import WalletMonitorAlerts from "./components/Wallet_Monitor_Alerts.jsx"; 
+import WalletMonitorCreate from "./components/Wallet_Monitor_Create.jsx";
+
 function App() {
   return (
     <BrowserRouter>
@@ -55,10 +59,13 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Protected cmp={<Dashboard />} />} />
         <Route path="/monitor" element={<Protected cmp={<Monitor />} />} />
+        <Route path="/wallet_security" element={<Protected cmp={<Wallet_Security />} />} />
         <Route path="/admin" element={<Protected cmp={<Admin />} />} />
         <Route path="/admin_add_user" element={<Protected cmp={<AdminAddUser />} />} />
         <Route path="/api_builder" element={<Protected cmp={<ApiBuilder />} />}/>
         <Route path="/monitor_alerts" element={<MonitorAlerts />} />
+        <Route path="/wallet_monitor_alerts" element={<WalletMonitorAlerts />} />
+        <Route path="/wallet_monitor_create" element={<WalletMonitorCreate />} />
         <Route path="/algo_alerts" element={<Algo_alerts />} />
          <Route
           path="/AlgoEventsedit"

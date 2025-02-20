@@ -3,9 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
 import { FaCirclePlus } from "react-icons/fa6";
-import Monitor_cmp from "./monitor_cmp";
 
-function Monitor() {
+import Wallet_Security_Cmp from "./Wallet_Security_Cmp";
+
+function Wallet_Security() {
   const userEmail = localStorage.getItem("email");
   console.log(userEmail);
   const navigate = useNavigate();
@@ -31,12 +32,15 @@ function Monitor() {
             <Link to="/dashboard" className="text-[#6A6A6A]">
               Overview
             </Link>
-            <Link to="/monitor" className="text-[#2D5C8F] font-semibold">
+            <Link to="/monitor" className="text-[#6A6A6A]">
               Monitor
             </Link>
-            <Link to="/wallet_security" className="text-[#6A6A6A]">
-                        Wallet Security
-                        </Link>
+            <Link
+              to="/wallet_security"
+              className="text-[#2D5C8F] font-semibold"
+            >
+              Wallet Security
+            </Link>
             <Link to="/log" className="text-[#6A6A6A] ">
               Logs
             </Link>
@@ -45,24 +49,24 @@ function Monitor() {
 
         <div className=" mt-20 w-full sm:ml-80  min-h-full">
           <div className="w-full flex justify-between items-center px-4 py-4">
-            <p className="text-[#6A6A6A] font-semibold text-lg">Monitors</p>
-            {is_admin== 1 && (
+            <p className="text-[#6A6A6A] font-semibold text-lg">
+              Wallet Security
+            </p>
+            {is_admin == 1 && (
               <Link
-              to="/monitor_create"
-              className="flex items-center gap-2 p-0 text-[#6A6A6A] font-medium "
-            >
-              Create Monitor{" "}
-              <FaCirclePlus className="text-5xl text-green-500 p-0" />
-            </Link>
+                to="/wallet_monitor_create"
+                className="flex items-center gap-2 p-0 text-[#6A6A6A] font-medium "
+              >
+                Create Wallet Security{" "}
+                <FaCirclePlus className="text-5xl text-green-500 p-0" />
+              </Link>
             )}
-            
           </div>
-          <Monitor_cmp />
+          <Wallet_Security_Cmp />
         </div>
-        
       </div>
     </div>
   );
 }
 
-export default Monitor;
+export default Wallet_Security;

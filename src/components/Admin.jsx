@@ -5,6 +5,10 @@ import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
 import { FaCirclePlus } from "react-icons/fa6";
 import { baseUrl } from "../Constants/data";
+import { FaTrash } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { IoIosRemoveCircle } from "react-icons/io";
 
 const AccountManagement = () => {
   const userEmail = localStorage.getItem("email");
@@ -18,6 +22,7 @@ const AccountManagement = () => {
   const [users, setUsers] = useState([]);
   const [adminUsers, setAdminUsers] = useState([]);
   const [analystUsers, setAnalystUsers] = useState([]);
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -50,10 +55,23 @@ const AccountManagement = () => {
   }, [users, adminUsers, analystUsers]);
 
 
+ 
+
   if (is_admin == 0) {
     return (
       <div className="w-full min-h-full">
         <NewNavbar email={userEmail} />
+        <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
         <div className="bg-[#FAFAFA] w-full flex h-full">
           <Sidebar />
 
@@ -114,6 +132,17 @@ const AccountManagement = () => {
     return (
       <div className="w-full min-h-full">
         <NewNavbar email={userEmail} />
+        <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
         <div className="bg-[#FAFAFA] w-full flex h-full">
           <Sidebar />
   
@@ -207,8 +236,41 @@ const AccountManagement = () => {
                                 : ""}
                             </td>
                             <td className="py-4 px-3 md:px-6">
-                              <button className="text-[#6A6A6A]">
-                                <HiDotsVertical className="text-xl" />
+                              <button className="text-[#6A6A6A]" 
+                              onClick={
+                                async () => {
+                                  const requestBody = {
+                                    email: user.email,
+                                    parent_id: 0,
+                                    is_admin: 0,
+                                  };
+                                
+                                  try {
+                                    const response = await fetch(
+                                      `${baseUrl}/set_users_access`,
+                                      {
+                                        method: "POST",
+                                        headers: {
+                                          "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify(requestBody),
+                                      }
+                                    );
+                                
+                                    const result = await response.json();
+                                    if (response.ok) {
+                                      toast.success("User access updated successfully!");
+                                    } else {
+                                      toast.error(result.message || "Failed to update user access.");
+                                    }
+                                    setValue(value+1)
+                                  } catch (error) {
+                                    toast.error("Something went wrong. Please try again later.");
+                                  }
+
+                                }
+                              }>
+                                <FaTrash   className="text-xl" />
                               </button>
                             </td>
                           </tr>
@@ -235,6 +297,17 @@ const AccountManagement = () => {
     return (
       <div className="w-full min-h-full">
         <NewNavbar email={userEmail} />
+        <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
         <div className="bg-[#FAFAFA] w-full flex h-full">
           <Sidebar />
   
@@ -323,11 +396,11 @@ const AccountManagement = () => {
                             <td className="py-4 px-3 md:px-6 text-[#6A6A6A]">
                             Analyst
                             </td>
-                            <td className="py-4 px-3 md:px-6">
+                            {/* <td className="py-4 px-3 md:px-6 my-auto">
                               <button className="text-[#6A6A6A]">
-                                <HiDotsVertical className="text-xl" />
+                                <FaTrash  className="text-xl" />
                               </button>
-                            </td>
+                            </td> */}
                           </tr>
                         ))
                       ) : (
