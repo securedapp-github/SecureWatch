@@ -84,9 +84,9 @@ const Wallet_Security_Cmp = () => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("Monitors", moniter);
-  // }, [moniter]);
+  useEffect(() => {
+    console.log("Wallet Monitors", moniter);
+  }, [moniter]);
 
   if (loading) {
     return (

@@ -47,7 +47,7 @@ function Monitor_alerts() {
         }),
       });
       const data = await res.json();
-      setAlerts(data.alerts);
+      setAlerts(data.alerts.filter(item => item.mid === mid));
       setLoading(false);
     };
     fetchAlert();

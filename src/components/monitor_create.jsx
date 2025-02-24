@@ -145,13 +145,23 @@ function Monitor_create() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Monitor name:", monitorName);
+    console.log("network:", network);
+    console.log("network type:",typeof network);
+    console.log("address:", address);
+    console.log("abi:", abi);
+    console.log("risk category:", riskCategory);
 
     // Common validation for all inputs
-    if (!monitorName || !network || !address ||(category !=1 && !abi)) {
-      console.error("Monitor inputs are incomplete.");
-      toast.error("Please fill out all monitor fields.");
-      return;
+    if(network != 1300 && network != 1301 && network !== 1300 && network !== 1301){
+      if (!monitorName || !network || !address || !abi  ) {
+        console.error("Monitor inputs are incomplete.");
+        toast.error("Please fill out all monitor fields.");
+        return;
+      }
     }
+    
+    
 
     try {
       const data = {
