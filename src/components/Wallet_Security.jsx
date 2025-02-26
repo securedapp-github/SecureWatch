@@ -17,9 +17,9 @@ function Wallet_Security() {
   console.log(email);
 
   return (
-    <div className="w-full min-h-full bg-[#FAFAFA]">
+    <div className="w-full min-h-full bg-white">
       <NewNavbar email={userEmail} />
-      <div className="bg-[#FAFAFA] w-full flex min-h-full">
+      <div className="bg-white w-full flex min-h-full">
         <Sidebar />
 
         <div className=" h-full sm:flex flex-col gap-5 ml-[100px] w-56 mt-20 hidden fixed">
@@ -55,10 +55,9 @@ function Wallet_Security() {
             {is_admin == 1 && (
               <Link
                 to="/wallet_monitor_create"
-                className="flex items-center gap-2 p-0 text-[#6A6A6A] font-medium "
+                className="bg-[#6549FD] text-white px-3 py-2 rounded-lg text-sm font-medium"
               >
-                Create Wallet Security{" "}
-                <FaCirclePlus className="text-5xl text-green-500 p-0" />
+                Create Wallet Security
               </Link>
             )}
           </div>

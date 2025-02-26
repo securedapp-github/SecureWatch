@@ -236,42 +236,42 @@ const AccountManagement = () => {
                                 : ""}
                             </td>
                             <td className="py-4 px-3 md:px-6">
-                              <button className="text-[#6A6A6A]" 
-                              onClick={
-                                async () => {
-                                  const requestBody = {
-                                    email: user.email,
-                                    parent_id: 0,
-                                    is_admin: 0,
-                                  };
-                                
-                                  try {
-                                    const response = await fetch(
-                                      `${baseUrl}/set_users_access`,
-                                      {
-                                        method: "POST",
-                                        headers: {
-                                          "Content-Type": "application/json",
-                                        },
-                                        body: JSON.stringify(requestBody),
-                                      }
-                                    );
-                                
-                                    const result = await response.json();
-                                    if (response.ok) {
-                                      toast.success("User access updated successfully!");
-                                    } else {
-                                      toast.error(result.message || "Failed to update user access.");
-                                    }
-                                    setValue(value+1)
-                                  } catch (error) {
-                                    toast.error("Something went wrong. Please try again later.");
-                                  }
+                            <button className="text-[#6A6A6A]" 
+  onClick={async () => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete ${user.email}?`);
+    if (confirmDelete) {
+      const requestBody = {
+        email: user.email,
+        parent_id: 0,
+        is_admin: 0,
+      };
 
-                                }
-                              }>
-                                <FaTrash   className="text-xl" />
-                              </button>
+      try {
+        const response = await fetch(
+          `${baseUrl}/set_users_access`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
+
+        const result = await response.json();
+        if (response.ok) {
+          toast.success("User access updated successfully!");
+        } else {
+          toast.error(result.message || "Failed to update user access.");
+        }
+        setValue(value + 1);
+      } catch (error) {
+        toast.error("Something went wrong. Please try again later.");
+      }
+    }
+  }}>
+  <FaTrash className="text-xl" />
+</button>
                             </td>
                           </tr>
                         ))
