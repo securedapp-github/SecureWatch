@@ -224,6 +224,14 @@ function Monitor_create() {
                 <option value="1">Ethereum Mainnet</option>
                 <option value="11155111">Sepolia Testnet</option>
                 <option value="137">Polygon Mainnet</option>
+                <option value="56">Binance Smart Chain</option>
+                <option value="8453">Base</option>
+                <option value="43114">Avalanche</option>
+                <option value="42161">Arbitrum</option>
+                <option value="100">Gnosis</option>
+                <option value="59144">Linea</option>
+                <option value="1313161554">Aurora</option>
+                <option value="10">Optimism</option>
                 <option value="80002">Amoy</option>
                 <option value="1300">Algorand Mainnet</option>
                 <option value="1301">Algorand Testnet</option>

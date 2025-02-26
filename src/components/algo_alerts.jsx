@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { FaCaretDown, FaCopy } from "react-icons/fa";
+import { FaCaretDown, FaCopy, FaExternalLinkAlt } from "react-icons/fa";
 import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 import { baseUrl } from "../Constants/data";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
 import { IoClose } from "react-icons/io5";
+import { TbTriangleSquareCircle } from "react-icons/tb";
 
 function Algo_alerts() {
   const userEmail = localStorage.getItem("email");
@@ -61,12 +62,41 @@ function Algo_alerts() {
 
   if (!alert.alerts || alert.alerts.length === 0 || alert === undefined) {
     return (
-      <div className="pt-10 bg-white">
-        <NewNavbar email={userEmail} />
-        <div className="text-lg lg:text-3xl font-medium text-black text-center mt-20">
-          You don't have any monitor alerts.
-        </div>
-      </div>
+      <div className=" bg-white">
+              <NewNavbar email={userEmail} />
+              <div className="bg-white w-full flex h-full ">
+              <Sidebar />
+      
+              <div className=" h-full sm:flex flex-col gap-5 ml-[100px] w-56 mt-20 hidden fixed">
+                <div className={`mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]`}>
+                  <h1 className="text-[#6A6A6A]  font-semibold text-nowrap">
+                    Realtime Security
+                  </h1>
+                </div>
+                <div className="flex flex-col gap-5 ml-5">
+                  <Link to="/dashboard" className="text-[#6A6A6A]">
+                    Overview
+                  </Link>
+                  <Link to="/monitor" className="text-[#6A6A6A] ">
+                    Monitor
+                  </Link>
+                  <Link to="/wallet_security" className="text-[#6A6A6A]">
+                                          Wallet Security
+                                          </Link>
+                  <Link to="/log" className="text-[#6A6A6A] ">
+                    Logs
+                  </Link>
+                </div>
+              </div>
+      
+              <div className="text-lg lg:text-3xl font-medium text-black text-center  pt-52 self-center mx-auto">
+                You don't have any monitor alerts.
+              </div>
+              </div>
+      
+      
+              
+            </div>
     );
   }
 
@@ -104,6 +134,9 @@ function Algo_alerts() {
             <Link to="/monitor" className="text-[#2D5C8F] font-semibold">
               Monitor
             </Link>
+            <Link to="/wallet_security" className="text-[#6A6A6A]">
+                                          Wallet Security
+                                          </Link>
             <Link to="/log" className="text-[#6A6A6A] ">
               Logs
             </Link>
@@ -238,8 +271,7 @@ function Algo_alerts() {
                     const group = alldata?.group || null; // Group ID
                     const sender = alldata?.sender || "N/A";
                     const receiver =
-                      alldata?.["asset-transfer-transaction"]?.receiver ||
-                      "N/A"; // Receiver address
+                      alldata?.["asset-transfer-transaction"]?.receiver ||"N/A"; // Receiver address
                     const amount =
                       alldata?.["asset-transfer-transaction"]?.amount || "N/A"; // Transferred value (amount)
                     const fee = alldata?.fee || "N/A"; // Fee
@@ -322,84 +354,60 @@ function Algo_alerts() {
         </div>
 
         {isModalOpen && selectedAlert && (
-  <div className="fixed inset-0 bg-black bg-opacity-85 flex justify-center items-center z-50">
-    <div className="bg-white  p-6 pt-0 w-[95%] sm:w-[600px] relative">
+  <div className="fixed inset-0 bg-white flex justify-center items-center z-50">
+    <div className="w-full sm:w-[60%] md:w-[600px] flex flex-col gap-5 px-4">
+
+      <div className="bg-[#F2FBF6] flex flex-col gap-2 p-4 rounded-2xl border shadow-lg">
+        <div className="bg-[#EBF6EE] border rounded-full w-8 h-8 flex items-center justify-center">
+          <TbTriangleSquareCircle className="text-green-400 text-xl" />
+        </div>
+        <p className="text-black text-xl font-medium">Alert Details</p>
+        <p className="text-slate-600 text-sm font-medium">Event: {selectedAlert.event_name}</p>
+      </div>
+
+
+      <div className=" ">
+        <p className="text-slate-700 mb-3 font-medium">From</p>
+        <p className="text-sm text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.alldata?.sender || "N/A"} <button onClick={() => copyToClipboard(selectedAlert.alldata?.sender || "N/A")}><FaCopy /></button></p>
+      </div>
+      <div className=" ">
+        <p className="text-slate-700 mb-3 font-medium">To</p>
+        <p className="text-sm text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.alldata?.["asset-transfer-transaction"]?.receiver ||"N/A"} <button onClick={() => copyToClipboard(selectedAlert.alldata?.["asset-transfer-transaction"]?.receiver ||"N/A")}><FaCopy /></button></p>
+      </div>
+
+
+      <div className=" ">
+        <p className="text-slate-700 mb-3 font-medium">Created on</p>
+        <p className="text-sm text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.created_on.slice(0, 10)} {selectedAlert.created_on.slice(11, 16)} </p>
+      </div>
+
+      <div className=" ">
+        <p className="text-slate-700 mb-3 font-medium">Transaction link</p>
+        <a
+          className="text-sm text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl"
+          href={
+            network === 1301
+              ? `https://lora.algokit.io/testnet/transaction/${selectedAlert.hash}`
+              :  `https://lora.algokit.io/mainnet/transaction/${selectedAlert.hash}`
+          }
+          target="_blank"
+        >
+          {network === 1301
+            ? `https://lora.algokit.io/testnet/transaction/${selectedAlert.hash.slice(selectedAlert.hash.length - 4)}`
+            : `https://lora.algokit.io/mainnet/transaction/${selectedAlert.hash.slice(selectedAlert.hash.length - 4)}`}<FaExternalLinkAlt />
+        </a>
+      </div>
+
       <button
         onClick={closeModal}
-        className="p-1 bg-[#2D5C8F] absolute top-0 right-0"
+        className=" text-sm text-black bg-gray-100   px-3 py-2 rounded-xl w-16 self-end"
       >
-        <IoClose className=" text-3xl  text-white   " />
+        Close
       </button>
-      <h2 className="text-lg font-bold mb-4 mt-4 text-black">
-        Alert Details
-      </h2>
-      
-      <p className="sm:flex gap-2 items-center text-wrap hidden text-black">
-                <strong>From:</strong> {selectedAlert.sender}{" "}
-                <span>
-                  <CopyIcon
-                    onClick={() => copyToClipboard(selectedAlert.sender)}
-                  />
-                </span>
-              </p>
-              <p className="flex gap-2 items-center text-wrap sm:hidden text-black">
-                <strong>From:</strong> {selectedAlert.sender}
-                ...$
-                {selectedAlert.sender}
-                <span>
-                  <CopyIcon
-                    onClick={() => copyToClipboard(selectedAlert.sender)}
-                  />
-                </span>
-              </p>
-              <p className="sm:flex gap-2 items-center text-wrap hidden text-black">
-                <strong>To:</strong> {selectedAlert.receiver}{" "}
-                <span>
-                  <CopyIcon
-                    onClick={() => copyToClipboard(selectedAlert.receiver)}
-                  />
-                </span>
-              </p>
-              <p className="flex gap-2 items-center text-wrap sm:hidden text-black">
-                <strong>From:</strong> {selectedAlert.receiver}
-                <span>
-                  <CopyIcon
-                    onClick={() => copyToClipboard(selectedAlert.receiver)}
-                  />
-                </span>
-              </p>
-              <p className="text-black">
-                <strong>Created On:</strong>{" "}
-                {new Date(selectedAlert.created_on).toLocaleString()}
-        
-              </p>
 
-              <p className="text-black">
-                <strong>Link:</strong>{" "}
-                {selectedAlert.transactionLink ? (
-                            <span className="text-lg text-blue-600 font-medium underline">
-                              <a
-                                href={selectedAlert.transactionLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {selectedAlert.txnHash
-                                  ? selectedAlert.txnHash.slice(0, 5) +
-                                    "..." +
-                                    selectedAlert.txnHash.slice(selectedAlert.txnHash.length - 4)
-                                  : "Group Txn"}
-                              </a>
-                            </span>
-                          ) : (
-                            <span className="text-lg text-gray-600">
-                              No Link Available
-                            </span>
-                          )}
-              </p>
     </div>
   </div>
 )}
-
 
 
       </div>
