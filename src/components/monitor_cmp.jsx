@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Switch } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
-import Edit from "../images/edit.png";
-import Trash from "../images/icons8-trash-48.png";
 import { ToastContainer, toast } from "react-toastify";
 import { baseUrl } from "../Constants/data";
 import { FaRegEdit } from "react-icons/fa";
 import { BsTrash } from "react-icons/bs";
+import { FaRegBell } from "react-icons/fa";
+import { LuPencil } from "react-icons/lu";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
+import { MdOutlineToggleOn } from "react-icons/md";
+import { MdOutlineToggleOff } from "react-icons/md";
+import { HiMenuAlt2 } from "react-icons/hi";
+
 
 const customStyles = {
   content: {
@@ -29,6 +35,7 @@ const Monitor_cmp = () => {
   const userId = localStorage.getItem("userId");
   const is_admin = localStorage.getItem("is_admin");
   const parent_id = localStorage.getItem("parent_id");
+  
 
   useEffect(() => {
     setLoading(true);
@@ -141,8 +148,8 @@ const Monitor_cmp = () => {
               return (
                 <div className="w-full flex p-3 md:p-10 justify-between border-b-2">
                   <div className="flex flex-col gap-3">
-                    <span className="text-md  text-[#6A6A6A]">{name}</span>
-                    <span className="text-md  text-[#6A6A6A]">
+                    <span className="text-md  text-black">{name}</span>
+                    <span className="text-md  text-black">
                       {network === 80002
                         ? "Amoy"
                         : network === 1
@@ -157,11 +164,11 @@ const Monitor_cmp = () => {
                         ? "Algorand Testnet"
                         : "Unknown"}
                     </span>
-                    <p className=" text-md text-[#6A6A6A] text-nowrap">
+                    <p className=" text-md text-black text-nowrap">
                       {created_on?.slice(0, 10)}
                     </p>
 
-                    <p className="  text-[#6A6A6A]">
+                    <p className="  text-black">
                       {created_on?.slice(11, 16)}
                     </p>
                     <p className="text-[#2D5C8F] ">
@@ -285,24 +292,26 @@ const Monitor_cmp = () => {
               );
             })}
           </div>
-          <div className="overflow-x-auto rounded-md border-2 border-gray-400 custom-scrollbar bg-white hidden xl:block">
-            <table className="min-w-full rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table border-gray-400 ">
+          <div className="overflow-x-auto rounded-md  custom-scrollbar bg-white hidden xl:block">
+            <table className="min-w-full rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table  ">
               <thead>
                 <tr className="">
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     Name
                   </th>
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     Networks
                   </th>
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     Created on
                   </th>
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     Time
                   </th>
-                  <th></th>
-                  <th></th>
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium flex items-center gap-40">
+                  Actions <HiMenuAlt2 className="text-lg"/>
+                  </th>
+                  <th ></th>
                 </tr>
               </thead>
               <tbody>
@@ -319,13 +328,13 @@ const Monitor_cmp = () => {
                   return (
                     <tr className="border-gray-400 border-2 border-l-0 border-r-0 last:last:border-0">
                       <td className="py-4 border-2 border-none flex items-center gap-3">
-                        <span className="text-md mt-auto text-[#6A6A6A]">
+                        <span className="text-md mt-auto text-black">
                           {name}
                         </span>
                       </td>
 
                       <td className="py-4 border-2 border-none ">
-                        <span className="text-md mt-auto text-[#6A6A6A]">
+                        <span className="text-md mt-auto text-black">
                           {network === 80002
                             ? "Amoy"
                             : network === 1
@@ -342,19 +351,19 @@ const Monitor_cmp = () => {
                         </span>
                       </td>
 
-                      <td className="py-4 border-2 border-none text-md text-[#6A6A6A] text-nowrap">
+                      <td className="py-4 border-2 border-none text-md text-black text-nowrap">
                         {created_on?.slice(0, 10)}
                       </td>
 
-                      <td className="py-4 border-2 border-none pl-4 text-[#6A6A6A]">
+                      <td className="py-4 border-2 border-none pl-4 text-black">
                         {created_on?.slice(11, 16)}
                       </td>
 
-                      <td className="text-[#2D5C8F] py-4">
+                      {/* <td className="text-[#2D5C8F] py-4">
                         {`${address?.slice(0, 5)}...${address?.slice(
                           address.length - 4
                         )}`}
-                      </td>
+                      </td> */}
 
                       <td className="flex gap-8 items-center py-4">
                         {(network === 1 ||
@@ -376,14 +385,14 @@ const Monitor_cmp = () => {
                                 },
                               });
                             }}
-                            className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg"
+                            className=" text-black text-lg"
                           >
-                            Interact
+                            <FaEdit />
                           </button>
                         ) : (
                           is_admin == 1 && (
                             <button
-                              className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg"
+                              className=" text-black text-lg"
                               onClick={() => {
                                 navigate("/api_builder?id=" + mid, {
                                   state: {
@@ -397,13 +406,13 @@ const Monitor_cmp = () => {
                                 });
                               }}
                             >
-                              Interact
+                              <FaEdit />
                             </button>
                           )
                         )}
 
                         <button
-                          className="border-2 border-red-500 text-red-500 px-3 py-[2px] rounded-lg font-medium hover:bg-red-500 hover:text-white"
+                          className=" text-black text-lg"
                           onClick={() => {
                             if (network === 1300 || network === 1301) {
                               // Navigate to algo_alerts page for Algorand Mainnet/Testnet
@@ -418,10 +427,11 @@ const Monitor_cmp = () => {
                             }
                           }}
                         >
-                          Alerts
+                          <FaRegBell />
                         </button>
                         {is_admin == 1 && (
                           <button
+                            className="text-black text-lg"
                             onClick={() => {
                               navigate("/monitor_Edit?id=" + mid, {
                                 state: {
@@ -435,20 +445,19 @@ const Monitor_cmp = () => {
                               });
                             }}
                           >
-                            <FaRegEdit className="text-[#4A4A4A] text-2xl" />
+                            <LuPencil />
                           </button>
                         )}
                         {is_admin == 1 && (
                           <button onClick={() => handleDeleteMonitor(mid)}>
-                            <BsTrash className="text-[#4A4A4A] text-2xl" />
+                            <FaRegTrashAlt className="text-black text-lg" />
                           </button>
                         )}
-                        {is_admin == 1 && (
-                          <Switch
-                            checked={status === 1 ? true : false}
-                            onChange={() => {
-                              const newStatus = status === 0 ? 1 : 0;
-
+                        {is_admin == 1 ? (
+                          status === 1 ? (
+                            <button
+                            className="text-black text-3xl"
+                            onClick={() => {
                               fetch(`${baseUrl}/update_monitor`, {
                                 method: "POST",
                                 headers: {
@@ -457,7 +466,7 @@ const Monitor_cmp = () => {
                                 },
                                 body: JSON.stringify({
                                   monitor_id: mid,
-                                  status: newStatus,
+                                  status: 0,
                                 }),
                               })
                                 .then((response) => response.json())
@@ -469,20 +478,38 @@ const Monitor_cmp = () => {
                                   console.error("Error:", error);
                                 });
                             }}
-                            className={`${
-                              status === 1 ? "bg-[#2D5C8F]" : "bg-[#B8B8B8]"
-                            } relative inline-flex h-6 w-11 items-center rounded-full`}
-                          >
-                            <span className="sr-only">
-                              Enable notifications
-                            </span>
-                            <span
-                              className={`${
-                                status === 1 ? "translate-x-6" : "translate-x-1"
-                              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                            />
-                          </Switch>
-                        )}
+                            >
+                            <MdOutlineToggleOn  />
+                            </button>
+                          ) : (
+                            <button
+                            className="text-black text-3xl"
+                            onClick={() => {
+                              fetch(`${baseUrl}/update_monitor`, {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                  Authorization: `Bearer ${token}`,
+                                },
+                                body: JSON.stringify({
+                                  monitor_id: mid,
+                                  status: 1,
+                                }),
+                              })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                  console.log("Success:", data);
+                                  setValue(value + 1);
+                                })
+                                .catch((error) => {
+                                  console.error("Error:", error);
+                                });
+                            }}
+                            >
+                            <MdOutlineToggleOff  />
+                            </button>
+                          )
+                        ) : null}
                       </td>
                     </tr>
                   );

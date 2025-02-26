@@ -141,11 +141,6 @@ function Dashboard() {
         <Link className="text-black flex gap-1 items-center"><MdOutlineSettings  /><span className="text-sm font-medium">Settings</span> </Link>
           </div>
 
-          <div className="flex flex-row gap-3">
-          <Link to="#" className="bg-[#F7F7F7] px-3 py-1 rounded-lg text-sm font-medium text-[#6549FD]">Help</Link>
-          <Link to="#" className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium">Add New</Link>
-
-          </div>
        
 
         </div>
