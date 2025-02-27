@@ -292,8 +292,8 @@ const Monitor_cmp = () => {
               );
             })}
           </div>
-          <div className="overflow-x-auto w-full rounded-md  custom-scrollbar bg-white hidden xl:block">
-            <table className="w-[85%] rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table  ">
+          <div className="overflow-x-auto w-[85%] rounded-md  custom-scrollbar hidden xl:block border-2 border-gray-400 mt-5">
+            <table className="w-full rounded-md overflow-hidden border-2 shadow-4xl bg-red shadow-[#303030F7] table   ">
               <thead>
                 <tr className="">
                   <th className="py-4  border-2 border-none text-black text-sm font-medium">
