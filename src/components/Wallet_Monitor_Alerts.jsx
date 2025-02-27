@@ -327,8 +327,8 @@ function Monitor_alerts() {
         </div>
 
         {isModalOpen && selectedAlert && (
-  <div className="fixed inset-0 bg-white flex justify-center items-center z-50">
-    <div className="w-full sm:w-[60%] md:w-[600px] flex flex-col gap-5 px-4">
+  <div className="fixed inset-0 bg-black bg-opacity-85 flex justify-center items-center z-50">
+    <div className="w-full bg-white  sm:w-[60%] md:w-[600px] flex flex-col gap-5 p-5 rounded-2xl">
 
       <div className="bg-[#F2FBF6] flex flex-col gap-2 p-4 rounded-2xl border shadow-lg">
         <div className="bg-[#EBF6EE] border rounded-full w-8 h-8 flex items-center justify-center">
@@ -341,11 +341,21 @@ function Monitor_alerts() {
 
       <div className=" ">
         <p className="text-slate-700 mb-3 font-medium">From</p>
-        <p className="text-sm text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.from_address} <button onClick={() => copyToClipboard(selectedAlert.from_address)}><FaCopy /></button></p>
+       <p className="hidden text-sm text-black bg-gray-100  md:flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.from_address} <button onClick={() => copyToClipboard(selectedAlert.from_address)}><FaCopy /></button></p>
+                       <p className="text-sm text-black bg-gray-100 md:hidden flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.from_address.slice(0, 5)}
+                       ....
+                       {selectedAlert.from_address.slice(
+                         selectedAlert.from_address.length - 4
+                       )} <button onClick={() => copyToClipboard(selectedAlert.from_address)}><FaCopy /></button></p>
       </div>
       <div className=" ">
         <p className="text-slate-700 mb-3 font-medium">To</p>
-        <p className="text-sm text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.to_address} <button onClick={() => copyToClipboard(selectedAlert.to_address)}><FaCopy /></button></p>
+        <p className="hidden text-sm text-black bg-gray-100  md:flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.to_address} <button onClick={() => copyToClipboard(selectedAlert.to_address)}><FaCopy /></button></p>
+                        <p className="text-sm md:hidden text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.to_address?.slice(0, 5)}
+                        ....
+                        {selectedAlert.to_address?.slice(
+                          selectedAlert.to_address?.length - 4
+                        )} <button onClick={() => copyToClipboard(selectedAlert.to_address)}><FaCopy /></button></p>
       </div>
 
 
