@@ -292,26 +292,26 @@ const Monitor_cmp = () => {
               );
             })}
           </div>
-          <div className="overflow-x-auto rounded-md  custom-scrollbar bg-white hidden xl:block">
-            <table className="min-w-full rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table  ">
+          <div className="overflow-x-auto w-full rounded-md  custom-scrollbar bg-white hidden xl:block">
+            <table className="w-[85%] rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table  ">
               <thead>
                 <tr className="">
-                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
+                  <th className="py-4  border-2 border-none text-black text-sm font-medium">
                     Name
                   </th>
-                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
+                  <th className="py-4  border-2 border-none text-black text-sm font-medium">
                     Networks
                   </th>
-                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
+                  <th className="py-4  border-2 border-none text-black text-sm font-medium">
                     Created on
                   </th>
-                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
+                  <th className="py-4  border-2 border-none text-black text-sm font-medium">
                     Time
                   </th>
-                  <th className="py-4 border-2 border-none text-black text-sm font-medium flex items-center gap-40">
+                  <th className="py-4  border-2 border-none text-black text-sm font-medium flex items-center gap-40">
                   Actions <HiMenuAlt2 className="text-lg"/>
                   </th>
-                  <th ></th>
+                  
                 </tr>
               </thead>
               <tbody>
@@ -326,15 +326,15 @@ const Monitor_cmp = () => {
                   const alert_data = i.alert_data;
                   const alert_type = i.alert_type;
                   return (
-                    <tr className="border-gray-400 border-2 border-l-0 border-r-0 last:last:border-0">
-                      <td className="py-4 border-2 border-none flex items-center gap-3">
-                        <span className="text-md mt-auto text-black">
+                    <tr className="border-gray-400 border-2 border-l-0 border-r-0 ">
+                      <td className=" ">
+                        <p className="text-md  text-black">
                           {name}
-                        </span>
+                        </p>
                       </td>
 
-                      <td className="py-4 border-2 border-none ">
-                        <span className="text-md mt-auto text-black">
+                      <td className=" ">
+                        <span className="text-md text-black">
                           {network === 80002
                             ? "Amoy"
                             : network === 1
@@ -351,21 +351,14 @@ const Monitor_cmp = () => {
                         </span>
                       </td>
 
-                      <td className="py-4 border-2 border-none text-md text-black text-nowrap">
+                      <td className=" text-md text-black text-nowrap">
                         {created_on?.slice(0, 10)}
                       </td>
 
-                      <td className="py-4 border-2 border-none pl-4 text-black">
+                      <td className="  text-black">
                         {created_on?.slice(11, 16)}
                       </td>
-
-                      {/* <td className="text-[#2D5C8F] py-4">
-                        {`${address?.slice(0, 5)}...${address?.slice(
-                          address.length - 4
-                        )}`}
-                      </td> */}
-
-                      <td className="flex gap-8 items-center py-4">
+                      <td className=" flex gap-8 items-center py-4">
                         {(network === 1 ||
                           network === 11155111 ||
                           network === 137 ||
