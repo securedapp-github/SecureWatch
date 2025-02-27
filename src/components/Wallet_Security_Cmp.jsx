@@ -133,7 +133,7 @@ const Wallet_Security_Cmp = () => {
         </div>
       ) : (
         <div className="w-full flex justify-center items-center">
-          <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10">
+          <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md  mb-10">
             {moniter.monitors.map((i) => {
               const name = i.name;
               const risk = i.category;
@@ -174,12 +174,32 @@ const Wallet_Security_Cmp = () => {
                 )}`}
               </p> */}
                   </div>
+                  <div className="flex flex-col gap-3 md:gap-5 justify-center items-center">
+                  <button
+                          className=" text-black text-lg"
+                          onClick={() => {
+                            navigate("/wallet_monitor_alerts", {
+                              state: { mid, network },
+                            });
+                          }}
+                        >
+                          <FaRegBell />
+                        </button>
+
+                        {is_admin == 1 && (
+                          <button onClick={() => handleDeleteMonitor(mid)}>
+                            <FaRegTrashAlt className="text-black text-lg" />
+                          </button>
+                        )}
+                  </div>
+                  
                 </div>
               );
             })}
           </div>
-          <div className="overflow-x-auto w-full rounded-md  custom-scrollbar bg-white hidden xl:block">
-            <table className="w-[65%] rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table  ">
+
+          <div className="overflow-x-auto w-[85%] rounded-md  custom-scrollbar bg-white hidden xl:block border-2 border-gray-400 mt-5">
+            <table className="rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table  ">
               <thead>
                 <tr className="">
                   <th className=" text-black text-sm font-medium">
@@ -212,7 +232,7 @@ const Wallet_Security_Cmp = () => {
                   const alert_data = i.alert_data;
                   const alert_type = i.alert_type;
                   return (
-                    <tr className="border-gray-400 border-2 border-l-0 border-r-0 ">
+                    <tr className="border-gray-400 border-2 border-l-0 border-r-0 last:border-b-0">
                       <td className=" ">
                         <span className="text-md  text-black">{name}</span>
                       </td>

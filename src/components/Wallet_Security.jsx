@@ -48,7 +48,7 @@ function Wallet_Security() {
         </div>
 
         <div className=" mt-20 w-full sm:ml-80  min-h-full">
-          <div className="w-full flex justify-between items-center px-4 py-4">
+          <div className="w-full flex justify-between items-center px-4 py-4 mt-4">
             <p className="text-[#6A6A6A] font-semibold text-lg">
               Wallet Security
             </p>
