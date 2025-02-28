@@ -116,169 +116,180 @@ const Wallet_Security_Cmp = () => {
 
   return (
     <div className=" w-full xl:w-[97%] overflow-auto flex justify-center items-center xl:justify-start xl:ml-4 xl:items-start flex-col pb-10">
-<ToastContainer
-  position="top-right"
-  autoClose={5000}
-  hideProgressBar={false}
-  newestOnTop={false}
-  closeOnClick
-  rtl={false}
-  pauseOnFocusLoss
-  draggable
-  pauseOnHover
-/>
-{loading ? (
-  <div className="text-center mt-20 text-4xl font-medium">
-    <span className="loading loading-spinner loading-lg text-[#2D5C8F]"></span>
-  </div>
-) : (
-  <div className="w-full flex justify-center items-center">
-    <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10">
-      {moniter.monitors.map((i) => {
-        const name = i.name;
-        const risk = i.category;
-        const network = i.network;
-        const status = i.status;
-        const mid = i.mid;
-        const created_on = i.created_on;
-        const address = i.address;
-        const alert_data = i.alert_data;
-        const alert_type = i.alert_type;
-        return (
-          <div className="w-full flex p-3 md:p-10 justify-between border-b-2">
-            <div className="flex flex-col gap-3">
-              <span className="text-md  text-black">{name}</span>
-              <span className="text-md  text-black">
-                {network === 80002
-                  ? "Amoy"
-                  : network === 1
-                  ? "Ethereum Mainnet"
-                  : network === 11155111
-                  ? "Sepolia Testnet"
-                  : network === 137
-                  ? "Polygon Mainnet"
-                  : network === 1300
-                  ? "Algorand Mainnet"
-                  : network === 1301
-                  ? "Algorand Testnet"
-                  : "Unknown"}
-              </span>
-              <p className=" text-md text-black text-nowrap">
-                {created_on?.slice(0, 10)}
-              </p>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      {loading ? (
+        <div className="text-center mt-20 text-4xl font-medium">
+          <span className="loading loading-spinner loading-lg text-[#2D5C8F]"></span>
+        </div>
+      ) : (
+        <div className="w-full flex justify-center items-center">
+          <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md  mb-10">
+            {moniter.monitors.map((i) => {
+              const name = i.name;
+              const risk = i.category;
+              const network = i.network;
+              const status = i.status;
+              const mid = i.mid;
+              const created_on = i.created_on;
+              const address = i.address;
+              const alert_data = i.alert_data;
+              const alert_type = i.alert_type;
+              return (
+                <div className="w-full flex p-3 md:p-10 justify-between border-b-2">
+                  <div className="flex flex-col gap-3">
+                    <span className="text-md  text-black">{name}</span>
+                    <span className="text-md  text-black">
+                      {network === 80002
+                        ? "Amoy"
+                        : network === 1
+                        ? "Ethereum Mainnet"
+                        : network === 11155111
+                        ? "Sepolia Testnet"
+                        : network === 137
+                        ? "Polygon Mainnet"
+                        : network === 1300
+                        ? "Algorand Mainnet"
+                        : network === 1301
+                        ? "Algorand Testnet"
+                        : "Unknown"}
+                    </span>
+                    <p className=" text-md text-black text-nowrap">
+                      {created_on?.slice(0, 10)}
+                    </p>
 
-              <p className="  text-black">
-                {created_on?.slice(11, 16)}
-              </p>
-              {/* <p className="text-[#2D5C8F] ">
+                    <p className="  text-black">{created_on?.slice(11, 16)}</p>
+                    {/* <p className="text-[#2D5C8F] ">
                 {`${address?.slice(0, 5)}...${address?.slice(
                   address.length - 4
                 )}`}
               </p> */}
-            </div>
-            
-          </div>
-        );
-      })}
-    </div>
-    <div className="overflow-x-auto rounded-md  custom-scrollbar bg-white hidden xl:block">
-      <table className="min-w-full rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table  ">
-        <thead>
-          <tr className="">
-            <th className="py-4 border-2 border-none text-black text-sm font-medium">
-              Name
-            </th>
-            <th className="py-4 border-2 border-none text-black text-sm font-medium">
-              Networks
-            </th>
-            <th className="py-4 border-2 border-none text-black text-sm font-medium">
-              Created on
-            </th>
-            <th className="py-4 border-2 border-none text-black text-sm font-medium">
-              Time
-            </th>
-            <th className="py-4 border-2 border-none text-black text-sm font-medium flex items-center gap-2">
-            Actions <HiMenuAlt2 className="text-lg"/>
-            </th>
-            <th ></th>
-          </tr>
-        </thead>
-        <tbody>
-          {moniter.monitors.map((i) => {
-            const name = i.name;
-            const risk = i.category;
-            const network = i.network;
-            const status = i.status;
-            const mid = i.mid;
-            const created_on = i.created_on;
-            const address = i.address;
-            const alert_data = i.alert_data;
-            const alert_type = i.alert_type;
-            return (
-              <tr className="border-gray-400 border-2 border-l-0 border-r-0 last:last:border-0">
-                <td className="py-4 border-2 border-none flex items-center gap-3">
-                  <span className="text-md mt-auto text-black">
-                    {name}
-                  </span>
-                </td>
-
-                <td className="py-4 border-2 border-none ">
-                  <span className="text-md mt-auto text-black">
-                    {network === 80002
-                      ? "Amoy"
-                      : network === 1
-                      ? "Ethereum Mainnet"
-                      : network === 11155111
-                      ? "Sepolia Testnet"
-                      : network === 137
-                      ? "Polygon Mainnet"
-                      : network === 1300
-                      ? "Algorand Mainnet"
-                      : network === 1301
-                      ? "Algorand Testnet"
-                      : "Unknown"}
-                  </span>
-                </td>
-
-                <td className="py-4 border-2 border-none text-md text-black text-nowrap">
-                  {created_on?.slice(0, 10)}
-                </td>
-
-                <td className="py-4 border-2 border-none pl-4 text-black">
-                  {created_on?.slice(11, 16)}
-                </td>
-
-                <td className="flex gap-8 items-center py-4">
-                  
+                  </div>
+                  <div className="flex flex-col gap-3 md:gap-5 justify-center items-center">
                   <button
-                    className=" text-black text-lg"
-                    onClick={
-                      () => {
-                        navigate("/wallet_monitor_alerts", {
-                          state: { mid, network },
-                        });
-                      }
-                    }
-                  >
-                    <FaRegBell />
-                  </button>
-                 
-                  {is_admin == 1 && (
-                    <button onClick={() => handleDeleteMonitor(mid)}>
-                      <FaRegTrashAlt className="text-black text-lg" />
-                    </button>
-                  )}
-                 
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                          className=" text-black text-lg"
+                          onClick={() => {
+                            navigate("/wallet_monitor_alerts", {
+                              state: { mid, network },
+                            });
+                          }}
+                        >
+                          <FaRegBell />
+                        </button>
+
+                        {is_admin == 1 && (
+                          <button onClick={() => handleDeleteMonitor(mid)}>
+                            <FaRegTrashAlt className="text-black text-lg" />
+                          </button>
+                        )}
+                  </div>
+                  
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="overflow-x-auto w-[85%] rounded-md  custom-scrollbar bg-white hidden xl:block border-2 border-gray-400 mt-5">
+            <table className="rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table  ">
+              <thead>
+                <tr className="">
+                  <th className=" text-black text-sm font-medium">
+                    Name
+                  </th>
+                  <th className=" text-black text-sm font-medium">
+                    Networks
+                  </th>
+                  <th className=" text-black text-sm font-medium">
+                    Created on
+                  </th>
+                  <th className=" text-black text-sm font-medium">
+                    Time
+                  </th>
+                  <th className=" text-black text-sm font-medium flex items-center gap-16">
+                    Actions <HiMenuAlt2 className="text-lg" />
+                  </th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {moniter.monitors.map((i) => {
+                  const name = i.name;
+                  const risk = i.category;
+                  const network = i.network;
+                  const status = i.status;
+                  const mid = i.mid;
+                  const created_on = i.created_on;
+                  const address = i.address;
+                  const alert_data = i.alert_data;
+                  const alert_type = i.alert_type;
+                  return (
+                    <tr className="border-gray-400 border-2 border-l-0 border-r-0 last:border-b-0">
+                      <td className=" ">
+                        <span className="text-md  text-black">{name}</span>
+                      </td>
+
+                      <td className=" ">
+                        <span className="text-md  text-black">
+                          {network === 80002
+                            ? "Amoy"
+                            : network === 1
+                            ? "Ethereum Mainnet"
+                            : network === 11155111
+                            ? "Sepolia Testnet"
+                            : network === 137
+                            ? "Polygon Mainnet"
+                            : network === 1300
+                            ? "Algorand Mainnet"
+                            : network === 1301
+                            ? "Algorand Testnet"
+                            : "Unknown"}
+                        </span>
+                      </td>
+
+                      <td className=" text-md text-black text-nowrap">
+                        {created_on?.slice(0, 10)}
+                      </td>
+
+                      <td className="  text-black">
+                        {created_on?.slice(11, 16)}
+                      </td>
+
+                      <td className="mx-14 flex gap-8 items-center py-4">
+                        <button
+                          className=" text-black text-lg"
+                          onClick={() => {
+                            navigate("/wallet_monitor_alerts", {
+                              state: { mid, network },
+                            });
+                          }}
+                        >
+                          <FaRegBell />
+                        </button>
+
+                        {is_admin == 1 && (
+                          <button onClick={() => handleDeleteMonitor(mid)}>
+                            <FaRegTrashAlt className="text-black text-lg" />
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-)}
-</div>
   );
 };
 

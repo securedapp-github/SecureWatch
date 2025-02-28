@@ -41,13 +41,13 @@ function Dashboard() {
   const parent_id = localStorage.getItem("parent_id");
   const userId = localStorage.getItem("userId");
   console.log("dashboard parent_id", parent_id);
-  const is_admin = localStorage.getItem("is_admin") ;
+  const is_admin = localStorage.getItem("is_admin");
   console.log("dashboard is_admin", is_admin);
 
   const [credits, setCredits] = useState(userCredits || 0);
   const [planexpiry, setPlanexpiry] = useState(userPlanexpiry || null);
   // const [formattedPlanExpiry, setFormattedPlanExpiry] = useState(null);
-  
+
   // if (userPlanexpiry){
   //   const planexpiryDate = new Date(planexpiry);
   //   const formattedPlanExpiry = new Intl.DateTimeFormat("en-IN", {
@@ -64,7 +64,7 @@ function Dashboard() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
     return date.toLocaleDateString(undefined, options);
   };
 
@@ -96,7 +96,6 @@ function Dashboard() {
     };
     fetchMoniter();
   }, []);
-  
 
   console.log(values);
   console.log("Monitors", monitorcount);
@@ -116,103 +115,179 @@ function Dashboard() {
       const data = await res.json();
       console.log("wallet monitor count", data.monitors.length);
       setWalletMoniterCount(data.monitors.length);
-      
     };
     fetchMoniter();
   }, []);
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-screen ">
       <NewNavbar email={userEmail} />
-      <div className=" w-full flex flex-col h-full bg-white pb-4">
+      <div className=" w-full flex flex-col h-full pb-4">
         <div className="hidden sm:block">
-        <Sidebar />
-        </div>
-        <div className="w-[calc(100%-96px)]  px-3  lg:ml-24  mt-20 hidden lg:flex justify-between items-center border-b-2 border-b-[#D3D3D3] py-4  ">
-          <div className="flex flex-row gap-3"> 
-          <span className="text-black font-bold text-center ">
-                  Tenant ID
-                  <span className="text-black ">
-                  {"  " + "#" + hash}
-                </span>
-                </span>
-
-        <Link to="dashboard" className="text-black flex gap-1 items-center"><CgHome /> <span className="text-sm font-medium">Dashboard</span></Link>
-        <Link className="text-black flex gap-1 items-center"><MdOutlineSettings  /><span className="text-sm font-medium">Settings</span> </Link>
-          </div>
-
-       
-
+          <Sidebar />
         </div>
 
-        <div className=" md:ml-24 mt-20 lg:mt-0 w-full lg:w-[calc(100%-96px)] h-full flex flex-col justify-start items-start bg-white     ">
+        <div className="sm:ml-[96px] w-full sm:w-[calc(100%-96px)]  flex flex-col h-full bg-white pb-4 items-center justify-center">
 
-        <p className="text-black text-xl font-medium lg:ml-20 xl:ml-36 mt-5 md:mt-10 mb-5 self-center lg:self-start text-center lg:text-start">Overview</p>
+          <div className="w-full sm:pl-20    mt-20 hidden lg:flex flex-row gap-5 items-center border-b-2 border-b-[#D3D3D3] py-4  ">
+            <span className="text-black font-bold ">
+              Tenant ID
+              <span className="text-black ">{"  " + "#" + hash}</span>
+            </span>
 
-          <div className="font-inter w-full xl:w-[1300px] flex gap-4 flex-wrap flex-col md:flex-row justify-center items-center  ">
+            <Link to="/dashboard" className="text-black flex gap-1 items-center">
+              <CgHome /> <span className="text-sm font-medium">Dashboard</span>
+            </Link>
 
-            
-
-            <div className=" w-[330px] h-[210px] p-4 flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
-              <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center"><MdOutlineHeadphones className="text-[#6549FD]"/></div>
-              <p className=" text-black text-sm font-medium">WALLET MONITOR</p>
-              <p className="text-sm  text-black">{walletMoniterCount}</p>
-              <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">CHECK WALLET MONITORS</p>
-              <Link to="/wallet_security" className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium">View Monitors</Link>
-            </div>
-
-
-            <div className=" w-[330px] h-[210px] p-4 flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
-              <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center"><FaRegBell className="text-[#6549FD]"/></div>
-              <p className=" text-black text-sm font-medium">ONCHAIN ALERTS</p>
-              <p className="text-sm  text-black">{alert}</p>
-              <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">CHECK ALL ALERTS</p>
-              <Link to="#" className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium">View Alerts</Link>
-            </div>
-
-            <div className=" w-[330px] h-[210px] p-4 flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
-              <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center"><MdMonitor className="text-[#6549FD]"/></div>
-              <p className=" text-black text-sm font-medium">CONTRACT MONITOR</p>
-              <p className="text-sm  text-black">{monitorcount}</p>
-              <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">CHECK ALL MONITORS</p>
-              <Link to="/monitor" className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium">View Monitors</Link>
-            </div>
-
-            <div className=" w-[330px] xl:hidden h-[210px] p-4 flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
-              <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center"><TbAlertTriangle className="text-[#6549FD]"/></div>
-              <p className=" text-black text-sm font-medium">INCIDENT REPORTED</p>
-              <p className="text-sm  text-black">{alert}</p>
-              <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">CHECK TOTAL ALERTS</p>
-              <Link to="#" className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium">View Incidents</Link>
-            </div>
-
-            <div className=" w-[330px] xl:hidden h-[210px] p-4 flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
-              <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center"><TbUserSquare className="text-[#6549FD]"/></div>
-              <p className=" text-black text-sm font-medium">USER PLANS</p>
-              <p className="text-sm  text-black">{credits}</p>
-              <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">ACCOUNT CREDITS</p>
-              <Link to="#" className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium">Manage Plan</Link>
-            </div>
-
-            <div className=" w-[505px] hidden h-[210px] p-4 xl:flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
-              <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center"><TbAlertTriangle className="text-[#6549FD]"/></div>
-              <p className=" text-black text-sm font-medium">INCIDENT REPORTED</p>
-              <p className="text-sm  text-black">{alert}</p>
-              <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">CHECK TOTAL ALERTS</p>
-              <Link to="#" className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium">View Incidents</Link>
-            </div>
-
-            <div className=" w-[505px] hidden h-[210px] p-4 xl:flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
-              <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center"><TbUserSquare className="text-[#6549FD]"/></div>
-              <p className=" text-black text-sm font-medium">USER PLANS</p>
-              <p className="text-sm  text-black">{credits}</p>
-              <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">ACCOUNT CREDITS</p>
-              <Link to="#" className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium">Manage Plan</Link>
-            </div>
-
-
+            <Link to="/monitor" className="text-black text-sm font-medium">
+              Monitor
+            </Link>
+            <Link to="/wallet_security" className="text-black text-sm font-medium">
+              Wallet Security
+            </Link>
+            <Link to="/log" className="text-black text-sm font-medium">
+              Logs
+            </Link>
 
           </div>
+
+          <div className="w-full sm:pl-20 mt-20 lg:mt-0 ">
+            <p className="text-black text-xl font-medium   mt-5 md:mt-10 mb-5  md:text-start text-center">
+              Overview
+            </p>
+          </div>
+
+          <div className="  sm:pl-20 lg:mt-0 w-full  h-full flex flex-col justify-start items-start bg-white    ">
+
+
+            <div className="font-inter w-full flex gap-4 flex-wrap flex-col justify-center items-center md:flex-row md:justify-start md:items-start  bg-white   ">
+              <div className="w-[330px] sm:w-[380px] h-[210px] p-4 flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
+                <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center">
+                  <MdOutlineHeadphones className="text-[#6549FD]" />
+                </div>
+                <p className=" text-black text-sm font-medium">WALLET MONITOR</p>
+                <p className="text-sm  text-black">{walletMoniterCount}</p>
+                <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+                  CHECK WALLET MONITORS
+                </p>
+                <Link
+                  to="/wallet_security"
+                  className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
+                >
+                  View Monitors
+                </Link>
+              </div>
+
+              <div className="w-[330px] sm:w-[380px] h-[210px] p-4 flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
+                <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center">
+                  <FaRegBell className="text-[#6549FD]" />
+                </div>
+                <p className=" text-black text-sm font-medium">ONCHAIN ALERTS</p>
+                <p className="text-sm  text-black">{alert}</p>
+                <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+                  CHECK ALL ALERTS
+                </p>
+                <Link
+                  to="#"
+                  className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
+                >
+                  View Alerts
+                </Link>
+              </div>
+
+              <div className="w-[330px] sm:w-[380px] h-[210px] p-4 flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
+                <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center">
+                  <MdMonitor className="text-[#6549FD]" />
+                </div>
+                <p className=" text-black text-sm font-medium">
+                  CONTRACT MONITOR
+                </p>
+                <p className="text-sm  text-black">{monitorcount}</p>
+                <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+                  CHECK ALL MONITORS
+                </p>
+                <Link
+                  to="/monitor"
+                  className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
+                >
+                  View Monitors
+                </Link>
+              </div>
+
+              <div className="w-[330px] sm:w-[380px] xl:hidden h-[210px] p-4 flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
+                <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center">
+                  <TbAlertTriangle className="text-[#6549FD]" />
+                </div>
+                <p className=" text-black text-sm font-medium">
+                  INCIDENT REPORTED
+                </p>
+                <p className="text-sm  text-black">{alert}</p>
+                <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+                  CHECK TOTAL ALERTS
+                </p>
+                <Link
+                  to="#"
+                  className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
+                >
+                  View Incidents
+                </Link>
+              </div>
+
+              <div className="w-[330px] sm:w-[380px] xl:hidden h-[210px] p-4 flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
+                <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center">
+                  <TbUserSquare className="text-[#6549FD]" />
+                </div>
+                <p className=" text-black text-sm font-medium">USER PLANS</p>
+                <p className="text-sm  text-black">{credits}</p>
+                <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+                  ACCOUNT CREDITS
+                </p>
+                <Link
+                  to="#"
+                  className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
+                >
+                  Manage Plan
+                </Link>
+              </div>
+
+              <div className="w-[330px] sm:w-[580px] hidden h-[210px] p-4 xl:flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
+                <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center">
+                  <TbAlertTriangle className="text-[#6549FD]" />
+                </div>
+                <p className=" text-black text-sm font-medium">
+                  INCIDENT REPORTED
+                </p>
+                <p className="text-sm  text-black">{alert}</p>
+                <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+                  CHECK TOTAL ALERTS
+                </p>
+                <Link
+                  to="#"
+                  className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
+                >
+                  View Incidents
+                </Link>
+              </div>
+
+              <div className="w-[330px] sm:w-[580px] hidden h-[210px] p-4 xl:flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
+                <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center">
+                  <TbUserSquare className="text-[#6549FD]" />
+                </div>
+                <p className=" text-black text-sm font-medium">USER PLANS</p>
+                <p className="text-sm  text-black">{credits}</p>
+                <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
+                  ACCOUNT CREDITS
+                </p>
+                <Link
+                  to="#"
+                  className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
+                >
+                  Manage Plan
+                </Link>
+              </div>
+            </div>
+          </div>
+
         </div>
 
 

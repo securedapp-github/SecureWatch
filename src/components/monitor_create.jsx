@@ -531,6 +531,32 @@ function Monitor_create() {
                 <option value="1" className="text-[13px] text-[#959595] ">
                   Ethereum Mainnet
                 </option>
+
+                <option value="56" className="text-[13px] text-[#959595] ">
+                Binance Smart Chain
+                </option>
+                <option value="8453" className="text-[13px] text-[#959595] ">
+                Base
+                </option>
+                <option value="43114" className="text-[13px] text-[#959595] ">
+                Avalanche
+                </option>
+                <option value="42161" className="text-[13px] text-[#959595] ">
+                Arbitrum
+                </option>
+                <option value="100" className="text-[13px] text-[#959595] ">
+                Gnosis
+                </option>
+                <option value="59144" className="text-[13px] text-[#959595] ">
+                Linea
+                </option>
+                <option value="1313161554" className="text-[13px] text-[#959595] ">
+                Aurora
+                </option>
+                <option value="10" className="text-[13px] text-[#959595] ">
+                Optimism
+                </option>
+
                 <option value="11155111" className="text-[13px] text-[#959595]">
                   Sepolia Testnet
                 </option>
