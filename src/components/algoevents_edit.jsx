@@ -963,14 +963,14 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
         </div>
         <div className="flex flex-col gap-5 ml-5">
           <Link to="/dashboard" className="text-[#6A6A6A]">
-            Overview
+          Dashboard
           </Link>
           <Link to="/monitor" className="text-[#6A6A6A]">
-            Monitor
+          Contract Monitor
           </Link>
-          <Link to="/log" className="text-[#6A6A6A]">
+           {/* <Link to="/log" className="text-[#6A6A6A]">
             Logs
-          </Link>
+          </Link> */}
         </div>
       </div>
     

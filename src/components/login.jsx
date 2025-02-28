@@ -41,6 +41,7 @@ function Login() {
         // console.log("parent_id", parent_id);
         const is_admin = response.data.user.is_admin;
         localStorage.setItem("is_admin", is_admin);
+        
         // console.log("is_admin", is_admin);
         localStorage.setItem("userId", userId);
         const token = response.data.token;

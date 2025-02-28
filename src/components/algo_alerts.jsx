@@ -75,17 +75,17 @@ function Algo_alerts() {
                 </div>
                 <div className="flex flex-col gap-5 ml-5">
                   <Link to="/dashboard" className="text-[#6A6A6A]">
-                    Overview
+                  Dashboard
                   </Link>
                   <Link to="/monitor" className="text-[#6A6A6A] ">
-                    Monitor
+                  Contract Monitor
                   </Link>
                   <Link to="/wallet_security" className="text-[#6A6A6A]">
-                                          Wallet Security
+                                          Wallet Monitor
                                           </Link>
-                  <Link to="/log" className="text-[#6A6A6A] ">
+                  {/* <Link to="/log" className="text-[#6A6A6A] ">
                     Logs
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
       
@@ -129,17 +129,17 @@ function Algo_alerts() {
           </div>
           <div className="flex flex-col gap-5 ml-5">
             <Link to="/dashboard" className="text-[#6A6A6A]">
-              Overview
+            Dashboard
             </Link>
             <Link to="/monitor" className="text-[#2D5C8F] font-semibold">
-              Monitor
+            Contract Monitor
             </Link>
             <Link to="/wallet_security" className="text-[#6A6A6A]">
-                                          Wallet Security
+                                          Wallet Monitor
                                           </Link>
-            <Link to="/log" className="text-[#6A6A6A] ">
+            {/* <Link to="/log" className="text-[#6A6A6A] ">
               Logs
-            </Link>
+            </Link> */}
           </div>
         </div>
         <div className="pt-20  pb-10 sm:ml-80 w-full px-3 pr-5">

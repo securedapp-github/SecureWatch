@@ -20,6 +20,7 @@ function Dashboard() {
   const [values, setValues] = useState([]);
   const [listeners, setListeners] = useState("");
   const [alert, setAlert] = useState("");
+  const [walletAlert, setWalletAlert] = useState("");
   const [monitorcount, setMonitorcount] = useState([]);
   const [walletMoniterCount, setWalletMoniterCount] = useState([]);
   const location = useLocation();
@@ -56,6 +57,7 @@ function Dashboard() {
   //     year: "numeric",
   //   }).format(planexpiryDate);
   //   setFormattedPlanExpiry(formattedPlanExpiry);
+  //   console.log("formattedPlanExpiry :", formattedPlanExpiry)
   // }
   const isValidDate = (dateString) => {
     const date = new Date(dateString);
@@ -114,6 +116,7 @@ function Dashboard() {
       });
       const data = await res.json();
       console.log("wallet monitor count", data.monitors.length);
+      setWalletAlert(data.alerts.length);
       setWalletMoniterCount(data.monitors.length);
     };
     fetchMoniter();
@@ -140,20 +143,20 @@ function Dashboard() {
             </Link>
 
             <Link to="/monitor" className="text-black text-sm font-medium">
-              Monitor
+              Contract Monitor
             </Link>
             <Link to="/wallet_security" className="text-black text-sm font-medium">
-              Wallet Security
+              Wallet Monitors
             </Link>
-            <Link to="/log" className="text-black text-sm font-medium">
+            {/* <Link to="/log" className="text-black text-sm font-medium">
               Logs
-            </Link>
+            </Link> */}
 
           </div>
 
           <div className="w-full sm:pl-20 mt-20 lg:mt-0 ">
             <p className="text-black text-xl font-medium   mt-5 md:mt-10 mb-5  md:text-start text-center">
-              Overview
+            Dashboard
             </p>
           </div>
 
@@ -182,10 +185,10 @@ function Dashboard() {
                 <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center">
                   <FaRegBell className="text-[#6549FD]" />
                 </div>
-                <p className=" text-black text-sm font-medium">ONCHAIN ALERTS</p>
-                <p className="text-sm  text-black">{alert}</p>
+                <p className=" text-black text-sm font-medium">WALLET ALERTS</p>
+                <p className="text-sm  text-black">{walletAlert}</p>
                 <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
-                  CHECK ALL ALERTS
+                  CHECK ALERTS
                 </p>
                 <Link
                   to="#"
@@ -204,7 +207,7 @@ function Dashboard() {
                 </p>
                 <p className="text-sm  text-black">{monitorcount}</p>
                 <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
-                  CHECK ALL MONITORS
+                  CHECK CONTRACT MONITORS
                 </p>
                 <Link
                   to="/monitor"
@@ -219,11 +222,11 @@ function Dashboard() {
                   <TbAlertTriangle className="text-[#6549FD]" />
                 </div>
                 <p className=" text-black text-sm font-medium">
-                  INCIDENT REPORTED
+                  CONTRACT INCIDENT REPORTED
                 </p>
                 <p className="text-sm  text-black">{alert}</p>
                 <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
-                  CHECK TOTAL ALERTS
+                  CHECK ALERTS
                 </p>
                 <Link
                   to="#"
@@ -237,10 +240,14 @@ function Dashboard() {
                 <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center">
                   <TbUserSquare className="text-[#6549FD]" />
                 </div>
-                <p className=" text-black text-sm font-medium">USER PLANS</p>
-                <p className="text-sm  text-black">{credits}</p>
+              
+                <p className=" text-black text-sm font-medium">USER PLAN</p>
+                <p className="text-sm  text-black"> PLAN EXPIRY: {new Date(planexpiry).toLocaleDateString()}</p>
+                <p className="text-sm  text-black"> PLAN CREDITS: {credits}</p>
+
                 <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
-                  ACCOUNT CREDITS
+                REMAINING CREDITS:  {Math.max(0, credits - (alert+walletAlert))}
+                {Math.max(0, credits - (alert+walletAlert)) === 0 && <span className="text-red-500"> ( contact @hello@securedapp.in )</span>}
                 </p>
                 <Link
                   to="#"
@@ -255,11 +262,11 @@ function Dashboard() {
                   <TbAlertTriangle className="text-[#6549FD]" />
                 </div>
                 <p className=" text-black text-sm font-medium">
-                  INCIDENT REPORTED
+                  CONTRACT INCIDENT REPORTED
                 </p>
                 <p className="text-sm  text-black">{alert}</p>
                 <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
-                  CHECK TOTAL ALERTS
+                  CHECK ALERTS
                 </p>
                 <Link
                   to="#"
@@ -273,10 +280,14 @@ function Dashboard() {
                 <div className="bg-[#E7E6F4] rounded-full w-7 h-7 flex justify-center items-center">
                   <TbUserSquare className="text-[#6549FD]" />
                 </div>
-                <p className=" text-black text-sm font-medium">USER PLANS</p>
-                <p className="text-sm  text-black">{credits}</p>
+                <p className=" text-black text-sm font-medium">USER PLAN</p>
+                <p className="text-sm  text-black"> PLAN EXPIRY: {new Date(planexpiry).toLocaleDateString()}</p>
+
+                <p className="text-sm  text-black"> PLAN CREDITS: {credits}</p>
+
                 <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
-                  ACCOUNT CREDITS
+                REMAINING CREDITS:  {Math.max(0, credits - (alert+walletAlert))}
+                {Math.max(0, credits - (alert+walletAlert)) === 0 && <span className="text-red-500"> ( contact @hello@securedapp.in )</span>}
                 </p>
                 <Link
                   to="#"

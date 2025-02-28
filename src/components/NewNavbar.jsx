@@ -83,14 +83,14 @@ export default function NewNavbar({ email }) {
               expandRealtimeSecurity && (
                 <div className="flex flex-col gap-5 pl-[70px] mb-3">
                 <Link to="/dashboard" className="text-[#6A6A6A]">
-                  Overview
+                Dashboard
                 </Link>
                 <Link to="/monitor" className="text-[#6A6A6A]">
-                  Monitor
+                Contract Monitor
                 </Link>
-                <Link to="/log" className="text-[#6A6A6A]">
+                {/* <Link to="/log" className="text-[#6A6A6A]">
                   Logs
-                </Link>
+                </Link> */}
               </div>
               )
             }
