@@ -151,10 +151,10 @@ const Approvaloptions = Algoevents.map((eventName) => ({
   
       // Prepare arguments with only name-value pairs
       const formattedArgs = {};
-      eventDetails.args.forEach((arg, index) => {
-        const [argName] = arg.split(":").map(str => str.trim()); // Extract the argument name
-        formattedArgs[argName] = eventDetails.argValues[index] || ""; // Assign value or empty string
-      });
+      // eventDetails.args.forEach((arg, index) => {
+      //   const [argName] = arg.split(":").map(str => str.trim()); // Extract the argument name
+      //   formattedArgs[argName] = eventDetails.argValues[index] || ""; // Assign value or empty string
+      // });
   
       methods[base64Name] = {
         name: eventName,
@@ -178,24 +178,24 @@ const Approvaloptions = Algoevents.map((eventName) => ({
           const method = Algoevents.find(m => m.name === option.value);
           newSelectedEvents[method.name] = {
             args: method.args,
-            argValues: Array(method.args.length).fill(""), // Initialize empty values
+            argValues: Array(1).fill(""), // Initialize empty values
           };
         });
         setSelectedEvents(newSelectedEvents);
       };
 
       
-      const handleArgumentChange = (e, eventName, argIndex) => {
-        setSelectedEvents((prevEvents) => ({
-          ...prevEvents,
-          [eventName]: {
-            ...prevEvents[eventName],
-            argValues: prevEvents[eventName].argValues.map((val, i) =>
-              i === argIndex ? e.target.value : val
-            ),
-          },
-        }));
-      };
+      // const handleArgumentChange = (e, eventName, argIndex) => {
+      //   setSelectedEvents((prevEvents) => ({
+      //     ...prevEvents,
+      //     [eventName]: {
+      //       ...prevEvents[eventName],
+      //       argValues: prevEvents[eventName].argValues.map((val, i) =>
+      //         i === argIndex ? e.target.value : val
+      //       ),
+      //     },
+      //   }));
+      // };
       
     const handleSaveMonitor = async () => {
       let formattedData;
@@ -511,7 +511,7 @@ const Approvaloptions = Algoevents.map((eventName) => ({
       </>
     )}
     
-    <div>
+    {/* <div>
       {Object.entries(selectedEvents).map(([eventName, eventData]) => (
         <div key={eventName} className="font-medium mt-3">
           <div>{eventName}</div>
@@ -528,7 +528,8 @@ const Approvaloptions = Algoevents.map((eventName) => ({
           ))}
         </div>
       ))}
-    </div></div>
+    </div> */}
+    </div>
               <button
                 className="py-3 w-full bg-[#2D5C8F] mt-10 rounded-lg text-white"
                 onClick={handleSaveMonitor}

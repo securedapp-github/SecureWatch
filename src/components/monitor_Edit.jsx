@@ -69,32 +69,63 @@ function Monitor_Edit() {
   //   return eventHandlers;
   // };
   const extractEventHandlers = (code) => {
+
+     // himanshu
+
+     const methodsInfo = {};
+     // Regular expression to find hex-encoded method names in TEAL
+     const eventRegex = /txna ApplicationArgs 0\s+pushbytes 0x([0-9a-fA-F]+)/g;
+     let match;
+   
+     while ((match = eventRegex.exec(code)) !== null) {
+       // Convert hex to string
+       const hexString = match[1];
+       const methodName = Buffer.from(hexString, "hex").toString();
+       const base64Name = Buffer.from(methodName).toString("base64");
+   
+       // Add to the result object
+       methodsInfo[base64Name] = {
+         name: methodName
+       };
+     }
+     console.log(methodsInfo);
+     const methodArray = Object.entries(methodsInfo).map(([base64Name, method]) => {
+       return {
+         base64: base64Name,
+         name: method.name,
+         args: method.name
+       };
+     });
+     return methodArray;
+
+
+
     // Validate and parse if necessary
-    if (typeof code === "string") {
-        try {
-            code = JSON.parse(code);
-        } catch (error) {
-            console.error("Failed to parse code as JSON:", error);
-            return [];
-        }
-    }
+    // if (typeof code === "string") {
+    //     try {
+    //         code = JSON.parse(code);
+    //     } catch (error) {
+    //         console.error("Failed to parse code as JSON:", error);
+    //         return [];
+    //     }
+    // }
 
-    if (!code || !Array.isArray(code.methods)) {
-        console.error("Invalid code format. Expected an object with a methods array.");
-        return [];
-    }
+    // if (!code || !Array.isArray(code.methods)) {
+    //     console.error("Invalid code format. Expected an object with a methods array.");
+    //     return [];
+    // }
 
-    const methodsInfo = [];
-    code.methods.forEach(method => {
-        const methodInfo = {
-            name: method.name,
-            args: method.args.map(arg => `${arg.name}: ${arg.type}`),
-            returns: method.returns.type
-        };
-        methodsInfo.push(methodInfo);
-    });
+    // const methodsInfo = [];
+    // code.methods.forEach(method => {
+    //     const methodInfo = {
+    //         name: method.name,
+    //         args: method.args.map(arg => `${arg.name}: ${arg.type}`),
+    //         returns: method.returns.type
+    //     };
+    //     methodsInfo.push(methodInfo);
+    // });
 
-    return methodsInfo;
+    // return methodsInfo;
 };
   
   const sendSmartContract = () => {

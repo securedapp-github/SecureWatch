@@ -341,7 +341,7 @@ const handleSelectChange = (selectedOptions) => {
 
       return {
         name: methodName,
-        args: (methodDetails?.args || []).map(arg => `${arg.split(': ')[0]}`), // Placeholder based on the argument name
+        args: ([]).map(arg => `${arg.split(': ')[0]}`), // Placeholder based on the argument name
       };
     });
 
@@ -1177,34 +1177,7 @@ const currentOptions = category === 2 ? txnOptionsCategory1 : txnOptionsCategory
           onChange={handleSelectChange}
           isMulti
         />
-         {Array.isArray(eventInputs) && eventInputs.map((event, eventIndex) => (
-      <div key={eventIndex} className="font-medium mt-3">
-        <div>{event.name}</div>
-        {event.args.length > 0 ? (
-          event.args.map((arg, argIndex) => {
-            const key = arg.split(': ')[0]; // Extract the argument name
-            return (
-              <div key={argIndex}>
-                <label>{key}:</label>
-                <input
-                className="w-full rounded-lg p-3 outline-none border border-[#4C4C4C] mt-2"
-                style={{ backgroundColor: "white" }}
-                  type="text"
-                  placeholder={`Enter ${key} value`} // Placeholder showing the argument name
-                  value={event.args[argIndex].split(': ')[1] || ''} // Pre-fill the input if value exists
-                  onChange={e => handleArgChange(eventIndex, argIndex, `${key}: ${e.target.value}`)}
-                />
-              </div>
-            );
-          })
-        ) : (
-          <div>
-            <p>No arguments for this method.</p>
-          </div>
-        )}
-      </div>
-             
-          ))}
+       
         </div>
       </>
     )}
