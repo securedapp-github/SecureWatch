@@ -31,15 +31,18 @@ import Logout from "./components/Logout.js";
 import Admin from "./components/Admin.jsx";
 import AdminAddUser from "./components/AdminAddUser.jsx";
 import CommingSoon from "./components/CommingSoon.jsx";
+import Billing from "./components/Billing.jsx";
 import Wallet_Security from "./components/Wallet_Security.jsx";
 import WalletMonitorAlerts from "./components/Wallet_Monitor_Alerts.jsx"; 
 import WalletMonitorCreate from "./components/Wallet_Monitor_Create.jsx";
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/log" element={<Logs />} />
+        <Route path="/billing" element={<Billing />} />
         <Route path="/comingsoon" element={<CommingSoon />} />
         <Route path="/alerts" element={<Protected cmp={<Alerts />} />} />
         <Route path="/function" element={<Protected cmp={<Functions />} />} />
