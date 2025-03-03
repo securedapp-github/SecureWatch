@@ -59,8 +59,8 @@ const BillingForm = () => {
 
 
                     </div>
-                    <div className="max-w-xl p-3 md:p-0  md:ml-6    ">
-                        
+                    <div className="w-full p-3 md:p-0  md:pl-6    ">
+
                         <p className=" text-black">
                             <strong className=" text-lg font-semibold text-black">Enter the organisation's address</strong>
                             <br />
@@ -68,31 +68,75 @@ const BillingForm = () => {
                             organisation is registered.
                         </p>
 
-                        <form className="mt-4 space-y-4">
-                            <div>
+                        <form className="mt-4 space-y-4 w-full">
+                            <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
                                 <label className="text-sm font-medium text-[#6A6A6A]">LEGAL NAME</label>
-                                <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" defaultValue="Jane" />
+                                <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" />
                             </div>
-                            <div>
-                                <label className="text-sm font-medium text-[#6A6A6A]">FIRST NAME</label>
-                                <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" defaultValue="Jane" />
+
+                            <div className="flex flex-row gap-4 flex-wrap w-full ">
+                                <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
+                                    <label className="text-sm font-medium text-[#6A6A6A]">FIRST NAME</label>
+                                    <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" />
+                                </div>
+                                <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
+                                    <label className="text-sm font-medium text-[#6A6A6A]">LAST NAME</label>
+                                    <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" />
+                                </div>
                             </div>
-                            <div>
-                                <label className="text-sm font-medium text-[#6A6A6A]">LAST NAME</label>
-                                <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" defaultValue="Jane" />
+
+                            <div className="flex flex-row gap-4 flex-wrap w-full">
+
+                                <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
+                                    <label className="text-sm font-medium text-[#6A6A6A]">BILLING EMAIL ID</label>
+                                    <input type="email" className="w-full p-2 border border-gray-300 bg-white rounded-md" placeholder="email id" />
+                                </div>
+                                <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
+                                    <label className="text-sm font-medium text-[#6A6A6A]">GST / TAX NUMBER</label>
+                                    <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" placeholder="000 000 000" />
+                                </div>
                             </div>
-                            <div>
-                                <label className="text-sm font-medium text-[#6A6A6A]">BILLING EMAIL ID</label>
-                                <input type="email" className="w-full p-2 border border-gray-300 bg-white rounded-md" placeholder="email id" />
+
+                            <div className="flex flex-row gap-4 flex-wrap w-full">
+                                <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
+                                    <label className="text-sm font-medium text-[#6A6A6A]">BILLING PHONE NUMBER</label>
+                                    <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" />
+                                </div>
+                                <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
+                                    <label className="text-sm font-medium text-[#6A6A6A]">Address</label>
+                                    <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" />
+                                </div>
                             </div>
-                            <div>
-                                <label className="text-sm font-medium text-[#6A6A6A]">GST / TAX NUMBER</label>
-                                <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" placeholder="000 000 000" />
+
+
+                            <div className="flex flex-row gap-4 flex-wrap w-full">
+                                <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
+                                    <label className="text-sm font-medium text-[#6A6A6A]">CITY</label>
+                                    <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" />
+                                </div>
+                                <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
+                                    <label className="text-sm font-medium text-[#6A6A6A]">STATE</label>
+                                    <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" />
+                                </div>
                             </div>
-                            <div>
-                                <label className="text-sm font-medium text-[#6A6A6A]">BILLING PHONE NUMBER</label>
-                                <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" placeholder="000 000 000" />
+                            <div className="flex flex-row gap-4 flex-wrap w-full">
+                                <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
+                                    <label className="text-sm font-medium text-[#6A6A6A]">Country</label>
+                                    <select className="w-full p-2 py-3 border border-gray-300 bg-white rounded-md">
+                                        <option value="">Select Country</option>
+                                        <option value="USA">USA</option>
+                                        <option value="Canada">Canada</option>
+                                        <option value="UK">UK</option>
+                                    </select>
+                                </div>
+                                <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
+                                    <label className="text-sm font-medium text-[#6A6A6A]">Pin Code</label>
+                                    <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" />
+                                </div>
                             </div>
+
+
+
                             <p className="text-xs text-gray-600">
                                 By continuing, I agree with the <span className="text-green-600 cursor-pointer">Payment Policy</span> and
                                 understand that my subscription will renew automatically at the end of term unless I cancel it.
