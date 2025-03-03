@@ -39,8 +39,8 @@ const AccountManagement = () => {
       });
       const data = await res.json();
       setUsers(data.users);
-      const admin = data.users.filter((user) => user.is_admin == 1);
-      const analyst = data.users.filter((user) => user.is_admin == 0);
+      const admin = data.users?.filter((user) => user.is_admin == 1);
+      const analyst = data.users?.filter((user) => user.is_admin == 0);
       setAdminUsers(admin);
       setAnalystUsers(analyst);
       setLoading(false);
@@ -150,6 +150,15 @@ const AccountManagement = () => {
             <div className={`mt-5 py-3 pl-4 pr-20 rounded-r-full bg-[#0A65C9]`}>
               <h1 className="text-white font-semibold text-nowrap">Admin</h1>
             </div>
+             <div className="flex flex-col gap-5 ml-5">
+                        <Link to="/admin"  className="text-[#2D5C8F] font-semibold">
+                        Account access
+                        </Link>
+                        <Link to="/billing" className="text-[#6A6A6A]">
+                        Billing
+                        </Link>
+                        
+                      </div>
           </div>
   
           <div className="min-h-screen   mt-20 w-full ">

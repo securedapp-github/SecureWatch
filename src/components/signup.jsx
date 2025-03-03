@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
-import c1 from "../images/backg.png";
-import c2 from "../images/ellipse.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 import NewNavbar2 from "./NewNavabr2";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { FaGithub } from "react-icons/fa";
-import { IoIosArrowForward } from "react-icons/io";
-import Google from "../images/google.png";
-import Metamask from "../images/metamask-icon.png";
 import SecureDapp from "../images/SecureDapp.png";
+import { toast, ToastContainer } from "react-toastify";
 
 function Signup() {
   const [loading, setLoading] = useState(false);
@@ -24,15 +18,50 @@ function Signup() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
-  function handleClick(e) {
+  // function handleClick(e) {
+  //   setLoading(true);
+  //   e.preventDefault();
+  //   if (!isValidEmail(email)) {
+  //     showErrorAlert("Please enter a valid email address.");
+  //     setLoading(false);
+  //   } else {
+  //     navigate("/login1", { state: { email } });
+  //   }
+  // }
+  async function handleClick(e) {
     setLoading(true);
     e.preventDefault();
     if (!isValidEmail(email)) {
-      //setErrorMessage("Please enter a valid email address.");
-      showErrorAlert("Please enter a valid email address.");
+      toast.error("Please enter a valid email address.");
       setLoading(false);
     } else {
-      navigate("/login1", { state: { email } });
+      try {
+        const response = await fetch("https://139-59-5-56.nip.io:3443/watchSendOtp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        if (response.ok) {
+          toast.success("OTP sent successfully!" ,
+            {
+              autoClose: 500,
+              onClose: () => {
+                navigate("/login1", { state: { email } });
+              },
+            }
+          );
+        } else {
+          const errorData = await response.json();
+          toast.error(errorData.message || "Failed to send OTP.");
+        }
+      } catch (error) {
+        toast.error("An error occurred. Please try again.");
+      } finally {
+        setLoading(false);
+      }
     }
   }
 
@@ -51,6 +80,17 @@ function Signup() {
   return (
     <div className="font-poppin bg-[#FAFAFA] min-h-screen pb-10">
       <NewNavbar2 />
+      <ToastContainer
+              position="top-right"
+              autoClose={1000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
       <div className="w-full h-full  px-2 sm:px-5 md:px-10 lg:px-20 pt-20 sm:pt-32 md:pt-40">
         <div className="bg-white rounded-2xl flex flex-wrap justify-center w-full p-4 py-10 shadow">
           <div className="w-full md:w-1/2 flex flex-col justify-start items-start  h-full gap-4  md:px-16">
@@ -91,7 +131,7 @@ function Signup() {
                 <p className="text-red-500 mb-3">{errorMessage}</p>
               )}
 
-              
+
             </form>
           </div>
         </div>

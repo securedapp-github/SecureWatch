@@ -366,6 +366,8 @@ const Monitor_cmp = () => {
                         is_admin == 1 ? (
                           <button
                             //onClick={() => handleInteract(mid)}
+                            // title="Interact"
+                            
                             onClick={() => {
                               navigate("/api_builder?id=" + mid, {
                                 state: {
@@ -378,14 +380,17 @@ const Monitor_cmp = () => {
                                 },
                               });
                             }}
-                            className=" text-black text-lg"
+                            className=" text-black text-lg tooltip"
+                            data-tip="Interact"
                           >
                             <FaEdit />
                           </button>
                         ) : (
                           is_admin == 1 && (
                             <button
-                              className=" text-black text-lg"
+                            // title="Interact"
+                              className=" text-black text-lg tooltip"
+                              data-tip="Interact"
                               onClick={() => {
                                 navigate("/api_builder?id=" + mid, {
                                   state: {
@@ -405,7 +410,8 @@ const Monitor_cmp = () => {
                         )}
 
                         <button
-                          className=" text-black text-lg"
+                          className=" text-black text-lg tooltip"
+                          data-tip="Alerts"
                           onClick={() => {
                             if (network === 1300 || network === 1301) {
                               // Navigate to algo_alerts page for Algorand Mainnet/Testnet
@@ -422,9 +428,11 @@ const Monitor_cmp = () => {
                         >
                           <FaRegBell />
                         </button>
+
                         {is_admin == 1 && (
                           <button
-                            className="text-black text-lg"
+                            className="text-black text-lg tooltip"
+                            data-tip="Edit"
                             onClick={() => {
                               navigate("/monitor_Edit?id=" + mid, {
                                 state: {
@@ -441,8 +449,9 @@ const Monitor_cmp = () => {
                             <LuPencil />
                           </button>
                         )}
+
                         {is_admin == 1 && (
-                          <button onClick={() => handleDeleteMonitor(mid)}>
+                          <button onClick={() => handleDeleteMonitor(mid)} className="tooltip" data-tip="Delete">
                             <FaRegTrashAlt className="text-black text-lg" />
                           </button>
                         )}

@@ -247,7 +247,7 @@ function Dashboard() {
 
                 <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
                 REMAINING CREDITS:  {Math.max(0, credits - (alert+walletAlert))}
-                {Math.max(0, credits - (alert+walletAlert)) === 0 && <span className="text-red-500"> ( contact @hello@securedapp.in )</span>}
+                {Math.max(0, credits - (alert+walletAlert)) === 0 && <span className="text-red-500"> ( contact hello@securedapp.in )</span>}
                 </p>
                 <Link
                   to="#"
@@ -287,7 +287,7 @@ function Dashboard() {
 
                 <p className="text-[#6A6A6A] text-xs sm:text-sm font-medium">
                 REMAINING CREDITS:  {Math.max(0, credits - (alert+walletAlert))}
-                {Math.max(0, credits - (alert+walletAlert)) === 0 && <span className="text-red-500"> ( contact @hello@securedapp.in )</span>}
+                {Math.max(0, credits - (alert+walletAlert)) === 0 && <span className="text-red-500"> ( contact hello@securedapp.in )</span>}
                 </p>
                 <Link
                   to="#"

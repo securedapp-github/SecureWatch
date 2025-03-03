@@ -10,6 +10,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import Google from "../images/google.png";
 import Metamask from "../images/metamask-icon.png";
 import SecureDapp from "../images/SecureDapp.png";
+import OTPInput from "react-otp-input";
 
 function Login1() {
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,7 @@ function Login1() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const email = location.state ? location.state.email : null;
+  const [otp, setOtp] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -33,13 +35,16 @@ function Login1() {
     try {
       const u_name = formData.name;
       const u_password = formData.password;
+      const referral = formData.referral;
+      const validOtp= parseInt(otp);
       if (
         !email ||
         email === "" ||
         u_name === "" ||
         u_password === "" ||
         !u_name ||
-        !u_password
+        !u_password ||
+        !validOtp
       ) {
         // setErrorMessage("Enter the Email, userame and password");
         showErrorAlert("Enter the Email, userame and password");
@@ -48,6 +53,8 @@ function Login1() {
           name: u_name,
           email,
           password: u_password,
+          referral: referral,
+          otp: validOtp,
         });
         console.log("response", response);
         if (response.status === 400) {
@@ -128,6 +135,7 @@ function Login1() {
                   required
                   className="w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition bg-white"
                 />
+                
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -141,7 +149,42 @@ function Login1() {
                 </button>
               </div>
 
+              <div>
+                <input
+                  type="text"
+                  placeholder="Enter your referral code"
+                  id="referral"
+                  name="referral"
+                  onChange={handleChange}
+                  autoComplete="off"
+                  className="w-full px-3 md:px-4 py-2.5 md:py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition bg-white"
+                />
+              </div>
+
+<div className="flex flex-col gap-3 justify-start items-start ">
+
+              <div className="font-medium text-lg self-start text-start text-[#4A4A4A] ">Enter your four digit OTP</div>
+
+              <OTPInput
+        value={otp}
+        onChange={setOtp}
+        numInputs={4}
+        inputStyle={{
+        width: '4rem',
+        height: '4rem',
+        marginRight: '1rem',
+        fontSize: '2rem',
+        borderRadius: 4,
+        border: '1px solid rgba(0,0,0,0.3)',
+        color: '#2563eb',
+        backgroundColor: 'white',
+        
+        }}
+        renderSeparator={<span> </span>}
+        renderInput={(props) => <input {...props} />}
+        />
              
+             </div>
 
               <button
                 type="submit"
