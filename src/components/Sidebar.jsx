@@ -55,7 +55,7 @@ export default function Sidebar() {
           <Link to="/comingsoon" className={`${expand ? "flex items-center gap-3" : ""}`}>
             <FaRegCalendarAlt className="text-2xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
-              {expand ? "Historic events" : ""}
+              {expand ? "Historical Insights" : ""}
             </span>{" "}
           </Link>
           <a href="https://securedapp.io/secure-trace" className={`${expand ? "flex items-center gap-2" : ""}`}>
@@ -67,12 +67,12 @@ export default function Sidebar() {
           <Link to="/comingsoon" className={`${expand ? "flex items-center gap-2" : ""}`}>
             <RiPieChartLine className="text-3xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
-              {expand ? "Analytics & Report" : ""}
+              {expand ? "Analytics & Reporting" : ""}
             </span>{" "}
           </Link>
           <Link to="/admin" className={`${expand ? "flex items-center gap-2" : ""}`}>
             <IoPersonSharp className="text-3xl text-gray-600" />{" "}
-            <span className="text-[#6A6A6A]">{expand ? "Admin" : ""}</span>{" "}
+            <span className="text-[#6A6A6A]">{expand ? "Admin Panel" : ""}</span>{" "}
           </Link>
           <Link to="/comingsoon" className={`${expand ? "flex items-center gap-2" : ""}`}>
             <LuNetwork className="text-3xl text-gray-600" />{" "}

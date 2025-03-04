@@ -33,7 +33,7 @@ const BillingForm = () => {
 
                 <div className=" h-full md:flex flex-col gap-5 ml-[100px] mt-20 hidden">
                     <div className={`mt-5 py-3 pl-4 pr-20 rounded-r-full bg-[#0A65C9]`}>
-                        <h1 className="text-white font-semibold text-nowrap">Admin</h1>
+                        <h1 className="text-white font-semibold text-nowrap">Admin Panel</h1>
                     </div>
                     <div className="flex flex-col gap-5 ml-5">
                         <Link to="/admin" className="text-[#6A6A6A]" >

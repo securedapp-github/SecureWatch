@@ -32,6 +32,36 @@ function Monitor_alerts() {
     setSelectedAlert(null);
   };
 
+  const explorer = {
+    80002: "https://amoy.polygonscan.com/tx/",
+    11155111: "https://sepolia.etherscan.io/tx/",
+    1: "https://etherscan.io/tx/",
+    56: "https://bscscan.com/tx/",
+    137: "https://polygonscan.com/tx/",
+    8453: "https://basescan.org/tx/",
+    43114: "https://snowtrace.io/tx/",
+    42161: "https://arbiscan.io/tx/",
+    100: "https://gnosisscan.io/tx/",
+    59144: "https://explorer.linea.build/tx/",
+    1313161554: "https://explorer.mainnet.aurora.dev/tx/",
+    10: "https://optimistic.etherscan.io/tx/"
+  };
+
+  const rpc_array = {
+    80002: "https://rpc-amoy.polygon.technology",
+    11155111: "https://1rpc.io/sepolia",
+    1: "https://eth.llamarpc.com",
+    56: "https://binance.llamarpc.com",
+    137: "https://polygon.llamarpc.com",
+    8453: "https://base.llamarpc.com",
+    43114: "https://avalanche.drpc.org",
+    42161: "https://arbitrum.llamarpc.com",
+    100: "https://1rpc.io/gnosis",
+    59144: "https://linea.drpc.org",
+    1313161554: "https://mainnet.aurora.dev",
+    10: "https://optimism.llamarpc.com"
+  };
+
   useEffect(() => {
     const fetchAlert = async () => {
       setLoading(true);
@@ -78,10 +108,10 @@ function Monitor_alerts() {
             </div>
             <div className="flex flex-col gap-5 ml-5">
               <Link to="/dashboard" className="text-[#6A6A6A]">
-              Dashboard
+                Dashboard
               </Link>
               <Link to="/monitor" className="text-[#6A6A6A] ">
-              Contract Monitor
+                Contract Monitor
               </Link>
               <Link to="/wallet_security" className="text-[#6A6A6A]">
                 Wallet Monitor
@@ -138,10 +168,10 @@ function Monitor_alerts() {
           </div>
           <div className="flex flex-col gap-5 ml-5">
             <Link to="/dashboard" className="text-[#6A6A6A]">
-            Dashboard
+              Dashboard
             </Link>
             <Link to="/monitor" className="text-[#2D5C8F] font-semibold">
-            Contract Monitor
+              Contract Monitor
             </Link>
             <Link to="/wallet_security" className="text-[#6A6A6A]">
               Wallet Monitor
@@ -172,23 +202,15 @@ function Monitor_alerts() {
                   <div className="w-full flex p-3 md:p-10 justify-between border-b-2">
                     <div className="flex flex-col gap-2">
                       <span className="  text-[#2D5C8F] font-medium ">
+
                         <a
-                          href={
-                            network === 80002
-                              ? `https://amoy.polygonscan.com/tx/${hash}`
-                              : network === 11155111
-                                ? `https://sepolia.etherscan.io/tx/${hash}`
-                                : "#"
-                          }
+                          href={explorer[network] ? `${explorer[network]}${hash}` : "#"}
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
-                          {network === 80002
-                            ? `https://amoy.poly...${hash.slice(
-                              hash.length - 4
-                            )}`
-                            : network === 11155111
-                              ? `https://sepo...${hash.slice(hash.length - 4)}`
-                              : "Unknown"}{" "}
+                          {explorer[network]
+                            ? `${explorer[network].replace("/tx/", "/tx/...")}${hash.slice(-4)}`
+                            : "Unknown"}
                         </a>
                       </span>
                       <p className=" text-black text-nowrap">
@@ -258,24 +280,13 @@ function Monitor_alerts() {
                         <td className=" ">
                           <span className="text-lg  text-blue-600 font-medium underline ">
                             <a
-                              href={
-                                network === 80002
-                                  ? `https://amoy.polygonscan.com/tx/${hash}`
-                                  : network === 11155111
-                                    ? `https://sepolia.etherscan.io/tx/${hash}`
-                                    : "#"
-                              }
+                              href={explorer[network] ? `${explorer[network]}${hash}` : "#"}
                               target="_blank"
+                              rel="noopener noreferrer"
                             >
-                              {network === 80002
-                                ? `https://amoy.poly...${hash.slice(
-                                  hash.length - 4
-                                )}`
-                                : network === 11155111
-                                  ? `https://sepo...${hash.slice(
-                                    hash.length - 4
-                                  )}`
-                                  : "Unknown"}{" "}
+                              {explorer[network]
+                                ? `${explorer[network].replace("/tx/", "/tx/...")}${hash.slice(-4)}`
+                                : "Unknown"}
                             </a>
                           </span>
                         </td>
@@ -334,20 +345,20 @@ function Monitor_alerts() {
                 <p className="text-slate-700 mb-3 font-medium">From</p>
                 <p className="hidden text-sm text-black bg-gray-100  md:flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.from_address} <button onClick={() => copyToClipboard(selectedAlert.from_address)}><FaCopy /></button></p>
                 <p className="text-sm text-black bg-gray-100 md:hidden flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.from_address.slice(0, 5)}
-                ....
-                {selectedAlert.from_address.slice(
-                  selectedAlert.from_address.length - 4
-                )} <button onClick={() => copyToClipboard(selectedAlert.from_address)}><FaCopy /></button></p>
-                
+                  ....
+                  {selectedAlert.from_address.slice(
+                    selectedAlert.from_address.length - 4
+                  )} <button onClick={() => copyToClipboard(selectedAlert.from_address)}><FaCopy /></button></p>
+
               </div>
               <div className=" ">
                 <p className="text-slate-700 mb-3 font-medium">To</p>
                 <p className="hidden text-sm text-black bg-gray-100  md:flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.to_address} <button onClick={() => copyToClipboard(selectedAlert.to_address)}><FaCopy /></button></p>
                 <p className="text-sm md:hidden text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.to_address.slice(0, 5)}
-                ....
-                {selectedAlert.to_address.slice(
-                  selectedAlert.to_address.length - 4
-                )} <button onClick={() => copyToClipboard(selectedAlert.to_address)}><FaCopy /></button></p>
+                  ....
+                  {selectedAlert.to_address.slice(
+                    selectedAlert.to_address.length - 4
+                  )} <button onClick={() => copyToClipboard(selectedAlert.to_address)}><FaCopy /></button></p>
               </div>
 
 
@@ -359,21 +370,15 @@ function Monitor_alerts() {
               <div className=" ">
                 <p className="text-slate-700 mb-3 font-medium">Transaction link</p>
                 <a
-                  className="text-sm text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl"
-                  href={
-                    network === 80002
-                      ? `https://amoy.polygonscan.com/tx/${selectedAlert.hash}`
-                      : network === 11155111
-                        ? `https://sepolia.etherscan.io/tx/${selectedAlert.hash}`
-                        : "#"
-                  }
+                  className="text-sm text-black bg-gray-100 flex items-center justify-between px-3 py-2 rounded-xl"
+                  href={explorer[network] ? `${explorer[network]}${selectedAlert.hash}` : "#"}
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  {network === 80002
-                    ? `https://amoy.poly...${selectedAlert.hash.slice(selectedAlert.hash.length - 4)}`
-                    : network === 11155111
-                      ? `https://sepo...${selectedAlert.hash.slice(selectedAlert.hash.length - 4)}`
-                      : "Unknown"}<FaExternalLinkAlt />
+                  {explorer[network]
+                    ? `${explorer[network].replace("/tx/", "/tx/...")}${selectedAlert.hash.slice(-4)}`
+                    : "Unknown"}
+                  <FaExternalLinkAlt />
                 </a>
               </div>
 
