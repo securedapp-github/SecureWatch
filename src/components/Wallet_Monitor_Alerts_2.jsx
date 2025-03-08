@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { FaCaretDown, FaCopy, FaExternalLinkAlt } from "react-icons/fa";
+import { FaCopy, FaExternalLinkAlt } from "react-icons/fa";
 import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 import { baseUrl } from "../Constants/data";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
-import { IoClose } from "react-icons/io5";
 import { TbTriangleSquareCircle } from "react-icons/tb";
 import { HiMenuAlt2 } from "react-icons/hi";
 
@@ -13,14 +12,14 @@ function Monitor_alerts() {
   const userEmail = localStorage.getItem("email");
   const token = localStorage.getItem("token");
   const location = useLocation();
-  const { mid } = location.state;
-  const { network } = location.state;
-  console.log("transfered mid", mid);
-  console.log("Network", network);
-  const [alert, setAlert] = useState([]);
+//   const { network } = location.state;
+//   console.log("Network", network);
+  const [alerts, setAlerts] = useState([]);
   const email = localStorage.getItem("email");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState(null);
+  const parent_id = localStorage.getItem("parent_id");
+  const userId = localStorage.getItem("userId");
   const [loading, setLoading] = useState(true);
 
   const openModal = (alert) => {
@@ -66,23 +65,27 @@ function Monitor_alerts() {
   useEffect(() => {
     const fetchAlert = async () => {
       setLoading(true);
-      const res = await fetch(`${baseUrl}/get_alerts`, {
+      const res = await fetch(`${baseUrl}/get_wallet_monitor`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          mid: mid,
+          user_id: parent_id != 0 ? parseInt(parent_id) : parseInt(userId),
         }),
       });
       const data = await res.json();
-      setAlert(data);
+      setAlerts(data.alerts);
       setLoading(false);
     };
     fetchAlert();
-    console.log("alert", alert);
+
   }, []);
+
+  useEffect(() => {
+    console.log("wallet alerts2:", alerts);
+  }, [alerts]);
 
   if (loading) {
     return (
@@ -94,7 +97,7 @@ function Monitor_alerts() {
       </div>
     );
   }
-  if (!alert.alerts || alert.alerts.length === 0 || alert === undefined) {
+  if (!alerts || alerts.length === 0 || alerts === undefined) {
     return (
       <div className=" bg-white">
         <NewNavbar email={userEmail} />
@@ -118,8 +121,8 @@ function Monitor_alerts() {
                 Wallet Monitor
               </Link>
               {/* <Link to="/log" className="text-[#6A6A6A] ">
-                Logs
-              </Link> */}
+                    Logs
+                  </Link> */}
             </div>
           </div>
 
@@ -158,7 +161,7 @@ function Monitor_alerts() {
   return (
     <div className="w-full min-h-full ">
       <NewNavbar email={userEmail} />
-      <div className="bg-white w-full flex h-full">
+      <div className="bg-[#FAFAFA] w-full flex h-full">
         <Sidebar />
 
         <div className=" h-full sm:flex flex-col gap-5 ml-[100px] w-56 mt-20 hidden fixed">
@@ -171,13 +174,12 @@ function Monitor_alerts() {
             <Link to="/dashboard" className="text-[#6A6A6A]">
               Dashboard
             </Link>
-            <Link to="/monitor" className="text-[#2D5C8F] font-semibold">
+            <Link to="/monitor" className="text-[#6A6A6A] ">
               Contract Monitor
             </Link>
             <Link to="/wallet_security" className="text-[#6A6A6A]">
               Wallet Monitor
             </Link>
-            <Link to="/log" className="text-[#6A6A6A] "></Link>
             {/* <Link to="/log" className="text-[#6A6A6A] ">
               Logs
             </Link> */}
@@ -185,51 +187,52 @@ function Monitor_alerts() {
         </div>
 
         <div className="pt-20  pb-10 sm:ml-80 w-full px-3 pr-5 mt-6">
-          <div className="text-black font-semibold text-lg ">
+          <div className="text-black font-semibold text-lg">
             Your Monitor Alerts{" "}
           </div>
           <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10 mx-auto">
-            {alert.alerts &&
-              alert.alerts.map((alert, index) => {
+            {alerts &&
+              alerts.map((alert, index) => {
                 const id = alert.id;
                 const hash = alert.hash;
-                const arguemant = alert.arguments;
                 const created_on = alert.created_on;
                 const from_address = alert.from_address;
                 const to_address = alert.to_address;
-                const eid = alert.eid;
-                const name = alert.event_name;
+                // const eid = alert.eid;
+                const name = alert.name;
+                const network = alert.network;
                 return (
                   <div className="w-full flex p-3 md:p-10 justify-between border-b-2">
                     <div className="flex flex-col gap-2">
                       <span className="  text-[#2D5C8F] font-medium ">
-
                         <a
                           href={explorer[network] ? `${explorer[network]}${hash}` : "#"}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           {explorer[network]
-                            ? `${explorer[network].replace("/tx/", "/tx/...")}${hash.slice(-4)}`
+                            ? `${explorer[network].replace("/tx/", "...")}${hash?.slice(-4)}`
                             : "Unknown"}
                         </a>
                       </span>
                       <p className=" text-black text-nowrap">
-                        {created_on.slice(0, 10)} {created_on.slice(11, 16)}
+                        {created_on?.slice(0, 10)} {created_on?.slice(11, 16)}
                       </p>
                       <p className="">
-                        <span className=" mt-auto text-black">{`${from_address.slice(
-                          0,
-                          5
-                        )}...${from_address.slice(
-                          from_address.length - 4
-                        )}`}</span>{" "}
+                        {from_address ?
+                          <span className=" mt-auto text-black">{`${from_address?.slice(
+                            0,
+                            5
+                          )}...${from_address?.slice(
+                            from_address.length - 4
+                          )}`}</span> : <span className="text-2xl mt-auto text-[#6A6A6A] font-bold">-</span>}{" "}
                       </p>
                       <p className="">
-                        <span className=" mt-auto text-black">{`${to_address.slice(
-                          0,
-                          5
-                        )}...${to_address.slice(to_address.length - 4)}`}</span>
+                        {to_address ?
+                          <span className=" mt-auto text-black">{`${to_address?.slice(
+                            0,
+                            5
+                          )}...${to_address?.slice(to_address.length - 4)}`}</span> : <span className="text-2xl mt-auto text-[#6A6A6A] font-bold">-</span>}
                       </p>
                     </div>
 
@@ -262,23 +265,19 @@ function Monitor_alerts() {
                   <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     To
                   </th>
-                  <th className="py-4 border-2 border-none text-black text-sm font-medium flex justify-center items-center">
-                    <HiMenuAlt2 className="text-lg"/>
-                  </th>
-                  
+                  <th className="py-4 border-2 border-none flex justify-center items-center text-black text-sm font-medium"> <HiMenuAlt2 className="text-lg"/></th>
                 </tr>
               </thead>
               <tbody>
-                {alert.alerts &&
-                  alert.alerts.map((alert, index) => {
+                {alerts &&
+                  alerts.map((alert, index) => {
                     const id = alert.id;
                     const hash = alert.hash;
-                    const arguemant = alert.arguments;
                     const created_on = alert.created_on;
                     const from_address = alert.from_address;
                     const to_address = alert.to_address;
-                    const eid = alert.eid;
-                    const name = alert.event_name;
+                    const name = alert.name;
+                    const network = alert.network;
                     return (
                       <tr className="border-gray-400 border-2 border-l-0 border-r-0 last:last:border-0">
                         <td className=" ">
@@ -289,31 +288,36 @@ function Monitor_alerts() {
                               rel="noopener noreferrer"
                             >
                               {explorer[network]
-                                ? `${explorer[network].replace("/tx/", "/tx/...")}${hash.slice(-4)}`
+                                ? `${explorer[network].replace("/tx/", "...")}${hash?.slice(-4)}`
                                 : "Unknown"}
                             </a>
                           </span>
                         </td>
                         <td className="  text-md text-black text-nowrap  ">
-                          {created_on.slice(0, 10)} {created_on.slice(11, 16)}
+                          {created_on?.slice(0, 10)} {created_on?.slice(11, 16)}
                         </td>
 
                         <td className=" ">
-                          <span className=" mt-auto text-md text-black">{`${from_address.slice(
-                            0,
-                            5
-                          )}...${from_address.slice(
-                            from_address.length - 4
-                          )}`}</span>{" "}
+                          {from_address ?
+                            <span className="text-md text-black mt-auto ">{`${from_address?.slice(
+                              0,
+                              5
+                            )}...${from_address?.slice(
+                              from_address.length - 4
+                            )}`}</span> : <span className="text-2xl mt-auto text-[#6A6A6A] font-bold">-</span>}
+                          {" "}
                         </td>
 
                         <td className=" ">
-                          <span className="text-md text-black mt-auto ">{`${to_address.slice(
-                            0,
-                            5
-                          )}...${to_address.slice(
-                            to_address.length - 4
-                          )}`}</span>
+                          {to_address ?
+                            <span className="text-md text-black mt-auto ">{`${to_address?.slice(
+                              0,
+                              5
+                            )}...${to_address?.slice(
+                              to_address.length - 4
+                            )}`}</span>
+                            : <span className="text-2xl mt-auto text-[#6A6A6A] font-bold">-</span>
+                          }
                         </td>
 
                         <td className=" flex justify-center items-center">
@@ -333,15 +337,15 @@ function Monitor_alerts() {
         </div>
 
         {isModalOpen && selectedAlert && (
-          <div className="fixed inset-0  bg-black bg-opacity-85 flex justify-center items-center z-50">
-            <div className="w-full bg-white sm:w-[60%] md:w-[600px] flex flex-col gap-5 p-5 rounded-2xl">
+          <div className="fixed inset-0 bg-black bg-opacity-85 flex justify-center items-center z-50">
+            <div className="w-full bg-white  sm:w-[60%] md:w-[600px] flex flex-col gap-5 p-5 rounded-2xl">
 
               <div className="bg-[#F2FBF6] flex flex-col gap-2 p-4 rounded-2xl border shadow-lg">
                 <div className="bg-[#EBF6EE] border rounded-full w-8 h-8 flex items-center justify-center">
                   <TbTriangleSquareCircle className="text-green-400 text-xl" />
                 </div>
                 <p className="text-black text-xl font-medium">Alert Details</p>
-                <p className="text-slate-600 text-sm font-medium">Event: {selectedAlert.event_name}</p>
+                <p className="text-slate-600 text-sm font-medium">Event: {selectedAlert.name}</p>
               </div>
 
 
@@ -353,15 +357,14 @@ function Monitor_alerts() {
                   {selectedAlert.from_address.slice(
                     selectedAlert.from_address.length - 4
                   )} <button onClick={() => copyToClipboard(selectedAlert.from_address)}><FaCopy /></button></p>
-
               </div>
               <div className=" ">
                 <p className="text-slate-700 mb-3 font-medium">To</p>
                 <p className="hidden text-sm text-black bg-gray-100  md:flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.to_address} <button onClick={() => copyToClipboard(selectedAlert.to_address)}><FaCopy /></button></p>
-                <p className="text-sm md:hidden text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.to_address.slice(0, 5)}
+                <p className="text-sm md:hidden text-black bg-gray-100  flex items-center justify-between px-3 py-2 rounded-xl">{selectedAlert.to_address?.slice(0, 5)}
                   ....
-                  {selectedAlert.to_address.slice(
-                    selectedAlert.to_address.length - 4
+                  {selectedAlert.to_address?.slice(
+                    selectedAlert.to_address?.length - 4
                   )} <button onClick={() => copyToClipboard(selectedAlert.to_address)}><FaCopy /></button></p>
               </div>
 
@@ -373,16 +376,17 @@ function Monitor_alerts() {
 
               <div className=" ">
                 <p className="text-slate-700 mb-3 font-medium">Transaction link</p>
+
                 <a
                   className="text-sm text-black bg-gray-100 flex items-center justify-between px-3 py-2 rounded-xl"
-                  href={explorer[network] ? `${explorer[network]}${selectedAlert.hash}` : "#"}
+                  href={explorer[selectedAlert.network] ? `${explorer[selectedAlert.network]}${selectedAlert.hash}` : "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {explorer[network]
-                    ? `${explorer[network].replace("/tx/", "/tx/...")}${selectedAlert.hash.slice(-4)}`
-                    : "Unknown"}
-                  <FaExternalLinkAlt />
+
+                  {explorer[selectedAlert.network]
+                    ? `${explorer[selectedAlert.network].replace("/tx/", "...")}${selectedAlert.hash.slice(-4)}`
+                    : "Unknown"}<FaExternalLinkAlt />
                 </a>
               </div>
 
@@ -396,8 +400,6 @@ function Monitor_alerts() {
             </div>
           </div>
         )}
-
-
       </div>
     </div>
   );

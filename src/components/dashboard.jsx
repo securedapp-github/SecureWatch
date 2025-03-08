@@ -191,7 +191,7 @@ function Dashboard() {
                   CHECK ALERTS
                 </p>
                 <Link
-                  to="#"
+                  to="/wallet_alerts"
                   className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
                 >
                   View Alerts
@@ -229,7 +229,7 @@ function Dashboard() {
                   CHECK ALERTS
                 </p>
                 <Link
-                  to="#"
+                  to="/contract_incidents"
                   className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
                 >
                   View Incidents
@@ -269,7 +269,7 @@ function Dashboard() {
                   CHECK ALERTS
                 </p>
                 <Link
-                  to="#"
+                  to="/contract_incidents"
                   className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
                 >
                   View Incidents

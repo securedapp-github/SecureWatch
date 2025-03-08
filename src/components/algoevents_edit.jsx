@@ -63,7 +63,7 @@ const [axferActive, setAxferActive] = useState(false);
 
   console.log("Selected values:", selectedValues.length);
 
-  const { name, email, m_id, network, abi, address, rk, alert_data, alert_type, Algoevents } = location.state || "";
+  const { name, email, m_id, network, abi, address, rk, alert_data, alert_type, Algoevents, slack_webhook } = location.state || "";
   const { category: category, ...otherState } = location.state || {};
   console.log("alert_data",alert_data);
   console.log("category:", category);
@@ -375,6 +375,7 @@ const handleAddArgument = (eventIndex) => {
     token: token,
     alert_data: alert_data,
     alert_type: alert_type,
+    slack_webhook, slack_webhook,
     //category: category
   };
 console.log("monitor data:",events);
