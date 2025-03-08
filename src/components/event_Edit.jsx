@@ -25,7 +25,7 @@ function Event_Edit() {
 
   console.log("Selected values:", selectedValues.length);
 
-  const { name, email, m_id, network, abi, address, rk, alert_data, alert_type } = location.state || "";
+  const { name, email, m_id, network, abi, address, rk, alert_data, alert_type, slack_webhook } = location.state || "";
 
   console.log("alert_data",alert_data);
   console.log("alert_type",alert_type);
@@ -258,6 +258,7 @@ const handleSelectChange = (selectedOptions) => {
     token: token,
     alert_data: alert_data,
     alert_type: alert_type,
+    slack_webhook, slack_webhook,
   };
 
   const handleSubmit = async () => {
