@@ -145,6 +145,7 @@ const Monitor_cmp = () => {
               const address = i.address;
               const alert_data = i.alert_data;
               const alert_type = i.alert_type;
+              const slack_webhook = i.slack_webhook;
               return (
                 <div className="w-full flex p-3 md:p-10 justify-between border-b-2">
                   <div className="flex flex-col gap-3">
@@ -236,6 +237,7 @@ const Monitor_cmp = () => {
                                 address,
                                 alert_data,
                                 alert_type,
+                                slack_webhook,
                               },
                             });
                           }}
@@ -316,15 +318,16 @@ const Monitor_cmp = () => {
               </thead>
               <tbody>
                 {moniter.monitors.map((i) => {
+                  const mid = i.mid;
                   const name = i.name;
                   const risk = i.category;
                   const network = i.network;
-                  const status = i.status;
-                  const mid = i.mid;
-                  const created_on = i.created_on;
                   const address = i.address;
-                  const alert_data = i.alert_data;
+                  const status = i.status;
+                  const created_on = i.created_on;
                   const alert_type = i.alert_type;
+                  const alert_data = i.alert_data;
+                  const slack_webhook = i.slack_webhook;
                   return (
                     <tr className="border-gray-400 border-2 border-l-0 border-r-0 ">
                       <td className=" ">
@@ -377,6 +380,7 @@ const Monitor_cmp = () => {
                                   address,
                                   alert_data,
                                   alert_type,
+                                  
                                 },
                               });
                             }}
@@ -442,6 +446,7 @@ const Monitor_cmp = () => {
                                   address,
                                   alert_data,
                                   alert_type,
+                                  slack_webhook,
                                 },
                               });
                             }}

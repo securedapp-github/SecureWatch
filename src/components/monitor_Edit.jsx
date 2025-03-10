@@ -31,8 +31,7 @@ function Monitor_Edit() {
   const targetMids = query.get("id");
   console.log("MID = ", targetMids);
 
- const { m_id, name, alert_data, alert_type, riskCategory } =
-    location.state || {};
+ const { m_id, name, alert_data, alert_type, slack_webhook, riskCategory } = location.state || {};
   const { mid } = location.state;
   const [category, setCategory] = useState();
   console.log("alert data is", alert_data);
@@ -215,6 +214,7 @@ function Monitor_Edit() {
                 category:
                   parseInt(category) || parseInt(selectedMonitor.category),
                 Algoevents: Algoevents,
+                slack_webhook: slack_webhook,
               },
             });
           },
@@ -252,6 +252,7 @@ function Monitor_Edit() {
                 token: token,
                 alert_data: alert_data || "",
                 alert_type: alert_type || "",
+                slack_webhook: slack_webhook || "",
               },
             });
           },

@@ -1,29 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Switch } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
-import { FaCopy } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import { baseUrl } from "../Constants/data";
-import { FaRegEdit } from "react-icons/fa";
-import { BsTrash } from "react-icons/bs";
 import { FaRegBell } from "react-icons/fa";
-import { LuPencil } from "react-icons/lu";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { FaEdit } from "react-icons/fa";
 import { MdOutlineToggleOn } from "react-icons/md";
 import { MdOutlineToggleOff } from "react-icons/md";
 import { HiMenuAlt2 } from "react-icons/hi";
 
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
 
 const Wallet_Security_Cmp = () => {
   const navigate = useNavigate();
@@ -33,8 +17,10 @@ const Wallet_Security_Cmp = () => {
   const [moniter, setMoniter] = useState([]);
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
+  console.log("user id:", userId);
   const is_admin = localStorage.getItem("is_admin");
   const parent_id = localStorage.getItem("parent_id");
+  console.log("parent_id:", parent_id);
 
   useEffect(() => {
     setLoading(true);
@@ -74,19 +60,16 @@ const Wallet_Security_Cmp = () => {
 
         if (response.ok) {
           setDeleteLoading(false);
-          setValue(value + 1); // Trigger re-fetch after deletion
+          setValue(value + 1);
           toast.success("Monitor deleted successfully.");
-          // alert("Monitor deleted successfully.");
         } else {
           setDeleteLoading(false);
           toast.error("Failed to delete monitor. Please try again.");
-          // alert("Failed to delete monitor. Please try again.");
         }
       } catch (error) {
         setDeleteLoading(false);
         toast.error("An error occurred. Please try again.");
         console.error("Error deleting monitor:", error);
-        // alert("An error occurred. Please try again.");
       }
     }
   };
@@ -152,16 +135,16 @@ const Wallet_Security_Cmp = () => {
                       {network === 80002
                         ? "Amoy"
                         : network === 1
-                        ? "Ethereum Mainnet"
-                        : network === 11155111
-                        ? "Sepolia Testnet"
-                        : network === 137
-                        ? "Polygon Mainnet"
-                        : network === 1300
-                        ? "Algorand Mainnet"
-                        : network === 1301
-                        ? "Algorand Testnet"
-                        : "Unknown"}
+                          ? "Ethereum Mainnet"
+                          : network === 11155111
+                            ? "Sepolia Testnet"
+                            : network === 137
+                              ? "Polygon Mainnet"
+                              : network === 1300
+                                ? "Algorand Mainnet"
+                                : network === 1301
+                                  ? "Algorand Testnet"
+                                  : "Unknown"}
                     </span>
                     <p className=" text-md text-black text-nowrap">
                       {created_on?.slice(0, 10)}
@@ -175,24 +158,82 @@ const Wallet_Security_Cmp = () => {
               </p> */}
                   </div>
                   <div className="flex flex-col gap-3 md:gap-5 justify-center items-center">
-                  <button
-                          className=" text-black text-lg"
+                    <button
+                      className=" text-black text-lg"
+                      onClick={() => {
+                        navigate("/wallet_monitor_alerts", {
+                          state: { mid, network },
+                        });
+                      }}
+                    >
+                      <FaRegBell />
+                    </button>
+
+                    {is_admin == 1 && (
+                      <button onClick={() => handleDeleteMonitor(mid)}>
+                        <FaRegTrashAlt className="text-black text-lg" />
+                      </button>
+                    )}
+
+                    {is_admin == 1 ? (
+                      status === 1 ? (
+                        <button
+                          className="text-black text-3xl"
                           onClick={() => {
-                            navigate("/wallet_monitor_alerts", {
-                              state: { mid, network },
-                            });
+                            fetch(`${baseUrl}/update_wallet_monitor`, {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                              },
+                              body: JSON.stringify({
+                                monitor_id: mid,
+                                status: 0,
+                              }),
+                            })
+                              .then((response) => response.json())
+                              .then((data) => {
+                                console.log("Success:", data);
+                                setValue(value + 1);
+                              })
+                              .catch((error) => {
+                                console.error("Error:", error);
+                              });
                           }}
                         >
-                          <FaRegBell />
+                          <MdOutlineToggleOn />
                         </button>
-
-                        {is_admin == 1 && (
-                          <button onClick={() => handleDeleteMonitor(mid)}>
-                            <FaRegTrashAlt className="text-black text-lg" />
-                          </button>
-                        )}
+                      ) : (
+                        <button
+                          className="text-black text-3xl"
+                          onClick={() => {
+                            fetch(`${baseUrl}/update_wallet_monitor`, {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                              },
+                              body: JSON.stringify({
+                                monitor_id: mid,
+                                status: 1,
+                              }),
+                            })
+                              .then((response) => response.json())
+                              .then((data) => {
+                                console.log("Success:", data);
+                                setValue(value + 1);
+                              })
+                              .catch((error) => {
+                                console.error("Error:", error);
+                              });
+                          }}
+                        >
+                          <MdOutlineToggleOff />
+                        </button>
+                      )
+                    ) : null}
                   </div>
-                  
+
                 </div>
               );
             })}
@@ -242,16 +283,16 @@ const Wallet_Security_Cmp = () => {
                           {network === 80002
                             ? "Amoy"
                             : network === 1
-                            ? "Ethereum Mainnet"
-                            : network === 11155111
-                            ? "Sepolia Testnet"
-                            : network === 137
-                            ? "Polygon Mainnet"
-                            : network === 1300
-                            ? "Algorand Mainnet"
-                            : network === 1301
-                            ? "Algorand Testnet"
-                            : "Unknown"}
+                              ? "Ethereum Mainnet"
+                              : network === 11155111
+                                ? "Sepolia Testnet"
+                                : network === 137
+                                  ? "Polygon Mainnet"
+                                  : network === 1300
+                                    ? "Algorand Mainnet"
+                                    : network === 1301
+                                      ? "Algorand Testnet"
+                                      : "Unknown"}
                         </span>
                       </td>
 
@@ -265,7 +306,8 @@ const Wallet_Security_Cmp = () => {
 
                       <td className="mx-14 flex gap-8 items-center py-4">
                         <button
-                          className=" text-black text-lg"
+                          className=" text-black text-lg tooltip"
+                          data-tip="Alerts"
                           onClick={() => {
                             navigate("/wallet_monitor_alerts", {
                               state: { mid, network },
@@ -276,10 +318,68 @@ const Wallet_Security_Cmp = () => {
                         </button>
 
                         {is_admin == 1 && (
-                          <button onClick={() => handleDeleteMonitor(mid)}>
-                            <FaRegTrashAlt className="text-black text-lg" />
+                          <button className=" tooltip" data-tip="Delete" onClick={() => handleDeleteMonitor(mid)}>
+                            <FaRegTrashAlt className="text-black text-lg " />
                           </button>
                         )}
+
+                        {is_admin == 1 ? (
+                          status === 1 ? (
+                            <button
+                              className="text-black text-3xl"
+                              onClick={() => {
+                                fetch(`${baseUrl}/update_wallet_monitor`, {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`,
+                                  },
+                                  body: JSON.stringify({
+                                    monitor_id: mid,
+                                    status: 0,
+                                  }),
+                                })
+                                  .then((response) => response.json())
+                                  .then((data) => {
+                                    console.log("Success:", data);
+                                    setValue(value + 1);
+                                  })
+                                  .catch((error) => {
+                                    console.error("Error:", error);
+                                  });
+                              }}
+                            >
+                              <MdOutlineToggleOn />
+                            </button>
+                          ) : (
+                            <button
+                              className="text-black text-3xl"
+                              onClick={() => {
+                                fetch(`${baseUrl}/update_wallet_monitor`, {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`,
+                                  },
+                                  body: JSON.stringify({
+                                    monitor_id: mid,
+                                    status: 1,
+                                  }),
+                                })
+                                  .then((response) => response.json())
+                                  .then((data) => {
+                                    console.log("Success:", data);
+                                    setValue(value + 1);
+                                  })
+                                  .catch((error) => {
+                                    console.error("Error:", error);
+                                  });
+                              }}
+                            >
+                              <MdOutlineToggleOff />
+                            </button>
+                          )
+                        ) : null}
                       </td>
                     </tr>
                   );

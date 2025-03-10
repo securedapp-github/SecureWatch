@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Modal from "react-modal";
-import Load from "../images/loading.png";
-import { Navigate, useLocation, useNavigate,Link } from "react-router-dom";
+import {  useLocation, useNavigate,Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { baseUrl } from "../Constants/data.js";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
 import { IoMdCheckmarkCircle } from "react-icons/io";
-import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import { TbLoader2 } from "react-icons/tb";
 
 Modal.setAppElement("#root");
@@ -42,6 +39,7 @@ function Alerts() {
   const [isSaved, setIsSaved] = useState(false);
   const [riskCategory, setRiskCategory] = useState("default");
   const [actionType, setActionType] = useState("default");
+  const [slackInput, setSlackInput] = useState("")
   
   console.log("riskCategory",riskCategory);
   console.log("actionType",actionType);
@@ -70,33 +68,17 @@ function Alerts() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (riskCategory === "" || riskCategory === "default" || actionType === "" || actionType === "default") {
-      console.error("No actions selected.");
+    
+
+    if (!emailInput && !slackInput) {
       setOpen(false);
-      toast.error("Please select all required fields!");
+      toast.error("Please provide at least one email or Slack webhook.");
       return;
     }
 
-    if (actionType === "email" && (emailInput === "" || emailInput === undefined || emailInput === null)) {
-      setOpen(false);
-      console.error("Please enter a valid email.");
-      toast.error("Please enter a valid email.");
-      return;
-    }
 
-    // const emails = emailInput.split(",").map((email) => email.trim());
-    // const emailString = emails.join(",");
-
-    // const postData = {
-    //   name: name,
-    //   monitor_id: m_id,
-    //   alert_type: actionType === "email" ? 1: 0, // Example: "1" for email, "0" for other actions
-    //   alert_data: actionType === "email" ? JSON.stringify(emailInput) : null, // Store email if email action is selected
-    //   risk_category: riskCategory,
-    //   // other_data: actionType !== "email" ? "other action data" : null, // Placeholder for other action data
-    // };
-
-    // console.log("Storing the following data:", postData); // Log the stored details
+    const emails = emailInput.split(",").map((email) => email.trim());
+    const emailString = emails.join(",");
 
     try {
       const response = await fetch(`${baseUrl}/update_monitor`, {
@@ -106,10 +88,10 @@ function Alerts() {
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          name: name,
           monitor_id: m_id,
-          alert_type: actionType === "email" ? 1: 0, 
-          alert_data: actionType === "email" ? emailInput : "", 
+          alert_type:  1, 
+          alert_data: emailString , 
+          slack_webhook: slackInput,
         }),
       });
       console.log("Response from server:", response.data);
@@ -283,31 +265,9 @@ function Alerts() {
           <div className="w-[97%] md:w-1/3 lg:w-1/4 mt-5 md:mt-0 mx-auto md:mx-0 sm:bg-inherit sm:border-0  bg-white px-2 border-2 rounded-md py-2">
             <form onSubmit={handleSubmit}>
               <div className="font-medium mt-5 text-lg" style={{ color: "black" }}>
-                Risk Category
+                Email
               </div>
-              <select
-                style={{ backgroundColor: "white" }}
-                name="category"
-                id="category"
-                required
-                onChange={(e) => setRiskCategory(e.target.value)}
-                value={riskCategory}
-                className="outline-none border-2 border-[#4C4C4C] py-3 rounded-xl  w-full px-3"
-              >
-                
-                <option value="default" className="text-[13px] text-[#959595] ">
-                  None
-                </option>
-                <option value="Low Severity" className="text-[13px] text-[#959595] ">
-                  Low Severity
-                </option>
-                <option value="Medium Severity" className="text-[13px] text-[#959595]">
-                  Medium Severity
-                </option>
-                <option value="High Severity" className="text-[13px] text-[#959595]">
-                  High Severity
-                </option>
-              </select>
+              <input type="text" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} className="mt-2 w-full border-2 border-black text-black bg-white p-2 rounded-lg" placeholder="Enter emails, e.g., example1@gmail.com, example2@gmail.com" />
   
               <div className="mt-5">
                 <div className="font-medium" style={{ color: "black" }}>
@@ -315,27 +275,8 @@ function Alerts() {
                 </div>
                 <div className="">
                   <div className="font-medium">
-                    <select
-                      style={{ backgroundColor: "white" }}
-                      className="outline-none border-2 border-[#4C4C4C] py-3 rounded-xl  w-full px-3"
-                      value={actionType}
-                      required
-                      onChange={(e) => setActionType(e.target.value)}
-                    >
-                      <option value="default" hidden>Select Action</option>
-                      <option value="email">Email</option>
-                      <option value="other">Other Action</option>
-                    </select>
-                    {actionType === "email" && (
-                      <input
-                        style={{ backgroundColor: "white" }}
-                        type="email"
-                        value={emailInput}
-                        onChange={(e) => setEmailInput(e.target.value)}
-                        className="mt-2 w-full border-2 border-gray-300 p-2 rounded-lg"
-                        placeholder="Enter emails, e.g., example1@gmail.com, example2@gmail.com"
-                      />
-                    )}
+                  <input type="text" value={slackInput} onChange={(e) => setSlackInput(e.target.value)} className="mt-2 w-full border-2 border-black text-black bg-white p-2 rounded-lg" placeholder="https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX" />
+                   
                   </div>
                   <div>
                     <svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -7,6 +7,7 @@ import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
 import { IoClose } from "react-icons/io5";
 import { TbTriangleSquareCircle } from "react-icons/tb";
+import { HiMenuAlt2 } from "react-icons/hi";
 
 function Algo_alerts() {
   const userEmail = localStorage.getItem("email");
@@ -116,7 +117,7 @@ function Algo_alerts() {
   };
 
   return (
-    <div className="w-full min-h-full bg-[#FAFAFA]">
+    <div className="w-full min-h-full bg-white">
       <NewNavbar email={userEmail} />
       <div className=" w-full flex h-full">
         <Sidebar />
@@ -142,8 +143,8 @@ function Algo_alerts() {
             </Link> */}
           </div>
         </div>
-        <div className="pt-20  pb-10 sm:ml-80 w-full px-3 pr-5">
-          <div className="text-2xl text-center lg:text-3xl font-bold text-black lg:text-start ml-5 mt-5 mb-5">
+        <div className="pt-20  pb-10 sm:ml-80 w-full px-3 xl:ps-20 xl:pe-20 pr-5 mt-6">
+          <div className="text-black font-semibold text-lg">
             Your Monitor Alerts
           </div>
 
@@ -241,19 +242,19 @@ function Algo_alerts() {
             <table className="min-w-full rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table border-gray-400 ">
               <thead>
                 <tr className="">
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg font-semibold">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     Txn Hash
                   </th>
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg font-semibold">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     Created On
                   </th>
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg font-semibold">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     From
                   </th>
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg font-semibold">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     To
                   </th>
-                  <th></th>
+                  <th className="py-4 border-2 border-none flex justify-center items-center text-black text-sm font-medium"> <HiMenuAlt2 className="text-lg"/></th>
                 </tr>
               </thead>
               <tbody>
@@ -301,7 +302,7 @@ function Algo_alerts() {
                       <tr className="border-gray-400 border-2 border-l-0 border-r-0 last:last:border-0">
                         <td>
                           {transactionLink ? (
-                            <span className="text-lg text-blue-600 font-medium underline">
+                            <span className="text-md text-black underline">
                               <a
                                 href={transactionLink}
                                 target="_blank"
@@ -315,23 +316,23 @@ function Algo_alerts() {
                               </a>
                             </span>
                           ) : (
-                            <span className="text-lg text-gray-600">
+                            <span className="text-md text-black">
                               No Link Available
                             </span>
                           )}
                         </td>
-                        <td className="text-[#6A6A6A] text-lg">
+                        <td className="text-md text-black">
                           {new Date(created_on).toLocaleString()}
                         </td>
                         <td className="">
-                          <span className="text-lg text-[#6A6A6A]">
+                          <span className="text-md text-black">
                             {`${sender.slice(0, 5)}...${sender.slice(
                               sender.length - 4
                             )}`}
                           </span>
                         </td>
                         <td className="">
-                          <span className="text-lg text-[#6A6A6A]">
+                          <span className="text-md text-black">
                             {`${receiver.slice(0, 5)}...${receiver.slice(
                               receiver.length - 4
                             )}`}

@@ -7,6 +7,7 @@ import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
 import { IoClose } from "react-icons/io5";
 import { TbTriangleSquareCircle } from "react-icons/tb";
+import { HiMenuAlt2 } from "react-icons/hi";
 
 function Monitor_alerts() {
   const userEmail = localStorage.getItem("email");
@@ -157,7 +158,7 @@ function Monitor_alerts() {
   return (
     <div className="w-full min-h-full ">
       <NewNavbar email={userEmail} />
-      <div className="bg-[#FAFAFA] w-full flex h-full">
+      <div className="bg-white w-full flex h-full">
         <Sidebar />
 
         <div className=" h-full sm:flex flex-col gap-5 ml-[100px] w-56 mt-20 hidden fixed">
@@ -183,8 +184,8 @@ function Monitor_alerts() {
           </div>
         </div>
 
-        <div className="pt-20  pb-10 sm:ml-80 w-full px-3 pr-5">
-          <div className="text-2xl text-center lg:text-3xl font-bold text-black lg:text-start ml-5 mt-5 mb-5 ">
+        <div className="pt-20  pb-10 sm:ml-80 w-full px-3 xl:ps-20 xl:pe-20 pr-5 mt-6">
+          <div className="text-black font-semibold text-lg ">
             Your Monitor Alerts{" "}
           </div>
           <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10 mx-auto">
@@ -249,19 +250,22 @@ function Monitor_alerts() {
             <table className="min-w-full rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table border-gray-400 ">
               <thead>
                 <tr className="">
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg font-semibold">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     Link
                   </th>
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg font-semibold">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     Created on
                   </th>
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg font-semibold">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     From
                   </th>
-                  <th className="py-4 border-2 border-none text-[#6A6A6A] text-lg font-semibold">
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium">
                     To
                   </th>
-                  <th></th>
+                  <th className="py-4 border-2 border-none text-black text-sm font-medium flex justify-center items-center">
+                    <HiMenuAlt2 className="text-lg"/>
+                  </th>
+                  
                 </tr>
               </thead>
               <tbody>
@@ -278,7 +282,7 @@ function Monitor_alerts() {
                     return (
                       <tr className="border-gray-400 border-2 border-l-0 border-r-0 last:last:border-0">
                         <td className=" ">
-                          <span className="text-lg  text-blue-600 font-medium underline ">
+                          <span className="text-md text-black underline ">
                             <a
                               href={explorer[network] ? `${explorer[network]}${hash}` : "#"}
                               target="_blank"
@@ -290,12 +294,12 @@ function Monitor_alerts() {
                             </a>
                           </span>
                         </td>
-                        <td className="  text-[#6A6A6A] text-nowrap text-lg ">
+                        <td className="  text-md text-black text-nowrap  ">
                           {created_on.slice(0, 10)} {created_on.slice(11, 16)}
                         </td>
 
                         <td className=" ">
-                          <span className="text-lg mt-auto text-[#6A6A6A]">{`${from_address.slice(
+                          <span className=" mt-auto text-md text-black">{`${from_address.slice(
                             0,
                             5
                           )}...${from_address.slice(
@@ -304,7 +308,7 @@ function Monitor_alerts() {
                         </td>
 
                         <td className=" ">
-                          <span className="text-lg mt-auto text-[#6A6A6A]">{`${to_address.slice(
+                          <span className="text-md text-black mt-auto ">{`${to_address.slice(
                             0,
                             5
                           )}...${to_address.slice(

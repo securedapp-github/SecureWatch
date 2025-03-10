@@ -12,10 +12,8 @@ function Monitor_alerts() {
   const userEmail = localStorage.getItem("email");
   const token = localStorage.getItem("token");
   const location = useLocation();
-  const { mid } = location.state;
-  const { network } = location.state;
-  console.log("transfered mid", mid);
-  console.log("Network", network);
+//   const { network } = location.state;
+//   console.log("Network", network);
   const [alerts, setAlerts] = useState([]);
   const email = localStorage.getItem("email");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,7 +76,7 @@ function Monitor_alerts() {
         }),
       });
       const data = await res.json();
-      setAlerts(data.alerts.filter(item => item.mid === mid));
+      setAlerts(data.alerts);
       setLoading(false);
     };
     fetchAlert();
@@ -86,7 +84,7 @@ function Monitor_alerts() {
   }, []);
 
   useEffect(() => {
-    console.log("alerts:", alerts);
+    console.log("wallet alerts2:", alerts);
   }, [alerts]);
 
   if (loading) {
@@ -202,6 +200,7 @@ function Monitor_alerts() {
                 const to_address = alert.to_address;
                 // const eid = alert.eid;
                 const name = alert.name;
+                const network = alert.network;
                 return (
                   <div className="w-full flex p-3 md:p-10 justify-between border-b-2">
                     <div className="flex flex-col gap-2">
@@ -278,6 +277,7 @@ function Monitor_alerts() {
                     const from_address = alert.from_address;
                     const to_address = alert.to_address;
                     const name = alert.name;
+                    const network = alert.network;
                     return (
                       <tr className="border-gray-400 border-2 border-l-0 border-r-0 last:last:border-0">
                         <td className=" ">
@@ -379,13 +379,13 @@ function Monitor_alerts() {
 
                 <a
                   className="text-sm text-black bg-gray-100 flex items-center justify-between px-3 py-2 rounded-xl"
-                  href={explorer[network] ? `${explorer[network]}${selectedAlert.hash}` : "#"}
+                  href={explorer[selectedAlert.network] ? `${explorer[selectedAlert.network]}${selectedAlert.hash}` : "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
 
-                  {explorer[network]
-                    ? `${explorer[network].replace("/tx/", "...")}${selectedAlert.hash.slice(-4)}`
+                  {explorer[selectedAlert.network]
+                    ? `${explorer[selectedAlert.network].replace("/tx/", "...")}${selectedAlert.hash.slice(-4)}`
                     : "Unknown"}<FaExternalLinkAlt />
                 </a>
               </div>

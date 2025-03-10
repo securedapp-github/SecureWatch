@@ -191,7 +191,7 @@ function Dashboard() {
                   CHECK ALERTS
                 </p>
                 <Link
-                  to="#"
+                  to="/wallet_alerts"
                   className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
                 >
                   View Alerts
@@ -229,7 +229,7 @@ function Dashboard() {
                   CHECK ALERTS
                 </p>
                 <Link
-                  to="#"
+                  to="/contract_incidents"
                   className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
                 >
                   View Incidents
@@ -249,12 +249,12 @@ function Dashboard() {
                 REMAINING CREDITS:  {Math.max(0, credits - (alert+walletAlert))}
                 {Math.max(0, credits - (alert+walletAlert)) === 0 && <span className="text-red-500"> ( contact hello@securedapp.in )</span>}
                 </p>
-                <Link
+                {/* <Link
                   to="#"
                   className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
                 >
                   Manage Plan
-                </Link>
+                </Link> */}
               </div>
 
               <div className="w-[330px] sm:w-[580px] hidden h-[210px] p-4 xl:flex flex-col justify-start items-start  gap-3 rounded-2xl bg-[#F7F5FF]  shadow ">
@@ -269,7 +269,7 @@ function Dashboard() {
                   CHECK ALERTS
                 </p>
                 <Link
-                  to="#"
+                  to="/contract_incidents"
                   className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
                 >
                   View Incidents
@@ -289,12 +289,12 @@ function Dashboard() {
                 REMAINING CREDITS:  {Math.max(0, credits - (alert+walletAlert))}
                 {Math.max(0, credits - (alert+walletAlert)) === 0 && <span className="text-red-500"> ( contact hello@securedapp.in )</span>}
                 </p>
-                <Link
+                {/* <Link
                   to="#"
                   className="bg-[#6549FD] text-white px-3 py-1 rounded-lg text-sm font-medium"
                 >
                   Manage Plan
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
