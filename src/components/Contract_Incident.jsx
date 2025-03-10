@@ -182,7 +182,7 @@ function Monitor_alerts() {
           </div>
         </div>
 
-        <div className="pt-20  pb-10 sm:ml-80 w-full px-3 pr-5 mt-6">
+        <div className="pt-20  pb-10 sm:ml-80 w-full pr-5 mt-6 px-3 xl:ps-20 xl:pe-20">
           <div className="text-black font-semibold text-lg ">
             Your Monitor Alerts{" "}
           </div>
