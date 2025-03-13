@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { HiDotsVertical } from "react-icons/hi";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaCirclePlus } from "react-icons/fa6";
 import { baseUrl } from "../Constants/data";
 import { FaTrash } from "react-icons/fa";
@@ -12,6 +12,7 @@ import { IoIosRemoveCircle } from "react-icons/io";
 
 const AccountManagement = () => {
   const userEmail = localStorage.getItem("email");
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const parent_id = localStorage.getItem("parent_id");
@@ -23,6 +24,7 @@ const AccountManagement = () => {
   const [adminUsers, setAdminUsers] = useState([]);
   const [analystUsers, setAnalystUsers] = useState([]);
   const [email, setEmail] = useState("");
+  
 
   useEffect(() => {
     setLoading(true);
@@ -32,12 +34,37 @@ const AccountManagement = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           parent_id: userId,
         }),
       });
       const data = await res.json();
+      if(res.status === 401){
+        toast.error("Session Expired, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
+      if(res.status === 403){
+        toast.error("Unauthorized Access, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
       setUsers(data.users);
       const admin = data.users?.filter((user) => user.is_admin == 1);
       const analyst = data.users?.filter((user) => user.is_admin == 0);
@@ -268,6 +295,30 @@ const AccountManagement = () => {
         );
 
         const result = await response.json();
+        if(response.status === 401){
+          toast.error("Session Expired, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
+        if(response.status === 403){
+          toast.error("Unauthorized Access, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
         if (response.ok) {
           toast.success("User access updated successfully!");
         } else {

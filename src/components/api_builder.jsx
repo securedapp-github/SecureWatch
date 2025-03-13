@@ -2,15 +2,17 @@ import React, { useState, useEffect, useRef } from "react";
 import Web3 from "web3";
 import "../App.css";
 import Connect from "./Connect";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { baseUrl } from "../Constants/data";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { RiArrowDropUpLine } from "react-icons/ri";
+import { toast, ToastContainer } from "react-toastify";
 
 const Api_builder = () => {
+  const navigate = useNavigate();
   const [userWalletAddress, setUserWalletAddress] = useState(null);
   const [contract, setContract] = useState(null);
   const [writeFunctions, setWriteFunctions] = useState([]);
@@ -161,7 +163,30 @@ const Api_builder = () => {
           }),
         });
         data = await res.json();
-
+        if(res.status === 401){
+          toast.error("Session Expired, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
+        if(res.status === 403){
+          toast.error("Unauthorized Access, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
         const _selectedMonitor = data.monitors.find(
           (monitor) => monitor.mid == targetMids
         );
@@ -430,6 +455,17 @@ const Api_builder = () => {
   return (
     <div className="w-full min-h-full">
       <NewNavbar email={userEmail} />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="bg-[#FAFAFA] w-full flex h-full">
         <Sidebar />
 

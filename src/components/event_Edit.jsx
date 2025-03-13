@@ -113,7 +113,30 @@ function Event_Edit() {
           },
           body: JSON.stringify({ mid: m_id }),
         });
-
+        if(res.status === 401){
+          toast.error("Session Expired, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
+        if(res.status === 403){
+          toast.error("Unauthorized Access, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
@@ -276,6 +299,30 @@ const handleSelectChange = (selectedOptions) => {
                  },
                 body: JSON.stringify(data),
             });
+            if(response.status === 401){
+              toast.error("Session Expired, Please login again",
+                {
+                  autoClose: 500,
+                  onClose: () => {
+                    localStorage.clear();
+                    navigate("/login");
+                  },
+                }
+      
+              )
+            }
+            if(response.status === 403){
+              toast.error("Unauthorized Access, Please login again",
+                {
+                  autoClose: 500,
+                  onClose: () => {
+                    localStorage.clear();
+                    navigate("/login");
+                  },
+                }
+      
+              )
+            }
             if (!response.ok) {
                 throw new Error(`Error fetching data from ${url}`);
             }
@@ -311,6 +358,30 @@ const handleSelectChange = (selectedOptions) => {
                  },
                 body: JSON.stringify({ mid: monitorId }),
             });
+            if(response.status === 401){
+              toast.error("Session Expired, Please login again",
+                {
+                  autoClose: 500,
+                  onClose: () => {
+                    localStorage.clear();
+                    navigate("/login");
+                  },
+                }
+      
+              )
+            }
+            if(response.status === 403){
+              toast.error("Unauthorized Access, Please login again",
+                {
+                  autoClose: 500,
+                  onClose: () => {
+                    localStorage.clear();
+                    navigate("/login");
+                  },
+                }
+      
+              )
+            }
             if (!response.ok) {
                 throw new Error('Error fetching event data');
             }

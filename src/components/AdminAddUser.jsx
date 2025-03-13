@@ -4,14 +4,16 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RolesForm = () => {
+  const navigate = useNavigate();
   const userEmail = localStorage.getItem("email");
   const parentId = localStorage.getItem("userId");
   const [email, setEmail] = useState("");
   const [notifyNewUsers, setNotifyNewUsers] = useState(false);
   const [selectedRole, setSelectedRole] = useState("");
+  const token = localStorage.getItem("token");
 
   const roles = [
     {
@@ -59,11 +61,35 @@ const RolesForm = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(requestBody),
         }
       );
+      if(response.status === 401){
+        toast.error("Session Expired, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
 
+        )
+      }
+      if(response.status === 403){
+        toast.error("Unauthorized Access, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
       const result = await response.json();
       if (response.ok) {
         toast.success("User access updated successfully!");

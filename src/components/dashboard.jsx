@@ -12,6 +12,7 @@ import { TbAlertTriangle } from "react-icons/tb";
 import { TbUserSquare } from "react-icons/tb";
 import { CgHome } from "react-icons/cg";
 import { MdOutlineSettings } from "react-icons/md";
+import { toast } from "react-toastify";
 
 function Dashboard() {
   const [hash, setHash] = useState("");
@@ -91,6 +92,30 @@ function Dashboard() {
         }),
       });
       const data = await res.json();
+      if(res.status === 401){
+        toast.error("Session Expired, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
+      if(res.status === 403){
+        toast.error("Unauthorized Access, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
       setValues(data);
       setListeners(data.listeners[0].active_listeners);
       setAlert(data.alerts[0].alerts);
@@ -115,6 +140,30 @@ function Dashboard() {
         }),
       });
       const data = await res.json();
+      if(res.status === 401){
+        toast.error("Session Expired, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
+      if(res.status === 403){
+        toast.error("Unauthorized Access, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
       console.log("wallet monitor count", data.monitors.length);
       setWalletAlert(data.alerts.length);
       setWalletMoniterCount(data.monitors.length);
