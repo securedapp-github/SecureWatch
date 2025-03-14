@@ -236,7 +236,30 @@ function Monitor_Edit() {
             Authorization: `Bearer ${token}`,
           },
         });
-
+        if(response.status === 401){
+          toast.error("Session Expired, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
+        if(response.status === 403){
+          toast.error("Unauthorized Access, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
         toast.success("Details updated successfully!", {
           autoClose: 500,
           onClose: () => {
@@ -319,6 +342,30 @@ function Monitor_Edit() {
           }),
         });
         data = await res.json();
+        if(res.status === 401){
+          toast.error("Session Expired, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
+        if(res.status === 403){
+          toast.error("Unauthorized Access, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
         console.log("Monitor data fetched:", data);
 
         // Log the monitors array to see if it contains the correct category value

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { FaCopy, FaExternalLinkAlt } from "react-icons/fa";
 import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 import { baseUrl } from "../Constants/data";
@@ -7,8 +7,10 @@ import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
 import { TbTriangleSquareCircle } from "react-icons/tb";
 import { HiMenuAlt2 } from "react-icons/hi";
+import { toast, ToastContainer } from "react-toastify";
 
 function Monitor_alerts() {
+  const navigate = useNavigate();
   const userEmail = localStorage.getItem("email");
   const token = localStorage.getItem("token");
   const location = useLocation();
@@ -76,6 +78,30 @@ function Monitor_alerts() {
         }),
       });
       const data = await res.json();
+      if(res.status === 401){
+        toast.error("Session Expired, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
+      if(res.status === 403){
+        toast.error("Unauthorized Access, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
       setAlerts(data.alerts);
       setLoading(false);
     };
@@ -101,6 +127,17 @@ function Monitor_alerts() {
     return (
       <div className=" bg-white">
         <NewNavbar email={userEmail} />
+        <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
         <div className="bg-white w-full flex h-full ">
           <Sidebar />
 

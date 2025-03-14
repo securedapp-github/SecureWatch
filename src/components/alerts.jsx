@@ -94,6 +94,30 @@ function Alerts() {
           slack_webhook: slackInput,
         }),
       });
+      if(response.status === 401){
+        toast.error("Session Expired, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
+      if(response.status === 403){
+        toast.error("Unauthorized Access, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
       console.log("Response from server:", response.data);
 
       toast.success("Monitor Updated successfully!", {

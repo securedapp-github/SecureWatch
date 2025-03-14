@@ -1,8 +1,11 @@
 import React,{useEffect,useState} from 'react'
 import Navbar from "./NewNavbar";
 import { baseUrl } from '../Constants/data';
+import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function Monitor_activity() {
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
     const [moniter, setMoniter] = useState([]);
     const [value, setValue] = useState(0);
@@ -19,6 +22,30 @@ function Monitor_activity() {
             }),
           });
           const data = await res.json();
+          if(res.status === 401){
+            toast.error("Session Expired, Please login again",
+              {
+                autoClose: 500,
+                onClose: () => {
+                  localStorage.clear();
+                  navigate("/login");
+                },
+              }
+    
+            )
+          }
+          if(res.status === 403){
+            toast.error("Unauthorized Access, Please login again",
+              {
+                autoClose: 500,
+                onClose: () => {
+                  localStorage.clear();
+                  navigate("/login");
+                },
+              }
+    
+            )
+          }
           setMoniter(data);
           
         };
@@ -39,6 +66,17 @@ function Monitor_activity() {
   return (
     <div className='font-poppin pt-10 mx-2 min-h-screen w-full bg-white' style={{'backgroundColor':'#FCFFFD'}}>
       <Navbar/>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className=' mx-auto mt-10'>
         <div className='w-4/6 mx-auto flex justify-center items-center md:justify-between  flex-col md:flex-row'>
         <div className=' text-4xl font-medium text-center text-black'>Monitor Activity</div>

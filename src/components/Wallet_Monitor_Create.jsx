@@ -17,6 +17,7 @@ function Monitor_create() {
   const [network, setNetwork] = useState("");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
+  const [slack, setSlack] = useState("");
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -44,6 +45,7 @@ function Monitor_create() {
       network: network,
       address: address,
       mail: email,
+      slack_webhook: slack,
     };
 
     try {
@@ -60,6 +62,30 @@ function Monitor_create() {
       );
 
       const data = await response.json();
+      if(response.status === 401){
+        toast.error("Session Expired, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
+      if(response.status === 403){
+        toast.error("Unauthorized Access, Please login again",
+          {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          }
+
+        )
+      }
 
       if (response.ok) {
         setMonitorName("");
@@ -93,6 +119,17 @@ function Monitor_create() {
         pauseOnHover
       />
       <NewNavbar email={userEmail} />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="bg-[#FAFAFA] w-full flex min-h-full">
         <Sidebar />
 
@@ -256,6 +293,16 @@ function Monitor_create() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter email"
+                className="outline-none border-2 py-3 rounded-xl w-full px-3 bg-white mt-1"
+              />
+              <label className="text-lg font-medium text-black mt-5 block">
+                Slack
+              </label>
+              <input
+                type="text"
+                value={slack}
+                onChange={(e) => setSlack(e.target.value)}
+                placeholder="Enter slack webhook"
                 className="outline-none border-2 py-3 rounded-xl w-full px-3 bg-white mt-1"
               />
 

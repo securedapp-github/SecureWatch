@@ -72,7 +72,30 @@ const Monitor_cmp = () => {
             monitor_id: monitor_id,
           }),
         });
-
+        if(response.status === 401){
+          toast.error("Session Expired, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
+        if(response.status === 403){
+          toast.error("Unauthorized Access, Please login again",
+            {
+              autoClose: 500,
+              onClose: () => {
+                localStorage.clear();
+                navigate("/login");
+              },
+            }
+  
+          )
+        }
         if (response.ok) {
           setDeleteLoading(false);
           setValue(value + 1); // Trigger re-fetch after deletion
@@ -463,7 +486,7 @@ const Monitor_cmp = () => {
                         {is_admin == 1 ? (
                           status === 1 ? (
                             <button
-                            className="text-black text-3xl"
+                            className="text-[#12D576] text-3xl"
                             onClick={() => {
                               fetch(`${baseUrl}/update_monitor`, {
                                 method: "POST",
