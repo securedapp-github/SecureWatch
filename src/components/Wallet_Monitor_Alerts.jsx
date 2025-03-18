@@ -9,6 +9,9 @@ import { TbTriangleSquareCircle } from "react-icons/tb";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { toast, ToastContainer } from "react-toastify";
 
+import ResponsivePagination from 'react-responsive-pagination';
+import 'react-responsive-pagination/themes/classic.css';
+
 function Monitor_alerts() {
   const navigate = useNavigate();
   const userEmail = localStorage.getItem("email");
@@ -25,6 +28,11 @@ function Monitor_alerts() {
   const parent_id = localStorage.getItem("parent_id");
   const userId = localStorage.getItem("userId");
   const [loading, setLoading] = useState(true);
+
+      const [data, setData] = useState([]);
+      const [currentPage, setCurrentPage] = useState(1);
+      const [dataPerPage, setDataPerPage] = useState(25);
+      const [totalPages, setTotalPages] = useState(1);
 
   const openModal = (alert) => {
     setSelectedAlert(alert);
@@ -80,6 +88,7 @@ function Monitor_alerts() {
         }),
       });
       const data = await res.json();
+      
       if(res.status === 401){
         toast.error("Session Expired, Please login again",
           {
@@ -105,15 +114,23 @@ function Monitor_alerts() {
         )
       }
       setAlerts(data.alerts.filter(item => item.mid === mid));
+      
       setLoading(false);
     };
     fetchAlert();
 
   }, []);
 
+  const indexOfLastData = currentPage * dataPerPage;
+  const indexOfFirstData = indexOfLastData - dataPerPage;
+  const currentData = alerts?.slice(indexOfFirstData, indexOfLastData);
+  console.log("Current Data", currentData);
+
   useEffect(() => {
+    console.log("currentData:", currentData);
     console.log("alerts:", alerts);
-  }, [alerts]);
+    
+  }, [currentData,alerts ]);
 
   if (loading) {
     return (
@@ -198,7 +215,7 @@ function Monitor_alerts() {
   };
 
   return (
-    <div className="w-full min-h-full ">
+    <div className="w-full min-h-full bg-white ">
       <NewNavbar email={userEmail} />
       <div className="bg-[#FAFAFA] w-full flex h-full">
         <Sidebar />
@@ -230,8 +247,8 @@ function Monitor_alerts() {
             Your Monitor Alerts{" "}
           </div>
           <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10 mx-auto">
-            {alerts &&
-              alerts.map((alert, index) => {
+            {currentData &&
+              currentData.map((alert, index) => {
                 const id = alert.id;
                 const hash = alert.hash;
                 const created_on = alert.created_on;
@@ -307,8 +324,8 @@ function Monitor_alerts() {
                 </tr>
               </thead>
               <tbody>
-                {alerts &&
-                  alerts.map((alert, index) => {
+                {currentData &&
+                  currentData.map((alert, index) => {
                     const id = alert.id;
                     const hash = alert.hash;
                     const created_on = alert.created_on;
@@ -438,6 +455,13 @@ function Monitor_alerts() {
           </div>
         )}
       </div>
+      <div className="w-full my-6 mx-auto flex justify-center items-center pb-6"> 
+            <ResponsivePagination
+            current={currentPage}
+            total={totalPages}
+            onPageChange={setCurrentPage}
+          />
+            </div>
     </div>
   );
 }

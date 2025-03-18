@@ -12,18 +12,9 @@ import { FaEdit } from "react-icons/fa";
 import { MdOutlineToggleOn } from "react-icons/md";
 import { MdOutlineToggleOff } from "react-icons/md";
 import { HiMenuAlt2 } from "react-icons/hi";
+import ResponsivePagination from 'react-responsive-pagination';
+import 'react-responsive-pagination/themes/classic.css';
 
-
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
 
 const Monitor_cmp = () => {
   const navigate = useNavigate();
@@ -35,6 +26,11 @@ const Monitor_cmp = () => {
   const userId = localStorage.getItem("userId");
   const is_admin = localStorage.getItem("is_admin");
   const parent_id = localStorage.getItem("parent_id");
+
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [dataPerPage, setDataPerPage] = useState(15);
+  const [totalPages, setTotalPages] = useState(1);
   
 
   useEffect(() => {
@@ -52,11 +48,19 @@ const Monitor_cmp = () => {
         }),
       });
       const data = await res.json();
+      console.log("Data", data);
+      setTotalPages(Math.ceil(data.monitors?.length / dataPerPage));
       setMoniter(data);
       setLoading(false);
     };
     fetchMoniter();
   }, [value]);
+
+  const indexOfLastData = currentPage * dataPerPage;
+  const indexOfFirstData = indexOfLastData - dataPerPage;
+  const currentData = moniter.monitors?.slice(indexOfFirstData, indexOfLastData);
+  console.log("Current Data", currentData);
+  
 
   const handleDeleteMonitor = async (monitor_id) => {
     setDeleteLoading(true);
@@ -117,6 +121,7 @@ const Monitor_cmp = () => {
 
   useEffect(() => {
     console.log("Monitors", moniter);
+
   }, [moniter]);
 
   if (loading) {
@@ -139,7 +144,7 @@ const Monitor_cmp = () => {
   }
 
   return (
-    <div className=" w-full xl:w-[97%] overflow-auto flex justify-center items-center xl:justify-start xl:ml-4 xl:items-start flex-col pb-10">
+    <div className=" w-full xl:w-[97%] overflow-auto flex justify-center items-center xl:justify-start xl:ml-4 xl:items-start flex-col pb-10 bg-white">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -158,7 +163,7 @@ const Monitor_cmp = () => {
       ) : (
         <div className="w-full flex justify-center items-center">
           <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10">
-            {moniter.monitors.map((i) => {
+            {currentData.map((i) => {
               const name = i.name;
               const risk = i.category;
               const network = i.network;
@@ -340,7 +345,7 @@ const Monitor_cmp = () => {
                 </tr>
               </thead>
               <tbody>
-                {moniter.monitors.map((i) => {
+                {currentData.map((i) => {
                   const mid = i.mid;
                   const name = i.name;
                   const risk = i.category;
@@ -547,8 +552,18 @@ const Monitor_cmp = () => {
               </tbody>
             </table>
           </div>
+
+          
         </div>
       )}
+      <div className="w-full mt-10 mx-auto flex justify-center items-center"> 
+      <ResponsivePagination
+      current={currentPage}
+      total={totalPages}
+      onPageChange={setCurrentPage}
+    />
+      </div>
+      
     </div>
   );
 };

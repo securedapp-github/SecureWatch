@@ -9,6 +9,9 @@ import { TbTriangleSquareCircle } from "react-icons/tb";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { toast, ToastContainer } from "react-toastify";
 
+import ResponsivePagination from 'react-responsive-pagination';
+import 'react-responsive-pagination/themes/classic.css';
+
 function Monitor_alerts() {
   const navigate = useNavigate();
   const userEmail = localStorage.getItem("email");
@@ -23,6 +26,11 @@ function Monitor_alerts() {
   const parent_id = localStorage.getItem("parent_id");
   const userId = localStorage.getItem("userId");
   const [loading, setLoading] = useState(true);
+
+      const [data, setData] = useState([]);
+      const [currentPage, setCurrentPage] = useState(1);
+      const [dataPerPage, setDataPerPage] = useState(25);
+      const [totalPages, setTotalPages] = useState(1);
 
   const openModal = (alert) => {
     setSelectedAlert(alert);
@@ -78,6 +86,7 @@ function Monitor_alerts() {
         }),
       });
       const data = await res.json();
+      setTotalPages(Math.ceil(data.alerts?.length / dataPerPage));
       if(res.status === 401){
         toast.error("Session Expired, Please login again",
           {
@@ -108,6 +117,11 @@ function Monitor_alerts() {
     fetchAlert();
 
   }, []);
+
+  const indexOfLastData = currentPage * dataPerPage;
+  const indexOfFirstData = indexOfLastData - dataPerPage;
+  const currentData = alerts?.slice(indexOfFirstData, indexOfLastData);
+  console.log("Current Data", currentData);
 
   useEffect(() => {
     console.log("wallet alerts2:", alerts);
@@ -228,8 +242,8 @@ function Monitor_alerts() {
             Your Monitor Alerts{" "}
           </div>
           <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10 mx-auto">
-            {alerts &&
-              alerts.map((alert, index) => {
+            {currentData &&
+              currentData.map((alert, index) => {
                 const id = alert.id;
                 const hash = alert.hash;
                 const created_on = alert.created_on;
@@ -306,8 +320,8 @@ function Monitor_alerts() {
                 </tr>
               </thead>
               <tbody>
-                {alerts &&
-                  alerts.map((alert, index) => {
+                {currentData &&
+                  currentData.map((alert, index) => {
                     const id = alert.id;
                     const hash = alert.hash;
                     const created_on = alert.created_on;
@@ -438,6 +452,13 @@ function Monitor_alerts() {
           </div>
         )}
       </div>
+            <div className="w-full py-6 mx-auto flex justify-center items-center bg-white pb-6" > 
+            <ResponsivePagination
+            current={currentPage}
+            total={totalPages}
+            onPageChange={setCurrentPage}
+          />
+            </div>
     </div>
   );
 }
