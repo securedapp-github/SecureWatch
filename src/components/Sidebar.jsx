@@ -64,7 +64,7 @@ export default function Sidebar() {
               {expand ? "Blockchain Forensics" : ""}
             </span>{" "}
           </a>
-          <Link to="/comingsoon" className={`${expand ? "flex items-center gap-2" : ""}`}>
+          <Link to="/analyticsmodule" className={`${expand ? "flex items-center gap-2" : ""}`}>
             <RiPieChartLine className="text-3xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
               {expand ? "Analytics & Reporting" : ""}
