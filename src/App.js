@@ -37,6 +37,8 @@ import WalletMonitorAlerts from "./components/Wallet_Monitor_Alerts.jsx";
 import WalletMonitorCreate from "./components/Wallet_Monitor_Create.jsx";
 import WalletMonitorAlerts2 from "./components/Wallet_Monitor_Alerts_2.jsx";
 import ContractIncident from "./components/Contract_Incident.jsx";
+import Analytics from "./components/Analytics.jsx";
+import AnalyticsModule from "./components/AnalyticsModule.jsx";
 
 
 
@@ -75,6 +77,8 @@ function App() {
         <Route path="/wallet_monitor_create" element={<WalletMonitorCreate />} />
         <Route path="/algo_alerts" element={<Algo_alerts />} />
         <Route path="/contract_incidents" element={<ContractIncident />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/analyticsmodule" element={<AnalyticsModule />} />
          <Route
           path="/AlgoEventsedit"
           element={<Protected cmp={<AlgoEventsedit />} />}
