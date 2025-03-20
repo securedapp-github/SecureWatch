@@ -21,6 +21,17 @@ function AnalyticsModule() {
   const parent_id = localStorage.getItem("parent_id");
   const baseUrl = "https://139-59-5-56.nip.io:3443";
 
+  const ALLOWED_CHAINS = {
+    1: "Ethereum Mainnet",
+    137: "Polygon Mainnet",
+    11155111: "Sepolia Testnet",
+    80002: "Amoy Testnet",
+    100: "Gnosis Mainnet",
+    56: "Binance Smart Chain Mainnet",
+    8453: "Base Mainnet",
+    42161: "Arbitrum Mainnet",
+  };
+
   useEffect(() => {
     setLoading(true);
     const fetchMonitors = async () => {
@@ -36,7 +47,7 @@ function AnalyticsModule() {
           }),
         });
         const data = await res.json();
-        setMonitors(data.monitors || []); // Ensure monitors exist in response
+        setMonitors(data.monitors || []);
       } catch (error) {
         console.error("Error fetching monitors:", error);
       }
@@ -63,16 +74,16 @@ function AnalyticsModule() {
     setShowCalendar(true);
   };
 
-const formatDateTime = (date) => {
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  const seconds = date.getSeconds().toString().padStart(2, "0");
+  const formatDateTime = (date) => {
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
 
-  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
-};
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  };
 
   const handleApply = () => {
     if (selectedMonitor) {
@@ -131,49 +142,49 @@ const formatDateTime = (date) => {
         <div className="mt-12 w-full px-2 md:px-4 py-6 relative md:ml-80">
           <div className="bg-white w-full min-h-full">
             <div className="w-full min-h-full relative">
-              <div className="container mx-auto p-2 md:p-4">
-                <h2 className="text-xl md:text-2xl font-bold mb-4 text-gray-500">
-                  Monitor List
+              <div className="container mx-auto p-2 md:p-4 text-black mt-5">
+                <h2 className="text-xl md:text-2xl font-bold mb-4">
+                  Contract Monitor
                 </h2>
 
                 {loading ? (
-                  <p className="text-center text-gray-500">Loading...</p>
+                  <p className="text-center">Loading...</p>
                 ) : monitors.length === 0 ? (
-                  <p className="text-center text-gray-500">
-                    No monitor data available.
-                  </p>
+                  <p className="text-center">No monitor data available.</p>
                 ) : (
-                  <div className="overflow-x-auto text-gray-500 rounded-md  shadow-md">
-                    <table className="min-w-full border border-gray-300 bg-white">
-                      <thead className="bg-gray-200">
+                  <div className="overflow-x-auto rounded-md border-2">
+                    <table className="min-w-full  border-gray-300 bg-white">
+                      <thead>
                         <tr>
-                          <th className="border px-2 md:px-4 py-2 text-left">
-                            Name
-                          </th>
-                          <th className="border px-2 md:px-4 py-2 text-left">
+                          <th className="px-2 md:px-4 py-2 text-left">Name</th>
+                          <th className="px-2 md:px-4 py-2 text-left">
                             Network
                           </th>
-                          <th className="border px-2 md:px-4 py-2 text-left">
+                          <th className="px-2 md:px-4 py-2 text-left">
                             Address
                           </th>
-                          <th className="border px-2 md:px-4 py-2 text-left">
+                          <th className="px-2 md:px-4 py-2 text-left">
                             Actions
                           </th>
                         </tr>
                       </thead>
                       <tbody>
                         {monitors.map((monitor) => (
-                          <tr key={monitor.mid} className="hover:bg-white">
-                            <td className="border px-2 md:px-4 py-2">
+                          <tr
+                            key={monitor.mid}
+                            className="hover:bg-white border-t-2 border-b"
+                          >
+                            <td className="px-2 md:px-4 py-2">
                               {monitor.name}
                             </td>
-                            <td className="border px-2 md:px-4 py-2">
-                              {monitor.network}
+                            <td className="px-2 md:px-4 py-2">
+                              {ALLOWED_CHAINS[monitor.network] ||
+                                monitor.network}
                             </td>
-                            <td className="border px-2 md:px-4 py-2 truncate max-w-[100px] md:max-w-[200px]">
+                            <td className="px-2 md:px-4 py-2 truncate max-w-[100px] md:max-w-[200px]">
                               {monitor.address}
                             </td>
-                            <td className="border px-2 md:px-4 py-2">
+                            <td className="px-2 md:px-4 py-2">
                               <button
                                 className="bg-blue-500 text-white px-2 md:px-4 py-1 md:py-2 text-sm md:text-base rounded-lg hover:bg-blue-600 transition w-full md:w-auto"
                                 onClick={() => handleViewAnalytics(monitor.mid)}
