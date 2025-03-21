@@ -3,13 +3,15 @@ import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
 import { baseUrl } from "../Constants/data";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const BillingForm = () => {
     const userId = localStorage.getItem("userId");
     const userEmail = localStorage.getItem("email");
     const [loading, setLoading] = useState(false);
+    const [value, setValue] = useState(1);
+    const token = localStorage.getItem("token");
     const [previousValues, setPreviousValues] = useState(
         {
             "legal_name": "Tech Solutions Ltd.",
@@ -27,26 +29,27 @@ const BillingForm = () => {
           
     );
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         setLoading(true);
-        // const token = localStorage.getItem("token");
         const requestOptions = {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
-            // Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({ ...previousValues, user_id: userId }),
         };
         const response = await fetch(`${baseUrl}/addOrgInfo`, requestOptions);
+        console.log("response", response);
         const data = await response.json();
         setPreviousValues(data);
-        if (data.status === "Success") {
+        setValue(value + 1);
+        if (response.ok) {
+            setLoading(false);
             toast.success(data.message);
-            setLoading(false);
         } else {
-            toast.error(data.message);
             setLoading(false);
+            toast.error(data.message);
         }
     }
 
@@ -58,23 +61,31 @@ const BillingForm = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-            //   Authorization: `Bearer ${token}`,
+             Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               user_id: userId,
             }),
           });
           const data = await res.json();
-          setPreviousValues(data);
+          setPreviousValues(data.organisation_info);
           setLoading(false);
         };
         fetchPreviousValues();
-      }, [userId]);
+      }, [userId, value]);
+
+      useEffect(() => {
+        console.log("previousValues", previousValues);
+        
+      }
+        , [previousValues]);
 
     if (loading) {
         return (
             <div className="w-full min-h-full">
                  <NewNavbar email={userEmail} />
+                  <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover
+                           />
                  <div className="bg-[#FAFAFA] w-full flex h-full">
             <Sidebar />
 
@@ -108,17 +119,8 @@ const BillingForm = () => {
     return (
         <div className="w-full min-h-full">
             <NewNavbar email={userEmail} />
-            <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-            />
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover
+                     />
             <div className="bg-[#FAFAFA] w-full flex h-full">
                 <Sidebar />
 
@@ -226,7 +228,12 @@ const BillingForm = () => {
                                 </div>
                                 <div className="flex flex-col items-start justify-start gap-2 w-full md:w-[45%]">
                                     <label className="text-sm font-medium text-[#6A6A6A]">Address</label>
-                                    <input type="text" className="w-full p-2 border border-gray-300 bg-white rounded-md" />
+                                    <input 
+                                        type="text"
+                                        className="w-full p-2 border border-gray-300 bg-white rounded-md"
+                                        value={previousValues.address}
+                                        onChange={(e) => setPreviousValues({ ...previousValues, address: e.target.value })}
+                                         />
                                 </div>
                             </div>
 

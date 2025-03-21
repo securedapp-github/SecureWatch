@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import { FaCaretDown, FaCopy, FaExternalLinkAlt } from "react-icons/fa";
+import { FaCopy, FaExternalLinkAlt } from "react-icons/fa";
 import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 import { baseUrl } from "../Constants/data";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
-import { IoClose } from "react-icons/io5";
 import { TbTriangleSquareCircle } from "react-icons/tb";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { toast, ToastContainer } from "react-toastify";
+
+import ResponsivePagination from 'react-responsive-pagination';
+import 'react-responsive-pagination/themes/classic.css';
 
 function Algo_alerts() {
   const navigate  = useNavigate();
@@ -21,6 +23,11 @@ function Algo_alerts() {
   const email = localStorage.getItem("email");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState(null);
+
+      const [data, setData] = useState([]);
+      const [currentPage, setCurrentPage] = useState(1);
+      const [dataPerPage, setDataPerPage] = useState(25);
+      const [totalPages, setTotalPages] = useState(1);
 
   const openModal = (alertItem) => {
     setSelectedAlert(alertItem);
@@ -57,6 +64,7 @@ function Algo_alerts() {
         }),
       });
       const data = await res.json();
+      setTotalPages(Math.ceil(data.alerts?.length / dataPerPage));
       if(res.status === 401){
         toast.error("Session Expired, Please login again",
           {
@@ -86,6 +94,11 @@ function Algo_alerts() {
     };
     fetchAlert();
   }, [mid, token]);
+
+  const indexOfLastData = currentPage * dataPerPage;
+  const indexOfFirstData = indexOfLastData - dataPerPage;
+  const currentData = alert.alerts?.slice(indexOfFirstData, indexOfLastData);
+  console.log("Current Data", currentData);
 
   if (!alert.alerts || alert.alerts.length === 0 || alert === undefined) {
     return (
@@ -186,8 +199,8 @@ function Algo_alerts() {
           </div>
 
           <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10 mx-auto">
-            {alert.alerts &&
-              alert.alerts.map((alertItem, index) => {
+            {currentData &&
+              currentData.map((alertItem, index) => {
                 const {
                   id,
                   hash, // Use hash for link
@@ -295,8 +308,8 @@ function Algo_alerts() {
                 </tr>
               </thead>
               <tbody>
-                {alert.alerts &&
-                  alert.alerts.map((alertItem, index) => {
+                {currentData &&
+                  currentData.map((alertItem, index) => {
                     const {
                       id,
                       hash, // Use hash for link
@@ -454,6 +467,13 @@ function Algo_alerts() {
 
 
       </div>
+      <div className="w-full my-6 mx-auto flex justify-center items-center"> 
+            <ResponsivePagination
+            current={currentPage}
+            total={totalPages}
+            onPageChange={setCurrentPage}
+          />
+            </div>
     </div>
   );
 }

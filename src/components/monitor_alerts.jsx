@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import { FaCaretDown, FaCopy, FaExternalLinkAlt } from "react-icons/fa";
+import { FaCopy, FaExternalLinkAlt } from "react-icons/fa";
 import { showErrorAlert, showSuccessAlert } from "./toastifyalert";
 import { baseUrl } from "../Constants/data";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
-import { IoClose } from "react-icons/io5";
 import { TbTriangleSquareCircle } from "react-icons/tb";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { toast, ToastContainer } from "react-toastify";
+
+import ResponsivePagination from 'react-responsive-pagination';
+import 'react-responsive-pagination/themes/classic.css';
+
 
 function Monitor_alerts() {
   const navigate = useNavigate();
@@ -24,6 +27,11 @@ function Monitor_alerts() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState(null);
   const [loading, setLoading] = useState(true);
+
+    const [data, setData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [dataPerPage, setDataPerPage] = useState(25);
+    const [totalPages, setTotalPages] = useState(1);
 
   const openModal = (alert) => {
     setSelectedAlert(alert);
@@ -79,6 +87,8 @@ function Monitor_alerts() {
         }),
       });
       const data = await res.json();
+      
+      setTotalPages(Math.ceil(data.alerts?.length / dataPerPage));
       if(res.status === 401){
         toast.error("Session Expired, Please login again",
           {
@@ -109,6 +119,11 @@ function Monitor_alerts() {
     fetchAlert();
     console.log("alert", alert);
   }, []);
+
+  const indexOfLastData = currentPage * dataPerPage;
+  const indexOfFirstData = indexOfLastData - dataPerPage;
+  const currentData = alert.alerts?.slice(indexOfFirstData, indexOfLastData);
+  console.log("Current Data", currentData);
 
   if (loading) {
     return (
@@ -193,7 +208,7 @@ function Monitor_alerts() {
   };
 
   return (
-    <div className="w-full min-h-full ">
+    <div className="w-full min-h-full bg-white pb-10">
       <NewNavbar email={userEmail} />
       <div className="bg-white w-full flex h-full">
         <Sidebar />
@@ -226,8 +241,8 @@ function Monitor_alerts() {
             Your Monitor Alerts{" "}
           </div>
           <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10 mx-auto">
-            {alert.alerts &&
-              alert.alerts.map((alert, index) => {
+            {currentData &&
+              currentData.map((alert, index) => {
                 const id = alert.id;
                 const hash = alert.hash;
                 const arguemant = alert.arguments;
@@ -306,8 +321,8 @@ function Monitor_alerts() {
                 </tr>
               </thead>
               <tbody>
-                {alert.alerts &&
-                  alert.alerts.map((alert, index) => {
+                {currentData &&
+                  currentData.map((alert, index) => {
                     const id = alert.id;
                     const hash = alert.hash;
                     const arguemant = alert.arguments;
@@ -435,6 +450,13 @@ function Monitor_alerts() {
         )}
 
 
+      </div>
+      <div className="w-full my-6 mx-auto flex justify-center items-center"> 
+      <ResponsivePagination
+      current={currentPage}
+      total={totalPages}
+      onPageChange={setCurrentPage}
+    />
       </div>
     </div>
   );

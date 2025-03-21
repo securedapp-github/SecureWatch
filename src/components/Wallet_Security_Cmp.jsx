@@ -7,6 +7,8 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { MdOutlineToggleOn } from "react-icons/md";
 import { MdOutlineToggleOff } from "react-icons/md";
 import { HiMenuAlt2 } from "react-icons/hi";
+import ResponsivePagination from 'react-responsive-pagination';
+import 'react-responsive-pagination/themes/classic.css';
 
 
 const Wallet_Security_Cmp = () => {
@@ -21,6 +23,11 @@ const Wallet_Security_Cmp = () => {
   const is_admin = localStorage.getItem("is_admin");
   const parent_id = localStorage.getItem("parent_id");
   console.log("parent_id:", parent_id);
+
+    const [data, setData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [dataPerPage, setDataPerPage] = useState(15);
+    const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     setLoading(true);
@@ -37,6 +44,8 @@ const Wallet_Security_Cmp = () => {
         }),
       });
       const data = await res.json();
+      console.log("Data", data);
+      setTotalPages(Math.ceil(data.monitors?.length / dataPerPage));
       if(res.status === 401){
         toast.error("Session Expired, Please login again",
           {
@@ -66,6 +75,11 @@ const Wallet_Security_Cmp = () => {
     };
     fetchMoniter();
   }, [value]);
+
+  const indexOfLastData = currentPage * dataPerPage;
+  const indexOfFirstData = indexOfLastData - dataPerPage;
+  const currentData = moniter.monitors?.slice(indexOfFirstData, indexOfLastData);
+  console.log("Current Data", currentData);
 
   const handleDeleteMonitor = async (monitor_id) => {
     setDeleteLoading(true);
@@ -122,7 +136,7 @@ const Wallet_Security_Cmp = () => {
   }
 
   return (
-    <div className=" w-full xl:w-[97%] overflow-auto flex justify-center items-center xl:justify-start xl:ml-4 xl:items-start flex-col pb-10">
+    <div className=" w-full xl:w-[97%] overflow-auto flex justify-center items-center xl:justify-start xl:ml-4 xl:items-start flex-col pb-10 bg-white">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -141,7 +155,7 @@ const Wallet_Security_Cmp = () => {
       ) : (
         <div className="w-full flex justify-center items-center">
           <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md  mb-10">
-            {moniter.monitors.map((i) => {
+            {currentData.map((i) => {
               const name = i.name;
               const risk = i.category;
               const network = i.network;
@@ -286,7 +300,7 @@ const Wallet_Security_Cmp = () => {
                 </tr>
               </thead>
               <tbody>
-                {moniter.monitors.map((i) => {
+                {currentData.map((i) => {
                   const name = i.name;
                   const risk = i.category;
                   const network = i.network;
@@ -413,6 +427,13 @@ const Wallet_Security_Cmp = () => {
           </div>
         </div>
       )}
+      <div className="w-full mt-10 mx-auto flex justify-center items-center"> 
+            <ResponsivePagination
+            current={currentPage}
+            total={totalPages}
+            onPageChange={setCurrentPage}
+          />
+            </div>
     </div>
   );
 };
