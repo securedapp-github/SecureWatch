@@ -52,7 +52,7 @@ export default function Sidebar() {
               {expand ? "Security Audit" : ""}
             </span>{" "}
           </a>
-          <Link to="/comingsoon" className={`${expand ? "flex items-center gap-3" : ""}`}>
+          <Link to="/historical_insights" className={`${expand ? "flex items-center gap-3" : ""}`}>
             <FaRegCalendarAlt className="text-2xl text-gray-600" />{" "}
             <span className="text-[#6A6A6A]">
               {expand ? "Historical Insights" : ""}
