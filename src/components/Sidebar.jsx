@@ -68,7 +68,7 @@ export default function Sidebar() {
         <div className={`flex flex-col ${expand ? "items-start ml-5" : "items-center"} justify-center gap-7`}>
           {[
             { href: "https://securedapp.io/solidity-shield", icon: <GrDocumentText className="text-2xl text-gray-600" />, text: "Security Audit" },
-            { to: "/comingsoon", icon: <FaRegCalendarAlt className="text-2xl text-gray-600" />, text: "Historical Insights" },
+            { to: "/historical_insights", icon: <FaRegCalendarAlt className="text-2xl text-gray-600" />, text: "Historical Insights" },
             { href: "https://securedapp.io/secure-trace", icon: <PiSquaresFourBold className="text-3xl text-gray-600" />, text: "Blockchain Forensics" },
             { to: "/analyticsmodule", icon: <RiPieChartLine className="text-3xl text-gray-600" />, text: "Analytics & Reporting" },
             { to: "/admin", icon: <IoPersonSharp className="text-3xl text-gray-600" />, text: "Admin Panel" },

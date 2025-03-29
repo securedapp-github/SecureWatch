@@ -39,6 +39,7 @@ import WalletMonitorAlerts2 from "./components/Wallet_Monitor_Alerts_2.jsx";
 import ContractIncident from "./components/Contract_Incident.jsx";
 import Analytics from "./components/Analytics.jsx";
 import AnalyticsModule from "./components/AnalyticsModule.jsx";
+import HistoricalInsights from "./components/HistoricalInsights.jsx";
 
 
 
@@ -79,6 +80,7 @@ function App() {
         <Route path="/contract_incidents" element={<ContractIncident />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/analyticsmodule" element={<AnalyticsModule />} />
+        <Route path="/historical_insights" element={<HistoricalInsights />} />
          <Route
           path="/AlgoEventsedit"
           element={<Protected cmp={<AlgoEventsedit />} />}
