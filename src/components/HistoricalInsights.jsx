@@ -21,19 +21,31 @@ const renderLoadingSpinner = () => (
 
 const getTransactionExplorerUrl = (network, transactionHash) => {
   const explorerUrls = {
-    80002: "https://amoy.polygonscan.com/tx/",
-    11155111: "https://sepolia.etherscan.io/tx/",
     1: "https://etherscan.io/tx/",
+    10: "https://optimistic.etherscan.io/tx/",
+    25: "https://cronoscan.com/tx/",
     56: "https://bscscan.com/tx/",
-    137: "https://polygonscan.com/tx/",
-    8453: "https://basescan.org/tx/",
-    43114: "https://snowtrace.io/tx/",
-    42161: "https://arbiscan.io/tx/",
     100: "https://gnosisscan.io/tx/",
+    137: "https://polygonscan.com/tx/",
+    204: "https://opbnbscan.com/tx/",
+    250: "https://ftmscan.com/tx/",
+    288: "https://bobascan.com/tx/",
+    324: "https://explorer.zksync.io/tx/",
+    43114: "https://snowtrace.io/tx/",
+    592: "https://astar.subscan.io/extrinsic/",
+    1101: "https://zkevm.polygonscan.com/tx/",
+    143: "https://monadscan.io/tx/",
+    2040: "https://testnet.opbnbscan.com/tx/",
+    42161: "https://arbiscan.io/tx/",
+    42220: "https://celoscan.io/tx/",
+    534352: "https://scrollscan.com/tx/",
     59144: "https://explorer.linea.build/tx/",
+    80002: "https://amoy.polygonscan.com/tx/",
+    8453: "https://basescan.org/tx/",
+    11155111: "https://sepolia.etherscan.io/tx/",
     1313161554: "https://explorer.mainnet.aurora.dev/tx/",
-    10: "https://optimistic.etherscan.io/tx/"
-  };
+    19845: "https://explorer.vanar.io/tx/"
+  };  
 
 
   return explorerUrls[network] ? `${explorerUrls[network]}${transactionHash}` : null;
@@ -334,19 +346,62 @@ const HistoricalInsights = () => {
                             </td>
                             <td className="px-4">
                               <span className="text-md text-black">
-                                {network === 80002
-                                  ? "Amoy"
-                                  : network === 1
-                                  ? "Ethereum Mainnet"
-                                  : network === 11155111
-                                  ? "Sepolia Testnet"
-                                  : network === 137
-                                  ? "Polygon Mainnet"
-                                  : network === 1300
-                                  ? "Algorand Mainnet"
-                                  : network === 1301
-                                  ? "Unknown"
-                                  : "Unknown"}
+                              {
+  network === 80002
+    ? "Amoy"
+    : network === 1
+    ? "Ethereum Mainnet"
+    : network === 11155111
+    ? "Sepolia Testnet"
+    : network === 137
+    ? "Polygon Mainnet"
+    : network === 1300
+    ? "Algorand Mainnet"
+    : network === 1301
+    ? "Algorand Testnet"
+    : network === 10
+    ? "Optimism Mainnet"
+    : network === 25
+    ? "Cronos Mainnet"
+    : network === 56
+    ? "Binance Smart Chain (BSC) Mainnet"
+    : network === 100
+    ? "Gnosis Chain"
+    : network === 204
+    ? "opBNB Mainnet"
+    : network === 250
+    ? "Fantom Mainnet"
+    : network === 288
+    ? "Boba Network"
+    : network === 324
+    ? "zkSync Era"
+    : network === 43114
+    ? "Avalanche C-Chain"
+    : network === 592
+    ? "Astar"
+    : network === 1101
+    ? "Polygon zkEVM"
+    : network === 143
+    ? "Monad"
+    : network === 2040
+    ? "opBNB Testnet"
+    : network === 42161
+    ? "Arbitrum One"
+    : network === 42220
+    ? "Celo"
+    : network === 534352
+    ? "Scroll Mainnet"
+    : network === 59144
+    ? "Linea Mainnet"
+    : network === 8453
+    ? "Base Mainnet"
+    : network === 1313161554
+    ? "Aurora Mainnet"
+    : network === 2040
+    ? "Vanar"
+    : "Unknown"
+}
+
                               </span>
                             </td>
                             <td className="text-md text-black text-nowrap px-4">
@@ -416,10 +471,10 @@ const HistoricalInsights = () => {
     {getTransactionExplorerUrl(selectedMonitor.network, transaction.transaction_hash.slice(0, 0))}...{transaction.transaction_hash.slice(-4)}
   </a>
 </td>
-<td className="px-6 py-2 text-sm text-black">
+<td className="lg:px-0 px-3 py-2 text-sm text-black">
                 {formatTimestamp(transaction.timestamp)}
               </td>
-                <td className="px-4 py-2 text-sm text-black">
+                <td className="lg:px-6 px-6 py-2 text-sm text-black">
                   {log.trans_event_name}
                 </td>
                 <td className="px-4 py-2 text-sm text-black">

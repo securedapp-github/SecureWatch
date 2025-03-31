@@ -49,6 +49,27 @@ const DateRangePicker = ({ onApply, onCancel }) => {
   };
 
 
+  // Generate year options (current year +/- 10 years)
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let i = currentYear - 25; i <= currentYear + 0; i++) {
+      years.push(i);
+    }
+    return years;
+  };
+
+
+  // Handle year change
+  const handleYearChange = (year, setDate) => {
+    setDate(prev => {
+      const newDate = new Date(prev);
+      newDate.setFullYear(parseInt(year));
+      return newDate;
+    });
+  };
+
+
   const generateTimeOptions = () => {
     const options = [];
     for (let i = 0; i < 24; i++) {
@@ -111,12 +132,12 @@ const DateRangePicker = ({ onApply, onCancel }) => {
 
 
   return (
-    <div className="p-7 fixed inset-0 mt-20 bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="p-0 fixed inset-0 mt-20 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white rounded-lg p-6 w-[800px] font-bold">
         <h2 className="text-xl font-bold mb-4 text-center">Select Date Range</h2>
 
 
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-2 gap-8 relative">
           {/* Start Date Calendar */}
           <div>
             <div className="text-blue-600 mb-2 text-center font-bold">Start Date</div>
@@ -127,8 +148,17 @@ const DateRangePicker = ({ onApply, onCancel }) => {
               >
                 ←
               </button>
-              <div className="font-bold">
-                {monthNames[startDate.getMonth()]} {startDate.getFullYear()}
+              <div className="font-bold flex items-center space-x-2">
+                <div>{monthNames[startDate.getMonth()]}</div>
+                <select
+                  className="border rounded-sm p-1 bg-white font-bold"
+                  value={startDate.getFullYear()}
+                  onChange={(e) => handleYearChange(e.target.value, setStartDate)}
+                >
+                  {generateYearOptions().map(year => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
               </div>
               <button
                 onClick={() => handleNextMonth(setStartDate)}
@@ -159,6 +189,8 @@ const DateRangePicker = ({ onApply, onCancel }) => {
             </div>
           </div>
 
+          {/* Vertical Divider Line */}
+          <div className="absolute h-full w-px bg-gray-500 left-1/2 transform -translate-x-1/2"></div>
 
           {/* End Date Calendar */}
           <div>
@@ -170,8 +202,17 @@ const DateRangePicker = ({ onApply, onCancel }) => {
               >
                 ←
               </button>
-              <div className="font-bold">
-                {monthNames[endDate.getMonth()]} {endDate.getFullYear()}
+              <div className="font-bold flex items-center space-x-2">
+                <div>{monthNames[endDate.getMonth()]}</div>
+                <select
+                  className="border bg-white rounded-md p-1 font-bold"
+                  value={endDate.getFullYear()}
+                  onChange={(e) => handleYearChange(e.target.value, setEndDate)}
+                >
+                  {generateYearOptions().map(year => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
               </div>
               <button
                 onClick={() => handleNextMonth(setEndDate)}
@@ -205,12 +246,13 @@ const DateRangePicker = ({ onApply, onCancel }) => {
 
 
         {/* Time Selection */}
-        <div className="grid grid-cols-2 gap-8 mt-6">
+        <div className="border-t border-gray-500 mt-6 pt-6">
+        <div className="grid grid-cols-2 gap-8">
           <div>
             <div className="text-gray-700 mb-2 text-center font-bold">Start Time</div>
             <div className="flex items-center justify-center space-x-2">
               <select
-                className="border rounded-md p-2 shadow-lg font-bold"
+                className="border rounded-md p-2 bg-white shadow-lg font-bold"
                 value={startTime.hours}
                 onChange={(e) => setStartTime(prev => ({ ...prev, hours: e.target.value }))}
               >
@@ -220,7 +262,7 @@ const DateRangePicker = ({ onApply, onCancel }) => {
               </select>
               <span className="font-bold">:</span>
               <select
-                className="border rounded-md p-2 shadow-lg font-bold"
+                className="border rounded-md p-2 bg-white shadow-lg font-bold"
                 value={startTime.minutes}
                 onChange={(e) => setStartTime(prev => ({ ...prev, minutes: e.target.value }))}
               >
@@ -230,7 +272,7 @@ const DateRangePicker = ({ onApply, onCancel }) => {
               </select>
               <span className="font-bold">:</span>
               <select
-                className="border rounded-md p-2 shadow-lg font-bold"
+                className="border rounded-md p-2 bg-white shadow-lg font-bold"
                 value={startTime.seconds}
                 onChange={(e) => setStartTime(prev => ({ ...prev, seconds: e.target.value }))}
               >
@@ -246,7 +288,7 @@ const DateRangePicker = ({ onApply, onCancel }) => {
             <div className="text-gray-700 mb-2 text-center font-bold">End Time</div>
             <div className="flex items-center justify-center space-x-2">
               <select
-                className="border rounded-md p-2 shadow-lg font-bold"
+                className="border rounded-md p-2 bg-white shadow-lg font-bold"
                 value={endTime.hours}
                 onChange={(e) => setEndTime(prev => ({ ...prev, hours: e.target.value }))}
               >
@@ -256,7 +298,7 @@ const DateRangePicker = ({ onApply, onCancel }) => {
               </select>
               <span className="font-bold">:</span>
               <select
-                className="border rounded-md p-2 shadow-lg font-bold"
+                className="border rounded-md p-2 bg-white shadow-lg font-bold"
                 value={endTime.minutes}
                 onChange={(e) => setEndTime(prev => ({ ...prev, minutes: e.target.value }))}
               >
@@ -266,7 +308,7 @@ const DateRangePicker = ({ onApply, onCancel }) => {
               </select>
               <span className="font-bold">:</span>
               <select
-                className="border rounded-md p-2 shadow-lg font-bold"
+                className="border rounded-md p-2 bg-white shadow-lg font-bold"
                 value={endTime.seconds}
                 onChange={(e) => setEndTime(prev => ({ ...prev, seconds: e.target.value }))}
               >
@@ -276,6 +318,7 @@ const DateRangePicker = ({ onApply, onCancel }) => {
               </select>
             </div>
           </div>
+        </div>
         </div>
 
 
