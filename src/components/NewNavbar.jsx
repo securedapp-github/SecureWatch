@@ -101,7 +101,7 @@ export default function NewNavbar({ email }) {
         </div>
 
         <div className='w-full  pl-8 pr-5 border-t py-4'>
-        <Link to="/comingsoon" className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><FaRegCalendarAlt className='text-[#6A6A6A] text-2xl' /> Historical Insights</span> <FaPlus className='text-[#6A6A6A] text-lg' /></Link>
+        <Link to="/historical_insights" className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full'><span className='flex items-center gap-4'><FaRegCalendarAlt className='text-[#6A6A6A] text-2xl' /> Historical Insights</span> <FaPlus className='text-[#6A6A6A] text-lg' /></Link>
         </div>
 
         <div className='w-full  pl-8 pr-5 border-t py-4'>
