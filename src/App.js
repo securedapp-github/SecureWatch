@@ -40,6 +40,8 @@ import ContractIncident from "./components/Contract_Incident.jsx";
 import Analytics from "./components/Analytics.jsx";
 import AnalyticsModule from "./components/AnalyticsModule.jsx";
 import HistoricalInsights from "./components/HistoricalInsights.jsx";
+import Autodefend_edit from "./components/Autodefend_edit.jsx"
+import Autodefend from "./components/Autodefend.jsx"
 
 
 
@@ -81,6 +83,8 @@ function App() {
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/analyticsmodule" element={<AnalyticsModule />} />
         <Route path="/historical_insights" element={<HistoricalInsights />} />
+        <Route path="/autodefend_edit" element={<Autodefend_edit />} />
+        <Route path="/autodefend" element={<Autodefend />} />
          <Route
           path="/AlgoEventsedit"
           element={<Protected cmp={<AlgoEventsedit />} />}

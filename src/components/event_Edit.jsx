@@ -272,6 +272,7 @@ const handleSelectChange = (selectedOptions) => {
 
 
   const navigationState = {
+    abi:abi,
     monitorName: name,
     network: networkState,
     address: addressState,
@@ -282,6 +283,7 @@ const handleSelectChange = (selectedOptions) => {
     alert_data: alert_data,
     alert_type: alert_type,
     slack_webhook, slack_webhook,
+    selectedEventNames: selectedValues
   };
 
   const handleSubmit = async () => {
@@ -506,7 +508,8 @@ const handleSelectChange = (selectedOptions) => {
                 toast.success("Events processed successfully!", {
                     autoClose: 500,
                     onClose: () => {
-                        navigate("/alert_edit", { state: navigationState });
+                        navigate("/autodefend_edit", { state: navigationState });
+                        // navigate("/alert_edit", { state: navigationState });
                     },
                 });
             } else {
@@ -633,6 +636,21 @@ const handleSelectChange = (selectedOptions) => {
                     <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                   </div>
                 </div>
+
+                 <div
+                              className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm "
+                              style={{ border: "1px solid #CACACA" }}
+                            >
+                
+                              <div className="my-auto " >
+                                {" "}
+                                Auto Defend
+                              </div>
+                              <div className="my-auto ml-auto">
+                
+                                <IoCheckmarkCircleOutline className="text-2xl " />
+                              </div>
+                            </div>
                 
                 <div
                   className="mt-5 flex gap-2 px-4 py-3 rounded-sm"
@@ -911,6 +929,21 @@ const handleSelectChange = (selectedOptions) => {
                   <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                 </div>
               </div>
+
+              <div
+                              className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm "
+                              style={{ border: "1px solid #CACACA" }}
+                            >
+                
+                              <div className="my-auto " >
+                                {" "}
+                                Auto Defend
+                              </div>
+                              <div className="my-auto ml-auto">
+                
+                                <IoCheckmarkCircleOutline className="text-2xl " />
+                              </div>
+                            </div>
               
               <div
                 className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"

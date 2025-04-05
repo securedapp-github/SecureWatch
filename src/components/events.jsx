@@ -199,6 +199,7 @@ function Events() {
   
     // Prepare navigation state
     const navigationState = {
+      abi:abi,
       name: name,
       network: network,
       address: address,
@@ -331,7 +332,8 @@ function Events() {
         toast.success("Event Added successfully!", {
           autoClose: 500,
           onClose: () => {
-            navigate("/alerts", { state: navigationState });
+            navigate("/autodefend", { state: navigationState });
+            // navigate("/alerts", { state: navigationState });
           },
         });
       } catch (error) {
@@ -469,6 +471,20 @@ function Events() {
                   <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                 </div>
               </div>
+              <div
+                                            className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm "
+                                            style={{ border: "1px solid #CACACA" }}
+                                          >
+                              
+                                            <div className="my-auto " >
+                                              {" "}
+                                              Auto Defend
+                                            </div>
+                                            <div className="my-auto ml-auto">
+                              
+                                              <IoCheckmarkCircleOutline className="text-2xl " />
+                                            </div>
+                                          </div>
               
               <div
                 className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"

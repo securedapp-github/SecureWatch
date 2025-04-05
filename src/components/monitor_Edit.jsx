@@ -508,6 +508,21 @@ function Monitor_Edit() {
                   <IoCheckmarkCircleOutline className="text-2xl " />
                 </div>
               </div>
+
+              <div
+                              className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm "
+                              style={{ border: "1px solid #CACACA" }}
+                            >
+                
+                              <div className="my-auto " >
+                                {" "}
+                                Auto Defend
+                              </div>
+                              <div className="my-auto ml-auto">
+                
+                                <IoCheckmarkCircleOutline className="text-2xl " />
+                              </div>
+                            </div>
               
               <div
                 className="mt-5 hidden
@@ -603,38 +618,67 @@ function Monitor_Edit() {
                     hidden
                     className="text-xl font-medium"
                   >
-                    {selectedMonitor.network === 80002
-                      ? "Amoy"
-                      : selectedMonitor.network === 1
-                      ? "Ethereum Mainnet"
-                      : selectedMonitor.network === 11155111
-                      ? "Sepolia Testnet"
-                      : selectedMonitor.network === 137
-                      ? "Polygon Mainnet"
-                       : selectedMonitor.network === 1300
-                        ? "Algorand Mainnet"
-                        : selectedMonitor.network === 1301
-                        ? "Algorand Testnet"
-                      : "Unknown"}
+                    {selectedMonitor.network === 80002 ? "Amoy" : selectedMonitor.network === 1
+                      ? "Ethereum Mainnet": selectedMonitor.network === 11155111
+                      ? "Sepolia Testnet": selectedMonitor.network === 137
+                      ? "Polygon Mainnet": selectedMonitor.network === 1300
+                      ? "Algorand Mainnet": selectedMonitor.network === 1301
+                      ? "Algorand Testnet": selectedMonitor.network === 56
+                      ?"Binance Smart Chain": selectedMonitor.network === 8453
+                      ? "Base": selectedMonitor.network === 43114
+                      ? "Avalanche": selectedMonitor.network === 42161
+                      ? "Arbitrum": selectedMonitor.network === 100
+                      ? "Gnosis" : selectedMonitor.network === 59144
+                      ? "Linea" : selectedMonitor.network === 1313161554
+                      ? "Aurora" : selectedMonitor.network === 10
+                      ? "Optimism" : selectedMonitor.network === 42161
+                      ? "Arbitrum One" : selectedMonitor.network === 43114
+                      ? "Avalanche C-Chain" : selectedMonitor.network === 204
+                      ? "opBNB" : selectedMonitor.network === 1101
+                      ? "Polygon zkEVM" : selectedMonitor.network === 250
+                      ? "Fantom" : selectedMonitor.network === 25
+                      ? "Cronos" : selectedMonitor.network === 592
+                      ? "Astar" : selectedMonitor.network === 42220
+                      ? "Celo" : selectedMonitor.network === 324
+                      ? "ZkSync Era" : selectedMonitor.network === 288
+                      ? "Boba Network" : selectedMonitor.network === 534352
+                      ? "Scroll" : selectedMonitor.network === 2040
+                      ? "Vanar" : selectedMonitor.network === 143
+                      ? "Monad" : "Unknown"
+                      }
                   </option>
-                  <option value="1" className="text-[13px] text-[#959595] ">
-                    Ethereum Mainnet
-                  </option>
-                  <option value="11155111" className="text-[13px] text-[#959595]">
-                    Sepolia Testnet
-                  </option>
-                  <option value="137" className="text-[13px] text-[#959595]">
-                    Polygon Mainnet
-                  </option>
-                  <option value="80002" className="text-[13px] text-[#959595]">
-                    Amoy
-                  </option>
-                  <option value="1300" className="text-[13px] text-[#959595]">
-                      Algorand Mainnet
-                    </option>
-                    <option value="1301" className="text-[13px] text-[#959595]">
-                      Algorand Testnet
-                    </option>
+                 
+                    <option value="1" className="text-[13px] text-[#959595] ">Ethereum Mainnet</option>
+                <option value="56" className="text-[13px] text-[#959595] ">Binance Smart Chain</option>
+                <option value="8453" className="text-[13px] text-[#959595] ">Base</option>
+                <option value="43114" className="text-[13px] text-[#959595] ">Avalanche</option>
+                <option value="42161" className="text-[13px] text-[#959595] ">Arbitrum</option>
+                <option value="100" className="text-[13px] text-[#959595] ">Gnosis</option>
+                <option value="59144" className="text-[13px] text-[#959595] ">Linea</option>
+                <option value="1313161554" className="text-[13px] text-[#959595] ">Aurora</option>
+                <option value="10" className="text-[13px] text-[#959595] ">Optimism</option>
+                <option value="11155111" className="text-[13px] text-[#959595]">Sepolia Testnet</option>
+                <option value="137" className="text-[13px] text-[#959595]">Polygon Mainnet</option>
+                <option value="80002" className="text-[13px] text-[#959595]">Amoy</option>
+                <option value="1300" className="text-[13px] text-[#959595]">Algorand Mainnet</option>
+                <option value="1301" className="text-[13px] text-[#959595]">Algorand Testnet</option>
+                <option value="42161" className="text-[13px] text-[#959595]">Arbitrum One</option>
+                <option value="43114" className="text-[13px] text-[#959595]">Avalanche C-Chain</option>
+                <option value="204" className="text-[13px] text-[#959595]">opBNB</option>
+                <option value="1101" className="text-[13px] text-[#959595]">Polygon zkEVM</option>
+                <option value="250" className="text-[13px] text-[#959595]">Fantom</option>
+                <option value="25" className="text-[13px] text-[#959595]">Cronos</option>
+                <option value="592" className="text-[13px] text-[#959595]">Astar</option>
+                <option value="100" className="text-[13px] text-[#959595]">Gnosis (xDai)</option>
+                <option value="42220" className="text-[13px] text-[#959595]">Celo</option>
+                <option value="324" className="text-[13px] text-[#959595]">ZkSync Era</option>
+                <option value="137" className="text-[13px] text-[#959595]">Polygon (Matic)</option>
+                <option value="288" className="text-[13px] text-[#959595]">Boba Network</option>
+                <option value="534352" className="text-[13px] text-[#959595]">Scroll</option>
+                <option value="2040" className="text-[13px] text-[#959595]">Vanar</option>
+                <option value="143" className="text-[13px] text-[#959595]">Monad</option>
+
+
                 </select>
      <div>
                     {selectedMonitor.network === 1300 ||

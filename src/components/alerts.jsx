@@ -253,6 +253,20 @@ function Alerts() {
                   <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                 </div>
               </div>
+               <div
+                            className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
+                            style={{ border: "1px solid #2D5C8F" }}
+                          >
+              
+                            <div className="my-auto text-black" >
+                              {" "}
+                              Auto Defend
+                            </div>
+                            <div className="my-auto ml-auto">
+              
+                              <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
+                            </div>
+                          </div>
               
               <div
                 className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
