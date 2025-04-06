@@ -27,6 +27,7 @@ const customStyles = {
 function Alerts() {
   const location = useLocation();
   const navigate = useNavigate();
+  const planType = parseInt(localStorage.getItem("planType")) || 0;
   const token = localStorage.getItem("token");
   const { name, email, m_id, network, address, rk, selectedEventNames } = location.state || {};
   const userEmail = localStorage.getItem("email");
@@ -254,13 +255,14 @@ function Alerts() {
                 </div>
               </div>
                <div
-                            className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
+               data-tip="This feature is available only for Pro users. Upgrade your plan to access Auto Defend."
+               className={`${planType===0?"tooltip  cursor-pointer":""} mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm`}
                             style={{ border: "1px solid #2D5C8F" }}
                           >
               
                             <div className="my-auto text-black" >
                               {" "}
-                              Auto Defend
+                              Autodefend
                             </div>
                             <div className="my-auto ml-auto">
               

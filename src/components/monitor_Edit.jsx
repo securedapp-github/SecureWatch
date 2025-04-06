@@ -18,6 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 function Monitor_Edit() {
   //  const { email, token } = location.state || "";
   const token = localStorage.getItem("token");
+  const planType = parseInt(localStorage.getItem("planType")) || 0;
   console.log("token is", token);
   const email = localStorage.getItem("email");
   const decoded = jwtDecode(token);
@@ -510,13 +511,14 @@ function Monitor_Edit() {
               </div>
 
               <div
-                              className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm "
+                              data-tip="This feature is available only for Pro users. Upgrade your plan to access Auto Defend."
+                              className={`${planType===0?"tooltip  cursor-pointer":""} mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm`}
                               style={{ border: "1px solid #CACACA" }}
                             >
                 
                               <div className="my-auto " >
                                 {" "}
-                                Auto Defend
+                                Autodefend
                               </div>
                               <div className="my-auto ml-auto">
                 

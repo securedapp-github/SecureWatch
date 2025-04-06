@@ -29,6 +29,7 @@ function Alerts_Edit() {
   const location = useLocation();
   const navigate = useNavigate();
   const { name, email, m_id, network, address, rk, selectedEventNames, alert_data, alert_type, slack_webhook } = location.state || {};
+  const planType = parseInt(localStorage.getItem("planType")) || 0;
   console.log("Alert Data",alert_data);
   console.log("Alert Type",alert_type);
   console.log("Slack Webhook",slack_webhook);
@@ -233,13 +234,15 @@ function Alerts_Edit() {
                 </div>
               </div>
                <div
-                            className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
+               data-tip="This feature is available only for Pro users. Upgrade your plan to access Auto Defend."
+               className={`${planType===0?"tooltip  cursor-pointer":""} mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm`}
+                           
                             style={{ border: "1px solid #2D5C8F" }}
                           >
               
                             <div className="my-auto text-black" >
                               {" "}
-                              Auto Defend
+                              Autodefend
                             </div>
                             <div className="my-auto ml-auto">
               

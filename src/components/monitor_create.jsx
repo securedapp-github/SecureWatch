@@ -16,6 +16,7 @@ function Monitor_create() {
   //  const { email, token } = location.state || "";
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
+  const planType = parseInt(localStorage.getItem("planType")) || 0;
   const decoded = jwtDecode(token);
   const user_Id = decoded.userId;
   const userEmail = localStorage.getItem("email");
@@ -485,13 +486,15 @@ function Monitor_create() {
               </div>
             </div>
             <div
-                              className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm "
+            data-tip="This feature is available only for Pro users. Upgrade your plan to access Auto Defend."
+            className={`${planType===0?"tooltip  cursor-pointer":""} mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm`}
+                             
                               style={{ border: "1px solid #CACACA" }}
                             >
                 
                               <div className="my-auto " >
                                 {" "}
-                                Auto Defend
+                               Autodefend
                               </div>
                               <div className="my-auto ml-auto">
                 
