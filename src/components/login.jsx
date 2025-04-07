@@ -17,6 +17,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -50,6 +51,9 @@ function Login() {
         const Email = response.data.user.email;
         const credits = response.data.user.credits;
         const planexpiry = response.data.user.planexpiry;
+        const notifications = response.data.user.notifications;
+        localStorage.setItem("notifications", JSON.stringify(notifications));
+        console.log("notifications", notifications);
         console.log("credits", credits);
         console.log("planexpiry", planexpiry);
         let login = localStorage.setItem("login", true);
@@ -176,6 +180,22 @@ function Login() {
               </div> */}
             </form>
           </div>
+          <div className="text-gray-600 text-center mt-4">
+            <div className="flex items-center">
+      <button
+        onClick={() => setShowMessage(true)}
+        className=" px-2 py-1 rounded transition text-xl"
+      >
+        [Start Free Trial]
+      </button>
+      <p>- No Card Required During Free Trial</p>
+      </div>
+      {showMessage && (
+        <p className="mt-2 text-sm text-red-400">
+          Login to avail your free trial !!
+        </p>
+      )}
+    </div>
         </div>
         <div className=" mt-5 flex gap-1 items-center justify-center mx-auto">
         <img src={SecureDapp} alt="SecureDapp logo" className="w-14" />
