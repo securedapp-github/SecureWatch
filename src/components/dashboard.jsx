@@ -12,7 +12,7 @@ import { TbAlertTriangle } from "react-icons/tb";
 import { TbUserSquare } from "react-icons/tb";
 import { CgHome } from "react-icons/cg";
 import { MdOutlineSettings } from "react-icons/md";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 function Dashboard() {
   const [hash, setHash] = useState("");
@@ -45,6 +45,8 @@ function Dashboard() {
   console.log("dashboard parent_id", parent_id);
   const is_admin = localStorage.getItem("is_admin");
   console.log("dashboard is_admin", is_admin);
+  const notifications = localStorage.getItem("notifications");
+  console.log("dashboard notifications", notifications);
 
   const [credits, setCredits] = useState(userCredits || 0);
   const [planexpiry, setPlanexpiry] = useState(userPlanexpiry || null);
@@ -170,6 +172,62 @@ function Dashboard() {
     };
     fetchMoniter();
   }, []);
+
+
+const DASHBOARD_TOAST_CONTAINER_ID = "dashboard-notification-container";
+
+const ensureDashboardToastContainer = () => {
+  if (!document.getElementById(DASHBOARD_TOAST_CONTAINER_ID)) {
+    const dashboardContainer = toast.createContainer({
+      containerId: DASHBOARD_TOAST_CONTAINER_ID,
+      position: "bottom-right",
+      theme: "colored"
+    });
+    
+    return dashboardContainer;
+  }
+  return true;
+};
+
+const dashboardToast = (message) => {
+  ensureDashboardToastContainer();
+  
+  toast(message.replace(/^"|"$/g, ""), {
+    position: "bottom-right",
+    autoClose: false,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "colored",
+    containerId: DASHBOARD_TOAST_CONTAINER_ID, 
+    style: {
+      backgroundColor: "#60a5fa", 
+      color: "#ffffff", 
+      fontWeight: "bold",
+    },
+  });
+};
+
+useEffect(() => {
+  if (!notifications) return;
+  
+  const trimmedNotifications = notifications.trim();
+  if (!trimmedNotifications) return;
+  
+  if (trimmedNotifications.includes("::")) {
+    const notificationArray = trimmedNotifications
+      .split("::")
+      .map(msg => msg.trim().replace(/^"|"$/g, ""))
+      .filter(msg => msg.length > 0);
+    
+    notificationArray.forEach(msg => {
+      dashboardToast(msg);
+    });
+  } else {
+    dashboardToast(trimmedNotifications.replace(/^"|"$/g, ""));
+  }
+}, [notifications]);
 
   return (
     <div className="w-full min-h-screen ">
@@ -352,6 +410,7 @@ function Dashboard() {
 
 
       </div>
+      <ToastContainer containerId="dashboard-notification-container" />
     </div>
   );
 }
