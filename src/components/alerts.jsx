@@ -308,10 +308,10 @@ function Alerts() {
                 Email
               </div>
               <input type="text" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} className="mt-2 w-full border-2 border-black text-black bg-white p-2 rounded-lg" placeholder="Enter emails, e.g., example1@gmail.com, example2@gmail.com" />
-  
+              <p className="text-lg font-medium text-black text-center mt-3">OR / AND</p>
               <div className="mt-5">
                 <div className="font-medium" style={{ color: "black" }}>
-                  Execute an action
+                  Slack
                 </div>
                 <div className="">
                   <div className="font-medium">

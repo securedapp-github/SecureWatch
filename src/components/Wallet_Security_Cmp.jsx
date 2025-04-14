@@ -24,10 +24,10 @@ const Wallet_Security_Cmp = () => {
   const parent_id = localStorage.getItem("parent_id");
   console.log("parent_id:", parent_id);
 
-    const [data, setData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [dataPerPage, setDataPerPage] = useState(15);
-    const [totalPages, setTotalPages] = useState(1);
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [dataPerPage, setDataPerPage] = useState(15);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     setLoading(true);
@@ -46,7 +46,7 @@ const Wallet_Security_Cmp = () => {
       const data = await res.json();
       console.log("Data", data);
       setTotalPages(Math.ceil(data.monitors?.length / dataPerPage));
-      if(res.status === 401){
+      if (res.status === 401) {
         toast.error("Session Expired, Please login again",
           {
             autoClose: 500,
@@ -58,7 +58,7 @@ const Wallet_Security_Cmp = () => {
 
         )
       }
-      if(res.status === 403){
+      if (res.status === 403) {
         toast.error("Unauthorized Access, Please login again",
           {
             autoClose: 500,
@@ -170,19 +170,53 @@ const Wallet_Security_Cmp = () => {
                   <div className="flex flex-col gap-3">
                     <span className="text-md  text-black">{name}</span>
                     <span className="text-md  text-black">
-                      {network === 80002
-                        ? "Amoy"
-                        : network === 1
-                          ? "Ethereum Mainnet"
-                          : network === 11155111
-                            ? "Sepolia Testnet"
-                            : network === 137
-                              ? "Polygon Mainnet"
-                              : network === 1300
-                                ? "Algorand Mainnet"
-                                : network === 1301
-                                  ? "Algorand Testnet"
-                                  : "Unknown"}
+                    {network === 1
+    ? "Ethereum Mainnet"
+    : network === 56
+        ? "Binance Smart Chain"
+        : network === 8453
+            ? "Base"
+            : network === 43114
+                ? "Avalanche"
+                : network === 42161
+                    ? "Arbitrum"
+                    : network === 100
+                        ? "Gnosis"
+                        : network === 59144
+                            ? "Linea"
+                            : network === 1313161554
+                                ? "Aurora"
+                                : network === 10
+                                    ? "Optimism"
+                                    : network === 11155111
+                                        ? "Sepolia Testnet"
+                                        : network === 137
+                                            ? "Polygon Mainnet"
+                                            : network === 80002
+                                                ? "Amoy"
+                                                        : network === 204
+                                                            ? "opBNB"
+                                                            : network === 1101
+                                                                ? "Polygon zkEVM"
+                                                                : network === 250
+                                                                    ? "Fantom"
+                                                                    : network === 25
+                                                                        ? "Cronos"
+                                                                        : network === 592
+                                                                            ? "Astar"
+                                                                            : network === 42220
+                                                                                ? "Celo"
+                                                                                : network === 324
+                                                                                    ? "ZkSync Era"
+                                                                                    : network === 288
+                                                                                        ? "Boba Network"
+                                                                                        : network === 534352
+                                                                                            ? "Scroll"
+                                                                                            : network === 2040
+                                                                                                ? "Vanar"
+                                                                                                : network === 143
+                                                                                                    ? "Monad"
+                                                                                                    : "Unknown"}
                     </span>
                     <p className=" text-md text-black text-nowrap">
                       {created_on?.slice(0, 10)}
@@ -318,19 +352,53 @@ const Wallet_Security_Cmp = () => {
 
                       <td className=" ">
                         <span className="text-md  text-black">
-                          {network === 80002
-                            ? "Amoy"
-                            : network === 1
-                              ? "Ethereum Mainnet"
-                              : network === 11155111
-                                ? "Sepolia Testnet"
-                                : network === 137
-                                  ? "Polygon Mainnet"
-                                  : network === 1300
-                                    ? "Algorand Mainnet"
-                                    : network === 1301
-                                      ? "Algorand Testnet"
-                                      : "Unknown"}
+                          {network === 1
+                            ? "Ethereum Mainnet"
+                            : network === 56
+                              ? "Binance Smart Chain"
+                              : network === 8453
+                                ? "Base"
+                                : network === 43114
+                                  ? "Avalanche"
+                                  : network === 42161
+                                    ? "Arbitrum"
+                                    : network === 100
+                                      ? "Gnosis"
+                                      : network === 59144
+                                        ? "Linea"
+                                        : network === 1313161554
+                                          ? "Aurora"
+                                          : network === 10
+                                            ? "Optimism"
+                                            : network === 11155111
+                                              ? "Sepolia Testnet"
+                                              : network === 137
+                                                ? "Polygon Mainnet"
+                                                : network === 80002
+                                                  ? "Amoy"
+                                                      : network === 204
+                                                        ? "opBNB"
+                                                        : network === 1101
+                                                          ? "Polygon zkEVM"
+                                                          : network === 250
+                                                            ? "Fantom"
+                                                            : network === 25
+                                                              ? "Cronos"
+                                                              : network === 592
+                                                                ? "Astar"
+                                                                : network === 42220
+                                                                  ? "Celo"
+                                                                  : network === 324
+                                                                    ? "ZkSync Era"
+                                                                    : network === 288
+                                                                      ? "Boba Network"
+                                                                      : network === 534352
+                                                                        ? "Scroll"
+                                                                        : network === 2040
+                                                                          ? "Vanar"
+                                                                          : network === 143
+                                                                            ? "Monad"
+                                                                            : "Unknown"}
                         </span>
                       </td>
 
@@ -427,13 +495,13 @@ const Wallet_Security_Cmp = () => {
           </div>
         </div>
       )}
-      <div className="w-full mt-10 mx-auto flex justify-center items-center"> 
-            <ResponsivePagination
-            current={currentPage}
-            total={totalPages}
-            onPageChange={setCurrentPage}
-          />
-            </div>
+      <div className="w-full mt-10 mx-auto flex justify-center items-center">
+        <ResponsivePagination
+          current={currentPage}
+          total={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
     </div>
   );
 };

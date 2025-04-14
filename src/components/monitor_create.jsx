@@ -697,7 +697,7 @@ function Monitor_create() {
                     className="text-lg font-medium mt-5"
                     style={{ color: "black" }}
                   >
-                    Address
+                    Contract Address
                   </div>
                   <input
                     type="text"
@@ -705,7 +705,7 @@ function Monitor_create() {
                     name="address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Enter address (0x.......)"
+                    placeholder="Enter contract address (0x.......)"
                     className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
                   />
 

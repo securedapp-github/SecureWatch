@@ -5,6 +5,7 @@ import Sidebar from "./Sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoMdCheckmarkCircle } from "react-icons/io";
+import { isAddress } from "web3-validator";
 
 function Monitor_create() {
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ function Monitor_create() {
     return emailRegex.test(email);
   };
 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,11 +36,18 @@ function Monitor_create() {
       return;
     }
 
+
     // Email Validation
     if (!validateEmail(email)) {
       toast.error("Please enter a valid email address.");
       return;
     }
+
+    // Validate Ethereum address using web3-validator
+  if (!isAddress(address)) {
+    toast.error("Please enter a valid wallet address.");
+    return;
+  }
 
     const requestBody = {
       user_id: parent_id != 0 ? parseInt(parent_id) : parseInt(userId),
@@ -259,8 +269,6 @@ function Monitor_create() {
                   Select a network
                 </option>
                 <option value="1">Ethereum Mainnet</option>
-                <option value="11155111">Sepolia Testnet</option>
-                <option value="137">Polygon Mainnet</option>
                 <option value="56">Binance Smart Chain</option>
                 <option value="8453">Base</option>
                 <option value="43114">Avalanche</option>
@@ -269,19 +277,34 @@ function Monitor_create() {
                 <option value="59144">Linea</option>
                 <option value="1313161554">Aurora</option>
                 <option value="10">Optimism</option>
+                <option value="11155111">Sepolia Testnet</option>
+                <option value="137">Polygon Mainnet</option>
                 <option value="80002">Amoy</option>
-                <option value="1300">Algorand Mainnet</option>
-                <option value="1301">Algorand Testnet</option>
+                <option value="42161">Arbitrum One</option>
+                <option value="43114">Avalanche C-Chain</option>
+                <option value="204">opBNB</option>
+                <option value="1101">Polygon zkEVM</option>
+                <option value="250">Fantom</option>
+                <option value="25">Cronos</option>
+                <option value="592">Astar</option>
+                <option value="100">Gnosis (xDai)</option>
+                <option value="42220">Celo</option>
+                <option value="324">ZkSync Era</option>
+                <option value="137">Polygon (Matic)</option>
+                <option value="288">Boba Network</option>
+                <option value="534352">Scroll</option>
+                <option value="2040">Vanar</option>
+                <option value="143">Monad</option>
               </select>
 
               <label className="text-lg font-medium text-black mt-5 block">
-                Address
+              Wallet Address
               </label>
               <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Enter address (0x.......)"
+                placeholder="Enter wallet address (0x.......)"
                 className="outline-none border-2 py-3 rounded-xl w-full px-3 bg-white mt-1"
               />
 
@@ -295,7 +318,8 @@ function Monitor_create() {
                 placeholder="Enter email"
                 className="outline-none border-2 py-3 rounded-xl w-full px-3 bg-white mt-1"
               />
-              <label className="text-lg font-medium text-black mt-5 block">
+              <p className="text-lg font-medium text-black text-center mt-3">OR / AND</p>
+              <label className="text-lg font-medium text-black mt-2 block">
                 Slack
               </label>
               <input

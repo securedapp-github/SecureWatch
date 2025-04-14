@@ -42,6 +42,7 @@ import AnalyticsModule from "./components/AnalyticsModule.jsx";
 import HistoricalInsights from "./components/HistoricalInsights.jsx";
 import Autodefend_edit from "./components/Autodefend_edit.jsx"
 import Autodefend from "./components/Autodefend.jsx"
+import Pricing from "./components/Pricing.jsx";
 
 
 
@@ -90,6 +91,7 @@ function App() {
           element={<Protected cmp={<AlgoEventsedit />} />}
         />
          <Route path="/Algoevents" element={<AlgoEvents />} />
+        <Route path="/pricing" element={<Pricing />} />
          <Route path="/logout" element={<Logout />} />
       </Routes>
     </BrowserRouter>

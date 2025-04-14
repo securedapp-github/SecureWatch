@@ -169,6 +169,16 @@ function Monitor_Edit() {
     e.preventDefault();
     // const finalAbi = (category === 2) ? "Asset_ABI" : abi || selectedMonitor.abi;
 
+     // Validate ABI
+  if (abi) {
+    try {
+      JSON.parse(abi); // Attempt to parse the ABI as JSON
+    } catch (error) {
+      toast.error("Invalid ABI format. Please provide a valid JSON.");
+      return; // Stop further execution if ABI is invalid
+    }
+  }
+  
     const data = {
       name: monitorName || selectedMonitor.name,
       monitor_id: selectedMonitor.mid,
@@ -663,7 +673,7 @@ function Monitor_Edit() {
                 <option value="137" className="text-[13px] text-[#959595]">Polygon Mainnet</option>
                 <option value="80002" className="text-[13px] text-[#959595]">Amoy</option>
                 <option value="1300" className="text-[13px] text-[#959595]">Algorand Mainnet</option>
-                <option value="1301" className="text-[13px] text-[#959595]">Algorand Testnet</option>
+                <option value="1301" className="text-[13px] text-[#959595]">Algorand Testnet</option> 
                 <option value="42161" className="text-[13px] text-[#959595]">Arbitrum One</option>
                 <option value="43114" className="text-[13px] text-[#959595]">Avalanche C-Chain</option>
                 <option value="204" className="text-[13px] text-[#959595]">opBNB</option>
@@ -722,7 +732,7 @@ function Monitor_Edit() {
                           className="text-lg font-medium mt-5"
                           style={{ color: "black" }}
                         >
-                          Address
+                          Contract Address
                         </div>
                         <input
                           type="text"
@@ -730,7 +740,7 @@ function Monitor_Edit() {
                           name="address"
                           value={address}
                           onChange={(e) => setAddress(e.target.value)}
-                          placeholder="Enter address (0x.......)"
+                          placeholder="Enter contract address (0x.......)"
                           className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
                         />
                       </div>
