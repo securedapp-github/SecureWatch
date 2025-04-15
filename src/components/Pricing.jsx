@@ -112,6 +112,7 @@ const plans = [
   
 
 const Pricing = () => {
+    const navigate = useNavigate();
     const userEmail = localStorage.getItem("email");
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
@@ -203,7 +204,12 @@ const Pricing = () => {
             <p className="text-lg font-bold text-[#2D5C8F]">Build your first dashboard in minutes</p>
             <p className="text-sm text-gray-500">Want to know more? Learn how to create dashboard.</p>
           </div>
-          <button className="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition">
+          <button
+           onClick={() => {
+            navigate("/login");
+          }
+        }
+          className="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition">
             Get started
           </button>
         </div>

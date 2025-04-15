@@ -452,6 +452,10 @@ function Autodefend() {
             </p>
             <div className="flex items-center gap-4 flex-wrap justify-center">
               <button
+               onClick={() => {
+                navigate("/pricing");
+              }
+            }
                 className="bg-[#2D5C8F] text-white px-6 py-2 rounded-lg hover:bg-[#1e3c5a]"
               >
                 View Plans
