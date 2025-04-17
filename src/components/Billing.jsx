@@ -132,8 +132,12 @@ const BillingForm = () => {
                         <Link to="/admin" className="text-[#6A6A6A]" >
                             Account access
                         </Link>
+                        
                         <Link to="/billing" className="text-[#2D5C8F] font-semibold">
                             Billing
+                        </Link>
+                        <Link to="/pricing" className="text-[#6A6A6A]" >
+                        Plans
                         </Link>
 
                     </div>

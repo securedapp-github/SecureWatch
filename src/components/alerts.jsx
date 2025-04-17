@@ -27,6 +27,7 @@ const customStyles = {
 function Alerts() {
   const location = useLocation();
   const navigate = useNavigate();
+  const planType = parseInt(localStorage.getItem("planType")) || 0;
   const token = localStorage.getItem("token");
   const { name, email, m_id, network, address, rk, selectedEventNames } = location.state || {};
   const userEmail = localStorage.getItem("email");
@@ -253,6 +254,21 @@ function Alerts() {
                   <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                 </div>
               </div>
+               <div
+               data-tip="This feature is available only for Pro users. Upgrade your plan to access Auto Defend."
+               className={`${planType===0?"tooltip  cursor-pointer":""} mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm`}
+                            style={{ border: "1px solid #2D5C8F" }}
+                          >
+              
+                            <div className="my-auto text-black" >
+                              {" "}
+                              Autodefend
+                            </div>
+                            <div className="my-auto ml-auto">
+              
+                              <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
+                            </div>
+                          </div>
               
               <div
                 className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
@@ -292,10 +308,10 @@ function Alerts() {
                 Email
               </div>
               <input type="text" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} className="mt-2 w-full border-2 border-black text-black bg-white p-2 rounded-lg" placeholder="Enter emails, e.g., example1@gmail.com, example2@gmail.com" />
-  
+              <p className="text-lg font-medium text-black text-center mt-3">OR / AND</p>
               <div className="mt-5">
                 <div className="font-medium" style={{ color: "black" }}>
-                  Execute an action
+                  Slack
                 </div>
                 <div className="">
                   <div className="font-medium">

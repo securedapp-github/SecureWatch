@@ -39,6 +39,8 @@ function Login() {
         console.log("userId", userId);
         const parent_id = response.data.user.parent_id;
         localStorage.setItem("parent_id", parent_id);
+        const planType = response.data.user.plan;
+        localStorage.setItem("planType", planType);
         // console.log("parent_id", parent_id);
         const is_admin = response.data.user.is_admin;
         localStorage.setItem("is_admin", is_admin);

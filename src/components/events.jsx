@@ -17,6 +17,7 @@ function Events() {
   const location = useLocation();
   const token = localStorage.getItem("token");
   const userEmail = localStorage.getItem("email");
+  const planType = parseInt(localStorage.getItem("planType")) || 0;
   console.log(userEmail);
   const { name, email, m_id, network, abi, address, rk } =
     location.state || "";
@@ -193,12 +194,165 @@ function Events() {
 
   const web3 = new Web3();
 
+  // const handleSaveMonitor = async () => {
+  //   // Prepare data for valid events
+  //   const validEventEntries = Object.entries(selectedEvents);
+  
+  //   // Prepare navigation state
+  //   const navigationState = {
+  //     abi:abi,
+  //     name: name,
+  //     network: network,
+  //     address: address,
+  //     rk: rk,
+  //     m_id: mid,
+  //     email: email,
+  //     token: token,
+  //     selectedEventNames: selectedEventNames,
+  //   };
+  
+  //   // Process each event
+  //   const eventPromises = validEventEntries.map(async ([eventName, eventDataEntry]) => {
+  //     const event = eventDetails.find((e) => e.name === eventName);
+  //     if (!event) {
+  //       console.error("Event not found in eventDetails:", eventName);
+  //       return; // Exit if the event is not found
+  //     }
+  
+  //     // Ensure args is an array
+  //     const argsArray = Array.isArray(eventDataEntry.args)
+  //       ? eventDataEntry.args
+  //       : eventDataEntry.args.split(",").map(arg => arg.trim());
+  
+  //     // Ensure operators is an array
+  //     const operatorsArray = Array.isArray(eventDataEntry.operators)
+  //       ? eventDataEntry.operators
+  //       : [];
+  
+  //     // Map argument details from event inputs
+  //     const argDetails = event.inputs.split(", ").map((arg) => {
+  //       const [name, type] = arg.split(": ");
+  //       return { name, type };
+  //     });
+  
+  //     const argsObject = argDetails.reduce((acc, { name, type }, index) => {
+  //       const value = argsArray[index];
+  //       const operator = operatorsArray[index] || ''; // Default operator if not provided
+        
+  //       if (type.startsWith('uint') && !type.startsWith('uint[]')) {
+  //         // Apply the operator to 'uint' type values (but not for 'uint[]')
+  //         acc[name] = `${operator}${value}`;
+  //       } else if (type.startsWith('uint[]')) {
+  //         // Handle 'uint[]' types by adding values without operator and colon
+  //         const valuesArray = value.split(',').map(val => val.trim());
+  //         acc[name] = valuesArray.join(', '); // Just values without operator and colon
+  //       } else {
+  //         // Just the value for non-uint types
+  //         acc[name] = value;
+  //       }
+      
+  //       return acc;
+  //     }, {});
+      
+      
+      
+      
+  
+  //     // Check if 'inputs' is available and correctly formatted
+  //     if (!event.inputs || typeof event.inputs !== "string") {
+  //       console.error("Event inputs are not correctly formatted:", event.inputs);
+  //       return;
+  //     }
+  
+  //     // Generate the event signature
+  //     const eventSignatureInputs = event.inputs.split(", ")
+  //       .map((input) => {
+  //         const [, type] = input.split(": ");
+  //         return type;
+  //       })
+  //       .join(",");
+  
+  //     const eventSignatureData = `${event.name}(${eventSignatureInputs})`;
+  //     let eventSignature;
+  //     try {
+  //       eventSignature = web3.eth.abi.encodeEventSignature(eventSignatureData);
+  //     } catch (error) {
+  //       console.error("Failed to encode event signature:", error, "with data:", eventSignatureData);
+  //       return;
+  //     }
+  
+  //     const body = {
+  //       name: eventName,
+  //       mid: mid,
+  //       signature: eventSignature,
+  //       arguments: argsObject,
+  //     };
+  
+  //     // Send data to the server
+  //     try {
+  //       const response = await axios.post(`${baseUrl}/add_event`, body,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
+  //       if(response.status === 401){
+  //         toast.error("Session Expired, Please login again",
+  //           {
+  //             autoClose: 500,
+  //             onClose: () => {
+  //               localStorage.clear();
+  //               navigate("/login");
+  //             },
+  //           }
+  
+  //         )
+  //       }
+  //       if(response.status === 403){
+  //         toast.error("Unauthorized Access, Please login again",
+  //           {
+  //             autoClose: 500,
+  //             onClose: () => {
+  //               localStorage.clear();
+  //               navigate("/login");
+  //             },
+  //           }
+  
+  //         )
+  //       }
+  //       console.log("Event added:", response.data);
+  //       const updatedNavigationState = {
+  //         ...navigationState,
+  //         ...response.data, // Merge response data into the navigation state
+  //       };
+  //       console.log("Updated Navigation State:", updatedNavigationState);
+        
+
+  //       // Show success message and navigate to alerts
+  //       toast.success("Event Added successfully!", {
+  //         autoClose: 500,
+  //         onClose: () => {
+  //           navigate("/autodefend", { state: updatedNavigationState });
+  //           // navigate("/alerts", { state: navigationState });
+  //         },
+  //       });
+  //     } catch (error) {
+  //       console.error("Error sending event data:", error);
+  //       toast.error("Failed to Add Event. Please try again!");
+  //     }
+  //   });
+  
+  //   // Wait for all events to be processed
+  //   await Promise.all(eventPromises);
+  // };
+
   const handleSaveMonitor = async () => {
-    // Prepare data for valid events
     const validEventEntries = Object.entries(selectedEvents);
   
-    // Prepare navigation state
+    // Prepare initial navigation state
     const navigationState = {
+      abi: abi,
       name: name,
       network: network,
       address: address,
@@ -209,25 +363,23 @@ function Events() {
       selectedEventNames: selectedEventNames,
     };
   
-    // Process each event
+    const responseDatas = []; // Array to collect all response data
+  
     const eventPromises = validEventEntries.map(async ([eventName, eventDataEntry]) => {
       const event = eventDetails.find((e) => e.name === eventName);
       if (!event) {
         console.error("Event not found in eventDetails:", eventName);
-        return; // Exit if the event is not found
+        return;
       }
   
-      // Ensure args is an array
       const argsArray = Array.isArray(eventDataEntry.args)
         ? eventDataEntry.args
-        : eventDataEntry.args.split(",").map(arg => arg.trim());
+        : eventDataEntry.args.split(",").map((arg) => arg.trim());
   
-      // Ensure operators is an array
       const operatorsArray = Array.isArray(eventDataEntry.operators)
         ? eventDataEntry.operators
         : [];
   
-      // Map argument details from event inputs
       const argDetails = event.inputs.split(", ").map((arg) => {
         const [name, type] = arg.split(": ");
         return { name, type };
@@ -235,39 +387,13 @@ function Events() {
   
       const argsObject = argDetails.reduce((acc, { name, type }, index) => {
         const value = argsArray[index];
-        const operator = operatorsArray[index] || ''; // Default operator if not provided
-        
-        if (type.startsWith('uint') && !type.startsWith('uint[]')) {
-          // Apply the operator to 'uint' type values (but not for 'uint[]')
-          acc[name] = `${operator}${value}`;
-        } else if (type.startsWith('uint[]')) {
-          // Handle 'uint[]' types by adding values without operator and colon
-          const valuesArray = value.split(',').map(val => val.trim());
-          acc[name] = valuesArray.join(', '); // Just values without operator and colon
-        } else {
-          // Just the value for non-uint types
-          acc[name] = value;
-        }
-      
+        const operator = operatorsArray[index] || '';
+        acc[name] = type.startsWith('uint') && !type.startsWith('uint[]') ? `${operator}${value}` : value;
         return acc;
       }, {});
-      
-      
-      
-      
   
-      // Check if 'inputs' is available and correctly formatted
-      if (!event.inputs || typeof event.inputs !== "string") {
-        console.error("Event inputs are not correctly formatted:", event.inputs);
-        return;
-      }
-  
-      // Generate the event signature
       const eventSignatureInputs = event.inputs.split(", ")
-        .map((input) => {
-          const [, type] = input.split(": ");
-          return type;
-        })
+        .map((input) => input.split(": ")[1])
         .join(",");
   
       const eventSignatureData = `${event.name}(${eventSignatureInputs})`;
@@ -275,7 +401,7 @@ function Events() {
       try {
         eventSignature = web3.eth.abi.encodeEventSignature(eventSignatureData);
       } catch (error) {
-        console.error("Failed to encode event signature:", error, "with data:", eventSignatureData);
+        console.error("Failed to encode event signature:", error);
         return;
       }
   
@@ -286,62 +412,60 @@ function Events() {
         arguments: argsObject,
       };
   
-      // Send data to the server
       try {
-        const response = await axios.post(`${baseUrl}/add_event`, body,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if(response.status === 401){
-          toast.error("Session Expired, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
-        }
-        if(response.status === 403){
-          toast.error("Unauthorized Access, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
-        }
-        console.log("Event added:", response.data);
-        console.log("Arguments Object:", argsObject);
-        console.log("Signature is:", eventSignature);
-        console.log("Network in event is", network);
-        console.log("Event is:", selectedEventNames);
-        console.log("Monitor id is:", m_id);
-        console.log("Event name is:", eventName);
-  
-        // Show success message and navigate to alerts
-        toast.success("Event Added successfully!", {
-          autoClose: 500,
-          onClose: () => {
-            navigate("/alerts", { state: navigationState });
+        const response = await axios.post(`${baseUrl}/add_event`, body, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
         });
+  
+        if (response.status === 401) {
+          toast.error("Session Expired, Please login again", {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+          return;
+        }
+  
+        if (response.status === 403) {
+          toast.error("Unauthorized Access, Please login again", {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
+          return;
+        }
+  
+        console.log("Event added:", response.data);
+        responseDatas.push(response.data); // Collect response data
       } catch (error) {
         console.error("Error sending event data:", error);
         toast.error("Failed to Add Event. Please try again!");
       }
     });
   
-    // Wait for all events to be processed
     await Promise.all(eventPromises);
+  
+    // Merge responseDatas into navigationState
+    const updatedNavigationState = {
+      ...navigationState,
+      responseDatas, // Add all response data as an array
+    };
+  
+    console.log("Updated Navigation State:", updatedNavigationState);
+  
+    // Show success message and navigate to autodefend
+    toast.success("Events Added successfully!", {
+      autoClose: 500,
+      onClose: () => {
+        navigate("/autodefend", { state: updatedNavigationState });
+      },
+    });
   };
   
 
@@ -469,6 +593,21 @@ function Events() {
                   <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                 </div>
               </div>
+              <div
+              data-tip="This feature is available only for Pro users. Upgrade your plan to access Auto Defend."
+              className={`${planType===0?"tooltip  cursor-pointer":""} mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm`}
+                                            style={{ border: "1px solid #CACACA" }}
+                                          >
+                              
+                                            <div className="my-auto " >
+                                              {" "}
+                                              Autodefend
+                                            </div>
+                                            <div className="my-auto ml-auto">
+                              
+                                              <IoCheckmarkCircleOutline className="text-2xl " />
+                                            </div>
+                                          </div>
               
               <div
                 className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"

@@ -179,19 +179,57 @@ const Monitor_cmp = () => {
                   <div className="flex flex-col gap-3">
                     <span className="text-md  text-black">{name}</span>
                     <span className="text-md  text-black">
-                      {network === 80002
-                        ? "Amoy"
-                        : network === 1
-                        ? "Ethereum Mainnet"
-                        : network === 11155111
-                        ? "Sepolia Testnet"
-                        : network === 137
-                        ? "Polygon Mainnet"
-                        : network === 1300
-                        ? "Algorand Mainnet"
-                        : network === 1301
-                        ? "Algorand Testnet"
-                        : "Unknown"}
+                    {network === 1
+    ? "Ethereum Mainnet"
+    : network === 56
+        ? "Binance Smart Chain"
+        : network === 8453
+            ? "Base"
+            : network === 43114
+                ? "Avalanche"
+                : network === 42161
+                    ? "Arbitrum"
+                    : network === 100
+                        ? "Gnosis"
+                        : network === 59144
+                            ? "Linea"
+                            : network === 1313161554
+                                ? "Aurora"
+                                : network === 10
+                                    ? "Optimism"
+                                    : network === 11155111
+                                        ? "Sepolia Testnet"
+                                        : network === 137
+                                            ? "Polygon Mainnet"
+                                            : network === 80002
+                                                ? "Amoy"
+                                                : network === 1300
+                                                    ? "Algorand Mainnet"
+                                                    : network === 1301
+                                                        ? "Algorand Testnet"
+                                                        : network === 204
+                                                            ? "opBNB"
+                                                            : network === 1101
+                                                                ? "Polygon zkEVM"
+                                                                : network === 250
+                                                                    ? "Fantom"
+                                                                    : network === 25
+                                                                        ? "Cronos"
+                                                                        : network === 592
+                                                                            ? "Astar"
+                                                                            : network === 42220
+                                                                                ? "Celo"
+                                                                                : network === 324
+                                                                                    ? "ZkSync Era"
+                                                                                    : network === 288
+                                                                                        ? "Boba Network"
+                                                                                        : network === 534352
+                                                                                            ? "Scroll"
+                                                                                            : network === 2040
+                                                                                                ? "Vanar"
+                                                                                                : network === 143
+                                                                                                    ? "Monad"
+                                                                                                    : "Unknown"}
                     </span>
                     <p className=" text-md text-black text-nowrap">
                       {created_on?.slice(0, 10)}
@@ -366,19 +404,57 @@ const Monitor_cmp = () => {
 
                       <td className=" ">
                         <span className="text-md text-black">
-                          {network === 80002
-                            ? "Amoy"
-                            : network === 1
-                            ? "Ethereum Mainnet"
-                            : network === 11155111
-                            ? "Sepolia Testnet"
-                            : network === 137
-                            ? "Polygon Mainnet"
-                            : network === 1300
-                            ? "Algorand Mainnet"
-                            : network === 1301
-                            ? "Algorand Testnet"
-                            : "Unknown"}
+                        {network === 1
+    ? "Ethereum Mainnet"
+    : network === 56
+        ? "Binance Smart Chain"
+        : network === 8453
+            ? "Base"
+            : network === 43114
+                ? "Avalanche"
+                : network === 42161
+                    ? "Arbitrum"
+                    : network === 100
+                        ? "Gnosis"
+                        : network === 59144
+                            ? "Linea"
+                            : network === 1313161554
+                                ? "Aurora"
+                                : network === 10
+                                    ? "Optimism"
+                                    : network === 11155111
+                                        ? "Sepolia Testnet"
+                                        : network === 137
+                                            ? "Polygon Mainnet"
+                                            : network === 80002
+                                                ? "Amoy"
+                                                : network === 1300
+                                                    ? "Algorand Mainnet"
+                                                    : network === 1301
+                                                        ? "Algorand Testnet"
+                                                        : network === 204
+                                                            ? "opBNB"
+                                                            : network === 1101
+                                                                ? "Polygon zkEVM"
+                                                                : network === 250
+                                                                    ? "Fantom"
+                                                                    : network === 25
+                                                                        ? "Cronos"
+                                                                        : network === 592
+                                                                            ? "Astar"
+                                                                            : network === 42220
+                                                                                ? "Celo"
+                                                                                : network === 324
+                                                                                    ? "ZkSync Era"
+                                                                                    : network === 288
+                                                                                        ? "Boba Network"
+                                                                                        : network === 534352
+                                                                                            ? "Scroll"
+                                                                                            : network === 2040
+                                                                                                ? "Vanar"
+                                                                                                : network === 143
+                                                                                                    ? "Monad"
+                                                                                                    : "Unknown"}
                         </span>
                       </td>
 

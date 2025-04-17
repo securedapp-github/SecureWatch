@@ -16,6 +16,7 @@ function Monitor_create() {
   //  const { email, token } = location.state || "";
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
+  const planType = parseInt(localStorage.getItem("planType")) || 0;
   const decoded = jwtDecode(token);
   const user_Id = decoded.userId;
   const userEmail = localStorage.getItem("email");
@@ -484,6 +485,22 @@ function Monitor_create() {
                 <IoCheckmarkCircleOutline className="text-2xl " />
               </div>
             </div>
+            <div
+            data-tip="This feature is available only for Pro users. Upgrade your plan to access Auto Defend."
+            className={`${planType===0?"tooltip  cursor-pointer":""} mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm`}
+                             
+                              style={{ border: "1px solid #CACACA" }}
+                            >
+                
+                              <div className="my-auto " >
+                                {" "}
+                               Autodefend
+                              </div>
+                              <div className="my-auto ml-auto">
+                
+                                <IoCheckmarkCircleOutline className="text-2xl " />
+                              </div>
+                            </div>
 
             <div
               className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"
@@ -575,50 +592,36 @@ function Monitor_create() {
                 >
                   None
                 </option>
-                <option value="1" className="text-[13px] text-[#959595] ">
-                  Ethereum Mainnet
-                </option>
+                <option value="1" className="text-[13px] text-[#959595] ">Ethereum Mainnet</option>
+                <option value="56" className="text-[13px] text-[#959595] ">Binance Smart Chain</option>
+                <option value="8453" className="text-[13px] text-[#959595] ">Base</option>
+                <option value="43114" className="text-[13px] text-[#959595] ">Avalanche</option>
+                <option value="42161" className="text-[13px] text-[#959595] ">Arbitrum</option>
+                <option value="100" className="text-[13px] text-[#959595] ">Gnosis</option>
+                <option value="59144" className="text-[13px] text-[#959595] ">Linea</option>
+                <option value="1313161554" className="text-[13px] text-[#959595] ">Aurora</option>
+                <option value="10" className="text-[13px] text-[#959595] ">Optimism</option>
+                <option value="11155111" className="text-[13px] text-[#959595]">Sepolia Testnet</option>
+                <option value="137" className="text-[13px] text-[#959595]">Polygon Mainnet</option>
+                <option value="80002" className="text-[13px] text-[#959595]">Amoy</option>
+                <option value="1300" className="text-[13px] text-[#959595]">Algorand Mainnet</option>
+                <option value="1301" className="text-[13px] text-[#959595]">Algorand Testnet</option>
+                <option value="42161" className="text-[13px] text-[#959595]">Arbitrum One</option>
+                <option value="43114" className="text-[13px] text-[#959595]">Avalanche C-Chain</option>
+                <option value="204" className="text-[13px] text-[#959595]">opBNB</option>
+                <option value="1101" className="text-[13px] text-[#959595]">Polygon zkEVM</option>
+                <option value="250" className="text-[13px] text-[#959595]">Fantom</option>
+                <option value="25" className="text-[13px] text-[#959595]">Cronos</option>
+                <option value="592" className="text-[13px] text-[#959595]">Astar</option>
+                <option value="100" className="text-[13px] text-[#959595]">Gnosis (xDai)</option>
+                <option value="42220" className="text-[13px] text-[#959595]">Celo</option>
+                <option value="324" className="text-[13px] text-[#959595]">ZkSync Era</option>
+                <option value="137" className="text-[13px] text-[#959595]">Polygon (Matic)</option>
+                <option value="288" className="text-[13px] text-[#959595]">Boba Network</option>
+                <option value="534352" className="text-[13px] text-[#959595]">Scroll</option>
+                <option value="2040" className="text-[13px] text-[#959595]">Vanar</option>
+                <option value="143" className="text-[13px] text-[#959595]">Monad</option>
 
-                <option value="56" className="text-[13px] text-[#959595] ">
-                Binance Smart Chain
-                </option>
-                <option value="8453" className="text-[13px] text-[#959595] ">
-                Base
-                </option>
-                <option value="43114" className="text-[13px] text-[#959595] ">
-                Avalanche
-                </option>
-                <option value="42161" className="text-[13px] text-[#959595] ">
-                Arbitrum
-                </option>
-                <option value="100" className="text-[13px] text-[#959595] ">
-                Gnosis
-                </option>
-                <option value="59144" className="text-[13px] text-[#959595] ">
-                Linea
-                </option>
-                <option value="1313161554" className="text-[13px] text-[#959595] ">
-                Aurora
-                </option>
-                <option value="10" className="text-[13px] text-[#959595] ">
-                Optimism
-                </option>
-
-                <option value="11155111" className="text-[13px] text-[#959595]">
-                  Sepolia Testnet
-                </option>
-                <option value="137" className="text-[13px] text-[#959595]">
-                  Polygon Mainnet
-                </option>
-                <option value="80002" className="text-[13px] text-[#959595]">
-                  Amoy
-                </option>
-                <option value="1300" className="text-[13px] text-[#959595]">
-                  Algorand Mainnet
-                </option>
-                <option value="1301" className="text-[13px] text-[#959595]">
-                  Algorand Testnet
-                </option>
               </select>
               {network === "1300" || network === "1301" ? (
                 <>
@@ -694,7 +697,7 @@ function Monitor_create() {
                     className="text-lg font-medium mt-5"
                     style={{ color: "black" }}
                   >
-                    Address
+                    Contract Address
                   </div>
                   <input
                     type="text"
@@ -702,7 +705,7 @@ function Monitor_create() {
                     name="address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Enter address (0x.......)"
+                    placeholder="Enter contract address (0x.......)"
                     className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
                   />
 

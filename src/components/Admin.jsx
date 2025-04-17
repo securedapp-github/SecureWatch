@@ -184,6 +184,9 @@ const AccountManagement = () => {
                         <Link to="/billing" className="text-[#6A6A6A]">
                         Billing
                         </Link>
+                        <Link to="/pricing" className="text-[#6A6A6A]">
+                        Plans
+                        </Link>
                         
                       </div>
           </div>

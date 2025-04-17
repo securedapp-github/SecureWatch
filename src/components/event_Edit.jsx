@@ -15,6 +15,7 @@ function Event_Edit() {
   const location = useLocation();
    const userEmail = localStorage.getItem("email");
   console.log(userEmail);
+  const planType = parseInt(localStorage.getItem("planType")) || 0;
   const token = localStorage.getItem("token");
   const [options, setOptions] = useState([]);
   const [foundedEvents, setFoundedEvents] = useState([]);
@@ -272,6 +273,7 @@ const handleSelectChange = (selectedOptions) => {
 
 
   const navigationState = {
+    abi:abi,
     monitorName: name,
     network: networkState,
     address: addressState,
@@ -282,6 +284,7 @@ const handleSelectChange = (selectedOptions) => {
     alert_data: alert_data,
     alert_type: alert_type,
     slack_webhook, slack_webhook,
+    selectedEventNames: selectedValues
   };
 
   const handleSubmit = async () => {
@@ -444,6 +447,7 @@ const handleSelectChange = (selectedOptions) => {
 
                 // Log the existing event details
                 console.log(`Existing event:`, existingEvent);
+                
                 console.log("Existing event arguments:", existingEvent?.arguments);
                 console.log("Existing event arguments value:", existingEvent?.arguments?.value);
 
@@ -479,7 +483,7 @@ const handleSelectChange = (selectedOptions) => {
                         sendRequest(`${baseUrl}/add_event`, "POST", requestData)
                             .then(response => {
                                 toast.success(`${eventType} event added successfully!`);
-                                console.log(`${eventType} added successfully!`, response);
+                                console.log(`${eventType} 1 added successfully!`, response);
                                 hasChanges = true;
                             })
                             .catch(error => {
@@ -506,7 +510,8 @@ const handleSelectChange = (selectedOptions) => {
                 toast.success("Events processed successfully!", {
                     autoClose: 500,
                     onClose: () => {
-                        navigate("/alert_edit", { state: navigationState });
+                        navigate("/autodefend_edit", { state: navigationState });
+                        // navigate("/alert_edit", { state: navigationState });
                     },
                 });
             } else {
@@ -633,6 +638,21 @@ const handleSelectChange = (selectedOptions) => {
                     <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                   </div>
                 </div>
+
+                 <div
+                              className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm "
+                              style={{ border: "1px solid #CACACA" }}
+                            >
+                
+                              <div className="my-auto " >
+                                {" "}
+                                {planType === 0 ? "This feature is available only for Pro users. Upgrade your plan to access Auto Defend.":"Autodefend"}
+                              </div>
+                              <div className="my-auto ml-auto">
+                
+                                <IoCheckmarkCircleOutline className="text-2xl " />
+                              </div>
+                            </div>
                 
                 <div
                   className="mt-5 flex gap-2 px-4 py-3 rounded-sm"
@@ -911,6 +931,23 @@ const handleSelectChange = (selectedOptions) => {
                   <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                 </div>
               </div>
+
+              <div
+              data-tip="This feature is available only for Pro users. Upgrade your plan to access Auto Defend."
+              className={`${planType===0?"tooltip  cursor-pointer":""} mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm`}
+                             
+                              style={{ border: "1px solid #CACACA" }}
+                            >
+                
+                              <div className="my-auto " >
+                                {" "}
+                                Autodefend
+                              </div>
+                              <div className="my-auto ml-auto">
+                
+                                <IoCheckmarkCircleOutline className="text-2xl " />
+                              </div>
+                            </div>
               
               <div
                 className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"

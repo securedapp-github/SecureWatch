@@ -29,6 +29,7 @@ function Alerts_Edit() {
   const location = useLocation();
   const navigate = useNavigate();
   const { name, email, m_id, network, address, rk, selectedEventNames, alert_data, alert_type, slack_webhook } = location.state || {};
+  const planType = parseInt(localStorage.getItem("planType")) || 0;
   console.log("Alert Data",alert_data);
   console.log("Alert Type",alert_type);
   console.log("Slack Webhook",slack_webhook);
@@ -232,6 +233,22 @@ function Alerts_Edit() {
                   <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
                 </div>
               </div>
+               <div
+               data-tip="This feature is available only for Pro users. Upgrade your plan to access Auto Defend."
+               className={`${planType===0?"tooltip  cursor-pointer":""} mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm`}
+                           
+                            style={{ border: "1px solid #2D5C8F" }}
+                          >
+              
+                            <div className="my-auto text-black" >
+                              {" "}
+                              Autodefend
+                            </div>
+                            <div className="my-auto ml-auto">
+              
+                              <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
+                            </div>
+                          </div>
               
               <div
                 className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
@@ -272,7 +289,7 @@ function Alerts_Edit() {
                   Email
                 </div>
                 <input type="text" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} className="mt-2 w-full border-2 border-black text-black bg-white p-2 rounded-lg" placeholder="Enter emails, e.g., example1@gmail.com, example2@gmail.com" />
-    
+                <p className="text-lg font-medium text-black text-center mt-3">OR / AND</p>
                 <div className="mt-5">
                   <div className="font-medium" style={{ color: "black" }}>
                     Slack
@@ -333,7 +350,7 @@ function Alerts_Edit() {
               </div>
               <div className="flex gap-1">
                 <div className=" bg-[#E9E9E9] rounded-md p-1 text-sm">
-                  {address.slice(0, 6)}...{address.slice(-4)}
+                  {address?.slice(0, 6)}...{address?.slice(-4)}
                 </div>
                 {/* <button onClick={copyMessage}>
                   <div className="my-auto">
