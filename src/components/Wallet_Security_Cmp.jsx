@@ -45,37 +45,35 @@ const Wallet_Security_Cmp = () => {
       });
       const data = await res.json();
       console.log("Data", data);
-      setTotalPages(Math.ceil(data.monitors?.length / dataPerPage));
+      // Sort monitors by created_on in descending order (present to past)
+      const sortedMonitors = data.monitors?.sort((a, b) => 
+        new Date(b.created_on) - new Date(a.created_on)
+      );
+      setTotalPages(Math.ceil(sortedMonitors?.length / dataPerPage));
       if (res.status === 401) {
-        toast.error("Session Expired, Please login again",
-          {
-            autoClose: 500,
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          }
-
-        )
+        toast.error("Session Expired, Please login again", {
+          autoClose: 500,
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
       }
       if (res.status === 403) {
-        toast.error("Unauthorized Access, Please login again",
-          {
-            autoClose: 500,
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          }
-
-        )
+        toast.error("Unauthorized Access, Please login again", {
+          autoClose: 500,
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
       }
-      setMoniter(data);
+      setMoniter({ ...data, monitors: sortedMonitors });
       setLoading(false);
     };
     fetchMoniter();
   }, [value]);
-
+  
   const indexOfLastData = currentPage * dataPerPage;
   const indexOfFirstData = indexOfLastData - dataPerPage;
   const currentData = moniter.monitors?.slice(indexOfFirstData, indexOfLastData);
@@ -325,7 +323,7 @@ const Wallet_Security_Cmp = () => {
                     Created on
                   </th>
                   <th className=" text-black text-sm font-medium">
-                    Time
+                    Address
                   </th>
                   <th className=" text-black text-sm font-medium flex items-center gap-16">
                     Actions <HiMenuAlt2 className="text-lg" />
@@ -406,8 +404,8 @@ const Wallet_Security_Cmp = () => {
                         {created_on?.slice(0, 10)}
                       </td>
 
-                      <td className="  text-black">
-                        {created_on?.slice(11, 16)}
+                      <td className="text-black">
+                        {address ? `${address.slice(0, 5)}...${address.slice(-4)}` : ""}
                       </td>
 
                       <td className="mx-14 flex gap-8 items-center py-4">

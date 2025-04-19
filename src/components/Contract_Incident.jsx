@@ -52,7 +52,9 @@ function Monitor_alerts() {
     100: "https://gnosisscan.io/tx/",
     59144: "https://explorer.linea.build/tx/",
     1313161554: "https://explorer.mainnet.aurora.dev/tx/",
-    10: "https://optimistic.etherscan.io/tx/"
+    10: "https://optimistic.etherscan.io/tx/",
+    1300: "https://explorer.bitquery.io/algorand/tx/",
+    1301: "https://explorer.bitquery.io/algorand_testnet/tx/",
   };
 
   const rpc_array = {
@@ -68,6 +70,7 @@ function Monitor_alerts() {
     59144: "https://linea.drpc.org",
     1313161554: "https://mainnet.aurora.dev",
     10: "https://optimism.llamarpc.com"
+
   };
 
   useEffect(() => {
@@ -80,43 +83,41 @@ function Monitor_alerts() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-        "mid": 0,
-        "uid": parent_id != 0 ? parseInt(parent_id) : parseInt(userId)
+          mid: 0,
+          uid: parent_id != 0 ? parseInt(parent_id) : parseInt(userId),
         }),
       });
       const data = await res.json();
-      setTotalPages(Math.ceil(data.alerts?.length / dataPerPage));
-      if(res.status === 401){
-        toast.error("Session Expired, Please login again",
-          {
-            autoClose: 500,
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          }
-
-        )
+      // Sort alerts by created_on in descending order (present to past)
+      const sortedAlerts = data.alerts?.sort((a, b) => 
+        new Date(b.created_on) - new Date(a.created_on)
+      );
+      setTotalPages(Math.ceil(sortedAlerts?.length / dataPerPage));
+      if (res.status === 401) {
+        toast.error("Session Expired, Please login again", {
+          autoClose: 500,
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
       }
-      if(res.status === 403){
-        toast.error("Unauthorized Access, Please login again",
-          {
-            autoClose: 500,
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          }
-
-        )
+      if (res.status === 403) {
+        toast.error("Unauthorized Access, Please login again", {
+          autoClose: 500,
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
       }
-      setAlert(data);
+      setAlert({ ...data, alerts: sortedAlerts });
       setLoading(false);
     };
     fetchAlert();
     console.log("Contract incident", alert);
   }, []);
-
+  
   const indexOfLastData = currentPage * dataPerPage;
   const indexOfFirstData = indexOfLastData - dataPerPage;
   const currentData = alert.alerts?.slice(indexOfFirstData, indexOfLastData);

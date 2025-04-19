@@ -173,61 +173,67 @@ function Dashboard() {
     fetchMoniter();
   }, []);
 
+  const DASHBOARD_TOAST_CONTAINER_ID = "dashboard-notification-container";
 
-const DASHBOARD_TOAST_CONTAINER_ID = "dashboard-notification-container";
-
-const ensureDashboardToastContainer = () => {
-  if (!document.getElementById(DASHBOARD_TOAST_CONTAINER_ID)) {
-    const dashboardContainer = toast.createContainer({
-      containerId: DASHBOARD_TOAST_CONTAINER_ID,
+  const ensureDashboardToastContainer = () => {
+    if (!document.getElementById(DASHBOARD_TOAST_CONTAINER_ID)) {
+      const dashboardContainer = toast.createContainer({
+        containerId: DASHBOARD_TOAST_CONTAINER_ID,
+        position: "bottom-right",
+        theme: "colored"
+      });
+      
+      return dashboardContainer;
+    }
+    return true;
+  };
+  
+  const dashboardToast = (message) => {
+    // Skip toast if message is null, undefined, not a string, empty, or "null"
+    if (!message || typeof message !== 'string' || !message.trim() || message.trim() === "null") {
+      return;
+    }
+    
+    ensureDashboardToastContainer();
+    
+    toast(message.replace(/^"|"$/g, ""), {
       position: "bottom-right",
-      theme: "colored"
+      autoClose: false,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "colored",
+      containerId: DASHBOARD_TOAST_CONTAINER_ID, 
+      style: {
+        backgroundColor: "#60a5fa", 
+        color: "#ffffff", 
+        fontWeight: "bold",
+      },
     });
+  };
+  
+  useEffect(() => {
+    // Skip if notifications is null, undefined, not a string, empty, or "null"
+    if (!notifications || typeof notifications !== 'string' || !notifications.trim() || notifications.trim() === "null") {
+      return;
+    }
     
-    return dashboardContainer;
-  }
-  return true;
-};
-
-const dashboardToast = (message) => {
-  ensureDashboardToastContainer();
-  
-  toast(message.replace(/^"|"$/g, ""), {
-    position: "bottom-right",
-    autoClose: false,
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "colored",
-    containerId: DASHBOARD_TOAST_CONTAINER_ID, 
-    style: {
-      backgroundColor: "#60a5fa", 
-      color: "#ffffff", 
-      fontWeight: "bold",
-    },
-  });
-};
-
-useEffect(() => {
-  if (!notifications) return;
-  
-  const trimmedNotifications = notifications.trim();
-  if (!trimmedNotifications) return;
-  
-  if (trimmedNotifications.includes("::")) {
-    const notificationArray = trimmedNotifications
-      .split("::")
-      .map(msg => msg.trim().replace(/^"|"$/g, ""))
-      .filter(msg => msg.length > 0);
+    const trimmedNotifications = notifications.trim();
     
-    notificationArray.forEach(msg => {
-      dashboardToast(msg);
-    });
-  } else {
-    dashboardToast(trimmedNotifications.replace(/^"|"$/g, ""));
-  }
-}, [notifications]);
+    if (trimmedNotifications.includes("::")) {
+      const notificationArray = trimmedNotifications
+        .split("::")
+        .map(msg => msg.trim().replace(/^"|"$/g, ""))
+        .filter(msg => msg.length > 0);
+      
+      notificationArray.forEach(msg => {
+        dashboardToast(msg);
+      });
+    } else {
+      dashboardToast(trimmedNotifications);
+    }
+  }, [notifications]);
 
   return (
     <div className="w-full min-h-screen ">
