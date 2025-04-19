@@ -49,13 +49,17 @@ const Monitor_cmp = () => {
       });
       const data = await res.json();
       console.log("Data", data);
-      setTotalPages(Math.ceil(data.monitors?.length / dataPerPage));
-      setMoniter(data);
+      // Sort monitors by created_on in descending order (present to past)
+      const sortedMonitors = data.monitors?.sort((a, b) => 
+        new Date(b.created_on) - new Date(a.created_on)
+      );
+      setTotalPages(Math.ceil(sortedMonitors?.length / dataPerPage));
+      setMoniter({ ...data, monitors: sortedMonitors });
       setLoading(false);
     };
     fetchMoniter();
   }, [value]);
-
+  
   const indexOfLastData = currentPage * dataPerPage;
   const indexOfFirstData = indexOfLastData - dataPerPage;
   const currentData = moniter.monitors?.slice(indexOfFirstData, indexOfLastData);
@@ -374,7 +378,7 @@ const Monitor_cmp = () => {
                     Created on
                   </th>
                   <th className="py-4  border-2 border-none text-black text-sm font-medium">
-                    Time
+                    Address
                   </th>
                   <th className="py-4  border-2 border-none text-black text-sm font-medium flex items-center gap-40">
                   Actions <HiMenuAlt2 className="text-lg"/>
@@ -462,8 +466,8 @@ const Monitor_cmp = () => {
                         {created_on?.slice(0, 10)}
                       </td>
 
-                      <td className="  text-black">
-                        {created_on?.slice(11, 16)}
+                      <td className="text-black">
+                        {address ? `${address.slice(0, 5)}...${address.slice(-4)}` : ""}
                       </td>
                       <td className=" flex gap-8 items-center py-4">
                         {(network === 1 ||

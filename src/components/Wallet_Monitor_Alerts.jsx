@@ -89,38 +89,35 @@ function Monitor_alerts() {
       });
       const data = await res.json();
       
-      if(res.status === 401){
-        toast.error("Session Expired, Please login again",
-          {
-            autoClose: 500,
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          }
-
-        )
+      if (res.status === 401) {
+        toast.error("Session Expired, Please login again", {
+          autoClose: 500,
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
       }
-      if(res.status === 403){
-        toast.error("Unauthorized Access, Please login again",
-          {
-            autoClose: 500,
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          }
-
-        )
+      if (res.status === 403) {
+        toast.error("Unauthorized Access, Please login again", {
+          autoClose: 500,
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
       }
-      setAlerts(data.alerts.filter(item => item.mid === mid));
+      // Filter alerts by mid and sort by alert_created_on in descending order
+      const filteredAndSortedAlerts = data.alerts
+        ?.filter(item => item.mid === mid)
+        .sort((a, b) => new Date(b.alert_created_on) - new Date(a.alert_created_on));
       
+      setAlerts(filteredAndSortedAlerts);
       setLoading(false);
     };
     fetchAlert();
-
   }, []);
-
+  
   const indexOfLastData = currentPage * dataPerPage;
   const indexOfFirstData = indexOfLastData - dataPerPage;
   const currentData = alerts?.slice(indexOfFirstData, indexOfLastData);
@@ -328,7 +325,7 @@ function Monitor_alerts() {
                   currentData.map((alert, index) => {
                     const id = alert.id;
                     const hash = alert.hash;
-                    const created_on = alert.created_on;
+                    const created_on = alert.alert_created_on;                    ;
                     const from_address = alert.from_address;
                     const to_address = alert.to_address;
                     const name = alert.name;
