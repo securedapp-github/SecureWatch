@@ -86,38 +86,35 @@ function Monitor_alerts() {
         }),
       });
       const data = await res.json();
-      setTotalPages(Math.ceil(data.alerts?.length / dataPerPage));
-      if(res.status === 401){
-        toast.error("Session Expired, Please login again",
-          {
-            autoClose: 500,
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          }
-
-        )
+      // Sort alerts by created_on in descending order (present to past)
+      const sortedAlerts = data.alerts?.sort((a, b) => 
+        new Date(b.created_on) - new Date(a.created_on)
+      );
+      setTotalPages(Math.ceil(sortedAlerts?.length / dataPerPage));
+      if (res.status === 401) {
+        toast.error("Session Expired, Please login again", {
+          autoClose: 500,
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
       }
-      if(res.status === 403){
-        toast.error("Unauthorized Access, Please login again",
-          {
-            autoClose: 500,
-            onClose: () => {
-              localStorage.clear();
-              navigate("/login");
-            },
-          }
-
-        )
+      if (res.status === 403) {
+        toast.error("Unauthorized Access, Please login again", {
+          autoClose: 500,
+          onClose: () => {
+            localStorage.clear();
+            navigate("/login");
+          },
+        });
       }
-      setAlerts(data.alerts);
+      setAlerts(sortedAlerts);
       setLoading(false);
     };
     fetchAlert();
-
   }, []);
-
+  
   const indexOfLastData = currentPage * dataPerPage;
   const indexOfFirstData = indexOfLastData - dataPerPage;
   const currentData = alerts?.slice(indexOfFirstData, indexOfLastData);
