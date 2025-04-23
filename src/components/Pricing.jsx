@@ -15,7 +15,7 @@ import Base from "../images/Base.png"
 const plans = [
     {
       title: "Guardian",
-      price: 69,
+      price: 99,
       planDetails: [
         "Protection for small teams",
         "Startups, freelancers, small teams (1–5 users)",
@@ -32,7 +32,7 @@ const plans = [
     },
     {
       title: "Sentinel",
-      price: 199,
+      price: 249,
       planDetails: [
         "SMBs (5–20 users)",
         "999 Securewatch Credits per month",
@@ -51,7 +51,7 @@ const plans = [
     },
     {
       title: "Fortress",
-      price: 399,
+      price: 499,
       planDetails: [
         "Comprehensive, enterprise",
         "Enterprises",
