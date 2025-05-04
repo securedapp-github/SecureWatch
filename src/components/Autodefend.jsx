@@ -38,6 +38,7 @@ function Autodefend() {
   const [selectedEvents, setSelectedEvents] = useState([]);
   const [eventFunctions, setEventFunctions] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [skipAutoDefend, setSkipAutoDefend] = useState(false);
 
   const handleFunctionSelect = (eventId, selectedOption) => {
     const selectedFunc = Abi.find(f => f.name === selectedOption.value);
@@ -68,64 +69,77 @@ function Autodefend() {
   const handleEventToggle = (eventId) => {
     setSelectedEvents(prevEvents => {
       if (prevEvents.includes(eventId)) {
-        const newEventFunctions = {...eventFunctions};
+        const newEventFunctions = { ...eventFunctions };
         delete newEventFunctions[eventId];
         setEventFunctions(newEventFunctions);
         return prevEvents.filter(id => id !== eventId);
       } else {
+        setSkipAutoDefend(false); // Disable skip when selecting an event
         return [...prevEvents, eventId];
       }
     });
   };
 
+  const handleSkipAutoDefend = () => {
+    setSkipAutoDefend(prev => {
+      if (!prev) {
+        setSelectedEvents([]); // Clear selected events when skipping
+        setEventFunctions({});
+      }
+      return !prev;
+    });
+  };
+
   const handleSubmit = async () => {
-    if (selectedEvents.length === 0) {
-      toast.error("Please select at least one event");
+    if (selectedEvents.length === 0 && !skipAutoDefend) {
+      toast.error("Please select at least one event or choose to skip AutoDefend");
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
-      const requests = selectedEvents.map(eventId => {
-        const eventData = previousData.find(e => e.eid === eventId);
-        const functionData = eventFunctions[eventId];
-        
-        if (!functionData?.function) {
-          throw new Error(`Please select a function for ${eventData.name}`);
-        }
-        console.log("Event Id:", eventId);
-        console.log("function Data:",functionData);
-        
+      if (!skipAutoDefend) {
+        const requests = selectedEvents.map(eventId => {
+          const eventData = previousData.find(e => e.eid === eventId);
+          const functionData = eventFunctions[eventId];
 
-        return fetch("https://139-59-5-56.nip.io:3443/addDefender", {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            mid: m_id,
-            eid: eventId,
-            name: functionData.function.name,
-            params: functionData.params || {},
-            status: true
-          })
+          if (!functionData?.function) {
+            throw new Error(`Please select a function for ${eventData.name}`);
+          }
+          console.log("Event Id:", eventId);
+          console.log("function Data:",functionData);
+          
+
+          return fetch("https://139-59-5-56.nip.io:3443/addDefender", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              mid: m_id,
+              eid: eventId,
+              name: functionData.function.name,
+              params: functionData.params || {},
+              status: true
+            })
+          });
         });
-      });
 
-      const responses = await Promise.all(requests);
-      console.log("Responses:",responses);
-      const results = await Promise.all(responses.map(res => res.json()));
-      console.log("Results:",results);
+        const responses = await Promise.all(requests);
+        console.log("Responses:",responses);
+        const results = await Promise.all(responses.map(res => res.json()));
+        console.log("Results:",results);
 
 
       // const errors = results.filter(result => !result.success);
       // if (errors.length > 0) {
       //   throw new Error(`Failed to save ${errors.length} event(s)`);
       // }
-      
 
-      
+
+      }
+
       const navigationState = {
         abi: abi,
         monitorName: name,
@@ -135,20 +149,21 @@ function Autodefend() {
         alert_type: alert_type,
         slack_webhook: slack_webhook,
         address: address,
-        autodefend_settings: {
+        autodefend_settings: skipAutoDefend ? {} : {
           events: selectedEvents.map(eventId => ({
             eid: eventId,
             ...eventFunctions[eventId]
           }))
         }
       };
-      toast.success("AutoDefend settings saved successfully!", {
+
+      toast.success(skipAutoDefend ? "Proceeding without AutoDefend settings" : "AutoDefend settings saved successfully!", {
         autoClose: 500,
         onClose: () => {
           navigate("/alerts", { state: navigationState });
         },
-    });
-     
+      });
+
 
     } catch (error) {
       console.error('Error:', error);
@@ -169,7 +184,7 @@ function Autodefend() {
 
         <div className=" h-full xl:flex flex-col gap-5 ml-[100px] hidden lg:mt-20 fixed ">
           <div className={`mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]`}>
-            <h1 className="text-[#6A6A6A]  font-semibold text-nowrap">
+          <h1 className="text-[#6A6A6A]  font-semibold text-nowrap">
               Realtime Security
             </h1>
           </div>
@@ -306,6 +321,7 @@ function Autodefend() {
                     className="checkbox border-2 border-gray-400 rounded"
                     checked={selectedEvents.includes(data.eid)}
                     onChange={() => handleEventToggle(data.eid)}
+                    disabled={skipAutoDefend}
                   />
                   <span className="text-black">{data.name}</span>
                 </label>
@@ -323,6 +339,10 @@ function Autodefend() {
                       placeholder="Select Function"
                       className="mb-4 text-black"
                       isMulti={false}
+                      value={eventFunctions[data.eid]?.function ? {
+                        value: eventFunctions[data.eid].function.name,
+                        label: eventFunctions[data.eid].function.name
+                      } : null}
                     />
 
                     {eventFunctions[data.eid]?.function && (
@@ -351,14 +371,27 @@ function Autodefend() {
               </div>
             ))}
 
-            <div className="w-full flex justify-center items-center mt-5">
+            <div className="w-full flex flex-col items-start mt-5">
               <button 
-                className="py-3 w-full bg-[#2D5C8F] rounded-lg text-white mt-5 disabled:opacity-50" 
+                className="py-3 w-full rounded-lg text-white mt-5 disabled:opacity-50"
+                style={{
+                  backgroundColor: selectedEvents.length > 0 || skipAutoDefend ? '#2D5C8F' : '#87A1C2',
+                }}
                 onClick={handleSubmit}
-                disabled={isLoading || selectedEvents.length === 0}
+                disabled={isLoading}
               >
                 {isLoading ? "Saving..." : "Save AutoDefend Settings"}
               </button>
+              <label className="flex items-center space-x-2 mt-3">
+                <input
+                  type="checkbox"
+                  className="checkbox border-2 border-gray-400 rounded"
+                  checked={skipAutoDefend}
+                  onChange={handleSkipAutoDefend}
+                  disabled={selectedEvents.length > 0}
+                />
+                <span className="text-black">Skip AutoDefend</span>
+              </label>
             </div>
           </div>
 
@@ -452,10 +485,10 @@ function Autodefend() {
             </p>
             <div className="flex items-center gap-4 flex-wrap justify-center">
               <button
-               onClick={() => {
-                navigate("/pricing");
+                onClick={() => {
+                  navigate("/pricing");
+                }
               }
-            }
                 className="bg-[#2D5C8F] text-white px-6 py-2 rounded-lg hover:bg-[#1e3c5a]"
               >
                 View Plans

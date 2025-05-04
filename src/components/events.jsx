@@ -29,7 +29,7 @@ function Events() {
   console.log("name:",name);
   console.log("MID:",m_id);
   const mid = m_id;
-
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [disp1, setDisp1] = useState("none");
   const [disp2, setDisp2] = useState("none");
   const handleToggle1 = (e) => {
@@ -671,80 +671,105 @@ function Events() {
     
               <div className="w-full  max-h-[400px] p-5 overflow-y-auto mb-4 edit-event mt-2">
               {Object.entries(selectedEvents).map(([eventName, eventData]) => {
-      // Access the argument details directly as an array of objects
-      const args = eventData.argDetails || [];
-    
-      // Ensure eventData.args and eventData.operators are arrays
-      const eventArgs = Array.isArray(eventData.args) ? eventData.args : [];
-      const eventOperators = Array.isArray(eventData.operators) ? eventData.operators : [];
-    
-      return (
-        <div key={eventName} className="mb-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">{eventName}</h3>
-          {args.length > 0 ? (
-            args.map((arg, index) => (
-              <div key={index} className="mb-4 flex flex-col space-y-1">
-      <label className="text-gray-700 text-sm font-medium">
-        {`${arg.name} :`}
-      </label>
-      <div className="flex flex-col md:flex-row md:items-center md:space-x-3">
-        {/* Input field for argument values */}
-        {arg.type === 'bool' ? (
-          <select
-            className="rounded-lg border border-gray-300 shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 py-2 w-full"
-            name="argument"
-            onChange={(e) => handleArgumentChange(e, eventName, index, 'argument')}
-            value={eventArgs[index] || 'none'}
-          >
-            <option value="none" hidden>None</option>
-            <option value="true">True</option>
-            <option value="false">False</option>
-          </select>
+    // Access the argument details directly as an array of objects
+    const args = eventData.argDetails || [];
+
+    // Ensure eventData.args and eventData.operators are arrays
+    const eventArgs = Array.isArray(eventData.args) ? eventData.args : [];
+    const eventOperators = Array.isArray(eventData.operators) ? eventData.operators : [];
+
+    return (
+      <div key={eventName} className="mb-6">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">{eventName}</h3>
+        {args.length > 0 ? (
+          args.map((arg, index) => (
+            <div key={index} className="mb-4 flex flex-col space-y-1">
+              <label className="text-gray-700 text-sm font-medium">{`${arg.name} :`}</label>
+              <div className="flex flex-col md:flex-row md:items-center md:space-x-3">
+                {/* Input field for argument values */}
+                {arg.type === "bool" ? (
+                  <select
+                    className="rounded-lg border border-gray-300 shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 py-2 w-full"
+                    name="argument"
+                    onChange={(e) => handleArgumentChange(e, eventName, index, "argument")}
+                    value={eventArgs[index] || "none"}
+                  >
+                    <option value="none" hidden>None</option>
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                  </select>
+                ) : (
+                  <input
+                    className="flex-1 rounded-lg p-3 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    style={{ backgroundColor: "#F9FAFB" }}
+                    type="text"
+                    name="argument"
+                    value={eventArgs[index] || ""}
+                    onChange={(e) => handleArgumentChange(e, eventName, index, "argument")}
+                    placeholder={`Enter value for ${arg.name}`}
+                  />
+                )}
+                {/* Operator selection dropdown */}
+                {["uint8", "uint16", "uint32", "uint64", "uint128", "uint256", "int8", "int16", "int32", "int64", "int128", "int256"].includes(arg.type) ? (
+                  <select
+                    className="rounded-lg border border-gray-300 shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 py-2 w-full md:w-auto"
+                    name="operator"
+                    onChange={(e) => handleArgumentChange(e, eventName, index, "operator")}
+                    value={eventOperators[index] || "none"}
+                  >
+                    <option value="none" hidden>Select Operator</option>
+                    <option value="<::">&lt;</option>
+                    <option value=">::">&gt;</option>
+                    <option value="==::">==</option>
+                  </select>
+                ) : null}
+              </div>
+            </div>
+          ))
         ) : (
-          <input
-            className="flex-1 rounded-lg p-3 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            style={{ backgroundColor: "#F9FAFB" }}
-            type="text"
-            name="argument"
-            value={eventArgs[index] || ''}
-            onChange={(e) => handleArgumentChange(e, eventName, index, 'argument')}
-            placeholder={`Enter value for ${arg.name}`}
-          />
+          <p className="text-gray-500 text-sm">No arguments available for this event.</p>
         )}
-        {/* Operator selection dropdown */}
-        {['uint8', 'uint16', 'uint32', 'uint64', 'uint128', 'uint256', 'int8', 'int16', 'int32', 'int64', 'int128', 'int256'].includes(arg.type) ? (
-          <select
-            className="rounded-lg border border-gray-300 shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 py-2 w-full md:w-auto"
-            name="operator"
-            onChange={(e) => handleArgumentChange(e, eventName, index, 'operator')}
-            value={eventOperators[index] || 'none'} // Ensure 'none' is correctly managed
-          >
-            <option value="none" hidden>Select Operator</option>
-            <option value="<::">&lt;</option>
-            <option value=">::">&gt;</option>
-            <option value="==::">==</option>
-          </select>
-        ) : null}
       </div>
-    </div>
-    
-            ))
-          ) : (
-            <p className="text-gray-500 text-sm">No arguments available for this event.</p>
-          )}
-        </div>
-      );
-    })}
+    );
+  })}
     
     
     
               </div>
+              <div className="flex items-center justify-center mb-4">
+  <label className="relative w-8 h-8 border-2 border-[#2c3e50] bg-white flex justify-center items-center cursor-pointer shadow-[5px_5px_10px_rgba(0,0,0,0.1)]">
+    <input
+      type="checkbox"
+      className="absolute opacity-0 w-full h-full"
+      checked={isTermsAccepted}
+      onChange={() => setIsTermsAccepted(!isTermsAccepted)}
+    />
+    {isTermsAccepted && (
+      <div className="w-4 h-8 border-r-4 border-b-4 border-[#27ae60] transform rotate-45 translate-y-[-2px]"></div>
+    )}
+  </label>
+  <span className="ml-3 text-sm text-gray-700">
+    I agree to the
+    <a
+      href="https://docs.google.com/document/d/1lUCKL5Nk7kXaUTnzRSupFrULWldHoeekd2Tb5y_1AM0/edit?usp=sharing"
+      target="_blank"
+      className="text-blue-600 hover:underline"
+    >
+      Terms & Conditions
+    </a>
+  </span>
+</div>
               <button
-                className="py-3 w-full bg-[#2D5C8F]  rounded-lg text-white "
-                onClick={handleSaveMonitor}
-              >
-                Save Alert
-              </button>
+  className={`py-3 w-full rounded-lg text-white ${
+    isTermsAccepted && Object.keys(selectedEvents).length > 0
+      ? "bg-[#2D5C8F] hover:bg-[#245078]"
+      : "bg-[#2D5C8F]/50 cursor-not-allowed"
+  }`}
+  onClick={handleSaveMonitor}
+  disabled={!(isTermsAccepted && Object.keys(selectedEvents).length > 0)}
+>
+  Save Alert
+</button>
             </div>
     
             <div className="border border-[#2D5C8F]  shadow-md p-4  rounded-xl w-80   mb-10 xl:mb-0">
