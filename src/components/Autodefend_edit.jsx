@@ -40,6 +40,7 @@ function Autodefend_edit() {
   const [eventFunctions, setEventFunctions] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [skipAutoDefend, setSkipAutoDefend] = useState(false);
 
   // Fetch events and existing defenders on component mount
   useEffect(() => {
@@ -139,53 +140,56 @@ function Autodefend_edit() {
         setEventFunctions(newEventFunctions);
         return prevEvents.filter(id => id !== eventId);
       } else {
+        setSkipAutoDefend(false); // Disable skip when selecting an event
         return [...prevEvents, eventId];
       }
     });
   };
 
   const handleSubmit = async () => {
-    if (selectedEvents.length === 0) {
-      toast.error("Please select at least one event");
+    if (selectedEvents.length === 0 && !skipAutoDefend) {
+      toast.error("Please select at least one event or choose to skip AutoDefend");
       return;
     }
 
     setIsLoading(true);
     
     try {
-      const requests = selectedEvents.map(eventId => {
-        const eventData = events.find(e => e.id === eventId);
-        const functionData = eventFunctions[eventId];
-        
-        if (!functionData?.function) {
-          throw new Error(`Please select a function for ${eventData.name}`);
-        }
+      if (!skipAutoDefend) {
+        const requests = selectedEvents.map(eventId => {
+          const eventData = events.find(e => e.id === eventId);
+          const functionData = eventFunctions[eventId];
+          
+          if (!functionData?.function) {
+            throw new Error(`Please select a function for ${eventData.name}`);
+          }
 
-        return fetch("https://139-59-5-56.nip.io:3443/addDefender", {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            mid: m_id,
-            eid: eventId,
-            name: functionData.function.name,
-            params: functionData.params || {},
-            status: true
-          })
+          return fetch("https://139-59-5-56.nip.io:3443/addDefender", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              mid: m_id,
+              eid: eventId,
+              name: functionData.function.name,
+              params: functionData.params || {},
+              status: true
+            })
+          });
         });
-      });
 
-      const responses = await Promise.all(requests);
-      const results = await Promise.all(responses.map(res => res.json()));
+        const responses = await Promise.all(requests);
+        const results = await Promise.all(responses.map(res => res.json()));
+      }
 
-      // const errors = results.filter(result => !result.success);
+            // const errors = results.filter(result => !result.success);
       // if (errors.length > 0) {
       //   throw new Error(`Failed to save ${errors.length} event(s)`);
       // }
 
       // toast.success("AutoDefend settings updated successfully!");
-      
+
       // Navigate to alerts page with updated data
       const navigationState = {
         abi: abi,
@@ -196,19 +200,20 @@ function Autodefend_edit() {
         alert_type: alert_type,
         slack_webhook: slack_webhook,
         address: address,
-        autodefend_settings: {
+        autodefend_settings: skipAutoDefend ? {} : {
           events: selectedEvents.map(eventId => ({
             eid: eventId,
             ...eventFunctions[eventId]
           }))
         }
       };
-       toast.success("AutoDefend settings updated successfully!", {
-              autoClose: 500,
-              onClose: () => {
-                navigate("/alert_edit", { state: navigationState });
-              },
-          });
+
+      toast.success(skipAutoDefend ? "Proceeding without AutoDefend settings" : "AutoDefend settings updated successfully!", {
+        autoClose: 500,
+        onClose: () => {
+          navigate("/alert_edit", { state: navigationState });
+        },
+      });
       
       // navigate("/alerts", { state: navigationState });
 
@@ -218,6 +223,16 @@ function Autodefend_edit() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSkipAutoDefend = () => {
+    setSkipAutoDefend(prev => {
+      if (!prev) {
+        setSelectedEvents([]);
+        setEventFunctions({});
+      }
+      return !prev;
+    });
   };
 
   const isLocked = planType === 0;
@@ -376,6 +391,7 @@ function Autodefend_edit() {
                     className="checkbox border-2 border-gray-400 rounded"
                     checked={selectedEvents.includes(event.id)}
                     onChange={() => handleEventToggle(event.id)}
+                    disabled={skipAutoDefend}
                   />
                   <span className="text-black">{event.name}</span>
                 </label>
@@ -425,14 +441,27 @@ function Autodefend_edit() {
               </div>
             ))}
 
-            <div className="w-full flex justify-center items-center mt-5">
+            <div className="w-full flex flex-col items-start mt-5">
               <button 
-                className="py-3 w-full bg-[#2D5C8F] rounded-lg text-white mt-5 disabled:opacity-50" 
+                className="py-3 w-full rounded-lg text-white mt-5 disabled:opacity-50"
+                style={{
+                  backgroundColor: selectedEvents.length > 0 || skipAutoDefend ? '#2D5C8F' : '#87A1C2',
+                }}
                 onClick={handleSubmit}
-                disabled={isLoading || selectedEvents.length === 0}
+                disabled={isLoading}
               >
                 {isLoading ? "Updating..." : "Update AutoDefend Settings"}
               </button>
+              <label className="flex items-center space-x-2 mt-3">
+                <input
+                  type="checkbox"
+                  className="checkbox border-2 border-gray-400 rounded"
+                  checked={skipAutoDefend}
+                  onChange={handleSkipAutoDefend}
+                  disabled={selectedEvents.length > 0}
+                />
+                <span className="text-black">Skip AutoDefend</span>
+              </label>
             </div>
           </div>
 
@@ -526,10 +555,10 @@ function Autodefend_edit() {
             </p>
             <div className="flex items-center gap-4 flex-wrap justify-center">
               <button
-              onClick={() => {
-                navigate("/pricing");
+                onClick={() => {
+                  navigate("/pricing");
+                }
               }
-            }
                 className="bg-[#2D5C8F] text-white px-6 py-2 rounded-lg hover:bg-[#1e3c5a]"
                 
               >

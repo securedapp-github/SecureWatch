@@ -15,7 +15,7 @@ import Base from "../images/Base.png"
 const plans = [
     {
       title: "Guardian",
-      price: 69, // Store as number for calculation
+      price: 99,
       planDetails: [
         "Protection for small teams",
         "Startups, freelancers, small teams (1–5 users)",
@@ -32,7 +32,7 @@ const plans = [
     },
     {
       title: "Sentinel",
-      price: 199,
+      price: 249,
       planDetails: [
         "SMBs (5–20 users)",
         "999 Securewatch Credits per month",
@@ -51,7 +51,7 @@ const plans = [
     },
     {
       title: "Fortress",
-      price: 399,
+      price: 499,
       planDetails: [
         "Comprehensive, enterprise",
         "Enterprises",
@@ -74,9 +74,9 @@ const plans = [
     },
 ];
 
-const PricingCard = ({ title, price, planDetails, features, isAnnual }) => {
+const PricingCard = ({ title, price, planDetails, features, isAnnual, discountPercentage }) => {
   const monthlyPrice = `$${price}/mth`;
-  const annualPrice = `$${Math.round(price * 0.83)}/mth`; // 17% discount
+  const annualPrice = `$${Math.round(price * (1 - discountPercentage / 100))}/mth`;
 
   return (
     <div className="bg-white rounded-3xl border-2 border-[#ECECEC] shadow-md p-6 w-full max-w-md mx-auto hover:scale-105 transition-transform">
@@ -132,7 +132,8 @@ const Pricing = () => {
 
     const [loading, setLoading] = useState(true);
     const [value, setValue] = useState(10);
-    const [isAnnual, setIsAnnual] = useState(false); // New state for billing toggle
+    const [isAnnual, setIsAnnual] = useState(false);
+    const [discountPercentage, setDiscountPercentage] = useState(17);
 
     return (
         <div className="w-full min-h-full">
@@ -196,13 +197,18 @@ const Pricing = () => {
                                         onChange={() => setIsAnnual(true)}
                                         className="radio bg-white" 
                                     />
-                                    <span>Pay annually (Save 17%)</span>
+                                    <span>Pay annually (Save {discountPercentage}%)</span>
                                 </label>
                             </div>
                         </div>
                         <div className="grid gap-6 md:grid-cols-3 max-w-6xl mx-auto">
                             {plans.map((plan, index) => (
-                                <PricingCard key={index} {...plan} isAnnual={isAnnual} />
+                                <PricingCard 
+                                    key={index} 
+                                    {...plan} 
+                                    isAnnual={isAnnual} 
+                                    discountPercentage={discountPercentage}
+                                />
                             ))}
                         </div>
                     </div>
