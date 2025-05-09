@@ -170,14 +170,15 @@ function Monitor_Edit() {
     // const finalAbi = (category === 2) ? "Asset_ABI" : abi || selectedMonitor.abi;
 
      // Validate ABI
-  if (abi) {
-    try {
-      JSON.parse(abi); // Attempt to parse the ABI as JSON
-    } catch (error) {
-      toast.error("Invalid ABI format. Please provide a valid JSON.");
-      return; // Stop further execution if ABI is invalid
+    // Validate ABI JSON format only for networks other than 1300 and 1301
+    if (abi && selectedMonitor.network !== 1300 && selectedMonitor.network !== 1301) {
+      try {
+        JSON.parse(abi); // Attempt to parse the ABI as JSON
+      } catch (error) {
+        toast.error("Invalid ABI format. Please provide a valid JSON.");
+        return; // Stop further execution if ABI is invalid
+      }
     }
-  }
   
     const data = {
       name: monitorName || selectedMonitor.name,
@@ -187,25 +188,28 @@ function Monitor_Edit() {
       address: address || selectedMonitor.address,
       alert_type: 1,
       //alert_data: "",
-      abi: category === 1 ? "Asset_ABI" : (abi || selectedMonitor.abi),
       category: category || selectedMonitor.category,
     };
+  
+    // Include abi in data only for networks other than 1300 and 1301
+    if (selectedMonitor.network !== 1300 && selectedMonitor.network !== 1301) {
+      data.abi = category === 1 ? "Asset_ABI" : (abi || selectedMonitor.abi);
+    }
+  
     console.log("data is:", data);
     console.log("mid:", selectedMonitor.mid);
-    
-
+  
     if (selectedMonitor.network === 1300 || selectedMonitor.network === 1301) {
       // data.smart_Contract = smartContract;
-      data.abi = code||selectedMonitor.abi;
-
+  
       try {
         const response = await axios.post(`${baseUrl}/update_monitor`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("smart contract code:", abi);
-
+        console.log("Monitor updated without ABI");
+  
         toast.success("Details updated successfully!", {
           autoClose: 500,
           onClose: () => {
@@ -215,8 +219,6 @@ function Monitor_Edit() {
                 network: network || selectedMonitor.network,
                 address: address || selectedMonitor.address,
                 rk: riskCategory,
-                //abi:  abi || selectedMonitor.abi,
-                abi: category === 1 ? "Asset_ABI" : (abi||selectedMonitor.abi),
                 m_id: selectedMonitor.mid,
                 email: email,
                 token: token,
@@ -230,7 +232,7 @@ function Monitor_Edit() {
             });
           },
         });
-
+  
         console.log("response is", response.data);
       } catch (error) {
         console.error("API request failed:", error); // Handle error
@@ -239,37 +241,29 @@ function Monitor_Edit() {
         });
       }
     } else {
-      data.abi = abi || selectedMonitor.abi;
-
       try {
         const response = await axios.post(`${baseUrl}/update_monitor`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        if(response.status === 401){
-          toast.error("Session Expired, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
+        if (response.status === 401) {
+          toast.error("Session Expired, Please login again", {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
         }
-        if(response.status === 403){
-          toast.error("Unauthorized Access, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
+        if (response.status === 403) {
+          toast.error("Unauthorized Access, Please login again", {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
         }
         toast.success("Details updated successfully!", {
           autoClose: 500,
@@ -280,7 +274,7 @@ function Monitor_Edit() {
                 network: network || selectedMonitor.network,
                 address: address || selectedMonitor.address,
                 rk: riskCategory,
-                abi: abi || selectedMonitor.abi,
+                abi: category === 1 ? "Asset_ABI" : (abi || selectedMonitor.abi),
                 m_id: selectedMonitor.mid,
                 email: email,
                 token: token,
@@ -291,7 +285,7 @@ function Monitor_Edit() {
             });
           },
         });
-
+  
         console.log("response is", response.data);
       } catch (error) {
         console.error("API request failed:", error); // Handle error
@@ -300,7 +294,7 @@ function Monitor_Edit() {
         });
       }
     }
-  };
+  }
 
   const [value, setValue] = useState(10);
   const [moniter, setMoniter] = useState([]);
