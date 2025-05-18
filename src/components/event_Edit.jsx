@@ -23,7 +23,6 @@ function Event_Edit() {
   const [totalEvents, setTotalEvents] = useState([]);
   const [removedEvents, setRemovedEvents] = useState([]);
   const [waiting, setWaiting] = useState(false);
-  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
 
   console.log("Selected values:", selectedValues.length);
 
@@ -984,139 +983,114 @@ const handleSelectChange = (selectedOptions) => {
             </div>
     
     
-            <div className=" w-[98%] sm:w-[400px] bg-white md:bg-inherit md:border-0 py-2 rounded-md border-2  px-2">
-              <div className="flex flex-col justify-center items-center gap-6">
-                <div className="font-medium text-lg" style={{ color: "black" }}>
-                  Choose the Signature Name
-                </div>
-    
-                <div className="my-auto   min-w-full">
-                  <div className="flex flex-col gap-4 m-3">
-                    <Select
-                      isMulti
-                      options={totalEvents}
-                      defaultValue={options}
-                      onChange={handleSelectChange}
+            <div className="w-[98%] sm:w-[400px] bg-white md:bg-inherit md:border-0 py-2 rounded-md border-2 px-2">
+  <div className="flex flex-col justify-center items-center gap-6">
+    <div className="font-medium text-lg" style={{ color: "black" }}>
+      Choose the Signature Name
+    </div>
+
+    <div className="my-auto min-w-full">
+      <div className="flex flex-col gap-4 m-3">
+        <Select
+          isMulti
+          options={totalEvents}
+          defaultValue={options}
+          onChange={handleSelectChange}
+        />
+      </div>
+    </div>
+  </div>
+
+  <div className="w-full max-h-[400px] p-5 overflow-y-auto mb-2 edit-event mt-2">
+    {selectedValues.length === 0 ? (
+      <p>No events selected.</p>
+    ) : (
+      selectedValues.map(eventName => {
+        const abiEvent = abiEventsMap[eventName];
+        if (!abiEvent) {
+          console.warn(`ABI Event not found for: ${eventName}`);
+          return null;
+        }
+        console.log("abiEvent", abiEvent);
+
+        return (
+          <div key={eventName} className="mb-4">
+            <div className="mt-3 text-black font-medium mb-3">{eventName} :</div>
+            <div className="flex flex-col gap-3">
+              {abiEvent.inputs.map(input => (
+                <div key={input.name} className="flex flex-col gap-2">
+                  <label className="text-gray-700 text-sm font-medium">
+                    {`${input.name} :`}
+                  </label>
+                  {input.type === 'bool' ? (
+                    <select
+                      className="w-full rounded-lg p-2 border border-[#4C4C4C] bg-white outline-none"
+                      onChange={(e) => handleInputChange(eventName, input.name, e.target.value)}
+                      value={eventInputs[eventName]?.[input.name] || 'none'}
+                      required
+                    >
+                      <option value="none" hidden>None</option>
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
+                  ) : (
+                    <input
+                      className="w-full rounded-lg p-2 border border-[#4C4C4C] bg-white outline-none"
+                      placeholder={`${input.name}: ${input.type}`}
+                      value={
+                        eventInputs[eventName]?.[input.name]
+                          ? eventInputs[eventName][input.name].startsWith('<') ? eventInputs[eventName][input.name].substring(3)
+                          : eventInputs[eventName][input.name].startsWith('>') ? eventInputs[eventName][input.name].substring(3)
+                          : eventInputs[eventName][input.name].startsWith('=') ? eventInputs[eventName][input.name].substring(4)
+                          : eventInputs[eventName][input.name]
+                          : ""
+                      }
+                      required
+                      onChange={(e) => handleInputChange(eventName, input.name, e.target.value)}
                     />
-                  </div>
-                </div>
-              </div>
-    
-    
-              <div className="w-full max-h-[400px] p-5 overflow-y-auto mb-2 edit-event mt-2">
-                {selectedValues.length === 0 ? (
-                  <p>No events selected.</p>
-                ) : (
-                  selectedValues.map(eventName => {
-                    const abiEvent = abiEventsMap[eventName];
-                    if (!abiEvent) {
-                      console.warn(`ABI Event not found for: ${eventName}`);
-                      return null;
-                    }
-                    console.log("abiEvent", abiEvent);
-    
-                    return (
-                      <div key={eventName} className="mb-4">
-                      <div className="mt-3 text-black font-medium mb-3">{eventName} :</div>
-                      <div className="flex flex-col gap-3">
-                        {abiEvent.inputs.map(input => (
-                          <div key={input.name} className="flex flex-col gap-2">
-                            <label className="text-gray-700 text-sm font-medium">
-                              {`${input.name} :`}
-                            </label>
-                            {input.type === 'bool' ? (
-                              <select
-                                className="w-full rounded-lg p-2 border border-[#4C4C4C] bg-white outline-none"
-                                onChange={(e) => handleInputChange(eventName, input.name, e.target.value)}
-                                value={eventInputs[eventName]?.[input.name] || 'none'}
-                                required
-                              >
-                                <option value="none" hidden>None</option>
-                                <option value="true">True</option>
-                                <option value="false">False</option>
-                              </select>
-                            ) : (
-                              <input
-                                className="w-full rounded-lg p-2 border border-[#4C4C4C] bg-white outline-none"
-                                placeholder={`${input.name}: ${input.type}`}
-                                value={
-                                  eventInputs[eventName]?.[input.name]
-                                    ? eventInputs[eventName][input.name].startsWith('<') ? eventInputs[eventName][input.name].substring(3)
-                                    : eventInputs[eventName][input.name].startsWith('>') ? eventInputs[eventName][input.name].substring(3)
-                                    : eventInputs[eventName][input.name].startsWith('=') ? eventInputs[eventName][input.name].substring(4)
-                                    : eventInputs[eventName][input.name]
-                                    : ""
-                                }
-                                required
-                                onChange={(e) => handleInputChange(eventName, input.name, e.target.value)}
-                              />
-                            )}
-                            {['uint8', 'uint16', 'uint32', 'uint64', 'uint128', 'uint256', 'int8', 'int16', 'int32', 'int64', 'int128', 'int256'].includes(input.type) && (
-                              <div className="flex gap-3 mt-2">
-                                <select
-                                  className="w-full py-2 bg-white border rounded-lg border-black"
-                                  onChange={(e) => handleOperatorChange(eventName, input.name, e.target.value)}
-                                  value={
-                                    eventInputs[eventName]?.[input.name]
-                                      ? eventInputs[eventName][input.name].startsWith('<') ? "<::"
-                                      : eventInputs[eventName][input.name].startsWith('>') ? ">::"
-                                      : eventInputs[eventName][input.name].startsWith('=') ? "==::"
-                                      : "None"
-                                      : "None"
-                                  }
-                                  required
-                                >
-                                  <option value="None" hidden>None</option>
-                                  <option value="<::" selected={eventInputs[eventName]?.[input.name]?.startsWith('<')}> &lt; </option>
-                                  <option value=">::" selected={eventInputs[eventName]?.[input.name]?.startsWith('>')}> &gt; </option>
-                                  <option value="==::" selected={eventInputs[eventName]?.[input.name]?.startsWith('=')}> == </option>
-                                </select>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                  )}
+                  {['uint8', 'uint16', 'uint32', 'uint64', 'uint128', 'uint256', 'int8', 'int16', 'int32', 'int64', 'int128', 'int256'].includes(input.type) && (
+                    <div className="flex gap-3 mt-2">
+                      <select
+                        className="w-full py-2 bg-white border rounded-lg border-black"
+                        onChange={(e) => handleOperatorChange(eventName, input.name, e.target.value)}
+                        value={
+                          eventInputs[eventName]?.[input.name]
+                            ? eventInputs[eventName][input.name].startsWith('<') ? "<::"
+                            : eventInputs[eventName][input.name].startsWith('>') ? ">::"
+                            : eventInputs[eventName][input.name].startsWith('=') ? "==::"
+                            : "None"
+                            : "None"
+                        }
+                        required
+                      >
+                        <option value="None" hidden>None</option>
+                        <option value="<::"> &lt; </option>
+                        <option value=">::"> &gt; </option>
+                        <option value="==::"> == </option>
+                      </select>
                     </div>
-                    
-                    );
-                  })
-                )}
-              </div>
-    
-              <div className="flex items-center justify-center mb-4">
-              <label className="relative w-8 h-8 border-2 border-[#2c3e50] bg-white flex justify-center items-center cursor-pointer shadow-[5px_5px_10px_rgba(0,0,0,0.1)]">
-                <input
-                  type="checkbox"
-                  className="absolute opacity-0 w-full h-full"
-                  checked={isTermsAccepted}
-                  onChange={() => setIsTermsAccepted(!isTermsAccepted)}
-                />
-                {isTermsAccepted && (
-                  <div className="w-4 h-8 border-r-4 border-b-4 border-[#27ae60] transform rotate-45 translate-y-[-2px]"></div>
-                )}
-              </label>
-              <span className="ml-3 text-sm text-gray-700">
-                I agree to the
-                <a
-                  href="https://docs.google.com/document/d/1lUCKL5Nk7kXaUTnzRSupFrULWldHoeekd2Tb5y_1AM0/edit?usp=sharing"
-                  target="_blank"
-                  className="text-blue-600 hover:underline"
-                >
-                  Terms & Conditions
-                </a>
-              </span>
+                  )}
+                </div>
+              ))}
             </div>
-            <button
-              className={`py-3 w-full rounded-lg text-white mt-5 ${
-                isTermsAccepted && selectedValues.length > 0
-                  ? "bg-[#2D5C8F] hover:bg-[#245078]"
-                  : "bg-[#2D5C8F]/50 cursor-not-allowed"
-              }`}
-              onClick={handleSubmit}
-              disabled={!(isTermsAccepted && selectedValues.length > 0)}
-            >
-              Update Events
-            </button>
+          </div>
+        );
+      })
+    )}
+  </div>
+
+  <button
+    className={`py-3 w-full rounded-lg text-white mt-5 ${
+      selectedValues.length > 0
+        ? "bg-[#2D5C8F] hover:bg-[#245078]"
+        : "bg-[#2D5C8F]/50 cursor-not-allowed"
+    }`}
+    onClick={handleSubmit}
+    disabled={selectedValues.length === 0}
+  >
+    Update Events
+  </button>
           </div>
     
             <div className="border border-[#2D5C8F]  shadow-md p-4  rounded-xl w-80   mb-10 xl:mb-0">
