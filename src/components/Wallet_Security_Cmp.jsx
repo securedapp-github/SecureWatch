@@ -325,7 +325,7 @@ const Wallet_Security_Cmp = () => {
                   <th className=" text-black text-sm font-medium">
                     Address
                   </th>
-                  <th className=" text-black text-sm font-medium flex items-center gap-16">
+                  <th className=" text-black text-sm font-medium flex items-center ml-16 gap-12">
                     Actions <HiMenuAlt2 className="text-lg" />
                   </th>
 
