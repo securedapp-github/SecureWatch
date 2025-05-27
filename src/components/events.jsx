@@ -29,7 +29,6 @@ function Events() {
   console.log("name:",name);
   console.log("MID:",m_id);
   const mid = m_id;
-  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [disp1, setDisp1] = useState("none");
   const [disp2, setDisp2] = useState("none");
   const handleToggle1 = (e) => {
@@ -736,37 +735,15 @@ function Events() {
     
     
               </div>
-              <div className="flex items-center justify-center mb-4">
-  <label className="relative w-8 h-8 border-2 border-[#2c3e50] bg-white flex justify-center items-center cursor-pointer shadow-[5px_5px_10px_rgba(0,0,0,0.1)]">
-    <input
-      type="checkbox"
-      className="absolute opacity-0 w-full h-full"
-      checked={isTermsAccepted}
-      onChange={() => setIsTermsAccepted(!isTermsAccepted)}
-    />
-    {isTermsAccepted && (
-      <div className="w-4 h-8 border-r-4 border-b-4 border-[#27ae60] transform rotate-45 translate-y-[-2px]"></div>
-    )}
-  </label>
-  <span className="ml-3 text-sm text-gray-700">
-    I agree to the
-    <a
-      href="https://docs.google.com/document/d/1lUCKL5Nk7kXaUTnzRSupFrULWldHoeekd2Tb5y_1AM0/edit?usp=sharing"
-      target="_blank"
-      className="text-blue-600 hover:underline"
-    >
-      Terms & Conditions
-    </a>
-  </span>
-</div>
+              
               <button
   className={`py-3 w-full rounded-lg text-white ${
-    isTermsAccepted && Object.keys(selectedEvents).length > 0
+   Object.keys(selectedEvents).length > 0
       ? "bg-[#2D5C8F] hover:bg-[#245078]"
       : "bg-[#2D5C8F]/50 cursor-not-allowed"
   }`}
   onClick={handleSaveMonitor}
-  disabled={!(isTermsAccepted && Object.keys(selectedEvents).length > 0)}
+  disabled={!(Object.keys(selectedEvents).length > 0)}
 >
   Save Alert
 </button>

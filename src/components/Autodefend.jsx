@@ -39,6 +39,7 @@ function Autodefend() {
   const [eventFunctions, setEventFunctions] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [skipAutoDefend, setSkipAutoDefend] = useState(false);
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
 
   const handleFunctionSelect = (eventId, selectedOption) => {
     const selectedFunc = Abi.find(f => f.name === selectedOption.value);
@@ -297,103 +298,127 @@ function Autodefend() {
           </div>
 
           <div className="w-[97%] md:w-1/3 lg:w-1/3 mt-5 md:mt-0 mx-auto md:mx-0 sm:bg-inherit sm:border-0 bg-white px-2 border-2 rounded-md py-2">
-            <h2 className="text-2xl font-semibold mb-2 text-black">Auto Defend</h2>
-            <h2 className="text-md font-medium mb-1 text-black mt-5">Please grant access to the wallet below to run the AutoDefend protocol:</h2>
-            <h2 className="text-md font-medium mb-2 text-[#2D5C8F] flex items-center">
-              0xe08E5dC46D7C555346822A7859B15b90c4B43e07
-              <span className="text-2xl">
-                <IoMdCopy
-                  className="ml-2 cursor-pointer text-black hover:text-gray-600 text-2xl font-bold"
-                  onClick={() => {
-                    navigator.clipboard.writeText("0xe08E5dC46D7C555346822A7859B15b90c4B43e07");
-                    toast.success("Address copied successfully!");
-                  }}
-                />
-              </span>
-            </h2>
-            <h2 className="text-md font-medium mb-2 text-black mt-5">Selected Events:</h2>
-            
-            {previousData?.map((data) => (
-              <div key={data.eid} className="mb-2">
-                <label className="flex items-center space-x-2">
+  <h2 className="text-2xl font-semibold mb-2 text-black">Auto Defend</h2>
+  <h2 className="text-md font-medium mb-1 text-black mt-5">Please grant access to the wallet below to run the AutoDefend protocol:</h2>
+  <h2 className="text-md font-medium mb-2 text-[#2D5C8F] flex items-center">
+    0xe08E5dC46D7C555346822A7859B15b90c4B43e07
+    <span className="text-2xl">
+      <IoMdCopy
+        className="ml-2 cursor-pointer text-black hover:text-gray-600 text-2xl font-bold"
+        onClick={() => {
+          navigator.clipboard.writeText("0xe08E5dC46D7C555346822A7859B15b90c4B43e07");
+          toast.success("Address copied successfully!");
+        }}
+      />
+    </span>
+  </h2>
+  <h2 className="text-md font-medium mb-2 text-black mt-5">Selected Events:</h2>
+  
+  {previousData?.map((data) => (
+    <div key={data.eid} className="mb-2">
+      <label className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          className="checkbox border-2 border-gray-400 rounded"
+          checked={selectedEvents.includes(data.eid)}
+          onChange={() => handleEventToggle(data.eid)}
+          disabled={skipAutoDefend}
+        />
+        <span className="text-black">{data.name}</span>
+      </label>
+      
+      {selectedEvents.includes(data.eid) && (
+        <div className="mt-4 p-4 border rounded">
+          <h2 className="text-lg font-semibold mb-2 text-black">
+            {data.name} - Select Function
+          </h2>
+          <Select
+            options={Abi
+              ?.filter(func => func.type === "function")
+              .map(func => ({ value: func.name, label: func.name }))}
+            onChange={(option) => handleFunctionSelect(data.eid, option)}
+            placeholder="Select Function"
+            className="mb-4 text-black"
+            isMulti={false}
+            value={eventFunctions[data.eid]?.function ? {
+              value: eventFunctions[data.eid].function.name,
+              label: eventFunctions[data.eid].function.name
+            } : null}
+          />
+
+          {eventFunctions[data.eid]?.function && (
+            <div className="mb-6 p-4 border rounded">
+              <h2 className="text-md font-semibold mb-2 text-black">
+                {eventFunctions[data.eid].function.name} Parameters
+              </h2>
+              {eventFunctions[data.eid].function.inputs?.map(input => (
+                <div key={input.name} className="mb-2">
+                  <label className="block text-sm font-medium text-black">
+                    {input.name} ({input.type})
+                  </label>
                   <input
-                    type="checkbox"
-                    className="checkbox border-2 border-gray-400 rounded"
-                    checked={selectedEvents.includes(data.eid)}
-                    onChange={() => handleEventToggle(data.eid)}
-                    disabled={skipAutoDefend}
+                    type="text"
+                    value={eventFunctions[data.eid]?.params?.[input.name] || ""}
+                    onChange={(e) => handleFunctionInputChange(e, data.eid, input.name)}
+                    className="w-full p-2 border rounded bg-white text-black"
+                    placeholder={`Enter ${input.type}`}
                   />
-                  <span className="text-black">{data.name}</span>
-                </label>
-                
-                {selectedEvents.includes(data.eid) && (
-                  <div className="mt-4 p-4 border rounded">
-                    <h2 className="text-lg font-semibold mb-2 text-black">
-                      {data.name} - Select Function
-                    </h2>
-                    <Select
-                      options={Abi
-                        ?.filter(func => func.type === "function")
-                        .map(func => ({ value: func.name, label: func.name }))}
-                      onChange={(option) => handleFunctionSelect(data.eid, option)}
-                      placeholder="Select Function"
-                      className="mb-4 text-black"
-                      isMulti={false}
-                      value={eventFunctions[data.eid]?.function ? {
-                        value: eventFunctions[data.eid].function.name,
-                        label: eventFunctions[data.eid].function.name
-                      } : null}
-                    />
-
-                    {eventFunctions[data.eid]?.function && (
-                      <div className="mb-6 p-4 border rounded">
-                        <h2 className="text-md font-semibold mb-2 text-black">
-                          {eventFunctions[data.eid].function.name} Parameters
-                        </h2>
-                        {eventFunctions[data.eid].function.inputs?.map(input => (
-                          <div key={input.name} className="mb-2">
-                            <label className="block text-sm font-medium text-black">
-                              {input.name} ({input.type})
-                            </label>
-                            <input
-                              type="text"
-                              value={eventFunctions[data.eid]?.params?.[input.name] || ""}
-                              onChange={(e) => handleFunctionInputChange(e, data.eid, input.name)}
-                              className="w-full p-2 border rounded bg-white text-black"
-                              placeholder={`Enter ${input.type}`}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
-
-            <div className="w-full flex flex-col items-start mt-5">
-              <button 
-                className="py-3 w-full rounded-lg text-white mt-5 disabled:opacity-50"
-                style={{
-                  backgroundColor: selectedEvents.length > 0 || skipAutoDefend ? '#2D5C8F' : '#87A1C2',
-                }}
-                onClick={handleSubmit}
-                disabled={isLoading}
-              >
-                {isLoading ? "Saving..." : "Save AutoDefend Settings"}
-              </button>
-              <label className="flex items-center space-x-2 mt-3">
-                <input
-                  type="checkbox"
-                  className="checkbox border-2 border-gray-400 rounded"
-                  checked={skipAutoDefend}
-                  onChange={handleSkipAutoDefend}
-                  disabled={selectedEvents.length > 0}
-                />
-                <span className="text-black">Skip AutoDefend</span>
-              </label>
+                </div>
+              ))}
             </div>
-          </div>
+          )}
+        </div>
+      )}
+    </div>
+  ))}
+
+  <div className="w-full flex flex-col items-start mt-5">
+    
+    <button 
+      className="py-3 w-full rounded-lg text-white mt-5 disabled:opacity-50"
+      style={{
+        backgroundColor: (selectedEvents.length > 0 || skipAutoDefend) && isTermsAccepted ? '#2D5C8F' : '#87A1C2',
+      }}
+      onClick={handleSubmit}
+      disabled={isLoading || !((selectedEvents.length > 0 || skipAutoDefend) && isTermsAccepted)}
+    >
+      {isLoading ? "Saving..." : "Save AutoDefend Settings"}
+    </button>
+    <label className="flex items-center space-x-2 mt-3">
+      <input
+        type="checkbox"
+        className="checkbox border-2 border-gray-400 rounded"
+        checked={skipAutoDefend}
+        onChange={handleSkipAutoDefend}
+        disabled={selectedEvents.length > 0}
+      />
+      <span className="text-black">Skip AutoDefend</span>
+    </label>
+    <div className="flex items-center justify-start mt-5">
+      <label className="relative w-8 h-8 border-2 border-[#2c3e50] bg-white flex justify-center items-center cursor-pointer shadow-[5px_5px_10px_rgba(0,0,0,0.1)]">
+        <input
+          type="checkbox"
+          className="absolute opacity-0 w-full h-full"
+          checked={isTermsAccepted}
+          onChange={() => setIsTermsAccepted(!isTermsAccepted)}
+        />
+        {isTermsAccepted && (
+          <div className="w-4 h-8 border-r-4 border-b-4 border-[#27ae60] transform rotate-45 translate-y-[-2px]"></div>
+        )}
+      </label>
+      <span className="ml-3 text-sm text-gray-700">
+        I agree to the
+        <a
+          href="https://docs.google.com/document/d/1lUCKL5Nk7kXaUTnzRSupFrULWldHoeekd2Tb5y_1AM0/edit?usp=sharing"
+          target="_blank"
+          className="text-blue-600 hover:underline ml-1"
+        >
+          Terms & Conditions
+        </a>
+      </span>
+    </div>
+  </div>
+</div>
 
           <div className="mt-4 md:mt-0 border mx-auto md:mx-0 border-[#2D5C8F] shadow-md p-5 rounded-xl">
             <div className="text-lg font-medium text-[#2D5C8F]">

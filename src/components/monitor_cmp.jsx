@@ -380,7 +380,7 @@ const Monitor_cmp = () => {
                   <th className="py-4  border-2 border-none text-black text-sm font-medium">
                     Address
                   </th>
-                  <th className="py-4  border-2 border-none text-black text-sm font-medium flex items-center gap-40">
+                  <th className="py-4  border-2 border-none text-black text-sm font-medium flex items-center ml-16 gap-24">
                   Actions <HiMenuAlt2 className="text-lg"/>
                   </th>
                   

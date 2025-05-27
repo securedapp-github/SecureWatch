@@ -170,14 +170,15 @@ function Monitor_Edit() {
     // const finalAbi = (category === 2) ? "Asset_ABI" : abi || selectedMonitor.abi;
 
      // Validate ABI
-  if (abi) {
-    try {
-      JSON.parse(abi); // Attempt to parse the ABI as JSON
-    } catch (error) {
-      toast.error("Invalid ABI format. Please provide a valid JSON.");
-      return; // Stop further execution if ABI is invalid
+    // Validate ABI JSON format only for networks other than 1300 and 1301
+    if (abi && selectedMonitor.network !== 1300 && selectedMonitor.network !== 1301) {
+      try {
+        JSON.parse(abi); // Attempt to parse the ABI as JSON
+      } catch (error) {
+        toast.error("Invalid ABI format. Please provide a valid JSON.");
+        return; // Stop further execution if ABI is invalid
+      }
     }
-  }
   
     const data = {
       name: monitorName || selectedMonitor.name,
@@ -187,25 +188,28 @@ function Monitor_Edit() {
       address: address || selectedMonitor.address,
       alert_type: 1,
       //alert_data: "",
-      abi: category === 1 ? "Asset_ABI" : (abi || selectedMonitor.abi),
       category: category || selectedMonitor.category,
     };
+  
+    // Include abi in data only for networks other than 1300 and 1301
+    if (selectedMonitor.network !== 1300 && selectedMonitor.network !== 1301) {
+      data.abi = category === 1 ? "Asset_ABI" : (abi || selectedMonitor.abi);
+    }
+  
     console.log("data is:", data);
     console.log("mid:", selectedMonitor.mid);
-    
-
+  
     if (selectedMonitor.network === 1300 || selectedMonitor.network === 1301) {
       // data.smart_Contract = smartContract;
-      data.abi = code||selectedMonitor.abi;
-
+  
       try {
         const response = await axios.post(`${baseUrl}/update_monitor`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("smart contract code:", abi);
-
+        console.log("Monitor updated without ABI");
+  
         toast.success("Details updated successfully!", {
           autoClose: 500,
           onClose: () => {
@@ -215,8 +219,6 @@ function Monitor_Edit() {
                 network: network || selectedMonitor.network,
                 address: address || selectedMonitor.address,
                 rk: riskCategory,
-                //abi:  abi || selectedMonitor.abi,
-                abi: category === 1 ? "Asset_ABI" : (abi||selectedMonitor.abi),
                 m_id: selectedMonitor.mid,
                 email: email,
                 token: token,
@@ -230,7 +232,7 @@ function Monitor_Edit() {
             });
           },
         });
-
+  
         console.log("response is", response.data);
       } catch (error) {
         console.error("API request failed:", error); // Handle error
@@ -239,37 +241,29 @@ function Monitor_Edit() {
         });
       }
     } else {
-      data.abi = abi || selectedMonitor.abi;
-
       try {
         const response = await axios.post(`${baseUrl}/update_monitor`, data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        if(response.status === 401){
-          toast.error("Session Expired, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
+        if (response.status === 401) {
+          toast.error("Session Expired, Please login again", {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
         }
-        if(response.status === 403){
-          toast.error("Unauthorized Access, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
+        if (response.status === 403) {
+          toast.error("Unauthorized Access, Please login again", {
+            autoClose: 500,
+            onClose: () => {
+              localStorage.clear();
+              navigate("/login");
+            },
+          });
         }
         toast.success("Details updated successfully!", {
           autoClose: 500,
@@ -280,7 +274,7 @@ function Monitor_Edit() {
                 network: network || selectedMonitor.network,
                 address: address || selectedMonitor.address,
                 rk: riskCategory,
-                abi: abi || selectedMonitor.abi,
+                abi: category === 1 ? "Asset_ABI" : (abi || selectedMonitor.abi),
                 m_id: selectedMonitor.mid,
                 email: email,
                 token: token,
@@ -291,7 +285,7 @@ function Monitor_Edit() {
             });
           },
         });
-
+  
         console.log("response is", response.data);
       } catch (error) {
         console.error("API request failed:", error); // Handle error
@@ -300,7 +294,7 @@ function Monitor_Edit() {
         });
       }
     }
-  };
+  }
 
   const [value, setValue] = useState(10);
   const [moniter, setMoniter] = useState([]);
@@ -660,35 +654,35 @@ function Monitor_Edit() {
                       }
                   </option>
                  
-                    <option value="1" className="text-[13px] text-[#959595] ">Ethereum Mainnet</option>
-                <option value="56" className="text-[13px] text-[#959595] ">Binance Smart Chain</option>
-                <option value="8453" className="text-[13px] text-[#959595] ">Base</option>
-                <option value="43114" className="text-[13px] text-[#959595] ">Avalanche</option>
-                <option value="42161" className="text-[13px] text-[#959595] ">Arbitrum</option>
-                <option value="100" className="text-[13px] text-[#959595] ">Gnosis</option>
-                <option value="59144" className="text-[13px] text-[#959595] ">Linea</option>
-                <option value="1313161554" className="text-[13px] text-[#959595] ">Aurora</option>
-                <option value="10" className="text-[13px] text-[#959595] ">Optimism</option>
-                <option value="11155111" className="text-[13px] text-[#959595]">Sepolia Testnet</option>
-                <option value="137" className="text-[13px] text-[#959595]">Polygon Mainnet</option>
-                <option value="80002" className="text-[13px] text-[#959595]">Amoy</option>
-                <option value="1300" className="text-[13px] text-[#959595]">Algorand Mainnet</option>
-                <option value="1301" className="text-[13px] text-[#959595]">Algorand Testnet</option> 
-                <option value="42161" className="text-[13px] text-[#959595]">Arbitrum One</option>
-                <option value="43114" className="text-[13px] text-[#959595]">Avalanche C-Chain</option>
-                <option value="204" className="text-[13px] text-[#959595]">opBNB</option>
-                <option value="1101" className="text-[13px] text-[#959595]">Polygon zkEVM</option>
-                <option value="250" className="text-[13px] text-[#959595]">Fantom</option>
-                <option value="25" className="text-[13px] text-[#959595]">Cronos</option>
-                <option value="592" className="text-[13px] text-[#959595]">Astar</option>
-                <option value="100" className="text-[13px] text-[#959595]">Gnosis (xDai)</option>
-                <option value="42220" className="text-[13px] text-[#959595]">Celo</option>
-                <option value="324" className="text-[13px] text-[#959595]">ZkSync Era</option>
-                <option value="137" className="text-[13px] text-[#959595]">Polygon (Matic)</option>
-                <option value="288" className="text-[13px] text-[#959595]">Boba Network</option>
-                <option value="534352" className="text-[13px] text-[#959595]">Scroll</option>
-                <option value="2040" className="text-[13px] text-[#959595]">Vanar</option>
-                <option value="143" className="text-[13px] text-[#959595]">Monad</option>
+                    <option value="1" className="text-[13px] text-[#000000] ">Ethereum Mainnet</option>
+                <option value="56" className="text-[13px] text-[#000000] ">Binance Smart Chain</option>
+                <option value="8453" className="text-[13px] text-[#000000] ">Base</option>
+                <option value="43114" className="text-[13px] text-[#000000] ">Avalanche</option>
+                <option value="42161" className="text-[13px] text-[#000000] ">Arbitrum</option>
+                <option value="100" className="text-[13px] text-[#000000] ">Gnosis</option>
+                <option value="59144" className="text-[13px] text-[#000000] ">Linea</option>
+                <option value="1313161554" className="text-[13px] text-[#000000] ">Aurora</option>
+                <option value="10" className="text-[13px] text-[#000000] ">Optimism</option>
+                <option value="11155111" className="text-[13px] text-[#000000]">Sepolia Testnet</option>
+                <option value="137" className="text-[13px] text-[#000000]">Polygon Mainnet</option>
+                <option value="80002" className="text-[13px] text-[#000000]">Amoy</option>
+                <option value="1300" className="text-[13px] text-[#000000]">Algorand Mainnet</option>
+                <option value="1301" className="text-[13px] text-[#000000]">Algorand Testnet</option> 
+                <option value="42161" className="text-[13px] text-[#000000]">Arbitrum One</option>
+                <option value="43114" className="text-[13px] text-[#000000]">Avalanche C-Chain</option>
+                <option value="204" className="text-[13px] text-[#000000]">opBNB</option>
+                <option value="1101" className="text-[13px] text-[#000000]">Polygon zkEVM</option>
+                <option value="250" className="text-[13px] text-[#000000]">Fantom</option>
+                <option value="25" className="text-[13px] text-[#000000]">Cronos</option>
+                <option value="592" className="text-[13px] text-[#000000]">Astar</option>
+                <option value="100" className="text-[13px] text-[#000000]">Gnosis (xDai)</option>
+                <option value="42220" className="text-[13px] text-[#000000]">Celo</option>
+                <option value="324" className="text-[13px] text-[#000000]">ZkSync Era</option>
+                <option value="137" className="text-[13px] text-[#000000]">Polygon (Matic)</option>
+                <option value="288" className="text-[13px] text-[#000000]">Boba Network</option>
+                <option value="534352" className="text-[13px] text-[#000000]">Scroll</option>
+                <option value="2040" className="text-[13px] text-[#000000]">Vanar</option>
+                <option value="143" className="text-[13px] text-[#000000]">Monad</option>
 
 
                 </select>
