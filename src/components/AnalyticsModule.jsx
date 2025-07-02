@@ -30,6 +30,7 @@ function AnalyticsModule() {
     56: "Binance Smart Chain Mainnet",
     8453: "Base Mainnet",
     42161: "Arbitrum Mainnet",
+    50: "Xdc Mainnet",
   };
 
   useEffect(() => {
