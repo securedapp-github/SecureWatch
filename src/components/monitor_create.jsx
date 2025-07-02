@@ -621,6 +621,7 @@ function Monitor_create() {
                 <option value="534352" className="text-[13px] text-[#000000]">Scroll</option>
                 <option value="2040" className="text-[13px] text-[#000000]">Vanar</option>
                 <option value="143" className="text-[13px] text-[#000000]">Monad</option>
+                <option value="50" className="text-[13px] text-[#000000]">Xdc Mainnet</option>
 
               </select>
               {network === "1300" || network === "1301" ? (
