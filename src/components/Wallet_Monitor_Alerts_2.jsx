@@ -54,7 +54,8 @@ function Monitor_alerts() {
     100: "https://gnosisscan.io/tx/",
     59144: "https://explorer.linea.build/tx/",
     1313161554: "https://explorer.mainnet.aurora.dev/tx/",
-    10: "https://optimistic.etherscan.io/tx/"
+    10: "https://optimistic.etherscan.io/tx/",
+    50: "https://xdcscan.com/tx/"
   };
 
   const rpc_array = {
