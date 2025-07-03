@@ -192,29 +192,31 @@ const Wallet_Security_Cmp = () => {
                                             ? "Polygon Mainnet"
                                             : network === 80002
                                                 ? "Amoy"
-                                                        : network === 204
-                                                            ? "opBNB"
-                                                            : network === 1101
-                                                                ? "Polygon zkEVM"
-                                                                : network === 250
-                                                                    ? "Fantom"
-                                                                    : network === 25
-                                                                        ? "Cronos"
-                                                                        : network === 592
-                                                                            ? "Astar"
-                                                                            : network === 42220
-                                                                                ? "Celo"
-                                                                                : network === 324
-                                                                                    ? "ZkSync Era"
-                                                                                    : network === 288
-                                                                                        ? "Boba Network"
-                                                                                        : network === 534352
-                                                                                            ? "Scroll"
-                                                                                            : network === 2040
-                                                                                                ? "Vanar"
-                                                                                                : network === 143
-                                                                                                    ? "Monad"
-                                                                                                    : "Unknown"}
+                                                : network === 204
+                                                    ? "opBNB"
+                                                    : network === 1101
+                                                        ? "Polygon zkEVM"
+                                                        : network === 250
+                                                            ? "Fantom"
+                                                            : network === 25
+                                                                ? "Cronos"
+                                                                : network === 592
+                                                                    ? "Astar"
+                                                                    : network === 42220
+                                                                        ? "Celo"
+                                                                        : network === 324
+                                                                            ? "ZkSync Era"
+                                                                            : network === 288
+                                                                                ? "Boba Network"
+                                                                                : network === 534352
+                                                                                    ? "Scroll"
+                                                                                    : network === 2040
+                                                                                        ? "Vanar"
+                                                                                        : network === 143
+                                                                                            ? "Monad"
+                                                                                            : network === 50
+                                                                                                ? "XDC Mainnet"
+                                                                                                : "Unknown"}
                     </span>
                     <p className=" text-md text-black text-nowrap">
                       {created_on?.slice(0, 10)}
@@ -351,52 +353,54 @@ const Wallet_Security_Cmp = () => {
                       <td className=" ">
                         <span className="text-md  text-black">
                           {network === 1
-                            ? "Ethereum Mainnet"
-                            : network === 56
-                              ? "Binance Smart Chain"
-                              : network === 8453
-                                ? "Base"
-                                : network === 43114
-                                  ? "Avalanche"
-                                  : network === 42161
-                                    ? "Arbitrum"
-                                    : network === 100
-                                      ? "Gnosis"
-                                      : network === 59144
-                                        ? "Linea"
-                                        : network === 1313161554
-                                          ? "Aurora"
-                                          : network === 10
-                                            ? "Optimism"
-                                            : network === 11155111
-                                              ? "Sepolia Testnet"
-                                              : network === 137
-                                                ? "Polygon Mainnet"
-                                                : network === 80002
-                                                  ? "Amoy"
-                                                      : network === 204
-                                                        ? "opBNB"
-                                                        : network === 1101
-                                                          ? "Polygon zkEVM"
-                                                          : network === 250
+    ? "Ethereum Mainnet"
+    : network === 56
+        ? "Binance Smart Chain"
+        : network === 8453
+            ? "Base"
+            : network === 43114
+                ? "Avalanche"
+                : network === 42161
+                    ? "Arbitrum"
+                    : network === 100
+                        ? "Gnosis"
+                        : network === 59144
+                            ? "Linea"
+                            : network === 1313161554
+                                ? "Aurora"
+                                : network === 10
+                                    ? "Optimism"
+                                    : network === 11155111
+                                        ? "Sepolia Testnet"
+                                        : network === 137
+                                            ? "Polygon Mainnet"
+                                            : network === 80002
+                                                ? "Amoy"
+                                                : network === 204
+                                                    ? "opBNB"
+                                                    : network === 1101
+                                                        ? "Polygon zkEVM"
+                                                        : network === 250
                                                             ? "Fantom"
                                                             : network === 25
-                                                              ? "Cronos"
-                                                              : network === 592
-                                                                ? "Astar"
-                                                                : network === 42220
-                                                                  ? "Celo"
-                                                                  : network === 324
-                                                                    ? "ZkSync Era"
-                                                                    : network === 288
-                                                                      ? "Boba Network"
-                                                                      : network === 534352
-                                                                        ? "Scroll"
-                                                                        : network === 2040
-                                                                          ? "Vanar"
-                                                                          : network === 143
-                                                                            ? "Monad"
-                                                                            : "Unknown"}
+                                                                ? "Cronos"
+                                                                : network === 592
+                                                                    ? "Astar"
+                                                                    : network === 42220
+                                                                        ? "Celo"
+                                                                        : network === 324
+                                                                            ? "ZkSync Era"
+                                                                            : network === 288
+                                                                                ? "Boba Network"
+                                                                                : network === 534352
+                                                                                    ? "Scroll"
+                                                                                    : network === 2040
+                                                                                        ? "Vanar"
+                                                                                        : network === 143
+                                                                                            ? "Monad"
+                                                                                            : network === 50
+                                                                                                ? "XDC Mainnet"
+                                                                                                : "Unknown"}
                         </span>
                       </td>
 
