@@ -649,8 +649,8 @@ function Monitor_Edit() {
                       ? "ZkSync Era" : selectedMonitor.network === 288
                       ? "Boba Network" : selectedMonitor.network === 534352
                       ? "Scroll" : selectedMonitor.network === 2040
-                      ? "Vanar" : selectedMonitor.network === 143
-                      ? "Xdc Mainnet" : selectedMonitor.network === 50
+                      ? "Vanar" : selectedMonitor.network === 50
+                      ? "Xdc Mainnet" : selectedMonitor.network === 143
                       ? "Monad" : "Unknown"
                       }
                   </option>
