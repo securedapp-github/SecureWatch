@@ -5,12 +5,13 @@ import Sidebar from "./Sidebar";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-function AnalyticsModule() {
+function AlgoticsModule() {
   const userEmail = localStorage.getItem("email");
   const [loading, setLoading] = useState(true);
   const [monitors, setMonitors] = useState([]);
   const [selectedMonitor, setSelectedMonitor] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [activeTab, setActiveTab] = useState("sewa"); // 'sewa' or 'manDeshi'
   const navigate = useNavigate();
 
   const [tempStartDate, setTempStartDate] = useState(new Date());
@@ -132,14 +133,20 @@ function AnalyticsModule() {
 
         {/* Hidden on mobile, visible on sm and up */}
         <div className="hidden sm:flex flex-col gap-5 fixed left-0 ml-[100px] w-56 mt-20">
-          <div className="mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]">
+          <div 
+            className={`mt-5 py-3 pl-4 pr-9 rounded-r-full cursor-pointer ${activeTab === 'sewa' ? 'bg-[#6A6A6A1A]' : ''}`}
+            onClick={() => setActiveTab('sewa')}
+          >
             <p className="text-[#6A6A6A] font-semibold text-nowrap px-2">
-              Analytics & Report
+              Sewa
             </p>
           </div>
-          <div className="py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A] cursor-pointer" onClick={() => navigate('/algotics')}>
+          <div 
+            className={`py-3 pl-4 pr-9 rounded-r-full cursor-pointer ${activeTab === 'manDeshi' ? 'bg-[#6A6A6A1A]' : ''}`}
+            onClick={() => setActiveTab('manDeshi')}
+          >
             <p className="text-[#6A6A6A] font-semibold text-nowrap px-2">
-              Algotics Dashboard
+              Man Deshi Foundation
             </p>
           </div>
         </div>
@@ -150,7 +157,7 @@ function AnalyticsModule() {
             <div className="w-full min-h-full relative">
               <div className="container mx-auto p-2 md:p-4 text-black mt-5">
                 <h2 className="text-xl md:text-2xl font-bold mb-4">
-                  Contract Monitor
+                  {activeTab === 'sewa' ? 'Sewa Dashboard' : 'Man Deshi Foundation Dashboard'}
                 </h2>
 
                 {loading ? (
@@ -397,4 +404,4 @@ function AnalyticsModule() {
   );
 }
 
-export default AnalyticsModule;
+export default AlgoticsModule;
