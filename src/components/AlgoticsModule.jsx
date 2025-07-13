@@ -11,6 +11,50 @@ function AlgoticsModule() {
   const [monitors, setMonitors] = useState([]);
   const [selectedMonitor, setSelectedMonitor] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showManDeshiData, setShowManDeshiData] = useState(null); // 'accounts', 'assets', or 'wallets'
+  const [showSewaData, setShowSewaData] = useState(null); // 'accounts', 'assets', or 'wallets'
+
+  const mockAccounts = [
+    { id: 'ACC001', name: 'Demo Account 1', createdDate: '2023-01-15' },
+    { id: 'ACC002', name: 'Demo Account 2', createdDate: '2023-02-20' },
+    { id: 'ACC003', name: 'Demo Account 3', createdDate: '2023-03-10' },
+  ];
+
+  const mockAssets = [
+    { id: 'AST001', name: 'Demo Asset A', count: 100 },
+    { id: 'AST002', name: 'Demo Asset B', count: 50 },
+    { id: 'AST003', name: 'Demo Asset C', count: 75 },
+  ];
+
+  const mockWallets = [
+    { id: 'WLT001', address: '0xabc...123', createdDate: '2024-07-01' },
+    { id: 'WLT002', address: '0xdef...456', createdDate: '2024-06-25' },
+    { id: 'WLT003', address: '0xghi...789', createdDate: '2024-05-10' },
+  ];
+
+  const walletStats = {
+    weekly: 10,
+    monthly: 40,
+    yearly: 300,
+  };
+
+  const sewaAccounts = [
+    { id: 'SEWA001', name: 'Sewa Account 1', createdDate: '2023-01-01' },
+    { id: 'SEWA002', name: 'Sewa Account 2', createdDate: '2023-02-05' },
+    { id: 'SEWA003', name: 'Sewa Account 3', createdDate: '2023-03-15' },
+  ];
+
+  const sewaAssets = [
+    { id: 'SEWA_AST001', name: 'Sewa Asset X', count: 200 },
+    { id: 'SEWA_AST002', name: 'Sewa Asset Y', count: 120 },
+    { id: 'SEWA_AST003', name: 'Sewa Asset Z', count: 90 },
+  ];
+
+  const sewaWalletStats = {
+    weekly: 5,
+    monthly: 20,
+    yearly: 150,
+  };
   const [activeTab, setActiveTab] = useState("sewa"); // 'sewa' or 'manDeshi'
   const navigate = useNavigate();
 
@@ -160,55 +204,222 @@ function AlgoticsModule() {
                   {activeTab === 'sewa' ? 'Sewa Dashboard' : 'Man Deshi Foundation Dashboard'}
                 </h2>
 
-                {loading ? (
-                  <p className="text-center">Loading...</p>
-                ) : monitors.length === 0 ? (
-                  <p className="text-center">No monitor data available.</p>
-                ) : (
-                  <div className="overflow-x-auto rounded-md border-2">
-                    <table className="min-w-full  border-gray-300 bg-white">
-                      <thead>
-                        <tr>
-                          <th className="px-2 md:px-4 py-2 text-left">Name</th>
-                          <th className="px-2 md:px-4 py-2 text-left">
-                            Network
-                          </th>
-                          <th className="px-2 md:px-4 py-2 text-left">
-                            Address
-                          </th>
-                          <th className="px-2 md:px-4 py-2 text-left">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {monitors.map((monitor) => (
-                          <tr
-                            key={monitor.mid}
-                            className="hover:bg-white border-t-2 border-b"
-                          >
-                            <td className="px-2 md:px-4 py-2">
-                              {monitor.name}
-                            </td>
-                            <td className="px-2 md:px-4 py-2">
-                              {ALLOWED_CHAINS[monitor.network] ||
-                                monitor.network}
-                            </td>
-                            <td className="px-2 md:px-4 py-2 truncate max-w-[100px] md:max-w-[200px]">
-                              {monitor.address}
-                            </td>
-                            <td className="px-2 md:px-4 py-2">
-                              <button
-                                className="bg-blue-500 text-white px-2 md:px-4 py-1 md:py-2 text-sm md:text-base rounded-lg hover:bg-blue-600 transition w-full md:w-auto"
-                                onClick={() => handleViewAnalytics(monitor.mid)}
-                              >
-                                View Analytics
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                {activeTab === 'sewa' && (
+                  {activeTab === 'sewa' && (
+                  <div className="flex flex-col gap-4 mt-4">
+                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
+                      <h3 className="text-lg font-semibold mb-2">Total Accounts Created: 120</h3>
+                      <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                        onClick={() => setShowSewaData('accounts')}
+                      >
+                        View Accounts
+                      </button>
+                    </div>
+
+                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
+                      <h3 className="text-lg font-semibold mb-2">Total Assets Created: 200</h3>
+                      <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                        onClick={() => setShowSewaData('assets')}
+                      >
+                        View Assets
+                      </button>
+                    </div>
+
+                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
+                      <h3 className="text-lg font-semibold mb-2">Total Wallets Created</h3>
+                      <p className="text-md mb-1">Weekly: {sewaWalletStats.weekly}</p>
+                      <p className="text-md mb-1">Monthly: {sewaWalletStats.monthly}</p>
+                      <p className="text-md mb-2">Yearly: {sewaWalletStats.yearly}</p>
+                      <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                        onClick={() => setShowSewaData('wallets')}
+                      >
+                        View Wallets
+                      </button>
+                    </div>
+
+                    {showSewaData === 'accounts' && (
+                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                        <h3 className="text-lg font-semibold mb-2 p-2">Demo Sewa Accounts</h3>
+                        <table className="min-w-full border-gray-300 bg-white">
+                          <thead>
+                            <tr>
+                              <th className="px-2 md:px-4 py-2 text-left">Account ID</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Name</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Created Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {sewaAccounts.map((account) => (
+                              <tr key={account.id} className="hover:bg-white border-t-2 border-b">
+                                <td className="px-2 md:px-4 py-2">{account.id}</td>
+                                <td className="px-2 md:px-4 py-2">{account.name}</td>
+                                <td className="px-2 md:px-4 py-2">{account.createdDate}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {showSewaData === 'assets' && (
+                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                        <h3 className="text-lg font-semibold mb-2 p-2">Demo Sewa Assets</h3>
+                        <table className="min-w-full border-gray-300 bg-white">
+                          <thead>
+                            <tr>
+                              <th className="px-2 md:px-4 py-2 text-left">Asset ID</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Asset Name</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Count</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {sewaAssets.map((asset) => (
+                              <tr key={asset.id} className="hover:bg-white border-t-2 border-b">
+                                <td className="px-2 md:px-4 py-2">{asset.id}</td>
+                                <td className="px-2 md:px-4 py-2">{asset.name}</td>
+                                <td className="px-2 md:px-4 py-2">{asset.count}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {showSewaData === 'wallets' && (
+                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                        <h3 className="text-lg font-semibold mb-2 p-2">Demo Sewa Wallets</h3>
+                        <table className="min-w-full border-gray-300 bg-white">
+                          <thead>
+                            <tr>
+                              <th className="px-2 md:px-4 py-2 text-left">Wallet ID</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Address</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Created Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {mockWallets.map((wallet) => (
+                              <tr key={wallet.id} className="hover:bg-white border-t-2 border-b">
+                                <td className="px-2 md:px-4 py-2">{wallet.id}</td>
+                                <td className="px-2 md:px-4 py-2">{wallet.address}</td>
+                                <td className="px-2 md:px-4 py-2">{wallet.createdDate}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activeTab === 'manDeshi' && (
+                  <div className="flex flex-col gap-4 mt-4">
+                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
+                      <h3 className="text-lg font-semibold mb-2">Total Accounts Created: 150</h3>
+                      <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                        onClick={() => setShowManDeshiData('accounts')}
+                      >
+                        View Accounts
+                      </button>
+                    </div>
+
+                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
+                      <h3 className="text-lg font-semibold mb-2">Total Assets Created: 250</h3>
+                      <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                        onClick={() => setShowManDeshiData('assets')}
+                      >
+                        View Assets
+                      </button>
+                    </div>
+
+                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
+                      <h3 className="text-lg font-semibold mb-2">Total Wallets Created</h3>
+                      <p className="text-md mb-1">Weekly: {walletStats.weekly}</p>
+                      <p className="text-md mb-1">Monthly: {walletStats.monthly}</p>
+                      <p className="text-md mb-2">Yearly: {walletStats.yearly}</p>
+                      <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                        onClick={() => setShowManDeshiData('wallets')}
+                      >
+                        View Wallets
+                      </button>
+                    </div>
+
+                    {showManDeshiData === 'accounts' && (
+                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                        <h3 className="text-lg font-semibold mb-2 p-2">Demo Accounts</h3>
+                        <table className="min-w-full border-gray-300 bg-white">
+                          <thead>
+                            <tr>
+                              <th className="px-2 md:px-4 py-2 text-left">Account ID</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Name</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Created Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {mockAccounts.map((account) => (
+                              <tr key={account.id} className="hover:bg-white border-t-2 border-b">
+                                <td className="px-2 md:px-4 py-2">{account.id}</td>
+                                <td className="px-2 md:px-4 py-2">{account.name}</td>
+                                <td className="px-2 md:px-4 py-2">{account.createdDate}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {showManDeshiData === 'assets' && (
+                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                        <h3 className="text-lg font-semibold mb-2 p-2">Demo Assets</h3>
+                        <table className="min-w-full border-gray-300 bg-white">
+                          <thead>
+                            <tr>
+                              <th className="px-2 md:px-4 py-2 text-left">Asset ID</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Asset Name</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Count</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {mockAssets.map((asset) => (
+                              <tr key={asset.id} className="hover:bg-white border-t-2 border-b">
+                                <td className="px-2 md:px-4 py-2">{asset.id}</td>
+                                <td className="px-2 md:px-4 py-2">{asset.name}</td>
+                                <td className="px-2 md:px-4 py-2">{asset.count}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {showManDeshiData === 'wallets' && (
+                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                        <h3 className="text-lg font-semibold mb-2 p-2">Demo Wallets</h3>
+                        <table className="min-w-full border-gray-300 bg-white">
+                          <thead>
+                            <tr>
+                              <th className="px-2 md:px-4 py-2 text-left">Wallet ID</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Address</th>
+                              <th className="px-2 md:px-4 py-2 text-left">Created Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {mockWallets.map((wallet) => (
+                              <tr key={wallet.id} className="hover:bg-white border-t-2 border-b">
+                                <td className="px-2 md:px-4 py-2">{wallet.id}</td>
+                                <td className="px-2 md:px-4 py-2">{wallet.address}</td>
+                                <td className="px-2 md:px-4 py-2">{wallet.createdDate}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
