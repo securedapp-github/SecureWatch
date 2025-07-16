@@ -215,7 +215,7 @@ const Wallet_Security_Cmp = () => {
                                                                                         : network === 143
                                                                                             ? "Monad"
                                                                                             : network === 50
-                                                                                                ? "XDC Mainnet"
+                                                                                                ? "XDC Network"
                                                                                                 : "Unknown"}
                     </span>
                     <p className=" text-md text-black text-nowrap">
@@ -399,7 +399,7 @@ const Wallet_Security_Cmp = () => {
                                                                                         : network === 143
                                                                                             ? "Monad"
                                                                                             : network === 50
-                                                                                                ? "XDC Mainnet"
+                                                                                                ? "XDC Network"
                                                                                                 : "Unknown"}
                         </span>
                       </td>

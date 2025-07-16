@@ -295,7 +295,7 @@ function Monitor_create() {
                 <option value="534352">Scroll</option>
                 <option value="2040">Vanar</option>
                 <option value="143">Monad</option>
-                <option value="50">Xdc Mainnet</option>
+                <option value="50">Xdc Network</option>
               </select>
 
               <label className="text-lg font-medium text-black mt-5 block">
