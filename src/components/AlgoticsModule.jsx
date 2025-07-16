@@ -169,6 +169,36 @@ function AlgoticsModule() {
     if (date < tempStartDate) setTempStartDate(date);
   };
 
+  // Add mock data for wallet categories
+  const sewaWalletsWeekly = [
+    { id: 'WLT001', address: '0xabc...123', createdDate: '2024-07-01' },
+    { id: 'WLT004', address: '0xjkl...321', createdDate: '2024-07-02' },
+  ];
+  const sewaWalletsMonthly = [
+    { id: 'WLT002', address: '0xdef...456', createdDate: '2024-06-25' },
+    { id: 'WLT005', address: '0xlmn...654', createdDate: '2024-06-15' },
+  ];
+  const sewaWalletsYearly = [
+    { id: 'WLT003', address: '0xghi...789', createdDate: '2024-05-10' },
+    { id: 'WLT006', address: '0xopq...987', createdDate: '2024-03-20' },
+  ];
+  const manDeshiWalletsWeekly = [
+    { id: 'WLT101', address: '0xaaa...111', createdDate: '2024-07-01' },
+    { id: 'WLT104', address: '0xbbb...222', createdDate: '2024-07-03' },
+  ];
+  const manDeshiWalletsMonthly = [
+    { id: 'WLT102', address: '0xccc...333', createdDate: '2024-06-20' },
+    { id: 'WLT105', address: '0xddd...444', createdDate: '2024-06-10' },
+  ];
+  const manDeshiWalletsYearly = [
+    { id: 'WLT103', address: '0xeee...555', createdDate: '2024-05-05' },
+    { id: 'WLT106', address: '0xfff...666', createdDate: '2024-02-18' },
+  ];
+
+  // Add state for wallet tab
+  const [sewaWalletTab, setSewaWalletTab] = useState('weekly');
+  const [manDeshiWalletTab, setManDeshiWalletTab] = useState('weekly');
+
   return (
     <div className="w-full min-h-full bg-white">
       <NewNavbar email={userEmail} />
@@ -205,46 +235,46 @@ function AlgoticsModule() {
                 </h2>
 
                 {activeTab === 'sewa' && (
-                  {activeTab === 'sewa' && (
-                  <div className="flex flex-col gap-4 mt-4">
-                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
-                      <h3 className="text-lg font-semibold mb-2">Total Accounts Created: 120</h3>
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-                        onClick={() => setShowSewaData('accounts')}
-                      >
-                        View Accounts
-                      </button>
+                  <div className="flex flex-col gap-6 mt-4">
+                    {/* Dashboard Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                      <div className="bg-gradient-to-br from-blue-100 to-blue-300 p-6 rounded-2xl shadow-lg flex flex-col items-center relative">
+                        <div className="bg-blue-500 text-white rounded-full p-3 mb-2 shadow-md">
+                          <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m9-4V7a4 4 0 10-8 0v3m12 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2v-1' /></svg>
+                        </div>
+                        <h3 className="text-lg font-semibold mb-1">Total Accounts</h3>
+                        <p className="text-3xl font-bold text-blue-700 mb-2">120</p>
+                        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition" onClick={() => setShowSewaData('accounts')}>View Accounts</button>
+                      </div>
+                      <div className="bg-gradient-to-br from-green-100 to-green-300 p-6 rounded-2xl shadow-lg flex flex-col items-center relative">
+                        <div className="bg-green-500 text-white rounded-full p-3 mb-2 shadow-md">
+                          <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm0 0V4m0 7v7m0 0h4m-4 0H8' /></svg>
+                        </div>
+                        <h3 className="text-lg font-semibold mb-1">Total Assets</h3>
+                        <p className="text-3xl font-bold text-green-700 mb-2">200</p>
+                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition" onClick={() => setShowSewaData('assets')}>View Assets</button>
+                      </div>
+                      <div className="bg-gradient-to-br from-purple-100 to-purple-300 p-6 rounded-2xl shadow-lg flex flex-col items-center relative">
+                        <div className="bg-purple-500 text-white rounded-full p-3 mb-2 shadow-md">
+                          <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 9V7a5 5 0 00-10 0v2a5 5 0 0010 0zm-2 6a2 2 0 01-2 2H9a2 2 0 01-2-2v-1a2 2 0 012-2h4a2 2 0 012 2v1z' /></svg>
+                        </div>
+                        <h3 className="text-lg font-semibold mb-1">Total Wallets</h3>
+                        <div className="flex gap-3 text-purple-700 font-bold mb-2">
+                          <span className="bg-white bg-opacity-60 rounded px-2 py-1 text-xs">Weekly: {sewaWalletStats.weekly}</span>
+                          <span className="bg-white bg-opacity-60 rounded px-2 py-1 text-xs">Monthly: {sewaWalletStats.monthly}</span>
+                          <span className="bg-white bg-opacity-60 rounded px-2 py-1 text-xs">Yearly: {sewaWalletStats.yearly}</span>
+                        </div>
+                        <button className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition" onClick={() => setShowSewaData('wallets')}>View Wallets</button>
+                      </div>
                     </div>
 
-                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
-                      <h3 className="text-lg font-semibold mb-2">Total Assets Created: 200</h3>
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-                        onClick={() => setShowSewaData('assets')}
-                      >
-                        View Assets
-                      </button>
-                    </div>
-
-                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
-                      <h3 className="text-lg font-semibold mb-2">Total Wallets Created</h3>
-                      <p className="text-md mb-1">Weekly: {sewaWalletStats.weekly}</p>
-                      <p className="text-md mb-1">Monthly: {sewaWalletStats.monthly}</p>
-                      <p className="text-md mb-2">Yearly: {sewaWalletStats.yearly}</p>
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-                        onClick={() => setShowSewaData('wallets')}
-                      >
-                        View Wallets
-                      </button>
-                    </div>
-
+                    {/* Data Tables with Close Button */}
                     {showSewaData === 'accounts' && (
-                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                      <div className="overflow-x-auto rounded-xl border-2 mt-4 bg-white shadow-lg relative">
+                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl font-bold" onClick={() => setShowSewaData(null)}>&times;</button>
                         <h3 className="text-lg font-semibold mb-2 p-2">Demo Sewa Accounts</h3>
-                        <table className="min-w-full border-gray-300 bg-white">
-                          <thead>
+                        <table className="min-w-full border-gray-300 bg-white rounded-xl">
+                          <thead className="bg-blue-50">
                             <tr>
                               <th className="px-2 md:px-4 py-2 text-left">Account ID</th>
                               <th className="px-2 md:px-4 py-2 text-left">Name</th>
@@ -252,9 +282,9 @@ function AlgoticsModule() {
                             </tr>
                           </thead>
                           <tbody>
-                            {sewaAccounts.map((account) => (
-                              <tr key={account.id} className="hover:bg-white border-t-2 border-b">
-                                <td className="px-2 md:px-4 py-2">{account.id}</td>
+                            {sewaAccounts.map((account, idx) => (
+                              <tr key={account.id} className={`hover:bg-blue-50 border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}> 
+                                <td className="px-2 md:px-4 py-2 font-mono text-blue-700">{account.id}</td>
                                 <td className="px-2 md:px-4 py-2">{account.name}</td>
                                 <td className="px-2 md:px-4 py-2">{account.createdDate}</td>
                               </tr>
@@ -265,10 +295,11 @@ function AlgoticsModule() {
                     )}
 
                     {showSewaData === 'assets' && (
-                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                      <div className="overflow-x-auto rounded-xl border-2 mt-4 bg-white shadow-lg relative">
+                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl font-bold" onClick={() => setShowSewaData(null)}>&times;</button>
                         <h3 className="text-lg font-semibold mb-2 p-2">Demo Sewa Assets</h3>
-                        <table className="min-w-full border-gray-300 bg-white">
-                          <thead>
+                        <table className="min-w-full border-gray-300 bg-white rounded-xl">
+                          <thead className="bg-green-50">
                             <tr>
                               <th className="px-2 md:px-4 py-2 text-left">Asset ID</th>
                               <th className="px-2 md:px-4 py-2 text-left">Asset Name</th>
@@ -276,9 +307,9 @@ function AlgoticsModule() {
                             </tr>
                           </thead>
                           <tbody>
-                            {sewaAssets.map((asset) => (
-                              <tr key={asset.id} className="hover:bg-white border-t-2 border-b">
-                                <td className="px-2 md:px-4 py-2">{asset.id}</td>
+                            {sewaAssets.map((asset, idx) => (
+                              <tr key={asset.id} className={`hover:bg-green-50 border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}> 
+                                <td className="px-2 md:px-4 py-2 font-mono text-green-700">{asset.id}</td>
                                 <td className="px-2 md:px-4 py-2">{asset.name}</td>
                                 <td className="px-2 md:px-4 py-2">{asset.count}</td>
                               </tr>
@@ -289,10 +320,17 @@ function AlgoticsModule() {
                     )}
 
                     {showSewaData === 'wallets' && (
-                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                      <div className="overflow-x-auto rounded-xl border-2 mt-4 bg-white shadow-lg relative">
+                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl font-bold" onClick={() => setShowSewaData(null)}>&times;</button>
                         <h3 className="text-lg font-semibold mb-2 p-2">Demo Sewa Wallets</h3>
-                        <table className="min-w-full border-gray-300 bg-white">
-                          <thead>
+                        {/* Tabs for Weekly, Monthly, Yearly */}
+                        <div className="flex gap-2 mb-4 px-2">
+                          <button onClick={() => setSewaWalletTab('weekly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${sewaWalletTab === 'weekly' ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}`}>Weekly</button>
+                          <button onClick={() => setSewaWalletTab('monthly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${sewaWalletTab === 'monthly' ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}`}>Monthly</button>
+                          <button onClick={() => setSewaWalletTab('yearly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${sewaWalletTab === 'yearly' ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}`}>Yearly</button>
+                        </div>
+                        <table className="min-w-full border-gray-300 bg-white rounded-xl">
+                          <thead className="bg-purple-50">
                             <tr>
                               <th className="px-2 md:px-4 py-2 text-left">Wallet ID</th>
                               <th className="px-2 md:px-4 py-2 text-left">Address</th>
@@ -300,9 +338,9 @@ function AlgoticsModule() {
                             </tr>
                           </thead>
                           <tbody>
-                            {mockWallets.map((wallet) => (
-                              <tr key={wallet.id} className="hover:bg-white border-t-2 border-b">
-                                <td className="px-2 md:px-4 py-2">{wallet.id}</td>
+                            {(sewaWalletTab === 'weekly' ? sewaWalletsWeekly : sewaWalletTab === 'monthly' ? sewaWalletsMonthly : sewaWalletsYearly).map((wallet, idx) => (
+                              <tr key={wallet.id} className={`hover:bg-purple-50 border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                                <td className="px-2 md:px-4 py-2 font-mono text-purple-700">{wallet.id}</td>
                                 <td className="px-2 md:px-4 py-2">{wallet.address}</td>
                                 <td className="px-2 md:px-4 py-2">{wallet.createdDate}</td>
                               </tr>
@@ -315,45 +353,46 @@ function AlgoticsModule() {
                 )}
 
                 {activeTab === 'manDeshi' && (
-                  <div className="flex flex-col gap-4 mt-4">
-                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
-                      <h3 className="text-lg font-semibold mb-2">Total Accounts Created: 150</h3>
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-                        onClick={() => setShowManDeshiData('accounts')}
-                      >
-                        View Accounts
-                      </button>
+                  <div className="flex flex-col gap-6 mt-4">
+                    {/* Dashboard Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                      <div className="bg-gradient-to-br from-orange-100 to-orange-300 p-6 rounded-2xl shadow-lg flex flex-col items-center relative">
+                        <div className="bg-orange-500 text-white rounded-full p-3 mb-2 shadow-md">
+                          <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m9-4V7a4 4 0 10-8 0v3m12 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2v-1' /></svg>
+                        </div>
+                        <h3 className="text-lg font-semibold mb-1">Total Accounts</h3>
+                        <p className="text-3xl font-bold text-orange-700 mb-2">150</p>
+                        <button className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition" onClick={() => setShowManDeshiData('accounts')}>View Accounts</button>
+                      </div>
+                      <div className="bg-gradient-to-br from-pink-100 to-pink-300 p-6 rounded-2xl shadow-lg flex flex-col items-center relative">
+                        <div className="bg-pink-500 text-white rounded-full p-3 mb-2 shadow-md">
+                          <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm0 0V4m0 7v7m0 0h4m-4 0H8' /></svg>
+                        </div>
+                        <h3 className="text-lg font-semibold mb-1">Total Assets</h3>
+                        <p className="text-3xl font-bold text-pink-700 mb-2">250</p>
+                        <button className="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition" onClick={() => setShowManDeshiData('assets')}>View Assets</button>
+                      </div>
+                      <div className="bg-gradient-to-br from-yellow-100 to-yellow-300 p-6 rounded-2xl shadow-lg flex flex-col items-center relative">
+                        <div className="bg-yellow-500 text-white rounded-full p-3 mb-2 shadow-md">
+                          <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 9V7a5 5 0 00-10 0v2a5 5 0 0010 0zm-2 6a2 2 0 01-2 2H9a2 2 0 01-2-2v-1a2 2 0 012-2h4a2 2 0 012 2v1z' /></svg>
+                        </div>
+                        <h3 className="text-lg font-semibold mb-1">Total Wallets</h3>
+                        <div className="flex gap-3 text-yellow-700 font-bold mb-2">
+                          <span className="bg-white bg-opacity-60 rounded px-2 py-1 text-xs">Weekly: {walletStats.weekly}</span>
+                          <span className="bg-white bg-opacity-60 rounded px-2 py-1 text-xs">Monthly: {walletStats.monthly}</span>
+                          <span className="bg-white bg-opacity-60 rounded px-2 py-1 text-xs">Yearly: {walletStats.yearly}</span>
+                        </div>
+                        <button className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition" onClick={() => setShowManDeshiData('wallets')}>View Wallets</button>
+                      </div>
                     </div>
 
-                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
-                      <h3 className="text-lg font-semibold mb-2">Total Assets Created: 250</h3>
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-                        onClick={() => setShowManDeshiData('assets')}
-                      >
-                        View Assets
-                      </button>
-                    </div>
-
-                    <div className="bg-gray-100 p-4 rounded-md shadow-md">
-                      <h3 className="text-lg font-semibold mb-2">Total Wallets Created</h3>
-                      <p className="text-md mb-1">Weekly: {walletStats.weekly}</p>
-                      <p className="text-md mb-1">Monthly: {walletStats.monthly}</p>
-                      <p className="text-md mb-2">Yearly: {walletStats.yearly}</p>
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-                        onClick={() => setShowManDeshiData('wallets')}
-                      >
-                        View Wallets
-                      </button>
-                    </div>
-
+                    {/* Data Tables with Close Button */}
                     {showManDeshiData === 'accounts' && (
-                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                      <div className="overflow-x-auto rounded-xl border-2 mt-4 bg-white shadow-lg relative">
+                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl font-bold" onClick={() => setShowManDeshiData(null)}>&times;</button>
                         <h3 className="text-lg font-semibold mb-2 p-2">Demo Accounts</h3>
-                        <table className="min-w-full border-gray-300 bg-white">
-                          <thead>
+                        <table className="min-w-full border-gray-300 bg-white rounded-xl">
+                          <thead className="bg-orange-50">
                             <tr>
                               <th className="px-2 md:px-4 py-2 text-left">Account ID</th>
                               <th className="px-2 md:px-4 py-2 text-left">Name</th>
@@ -361,9 +400,9 @@ function AlgoticsModule() {
                             </tr>
                           </thead>
                           <tbody>
-                            {mockAccounts.map((account) => (
-                              <tr key={account.id} className="hover:bg-white border-t-2 border-b">
-                                <td className="px-2 md:px-4 py-2">{account.id}</td>
+                            {mockAccounts.map((account, idx) => (
+                              <tr key={account.id} className={`hover:bg-orange-50 border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}> 
+                                <td className="px-2 md:px-4 py-2 font-mono text-orange-700">{account.id}</td>
                                 <td className="px-2 md:px-4 py-2">{account.name}</td>
                                 <td className="px-2 md:px-4 py-2">{account.createdDate}</td>
                               </tr>
@@ -374,10 +413,11 @@ function AlgoticsModule() {
                     )}
 
                     {showManDeshiData === 'assets' && (
-                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                      <div className="overflow-x-auto rounded-xl border-2 mt-4 bg-white shadow-lg relative">
+                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl font-bold" onClick={() => setShowManDeshiData(null)}>&times;</button>
                         <h3 className="text-lg font-semibold mb-2 p-2">Demo Assets</h3>
-                        <table className="min-w-full border-gray-300 bg-white">
-                          <thead>
+                        <table className="min-w-full border-gray-300 bg-white rounded-xl">
+                          <thead className="bg-pink-50">
                             <tr>
                               <th className="px-2 md:px-4 py-2 text-left">Asset ID</th>
                               <th className="px-2 md:px-4 py-2 text-left">Asset Name</th>
@@ -385,9 +425,9 @@ function AlgoticsModule() {
                             </tr>
                           </thead>
                           <tbody>
-                            {mockAssets.map((asset) => (
-                              <tr key={asset.id} className="hover:bg-white border-t-2 border-b">
-                                <td className="px-2 md:px-4 py-2">{asset.id}</td>
+                            {mockAssets.map((asset, idx) => (
+                              <tr key={asset.id} className={`hover:bg-pink-50 border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}> 
+                                <td className="px-2 md:px-4 py-2 font-mono text-pink-700">{asset.id}</td>
                                 <td className="px-2 md:px-4 py-2">{asset.name}</td>
                                 <td className="px-2 md:px-4 py-2">{asset.count}</td>
                               </tr>
@@ -398,10 +438,17 @@ function AlgoticsModule() {
                     )}
 
                     {showManDeshiData === 'wallets' && (
-                      <div className="overflow-x-auto rounded-md border-2 mt-4">
+                      <div className="overflow-x-auto rounded-xl border-2 mt-4 bg-white shadow-lg relative">
+                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl font-bold" onClick={() => setShowManDeshiData(null)}>&times;</button>
                         <h3 className="text-lg font-semibold mb-2 p-2">Demo Wallets</h3>
-                        <table className="min-w-full border-gray-300 bg-white">
-                          <thead>
+                        {/* Tabs for Weekly, Monthly, Yearly */}
+                        <div className="flex gap-2 mb-4 px-2">
+                          <button onClick={() => setManDeshiWalletTab('weekly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${manDeshiWalletTab === 'weekly' ? 'bg-yellow-500 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}`}>Weekly</button>
+                          <button onClick={() => setManDeshiWalletTab('monthly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${manDeshiWalletTab === 'monthly' ? 'bg-yellow-500 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}`}>Monthly</button>
+                          <button onClick={() => setManDeshiWalletTab('yearly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${manDeshiWalletTab === 'yearly' ? 'bg-yellow-500 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}`}>Yearly</button>
+                        </div>
+                        <table className="min-w-full border-gray-300 bg-white rounded-xl">
+                          <thead className="bg-yellow-50">
                             <tr>
                               <th className="px-2 md:px-4 py-2 text-left">Wallet ID</th>
                               <th className="px-2 md:px-4 py-2 text-left">Address</th>
@@ -409,9 +456,9 @@ function AlgoticsModule() {
                             </tr>
                           </thead>
                           <tbody>
-                            {mockWallets.map((wallet) => (
-                              <tr key={wallet.id} className="hover:bg-white border-t-2 border-b">
-                                <td className="px-2 md:px-4 py-2">{wallet.id}</td>
+                            {(manDeshiWalletTab === 'weekly' ? manDeshiWalletsWeekly : manDeshiWalletTab === 'monthly' ? manDeshiWalletsMonthly : manDeshiWalletsYearly).map((wallet, idx) => (
+                              <tr key={wallet.id} className={`hover:bg-yellow-50 border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                                <td className="px-2 md:px-4 py-2 font-mono text-yellow-700">{wallet.id}</td>
                                 <td className="px-2 md:px-4 py-2">{wallet.address}</td>
                                 <td className="px-2 md:px-4 py-2">{wallet.createdDate}</td>
                               </tr>
