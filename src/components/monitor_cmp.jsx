@@ -234,7 +234,7 @@ const Monitor_cmp = () => {
                                                                                                 : network === 143
                                                                                                     ? "Monad"
                                                                                                     : network === 50
-                                                                                                      ? "Xdc Network"
+                                                                                                      ? "XDC Network"
                                                                                                     : "Unknown"}
                     </span>
                     <p className=" text-md text-black text-nowrap">
@@ -461,7 +461,7 @@ const Monitor_cmp = () => {
                                                                                                 : network === 143
                                                                                                     ? "Monad"
                                                                                                     : network === 50
-                                                                                                      ? "Xdc Network"
+                                                                                                      ? "XDC Network"
                                                                                                     : "Unknown"}
                         </span>
                       </td>
