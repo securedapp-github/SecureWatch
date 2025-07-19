@@ -24,47 +24,6 @@ function AlgoticsModule() {
   const [mannDeshiUserStatsLoading, setMannDeshiUserStatsLoading] = useState(false);
   const [mannDeshiUserStatsError, setMannDeshiUserStatsError] = useState(null);
 
-  const mockAccounts = [
-    { id: 'ACC001', name: 'Demo Account 1', createdDate: '2023-01-15' },
-    { id: 'ACC002', name: 'Demo Account 2', createdDate: '2023-02-20' },
-    { id: 'ACC003', name: 'Demo Account 3', createdDate: '2023-03-10' },
-  ];
-
-  const mockAssets = [
-    { id: 'AST001', name: 'Demo Asset A', count: 100 },
-    { id: 'AST002', name: 'Demo Asset B', count: 50 },
-    { id: 'AST003', name: 'Demo Asset C', count: 75 },
-  ];
-
-  const mockWallets = [
-    { id: 'WLT001', address: '0xabc...123', createdDate: '2024-07-01' },
-    { id: 'WLT002', address: '0xdef...456', createdDate: '2024-06-25' },
-    { id: 'WLT003', address: '0xghi...789', createdDate: '2024-05-10' },
-  ];
-
-  const walletStats = {
-    weekly: 10,
-    monthly: 40,
-    yearly: 300,
-  };
-
-  const sewaAccounts = [
-    { id: 'SEWA001', name: 'Sewa Account 1', createdDate: '2023-01-01' },
-    { id: 'SEWA002', name: 'Sewa Account 2', createdDate: '2023-02-05' },
-    { id: 'SEWA003', name: 'Sewa Account 3', createdDate: '2023-03-15' },
-  ];
-
-  const sewaAssets = [
-    { id: 'SEWA_AST001', name: 'Sewa Asset X', count: 200 },
-    { id: 'SEWA_AST002', name: 'Sewa Asset Y', count: 120 },
-    { id: 'SEWA_AST003', name: 'Sewa Asset Z', count: 90 },
-  ];
-
-  const sewaWalletStats = {
-    weekly: 5,
-    monthly: 20,
-    yearly: 150,
-  };
   const [activeTab, setActiveTab] = useState("sewa"); // 'sewa' or 'manDeshi'
   const navigate = useNavigate();
 
@@ -241,31 +200,6 @@ function AlgoticsModule() {
     if (date < tempStartDate) setTempStartDate(date);
   };
 
-  // Add mock data for wallet categories
-  const sewaWalletsWeekly = [
-    { id: 'WLT001', address: '0xabc...123', createdDate: '2024-07-01' },
-    { id: 'WLT004', address: '0xjkl...321', createdDate: '2024-07-02' },
-  ];
-  const sewaWalletsMonthly = [
-    { id: 'WLT002', address: '0xdef...456', createdDate: '2024-06-25' },
-    { id: 'WLT005', address: '0xlmn...654', createdDate: '2024-06-15' },
-  ];
-  const sewaWalletsYearly = [
-    { id: 'WLT003', address: '0xghi...789', createdDate: '2024-05-10' },
-    { id: 'WLT006', address: '0xopq...987', createdDate: '2024-03-20' },
-  ];
-  const manDeshiWalletsWeekly = [
-    { id: 'WLT101', address: '0xaaa...111', createdDate: '2024-07-01' },
-    { id: 'WLT104', address: '0xbbb...222', createdDate: '2024-07-03' },
-  ];
-  const manDeshiWalletsMonthly = [
-    { id: 'WLT102', address: '0xccc...333', createdDate: '2024-06-20' },
-    { id: 'WLT105', address: '0xddd...444', createdDate: '2024-06-10' },
-  ];
-  const manDeshiWalletsYearly = [
-    { id: 'WLT103', address: '0xeee...555', createdDate: '2024-05-05' },
-    { id: 'WLT106', address: '0xfff...666', createdDate: '2024-02-18' },
-  ];
   const [sewaWalletTab, setSewaWalletTab] = useState('weekly');
   const [manDeshiWalletTab, setManDeshiWalletTab] = useState('weekly');
 
@@ -290,7 +224,7 @@ function AlgoticsModule() {
             onClick={() => setActiveTab('manDeshi')}
           >
             <p className="text-[#6A6A6A] font-semibold text-nowrap px-2">
-              Man Deshi Foundation
+              MannDeshi Foundation
             </p>
           </div>
         </div>
@@ -301,7 +235,7 @@ function AlgoticsModule() {
             <div className="w-full min-h-full relative">
               <div className="container mx-auto p-2 md:p-4 text-black mt-5">
                 <h2 className="text-xl md:text-2xl font-bold mb-4">
-                  {activeTab === 'sewa' ? 'Sewa Dashboard' : 'Man Deshi Foundation Dashboard'}
+                  {activeTab === 'sewa' ? 'Sewa Dashboard' : 'MannDeshi Foundation Dashboard'}
                 </h2>
 
                 {activeTab === 'sewa' && (
