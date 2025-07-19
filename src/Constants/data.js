@@ -1,1 +1,1 @@
-export const baseUrl = 'https://139-59-5-56.nip.io:3443';
+export const baseUrl = 'http://localhost:8000';
