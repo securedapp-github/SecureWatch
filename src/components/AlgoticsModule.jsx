@@ -200,9 +200,6 @@ function AlgoticsModule() {
     if (date < tempStartDate) setTempStartDate(date);
   };
 
-  const [sewaWalletTab, setSewaWalletTab] = useState('weekly');
-  const [manDeshiWalletTab, setManDeshiWalletTab] = useState('weekly');
-
   return (
     <div className="w-full min-h-full bg-white">
       <NewNavbar email={userEmail} />
@@ -316,36 +313,7 @@ function AlgoticsModule() {
                       </div>
                     )}
 
-                    {showSewaData === 'wallets' && (
-                      <div className="overflow-x-auto rounded-xl border-2 mt-4 bg-white shadow-lg relative">
-                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl font-bold" onClick={() => setShowSewaData(null)}>&times;</button>
-                        <h3 className="text-lg font-semibold mb-2 p-2">Demo Sewa Wallets</h3>
-                        {/* Tabs for Weekly, Monthly, Yearly */}
-                        <div className="flex gap-2 mb-4 px-2">
-                          <button onClick={() => setSewaWalletTab('weekly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${sewaWalletTab === 'weekly' ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}`}>Weekly</button>
-                          <button onClick={() => setSewaWalletTab('monthly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${sewaWalletTab === 'monthly' ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}`}>Monthly</button>
-                          <button onClick={() => setSewaWalletTab('yearly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${sewaWalletTab === 'yearly' ? 'bg-purple-500 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}`}>Yearly</button>
-                        </div>
-                        <table className="min-w-full border-gray-300 bg-white rounded-xl">
-                          <thead className="bg-purple-50">
-                            <tr>
-                              <th className="px-2 md:px-4 py-2 text-left">Wallet ID</th>
-                              <th className="px-2 md:px-4 py-2 text-left">Address</th>
-                              <th className="px-2 md:px-4 py-2 text-left">Created Date</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {(sewaWalletTab === 'weekly' ? sewaWalletsWeekly : sewaWalletTab === 'monthly' ? sewaWalletsMonthly : sewaWalletsYearly).map((wallet, idx) => (
-                              <tr key={wallet.id} className={`hover:bg-purple-50 border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-                                <td className="px-2 md:px-4 py-2 font-mono text-purple-700">{wallet.id}</td>
-                                <td className="px-2 md:px-4 py-2">{wallet.address}</td>
-                                <td className="px-2 md:px-4 py-2">{wallet.createdDate}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
+                    {showSewaData === 'wallets' && null}
                   </div>
                 )}
 
@@ -433,36 +401,7 @@ function AlgoticsModule() {
                       </div>
                     )}
 
-                    {showManDeshiData === 'wallets' && (
-                      <div className="overflow-x-auto rounded-xl border-2 mt-4 bg-white shadow-lg relative">
-                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl font-bold" onClick={() => setShowManDeshiData(null)}>&times;</button>
-                        <h3 className="text-lg font-semibold mb-2 p-2">Demo Wallets</h3>
-                        {/* Tabs for Weekly, Monthly, Yearly */}
-                        <div className="flex gap-2 mb-4 px-2">
-                          <button onClick={() => setManDeshiWalletTab('weekly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${manDeshiWalletTab === 'weekly' ? 'bg-yellow-500 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}`}>Weekly</button>
-                          <button onClick={() => setManDeshiWalletTab('monthly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${manDeshiWalletTab === 'monthly' ? 'bg-yellow-500 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}`}>Monthly</button>
-                          <button onClick={() => setManDeshiWalletTab('yearly')} className={`px-4 py-2 rounded-t-lg font-semibold transition ${manDeshiWalletTab === 'yearly' ? 'bg-yellow-500 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}`}>Yearly</button>
-                        </div>
-                        <table className="min-w-full border-gray-300 bg-white rounded-xl">
-                          <thead className="bg-yellow-50">
-                            <tr>
-                              <th className="px-2 md:px-4 py-2 text-left">Wallet ID</th>
-                              <th className="px-2 md:px-4 py-2 text-left">Address</th>
-                              <th className="px-2 md:px-4 py-2 text-left">Created Date</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {(manDeshiWalletTab === 'weekly' ? manDeshiWalletsWeekly : manDeshiWalletTab === 'monthly' ? manDeshiWalletsMonthly : manDeshiWalletsYearly).map((wallet, idx) => (
-                              <tr key={wallet.id} className={`hover:bg-yellow-50 border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-                                <td className="px-2 md:px-4 py-2 font-mono text-yellow-700">{wallet.id}</td>
-                                <td className="px-2 md:px-4 py-2">{wallet.address}</td>
-                                <td className="px-2 md:px-4 py-2">{wallet.createdDate}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
+                    {showManDeshiData === 'wallets' && null}
                   </div>
                 )}
               </div>
