@@ -6,6 +6,8 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { baseUrl } from '../Constants/data.js';
 
+const SEWA_TOTAL_CREATED = 9007199254740991;
+
 function AlgoticsModule() {
   const userEmail = localStorage.getItem("email");
   const [loading, setLoading] = useState(true);
@@ -147,9 +149,15 @@ function AlgoticsModule() {
     setShowSewaData('assets');
     setSewaAssetsLoading(true);
     setSewaAssetsError(null);
-    fetch(`${baseUrl}/getSewaAnalytics`)
-      .then(r => r.json())
-      .then(data => setSewaAssetCategories(data.assetCategoryCounts))
+    // Fetch both asset categories and dispensed data if not already fetched
+    Promise.all([
+      fetch(`${baseUrl}/getSewaAnalytics`).then(r => r.json()),
+      sewaDispensedData ? Promise.resolve(sewaDispensedData) : fetch(`${baseUrl}/sewaDispenser`).then(r => r.json())
+    ])
+      .then(([data, dispensed]) => {
+        setSewaAssetCategories(data.assetCategoryCounts);
+        setSewaDispensedData(dispensed);
+      })
       .catch(e => setSewaAssetsError('Failed to fetch asset categories'))
       .finally(() => setSewaAssetsLoading(false));
   };
@@ -275,27 +283,26 @@ function AlgoticsModule() {
                     </div>
                     {/* Sewa Stats Card/Table */}
                     {showSewaData === 'stats' && (
-                      <div className="rounded-xl border-2 mt-4 bg-white shadow-2xl relative max-w-xl mx-auto p-6">
-                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold" onClick={() => setShowSewaData(null)}>&times;</button>
+                      <div className="rounded-xl border-2 mt-4 bg-white shadow-2xl relative p-6">
                         <h3 className="text-2xl font-bold mb-4 p-2 text-center">User Stats</h3>
                         {sewaStatsLoading && <div className="p-6 text-center text-xl text-gray-500">Loading...</div>}
                         {sewaStatsError && <div className="p-6 text-center text-xl text-red-500">{sewaStatsError}</div>}
                         {!sewaStatsLoading && !sewaStatsError && sewaStats && (
-                          <table className="min-w-full border-gray-300 bg-white rounded-xl text-lg mb-8">
-                            <thead className="bg-blue-50">
+                          <table className="w-full rounded-md overflow-hidden border-2 shadow-4xl bg-red shadow-[#303030F7] table">
+                            <thead className="bg-gray-100">
                               <tr>
-                                <th className="px-6 py-4 text-center text-xl font-bold">Weekly</th>
-                                <th className="px-6 py-4 text-center text-xl font-bold">Monthly</th>
-                                <th className="px-6 py-4 text-center text-xl font-bold">Yearly</th>
-                                <th className="px-6 py-4 text-center text-xl font-bold">Total</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Weekly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Monthly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Yearly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Total</th>
                               </tr>
                             </thead>
                             <tbody>
-                              <tr className="border-t-2 border-b bg-gray-50 text-2xl font-semibold">
-                                <td className="px-6 py-4 text-center">{sewaStats.weekly}</td>
-                                <td className="px-6 py-4 text-center">{sewaStats.monthly}</td>
-                                <td className="px-6 py-4 text-center">{sewaStats.yearly}</td>
-                                <td className="px-6 py-4 text-center">{sewaStats.total}</td>
+                              <tr className="border-t-2 border-b bg-gray-50 text-xl font-semibold">
+                                <td className="py-4 border-2 border-none text-black text-center">{sewaStats.weekly}</td>
+                                <td className="py-4 border-2 border-none text-black text-center">{sewaStats.monthly}</td>
+                                <td className="py-4 border-2 border-none text-black text-center">{sewaStats.yearly}</td>
+                                <td className="py-4 border-2 border-none text-black text-center">{sewaStats.total}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -304,26 +311,39 @@ function AlgoticsModule() {
                     )}
                     {/* Sewa Asset Category Table */}
                     {showSewaData === 'assets' && (
-                      <div className="rounded-xl border-2 mt-4 bg-white shadow-2xl relative max-w-xl mx-auto p-6">
-                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold" onClick={() => setShowSewaData(null)}>&times;</button>
+                      <div className="rounded-xl border-2 mt-4 bg-white shadow-2xl relative p-6">
                         <h4 className="text-xl font-bold mb-3 text-blue-700">Asset Category Breakdown</h4>
                         {sewaAssetsLoading && <div className="p-6 text-center text-xl text-gray-500">Loading...</div>}
                         {sewaAssetsError && <div className="p-6 text-center text-xl text-red-500">{sewaAssetsError}</div>}
                         {!sewaAssetsLoading && !sewaAssetsError && sewaAssetCategories && (
-                          <table className="min-w-full border-gray-300 bg-white rounded-xl text-lg">
-                            <thead className="bg-green-50">
+                          <table className="w-full rounded-md overflow-hidden border-2 shadow-4xl bg-red shadow-[#303030F7] table">
+                            <thead className="bg-gray-100">
                               <tr>
-                                <th className="px-6 py-3 text-left font-bold">Category</th>
-                                <th className="px-6 py-3 text-center font-bold">Count</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Category</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Total Created</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Total Left</th>
                               </tr>
                             </thead>
                             <tbody>
-                              {Object.entries(sewaAssetCategories).map(([cat, count], idx) => (
-                                <tr key={cat} className={`border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}> 
-                                  <td className="px-6 py-3 text-blue-900 font-semibold">{cat}</td>
-                                  <td className="px-6 py-3 text-center text-green-700 font-bold">{count}</td>
-                                </tr>
-                              ))}
+                              {Object.entries(sewaAssetCategories).map(([cat, count], idx) => {
+                                // Find dispensed total for this category (by unitname match)
+                                let dispensedTotal = 0;
+                                if (sewaDispensedData) {
+                                  for (const key in sewaDispensedData) {
+                                    if (sewaDispensedData[key].unitname && sewaDispensedData[key].unitname.toLowerCase().includes(cat.toLowerCase())) {
+                                      dispensedTotal += Number(sewaDispensedData[key].total);
+                                    }
+                                  }
+                                }
+                                const totalLeft = SEWA_TOTAL_CREATED - dispensedTotal;
+                                return (
+                                  <tr key={cat} className={`border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}> 
+                                    <td className="py-4 border-2 border-none text-black text-center">{cat}</td>
+                                    <td className="py-4 border-2 border-none text-black text-center">{SEWA_TOTAL_CREATED.toLocaleString()}</td>
+                                    <td className="py-4 border-2 border-none text-black text-center">{totalLeft.toLocaleString()}</td>
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
                         )}
@@ -331,30 +351,29 @@ function AlgoticsModule() {
                     )}
                     {/* Sewa Dispensed Table */}
                     {showSewaData === 'dispensed' && (
-                      <div className="rounded-xl border-2 mt-4 bg-white shadow-2xl relative max-w-xl mx-auto p-6">
-                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold" onClick={() => setShowSewaData(null)}>&times;</button>
+                      <div className="rounded-xl border-2 mt-4 bg-white shadow-2xl relative p-6">
                         <h4 className="text-xl font-bold mb-3 text-yellow-700">Total Assets Dispensed</h4>
                         {sewaDispensedLoading && <div className="p-6 text-center text-xl text-gray-500">Loading...</div>}
                         {sewaDispensedError && <div className="p-6 text-center text-xl text-red-500">{sewaDispensedError}</div>}
                         {!sewaDispensedLoading && !sewaDispensedError && sewaDispensedData && (
-                          <table className="min-w-full border-gray-300 bg-white rounded-xl text-lg">
-                            <thead className="bg-yellow-50">
+                          <table className="w-full rounded-md overflow-hidden border-2 shadow-4xl bg-red shadow-[#303030F7] table">
+                            <thead className="bg-gray-100">
                               <tr>
-                                <th className="px-6 py-3 text-left font-bold">Asset Name</th>
-                                <th className="px-6 py-3 text-center font-bold">Weekly</th>
-                                <th className="px-6 py-3 text-center font-bold">Monthly</th>
-                                <th className="px-6 py-3 text-center font-bold">Yearly</th>
-                                <th className="px-6 py-3 text-center font-bold">Total</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Asset Name</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Weekly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Monthly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Yearly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Total</th>
                               </tr>
                             </thead>
                             <tbody>
                               {Object.values(sewaDispensedData).map((item, idx) => (
                                 <tr key={item.unitname + idx} className={`border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-                                  <td className="px-6 py-3 text-yellow-900 font-semibold">{item.unitname}</td>
-                                  <td className="px-6 py-3 text-center">{item.weekly}</td>
-                                  <td className="px-6 py-3 text-center">{item.monthly}</td>
-                                  <td className="px-6 py-3 text-center">{item.yearly}</td>
-                                  <td className="px-6 py-3 text-center font-bold">{item.total}</td>
+                                  <td className="py-4 border-2 border-none text-black text-center">{item.unitname}</td>
+                                  <td className="py-4 border-2 border-none text-black text-center">{item.weekly}</td>
+                                  <td className="py-4 border-2 border-none text-black text-center">{item.monthly}</td>
+                                  <td className="py-4 border-2 border-none text-black text-center">{item.yearly}</td>
+                                  <td className="py-4 border-2 border-none text-black text-center font-bold">{item.total}</td>
                                 </tr>
                               ))}
                             </tbody>
@@ -390,27 +409,26 @@ function AlgoticsModule() {
                     </div>
                     {/* MannDeshi User Stats Table (optional, if you want to show it on View Accounts) */}
                     {showManDeshiData === 'accounts' && (
-                      <div className="rounded-xl border-2 mt-4 bg-white shadow-2xl relative max-w-xl mx-auto p-6">
-                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold" onClick={() => setShowManDeshiData(null)}>&times;</button>
+                      <div className="rounded-xl border-2 mt-4 bg-white shadow-2xl relative p-6">
                         <h3 className="text-2xl font-bold mb-4 p-2 text-center">User Stats</h3>
                         {mannDeshiUserStatsLoading && <div className="p-6 text-center text-xl text-gray-500">Loading...</div>}
                         {mannDeshiUserStatsError && <div className="p-6 text-center text-xl text-red-500">{mannDeshiUserStatsError}</div>}
                         {!mannDeshiUserStatsLoading && !mannDeshiUserStatsError && mannDeshiUserStats && (
-                          <table className="min-w-full border-gray-300 bg-white rounded-xl text-lg mb-8">
-                            <thead className="bg-blue-50">
+                          <table className="w-full rounded-md overflow-hidden border-2 shadow-4xl bg-red shadow-[#303030F7] table">
+                            <thead className="bg-gray-100">
                               <tr>
-                                <th className="px-6 py-4 text-center text-xl font-bold">Weekly</th>
-                                <th className="px-6 py-4 text-center text-xl font-bold">Monthly</th>
-                                <th className="px-6 py-4 text-center text-xl font-bold">Yearly</th>
-                                <th className="px-6 py-4 text-center text-xl font-bold">Total</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Weekly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Monthly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Yearly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Total</th>
                               </tr>
                             </thead>
                             <tbody>
-                              <tr className="border-t-2 border-b bg-gray-50 text-2xl font-semibold">
-                                <td className="px-6 py-4 text-center">{mannDeshiUserStats.weekly}</td>
-                                <td className="px-6 py-4 text-center">{mannDeshiUserStats.monthly}</td>
-                                <td className="px-6 py-4 text-center">{mannDeshiUserStats.yearly}</td>
-                                <td className="px-6 py-4 text-center">{mannDeshiUserStats.total}</td>
+                              <tr className="border-t-2 border-b bg-gray-50 text-xl font-semibold">
+                                <td className="py-4 border-2 border-none text-black text-center">{mannDeshiUserStats.weekly}</td>
+                                <td className="py-4 border-2 border-none text-black text-center">{mannDeshiUserStats.monthly}</td>
+                                <td className="py-4 border-2 border-none text-black text-center">{mannDeshiUserStats.yearly}</td>
+                                <td className="py-4 border-2 border-none text-black text-center">{mannDeshiUserStats.total}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -419,30 +437,29 @@ function AlgoticsModule() {
                     )}
 
                     {showManDeshiData === 'assets' && (
-                      <div className="overflow-x-auto rounded-xl border-2 mt-4 bg-white shadow-lg relative">
-                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl font-bold" onClick={() => setShowManDeshiData(null)}>&times;</button>
+                      <div className="overflow-x-auto rounded-xl border-2 mt-4 bg-white shadow-lg relative p-6">
                         <h3 className="text-lg font-semibold mb-2 p-2">Asset Category Breakdown</h3>
                         {mannDeshiAssetsLoading && <div className="p-4 text-center text-gray-500">Loading...</div>}
                         {mannDeshiAssetsError && <div className="p-4 text-center text-red-500">{mannDeshiAssetsError}</div>}
                         {!mannDeshiAssetsLoading && !mannDeshiAssetsError && mannDeshiAnalytics && (
-                          <table className="min-w-full border-gray-300 bg-white rounded-xl">
-                            <thead className="bg-pink-50">
+                          <table className="w-full rounded-md overflow-hidden border-2 shadow-4xl bg-red shadow-[#303030F7] table">
+                            <thead className="bg-gray-100">
                               <tr>
-                                <th className="px-2 md:px-4 py-2 text-left">Category</th>
-                                <th className="px-2 md:px-4 py-2 text-left">Weekly</th>
-                                <th className="px-2 md:px-4 py-2 text-left">Monthly</th>
-                                <th className="px-2 md:px-4 py-2 text-left">Yearly</th>
-                                <th className="px-2 md:px-4 py-2 text-left">Total</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Category</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Weekly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Monthly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Yearly</th>
+                                <th className="py-4 border-2 border-none text-black text-base font-bold text-center">Total</th>
                               </tr>
                             </thead>
                             <tbody>
                               {Object.entries(mannDeshiAnalytics).map(([cat, stats], idx) => (
-                                <tr key={cat} className={`hover:bg-pink-50 border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-                                  <td className="px-2 md:px-4 py-2 font-semibold text-pink-700">{cat}</td>
-                                  <td className="px-2 md:px-4 py-2">{stats.weekly}</td>
-                                  <td className="px-2 md:px-4 py-2">{stats.monthly}</td>
-                                  <td className="px-2 md:px-4 py-2">{stats.yearly}</td>
-                                  <td className="px-2 md:px-4 py-2">{stats.total}</td>
+                                <tr key={cat} className={`hover:bg-pink-50 border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}> 
+                                  <td className="py-4 border-2 border-none text-black text-center">{cat}</td>
+                                  <td className="py-4 border-2 border-none text-black text-center">{stats.weekly}</td>
+                                  <td className="py-4 border-2 border-none text-black text-center">{stats.monthly}</td>
+                                  <td className="py-4 border-2 border-none text-black text-center">{stats.yearly}</td>
+                                  <td className="py-4 border-2 border-none text-black text-center">{stats.total}</td>
                                 </tr>
                               ))}
                             </tbody>
