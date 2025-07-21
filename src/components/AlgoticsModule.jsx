@@ -23,6 +23,9 @@ function AlgoticsModule() {
   const [mannDeshiUserStats, setMannDeshiUserStats] = useState(null);
   const [mannDeshiUserStatsLoading, setMannDeshiUserStatsLoading] = useState(false);
   const [mannDeshiUserStatsError, setMannDeshiUserStatsError] = useState(null);
+  const [sewaDispensedData, setSewaDispensedData] = useState(null);
+  const [sewaDispensedLoading, setSewaDispensedLoading] = useState(false);
+  const [sewaDispensedError, setSewaDispensedError] = useState(null);
 
   const [activeTab, setActiveTab] = useState("sewa"); // 'sewa' or 'manDeshi'
   const navigate = useNavigate();
@@ -151,6 +154,17 @@ function AlgoticsModule() {
       .finally(() => setSewaAssetsLoading(false));
   };
 
+  const handleViewSewaDispensed = () => {
+    setShowSewaData('dispensed');
+    setSewaDispensedLoading(true);
+    setSewaDispensedError(null);
+    fetch(`${baseUrl}/sewaDispenser`)
+      .then(r => r.json())
+      .then(data => setSewaDispensedData(data))
+      .catch(e => setSewaDispensedError('Failed to fetch dispensed assets'))
+      .finally(() => setSewaDispensedLoading(false));
+  };
+
   const formatDateTime = (date) => {
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -253,7 +267,10 @@ function AlgoticsModule() {
                         </div>
                         <h3 className="text-lg font-semibold mb-1">Total Assets</h3>
                         <p className="text-3xl font-bold text-green-700 mb-2">{countsLoading ? '...' : sewaCounts.assetsCount}</p>
-                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition" onClick={handleViewSewaAssets}>View Assets</button>
+                        <div className="flex flex-col gap-2 w-full">
+                          <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition" onClick={handleViewSewaAssets}>View Assets</button>
+                          <button className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition" onClick={handleViewSewaDispensed}>Total Assets Dispensed</button>
+                        </div>
                       </div>
                     </div>
                     {/* Sewa Stats Card/Table */}
@@ -305,6 +322,39 @@ function AlgoticsModule() {
                                 <tr key={cat} className={`border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}> 
                                   <td className="px-6 py-3 text-blue-900 font-semibold">{cat}</td>
                                   <td className="px-6 py-3 text-center text-green-700 font-bold">{count}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        )}
+                      </div>
+                    )}
+                    {/* Sewa Dispensed Table */}
+                    {showSewaData === 'dispensed' && (
+                      <div className="rounded-xl border-2 mt-4 bg-white shadow-2xl relative max-w-xl mx-auto p-6">
+                        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-2xl font-bold" onClick={() => setShowSewaData(null)}>&times;</button>
+                        <h4 className="text-xl font-bold mb-3 text-yellow-700">Total Assets Dispensed</h4>
+                        {sewaDispensedLoading && <div className="p-6 text-center text-xl text-gray-500">Loading...</div>}
+                        {sewaDispensedError && <div className="p-6 text-center text-xl text-red-500">{sewaDispensedError}</div>}
+                        {!sewaDispensedLoading && !sewaDispensedError && sewaDispensedData && (
+                          <table className="min-w-full border-gray-300 bg-white rounded-xl text-lg">
+                            <thead className="bg-yellow-50">
+                              <tr>
+                                <th className="px-6 py-3 text-left font-bold">Asset Name</th>
+                                <th className="px-6 py-3 text-center font-bold">Weekly</th>
+                                <th className="px-6 py-3 text-center font-bold">Monthly</th>
+                                <th className="px-6 py-3 text-center font-bold">Yearly</th>
+                                <th className="px-6 py-3 text-center font-bold">Total</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {Object.values(sewaDispensedData).map((item, idx) => (
+                                <tr key={item.unitname + idx} className={`border-t-2 border-b ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                                  <td className="px-6 py-3 text-yellow-900 font-semibold">{item.unitname}</td>
+                                  <td className="px-6 py-3 text-center">{item.weekly}</td>
+                                  <td className="px-6 py-3 text-center">{item.monthly}</td>
+                                  <td className="px-6 py-3 text-center">{item.yearly}</td>
+                                  <td className="px-6 py-3 text-center font-bold">{item.total}</td>
                                 </tr>
                               ))}
                             </tbody>
