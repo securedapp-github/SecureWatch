@@ -43,6 +43,7 @@ import HistoricalInsights from "./components/HistoricalInsights.jsx";
 import Autodefend_edit from "./components/Autodefend_edit.jsx"
 import Autodefend from "./components/Autodefend.jsx"
 import Pricing from "./components/Pricing.jsx";
+import AlgoticsModule from "./components/AlgoticsModule.jsx";
 
 
 
@@ -83,6 +84,7 @@ function App() {
         <Route path="/contract_incidents" element={<ContractIncident />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/analyticsmodule" element={<AnalyticsModule />} />
+        <Route path="/algotics" element={<AlgoticsModule />} />
         <Route path="/historical_insights" element={<HistoricalInsights />} />
         <Route path="/autodefend_edit" element={<Autodefend_edit />} />
         <Route path="/autodefend" element={<Autodefend />} />

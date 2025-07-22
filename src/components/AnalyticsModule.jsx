@@ -137,6 +137,11 @@ function AnalyticsModule() {
               Analytics & Report
             </p>
           </div>
+          <div className="py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A] cursor-pointer" onClick={() => navigate('/algotics')}>
+            <p className="text-[#6A6A6A] font-semibold text-nowrap px-2">
+              Algotics Dashboard
+            </p>
+          </div>
         </div>
 
         {/* Main content area - adjusted margins for responsive layout */}
