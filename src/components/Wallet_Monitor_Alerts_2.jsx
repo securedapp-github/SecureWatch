@@ -55,7 +55,17 @@ function Monitor_alerts() {
     59144: "https://explorer.linea.build/tx/",
     1313161554: "https://explorer.mainnet.aurora.dev/tx/",
     10: "https://optimistic.etherscan.io/tx/",
-    50: "https://xdcscan.com/tx/"
+    50: "https://xdcscan.com/tx/",
+    169: "https://pacific-info.manta.network/tx/",
+    146: "https://explorer.soniclabs.com/tx/",
+    1625: "https://gscan.xyz/tx/",
+    7000: "https://explorer.mainnet.zetachain.com/tx/",
+    47763: "https://xexplorer.neo.org/tx/",
+    592: "https://astar.subscan.io/tx/",
+    1868: "https://soneium.blockscout.com/tx/",
+    747474: "https://explorer.katanarpc.com/tx/",
+    43111: "https://explorer.hemi.xyz/tx/",
+    185: "https://explorer.mintchain.io/tx/"
   };
 
   const rpc_array = {
@@ -70,7 +80,17 @@ function Monitor_alerts() {
     100: "https://1rpc.io/gnosis",
     59144: "https://linea.drpc.org",
     1313161554: "https://mainnet.aurora.dev",
-    10: "https://optimism.llamarpc.com"
+    10: "https://optimism.llamarpc.com",
+    169: "https://pacific-rpc.manta.network/http",
+    146: "https://rpc.soniclabs.com",
+    1625: "https://rpc.ankr.com/gravity",
+    7000: "https://zetachain-evm.blockpi.network/v1/rpc/public",
+    47763: "https://mainnet-1.rpc.banelabs.org",
+    592: "https://astar.api.onfinality.io/public",
+    1868: "https://rpc.soneium.org",
+    747474: "https://rpc.katana.network",
+    43111: "https://hemi.drpc.org",
+    185: "https://rpc.mintchain.io"
   };
 
   useEffect(() => {
