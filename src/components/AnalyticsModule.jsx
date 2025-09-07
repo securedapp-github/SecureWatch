@@ -41,6 +41,7 @@ function AnalyticsModule() {
   747474: "Katana",
   43111: "Hemi",
   185: "Mint",
+  1116: "CoreDAO",
 };
 
   useEffect(() => {
