@@ -46,7 +46,14 @@ const getTransactionExplorerUrl = (network, transactionHash) => {
     1313161554: "https://explorer.mainnet.aurora.dev/tx/",
     19845: "https://explorer.vanar.io/tx/",
     1116: "https://scan.coredao.org/tx/",
-  };  
+    146: "https://api.sonicscan.org/api",
+    169: "https://pacific-info.manta.network/api",
+    1625: "https://gscan.xyz/api",
+    7000: "https://explorer.mainnet.zetachain.com/api",
+    47763: "https://xexplorer.neo.org/api",
+    1868: "https://soneium.blockscout.com/api",
+    185: "https://explorer.mintchain.io/api"
+};  
 
 
   return explorerUrls[network] ? `${explorerUrls[network]}${transactionHash}` : null;
@@ -348,18 +355,8 @@ const HistoricalInsights = () => {
                             <td className="px-4">
                               <span className="text-md text-black">
                               {
-  network === 80002
-    ? "Amoy"
-    : network === 1
+  network === 1
     ? "Ethereum Mainnet"
-    : network === 11155111
-    ? "Sepolia Testnet"
-    : network === 137
-    ? "Polygon Mainnet"
-    : network === 1300
-    ? "Algorand Mainnet"
-    : network === 1301
-    ? "Algorand Testnet"
     : network === 10
     ? "Optimism Mainnet"
     : network === 25
@@ -368,6 +365,18 @@ const HistoricalInsights = () => {
     ? "Binance Smart Chain (BSC) Mainnet"
     : network === 100
     ? "Gnosis Chain"
+    : network === 137
+    ? "Polygon Mainnet"
+    : network === 143
+    ? "Monad"
+    : network === 146
+    ? "Sonic"
+    : network === 169
+    ? "Manta Pacific"
+    : network === 185
+    ? "Mint"
+    : network === 1868
+    ? "Soneium"
     : network === 204
     ? "opBNB Mainnet"
     : network === 250
@@ -378,12 +387,18 @@ const HistoricalInsights = () => {
     ? "zkSync Era"
     : network === 43114
     ? "Avalanche C-Chain"
+    : network === 47763
+    ? "Neo X"
     : network === 592
     ? "Astar"
+    : network === 7000
+    ? "ZetaChain"
     : network === 1101
     ? "Polygon zkEVM"
-    : network === 143
-    ? "Monad"
+    : network === 1313161554
+    ? "Aurora Mainnet"
+    : network === 1625
+    ? "GChain"
     : network === 2040
     ? "opBNB Testnet"
     : network === 42161
@@ -394,14 +409,20 @@ const HistoricalInsights = () => {
     ? "Scroll Mainnet"
     : network === 59144
     ? "Linea Mainnet"
+    : network === 80002
+    ? "Amoy Testnet"
     : network === 8453
     ? "Base Mainnet"
-    : network === 1313161554
-    ? "Aurora Mainnet"
-    : network === 2040
-    ? "Vanar"
-    : network === 1116 
+    : network === 1116
     ? "CoreDAO"
+    : network === 11155111
+    ? "Sepolia Testnet"
+    : network === 19845
+    ? "Vanar"
+    : network === 1300
+    ? "Algorand Mainnet"
+    : network === 1301
+    ? "Algorand Testnet"
     : "Unknown"
 }
 
