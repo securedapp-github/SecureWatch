@@ -44,7 +44,8 @@ const getTransactionExplorerUrl = (network, transactionHash) => {
     8453: "https://basescan.org/tx/",
     11155111: "https://sepolia.etherscan.io/tx/",
     1313161554: "https://explorer.mainnet.aurora.dev/tx/",
-    19845: "https://explorer.vanar.io/tx/"
+    19845: "https://explorer.vanar.io/tx/",
+    1116: "https://scan.coredao.org/tx/",
   };  
 
 
@@ -399,6 +400,8 @@ const HistoricalInsights = () => {
     ? "Aurora Mainnet"
     : network === 2040
     ? "Vanar"
+    : network === 1116 
+    ? "CoreDAO"
     : "Unknown"
 }
 
