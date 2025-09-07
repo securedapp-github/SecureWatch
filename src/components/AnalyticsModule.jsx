@@ -22,16 +22,27 @@ function AnalyticsModule() {
   const baseUrl = "https://139-59-5-56.nip.io:3443";
 
   const ALLOWED_CHAINS = {
-    1: "Ethereum Mainnet",
-    137: "Polygon Mainnet",
-    11155111: "Sepolia Testnet",
-    80002: "Amoy Testnet",
-    100: "Gnosis Mainnet",
-    56: "Binance Smart Chain Mainnet",
-    8453: "Base Mainnet",
-    42161: "Arbitrum Mainnet",
-    50: "XDC Network",
-  };
+  1: "Ethereum Mainnet",
+  137: "Polygon Mainnet",
+  11155111: "Sepolia Testnet",
+  80002: "Amoy Testnet",
+  100: "Gnosis Mainnet",
+  56: "Binance Smart Chain Mainnet",
+  8453: "Base Mainnet",
+  42161: "Arbitrum Mainnet",
+  50: "XDC Network",
+  169: "Manta Pacific",
+  146: "Sonic",
+  1625: "Gravity Chain",
+  7000: "ZetaChain",
+  47763: "Neo X",
+  592: "Astar",
+  1868: "Soneium",
+  747474: "Katana",
+  43111: "Hemi",
+  185: "Mint",
+  1116: "CoreDAO",
+};
 
   useEffect(() => {
     setLoading(true);

@@ -622,6 +622,17 @@ function Monitor_create() {
                 <option value="2040" className="text-[13px] text-[#000000]">Vanar</option>
                 <option value="143" className="text-[13px] text-[#000000]">Monad</option>
                 <option value="50" className="text-[13px] text-[#000000]">XDC Network</option>
+                <option value="169" className="text-[13px] text-[#000000]">Manta Pacific</option>
+                <option value="146" className="text-[13px] text-[#000000]">Sonic</option>
+                <option value="1625" className="text-[13px] text-[#000000]">Gravity Chain</option>
+                <option value="7000" className="text-[13px] text-[#000000]">Zeta Chain</option>
+                <option value="47763" className="text-[13px] text-[#000000]">Neo X</option>
+                <option value="592" className="text-[13px] text-[#000000]">Astar</option>
+                <option value="1868" className="text-[13px] text-[#000000]">Soneium</option>
+                <option value="747474" className="text-[13px] text-[#000000]">Katana</option>
+                <option value="43111" className="text-[13px] text-[#000000]">Hemi</option>
+                <option value="185" className="text-[13px] text-[#000000]">Mint</option>
+                <option value="1116" className="text-[13px] text-[#000000]">CoreDAO</option>
 
               </select>
               {network === "1300" || network === "1301" ? (

@@ -7,9 +7,8 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { MdOutlineToggleOn } from "react-icons/md";
 import { MdOutlineToggleOff } from "react-icons/md";
 import { HiMenuAlt2 } from "react-icons/hi";
-import ResponsivePagination from 'react-responsive-pagination';
-import 'react-responsive-pagination/themes/classic.css';
-
+import ResponsivePagination from "react-responsive-pagination";
+import "react-responsive-pagination/themes/classic.css";
 
 const Wallet_Security_Cmp = () => {
   const navigate = useNavigate();
@@ -46,8 +45,8 @@ const Wallet_Security_Cmp = () => {
       const data = await res.json();
       console.log("Data", data);
       // Sort monitors by created_on in descending order (present to past)
-      const sortedMonitors = data.monitors?.sort((a, b) => 
-        new Date(b.created_on) - new Date(a.created_on)
+      const sortedMonitors = data.monitors?.sort(
+        (a, b) => new Date(b.created_on) - new Date(a.created_on)
       );
       setTotalPages(Math.ceil(sortedMonitors?.length / dataPerPage));
       if (res.status === 401) {
@@ -73,10 +72,13 @@ const Wallet_Security_Cmp = () => {
     };
     fetchMoniter();
   }, [value]);
-  
+
   const indexOfLastData = currentPage * dataPerPage;
   const indexOfFirstData = indexOfLastData - dataPerPage;
-  const currentData = moniter.monitors?.slice(indexOfFirstData, indexOfLastData);
+  const currentData = moniter.monitors?.slice(
+    indexOfFirstData,
+    indexOfLastData
+  );
   console.log("Current Data", currentData);
 
   const handleDeleteMonitor = async (monitor_id) => {
@@ -168,55 +170,77 @@ const Wallet_Security_Cmp = () => {
                   <div className="flex flex-col gap-3">
                     <span className="text-md  text-black">{name}</span>
                     <span className="text-md  text-black">
-                    {network === 1
-    ? "Ethereum Mainnet"
-    : network === 56
-        ? "Binance Smart Chain"
-        : network === 8453
-            ? "Base"
-            : network === 43114
-                ? "Avalanche"
-                : network === 42161
-                    ? "Arbitrum"
-                    : network === 100
+                      {network === 1
+                        ? "Ethereum Mainnet"
+                        : network === 56
+                        ? "BNB"
+                        : network === 8453
+                        ? "Base"
+                        : network === 43114
+                        ? "Avalanche"
+                        : network === 42161
+                        ? "Arbitrum"
+                        : network === 100
                         ? "Gnosis"
                         : network === 59144
-                            ? "Linea"
-                            : network === 1313161554
-                                ? "Aurora"
-                                : network === 10
-                                    ? "Optimism"
-                                    : network === 11155111
-                                        ? "Sepolia Testnet"
-                                        : network === 137
-                                            ? "Polygon Mainnet"
-                                            : network === 80002
-                                                ? "Amoy"
-                                                : network === 204
-                                                    ? "opBNB"
-                                                    : network === 1101
-                                                        ? "Polygon zkEVM"
-                                                        : network === 250
-                                                            ? "Fantom"
-                                                            : network === 25
-                                                                ? "Cronos"
-                                                                : network === 592
-                                                                    ? "Astar"
-                                                                    : network === 42220
-                                                                        ? "Celo"
-                                                                        : network === 324
-                                                                            ? "ZkSync Era"
-                                                                            : network === 288
-                                                                                ? "Boba Network"
-                                                                                : network === 534352
-                                                                                    ? "Scroll"
-                                                                                    : network === 2040
-                                                                                        ? "Vanar"
-                                                                                        : network === 143
-                                                                                            ? "Monad"
-                                                                                            : network === 50
-                                                                                                ? "XDC Network"
-                                                                                                : "Unknown"}
+                        ? "Linea"
+                        : network === 1313161554
+                        ? "Aurora"
+                        : network === 10
+                        ? "Optimism"
+                        : network === 11155111
+                        ? "Sepolia Testnet"
+                        : network === 137
+                        ? "Polygon Mainnet"
+                        : network === 80002
+                        ? "Amoy"
+                        : network === 204
+                        ? "opBNB"
+                        : network === 1101
+                        ? "Polygon zkEVM"
+                        : network === 250
+                        ? "Fantom"
+                        : network === 25
+                        ? "Cronos"
+                        : network === 592
+                        ? "Astar"
+                        : network === 42220
+                        ? "Celo"
+                        : network === 324
+                        ? "ZkSync Era"
+                        : network === 288
+                        ? "Boba Network"
+                        : network === 534352
+                        ? "Scroll"
+                        : network === 2040
+                        ? "Vanar"
+                        : network === 143
+                        ? "Monad"
+                        : network === 50
+                        ? "XDC Network"
+                        : network === 169
+                        ? "Manta Pacific"
+                        : network === 146
+                        ? "Sonic"
+                        : network === 1625
+                        ? "Gravity Chain"
+                        : network === 7000
+                        ? "Zeta Chain"
+                        : network === 47763
+                        ? "Neo X"
+                        : network === 592
+                        ? "Astar"
+                        : network === 1868
+                        ? "Soneium"
+                        : network === 747474
+                        ? "Katana"
+                        : network === 43111
+                        ? "Hemi"
+                        : network === 185
+                        ? "Mint"
+                        : network === 1116 
+                        ? "CoreDAO"
+                        : "Unknown"}
                     </span>
                     <p className=" text-md text-black text-nowrap">
                       {created_on?.slice(0, 10)}
@@ -305,7 +329,6 @@ const Wallet_Security_Cmp = () => {
                       )
                     ) : null}
                   </div>
-
                 </div>
               );
             })}
@@ -315,22 +338,15 @@ const Wallet_Security_Cmp = () => {
             <table className="rounded-md overflow-hidden shadow-4xl shadow-[#303030F7] table  ">
               <thead>
                 <tr className="">
-                  <th className=" text-black text-sm font-medium">
-                    Name
-                  </th>
-                  <th className=" text-black text-sm font-medium">
-                    Networks
-                  </th>
+                  <th className=" text-black text-sm font-medium">Name</th>
+                  <th className=" text-black text-sm font-medium">Networks</th>
                   <th className=" text-black text-sm font-medium">
                     Created on
                   </th>
-                  <th className=" text-black text-sm font-medium">
-                    Address
-                  </th>
+                  <th className=" text-black text-sm font-medium">Address</th>
                   <th className=" text-black text-sm font-medium flex items-center ml-16 gap-12">
                     Actions <HiMenuAlt2 className="text-lg" />
                   </th>
-
                 </tr>
               </thead>
               <tbody>
@@ -353,54 +369,76 @@ const Wallet_Security_Cmp = () => {
                       <td className=" ">
                         <span className="text-md  text-black">
                           {network === 1
-    ? "Ethereum Mainnet"
-    : network === 56
-        ? "Binance Smart Chain"
-        : network === 8453
-            ? "Base"
-            : network === 43114
-                ? "Avalanche"
-                : network === 42161
-                    ? "Arbitrum"
-                    : network === 100
-                        ? "Gnosis"
-                        : network === 59144
+                            ? "Ethereum Mainnet"
+                            : network === 56
+                            ? "BNB"
+                            : network === 8453
+                            ? "Base"
+                            : network === 43114
+                            ? "Avalanche"
+                            : network === 42161
+                            ? "Arbitrum"
+                            : network === 100
+                            ? "Gnosis"
+                            : network === 59144
                             ? "Linea"
                             : network === 1313161554
-                                ? "Aurora"
-                                : network === 10
-                                    ? "Optimism"
-                                    : network === 11155111
-                                        ? "Sepolia Testnet"
-                                        : network === 137
-                                            ? "Polygon Mainnet"
-                                            : network === 80002
-                                                ? "Amoy"
-                                                : network === 204
-                                                    ? "opBNB"
-                                                    : network === 1101
-                                                        ? "Polygon zkEVM"
-                                                        : network === 250
-                                                            ? "Fantom"
-                                                            : network === 25
-                                                                ? "Cronos"
-                                                                : network === 592
-                                                                    ? "Astar"
-                                                                    : network === 42220
-                                                                        ? "Celo"
-                                                                        : network === 324
-                                                                            ? "ZkSync Era"
-                                                                            : network === 288
-                                                                                ? "Boba Network"
-                                                                                : network === 534352
-                                                                                    ? "Scroll"
-                                                                                    : network === 2040
-                                                                                        ? "Vanar"
-                                                                                        : network === 143
-                                                                                            ? "Monad"
-                                                                                            : network === 50
-                                                                                                ? "XDC Network"
-                                                                                                : "Unknown"}
+                            ? "Aurora"
+                            : network === 10
+                            ? "Optimism"
+                            : network === 11155111
+                            ? "Sepolia Testnet"
+                            : network === 137
+                            ? "Polygon Mainnet"
+                            : network === 80002
+                            ? "Amoy"
+                            : network === 204
+                            ? "opBNB"
+                            : network === 1101
+                            ? "Polygon zkEVM"
+                            : network === 250
+                            ? "Fantom"
+                            : network === 25
+                            ? "Cronos"
+                            : network === 592
+                            ? "Astar"
+                            : network === 42220
+                            ? "Celo"
+                            : network === 324
+                            ? "ZkSync Era"
+                            : network === 288
+                            ? "Boba Network"
+                            : network === 534352
+                            ? "Scroll"
+                            : network === 2040
+                            ? "Vanar"
+                            : network === 143
+                            ? "Monad"
+                            : network === 50
+                            ? "XDC Network"
+                            : network === 169
+                            ? "Manta Pacific"
+                            : network === 146
+                            ? "Sonic"
+                            : network === 1625
+                            ? "Gravity Chain"
+                            : network === 7000
+                            ? "Zeta Chain"
+                            : network === 47763
+                            ? "Neo X"
+                            : network === 592
+                            ? "Astar"
+                            : network === 1868
+                            ? "Soneium"
+                            : network === 747474
+                            ? "Katana"
+                            : network === 43111
+                            ? "Hemi"
+                            : network === 185
+                            ? "Mint"
+                            : network === 1116 
+                            ? "CoreDAO"
+                            : "Unknown"}
                         </span>
                       </td>
 
@@ -409,7 +447,9 @@ const Wallet_Security_Cmp = () => {
                       </td>
 
                       <td className="text-black">
-                        {address ? `${address.slice(0, 5)}...${address.slice(-4)}` : ""}
+                        {address
+                          ? `${address.slice(0, 5)}...${address.slice(-4)}`
+                          : ""}
                       </td>
 
                       <td className="mx-14 flex gap-8 items-center py-4">
@@ -426,7 +466,11 @@ const Wallet_Security_Cmp = () => {
                         </button>
 
                         {is_admin == 1 && (
-                          <button className=" tooltip" data-tip="Delete" onClick={() => handleDeleteMonitor(mid)}>
+                          <button
+                            className=" tooltip"
+                            data-tip="Delete"
+                            onClick={() => handleDeleteMonitor(mid)}
+                          >
                             <FaRegTrashAlt className="text-black text-lg " />
                           </button>
                         )}

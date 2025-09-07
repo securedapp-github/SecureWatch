@@ -296,6 +296,18 @@ function Monitor_create() {
                 <option value="2040">Vanar</option>
                 <option value="143">Monad</option>
                 <option value="50">XDC Network</option>
+                <option value="169">Manta Pacific</option>
+                <option value="146">Sonic</option>
+                <option value="1625">Gravity Chain</option>
+                <option value="7000">Zeta Chain</option>
+                <option value="47763">Neo X</option>
+                <option value="592">Astar</option>
+                <option value="1868">Soneium</option>
+                <option value="747474">Katana</option>
+                <option value="43111">Hemi</option>
+                <option value="185">Mint</option>
+                <option value="1116">CoreDAO</option>
+
               </select>
 
               <label className="text-lg font-medium text-black mt-5 block">

@@ -625,34 +625,44 @@ function Monitor_Edit() {
                     className="text-xl font-medium"
                   >
                     {selectedMonitor.network === 80002 ? "Amoy" : selectedMonitor.network === 1
-                      ? "Ethereum Mainnet": selectedMonitor.network === 11155111
-                      ? "Sepolia Testnet": selectedMonitor.network === 137
-                      ? "Polygon Mainnet": selectedMonitor.network === 1300
-                      ? "Algorand Mainnet": selectedMonitor.network === 1301
-                      ? "Algorand Testnet": selectedMonitor.network === 56
-                      ?"Binance Smart Chain": selectedMonitor.network === 8453
-                      ? "Base": selectedMonitor.network === 43114
-                      ? "Avalanche": selectedMonitor.network === 42161
-                      ? "Arbitrum": selectedMonitor.network === 100
-                      ? "Gnosis" : selectedMonitor.network === 59144
-                      ? "Linea" : selectedMonitor.network === 1313161554
-                      ? "Aurora" : selectedMonitor.network === 10
-                      ? "Optimism" : selectedMonitor.network === 42161
-                      ? "Arbitrum One" : selectedMonitor.network === 43114
-                      ? "Avalanche C-Chain" : selectedMonitor.network === 204
-                      ? "opBNB" : selectedMonitor.network === 1101
-                      ? "Polygon zkEVM" : selectedMonitor.network === 250
-                      ? "Fantom" : selectedMonitor.network === 25
-                      ? "Cronos" : selectedMonitor.network === 592
-                      ? "Astar" : selectedMonitor.network === 42220
-                      ? "Celo" : selectedMonitor.network === 324
-                      ? "ZkSync Era" : selectedMonitor.network === 288
-                      ? "Boba Network" : selectedMonitor.network === 534352
-                      ? "Scroll" : selectedMonitor.network === 2040
-                      ? "Vanar" : selectedMonitor.network === 50
-                      ? "XDC Network" : selectedMonitor.network === 143
-                      ? "Monad" : "Unknown"
-                      }
+                    ? "Ethereum Mainnet": selectedMonitor.network === 11155111
+                    ? "Sepolia Testnet": selectedMonitor.network === 137
+                    ? "Polygon Mainnet": selectedMonitor.network === 1300
+                    ? "Algorand Mainnet": selectedMonitor.network === 1301
+                    ? "Algorand Testnet": selectedMonitor.network === 56
+                    ?"Binance Smart Chain": selectedMonitor.network === 8453
+                    ? "Base": selectedMonitor.network === 43114
+                    ? "Avalanche": selectedMonitor.network === 42161
+                    ? "Arbitrum": selectedMonitor.network === 100
+                    ? "Gnosis" : selectedMonitor.network === 59144
+                    ? "Linea" : selectedMonitor.network === 1313161554
+                    ? "Aurora" : selectedMonitor.network === 10
+                    ? "Optimism" : selectedMonitor.network === 42161
+                    ? "Arbitrum One" : selectedMonitor.network === 43114
+                    ? "Avalanche C-Chain" : selectedMonitor.network === 204
+                    ? "opBNB" : selectedMonitor.network === 1101
+                    ? "Polygon zkEVM" : selectedMonitor.network === 250
+                    ? "Fantom" : selectedMonitor.network === 25
+                    ? "Cronos" : selectedMonitor.network === 592
+                    ? "Astar" : selectedMonitor.network === 42220
+                    ? "Celo" : selectedMonitor.network === 324
+                    ? "ZkSync Era" : selectedMonitor.network === 288
+                    ? "Boba Network" : selectedMonitor.network === 534352
+                    ? "Scroll" : selectedMonitor.network === 2040
+                    ? "Vanar" : selectedMonitor.network === 50
+                    ? "XDC Network" : selectedMonitor.network === 143
+                    ? "Monad" : selectedMonitor.network === 169
+                    ? "Manta Pacific" : selectedMonitor.network === 146
+                    ? "Sonic" : selectedMonitor.network === 1625
+                    ? "Gravity Chain" : selectedMonitor.network === 7000
+                    ? "Zeta Chain" : selectedMonitor.network === 47763
+                    ? "Neo X" : selectedMonitor.network === 1868
+                    ? "Soneium" : selectedMonitor.network === 747474
+                    ? "Katana" : selectedMonitor.network === 43111
+                    ? "Hemi" : selectedMonitor.network === 185
+                    ? "Mint" : selectedMonitor.network === 1116 
+                    ? "CoreDAO" : "Unknown"
+                    }
                   </option>
                  
                     <option value="1" className="text-[13px] text-[#000000] ">Ethereum Mainnet</option>
@@ -685,8 +695,17 @@ function Monitor_Edit() {
                 <option value="2040" className="text-[13px] text-[#000000]">Vanar</option>
                 <option value="143" className="text-[13px] text-[#000000]">Monad</option>
                 <option value="50" className="text-[13px] text-[#000000]">XDC Network</option>
-
-
+                <option value="169" className="text-[13px] text-[#000000]">Manta Pacific</option>
+                <option value="146" className="text-[13px] text-[#000000]">Sonic</option>
+                <option value="1625" className="text-[13px] text-[#000000]">Gravity Chain</option>
+                <option value="7000" className="text-[13px] text-[#000000]">Zeta Chain</option>
+                <option value="47763" className="text-[13px] text-[#000000]">Neo X</option>
+                <option value="592" className="text-[13px] text-[#000000]">Astar</option>
+                <option value="1868" className="text-[13px] text-[#000000]">Soneium</option>
+                <option value="747474" className="text-[13px] text-[#000000]">Katana</option>
+                <option value="43111" className="text-[13px] text-[#000000]">Hemi</option>
+                <option value="185" className="text-[13px] text-[#000000]">Mint</option>
+                <option value="1116" className="text-[13px] text-[#000000]">CoreDAO</option>
                 </select>
      <div>
                     {selectedMonitor.network === 1300 ||
