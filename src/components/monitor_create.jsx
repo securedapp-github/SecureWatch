@@ -632,7 +632,7 @@ function Monitor_create() {
                 <option value="747474" className="text-[13px] text-[#000000]">Katana</option>
                 <option value="43111" className="text-[13px] text-[#000000]">Hemi</option>
                 <option value="185" className="text-[13px] text-[#000000]">Mint</option>
-
+                <option value="1116" className="text-[13px] text-[#000000]">CoreDAO</option>
 
               </select>
               {network === "1300" || network === "1301" ? (

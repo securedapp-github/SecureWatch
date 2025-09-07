@@ -660,7 +660,8 @@ function Monitor_Edit() {
                     ? "Soneium" : selectedMonitor.network === 747474
                     ? "Katana" : selectedMonitor.network === 43111
                     ? "Hemi" : selectedMonitor.network === 185
-                    ? "Mint" : "Unknown"
+                    ? "Mint" : selectedMonitor.network === 1116 
+                    ? "CoreDAO" : "Unknown"
                     }
                   </option>
                  
@@ -704,6 +705,7 @@ function Monitor_Edit() {
                 <option value="747474" className="text-[13px] text-[#000000]">Katana</option>
                 <option value="43111" className="text-[13px] text-[#000000]">Hemi</option>
                 <option value="185" className="text-[13px] text-[#000000]">Mint</option>
+                <option value="1116" className="text-[13px] text-[#000000]">CoreDAO</option>
                 </select>
      <div>
                     {selectedMonitor.network === 1300 ||
