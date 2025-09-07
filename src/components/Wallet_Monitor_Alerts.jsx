@@ -67,7 +67,8 @@ function Monitor_alerts() {
     1868: "https://soneium.blockscout.com/tx/",
     747474: "https://explorer.katanarpc.com/tx/",
     43111: "https://explorer.hemi.xyz/tx/",
-    185: "https://explorer.mintchain.io/tx/"
+    185: "https://explorer.mintchain.io/tx/",
+    1116: "https://scan.coredao.org/tx/"
   };
 
   const rpc_array = {
@@ -92,7 +93,8 @@ function Monitor_alerts() {
     1868: "https://rpc.soneium.org",
     747474: "https://rpc.katana.network",
     43111: "https://hemi.drpc.org",
-    185: "https://rpc.mintchain.io"
+    185: "https://rpc.mintchain.io",
+    1116: "https://rpc.coredao.org"
   };
 
   useEffect(() => {

@@ -238,6 +238,8 @@ const Wallet_Security_Cmp = () => {
                         ? "Hemi"
                         : network === 185
                         ? "Mint"
+                        : network === 1116 
+                        ? "CoreDAO"
                         : "Unknown"}
                     </span>
                     <p className=" text-md text-black text-nowrap">
@@ -434,6 +436,8 @@ const Wallet_Security_Cmp = () => {
                             ? "Hemi"
                             : network === 185
                             ? "Mint"
+                            : network === 1116 
+                            ? "CoreDAO"
                             : "Unknown"}
                         </span>
                       </td>

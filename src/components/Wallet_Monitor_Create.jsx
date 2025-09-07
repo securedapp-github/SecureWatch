@@ -306,6 +306,7 @@ function Monitor_create() {
                 <option value="747474">Katana</option>
                 <option value="43111">Hemi</option>
                 <option value="185">Mint</option>
+                <option value="1116">CoreDAO</option>
 
               </select>
 
