@@ -18,6 +18,7 @@ const CustomDropdown = ({ options, onChange, value }) => {
   return (
     <Select
       isMulti
+      closeMenuOnSelect={false}
       options={options}
       onChange={onChange}
       value={value}

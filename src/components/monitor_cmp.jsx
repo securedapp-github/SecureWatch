@@ -35,30 +35,73 @@ const Monitor_cmp = () => {
 
   useEffect(() => {
     setLoading(true);
-    const fetchMoniter = async () => {
-      setLoading(true);
-      const res = await fetch(`${baseUrl}/get_monitor`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+    if (localStorage.getItem("is_demo") === "true") {
+      const demoMonitors = [
+        {
+          id: 1,
+          name: "USDT Treasury Sentinel",
+          network: "Ethereum Mainnet",
+          contract_address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          status: "Active",
+          created_on: new Date().toISOString(),
+          active_listeners: 4,
+          is_active: 1,
         },
-        body: JSON.stringify({
-          user_id: parent_id != 0 ? parseInt(parent_id) : parseInt(userId),
-        }),
-      });
-      const data = await res.json();
-      console.log("Data", data);
-      // Sort monitors by created_on in descending order (present to past)
-      const sortedMonitors = data.monitors?.sort((a, b) => 
-        new Date(b.created_on) - new Date(a.created_on)
-      );
-      setTotalPages(Math.ceil(sortedMonitors?.length / dataPerPage));
-      setMoniter({ ...data, monitors: sortedMonitors });
+        {
+          id: 2,
+          name: "Uniswap V3 Vault Monitor",
+          network: "Polygon",
+          contract_address: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
+          status: "Active",
+          created_on: new Date(Date.now() - 86400000).toISOString(),
+          active_listeners: 2,
+          is_active: 1,
+        },
+        {
+          id: 3,
+          name: "MultiSig Escrow Guard",
+          network: "Arbitrum",
+          contract_address: "0x111111125421ca6dc452d289314280a0f8842a65",
+          status: "Active",
+          created_on: new Date(Date.now() - 172800000).toISOString(),
+          active_listeners: 1,
+          is_active: 0,
+        },
+      ];
+      setTotalPages(1);
+      setMoniter({ monitors: demoMonitors, listeners: [{ active_listeners: 3 }], alerts: [{ alerts: 5 }] });
       setLoading(false);
+      return;
+    }
+
+    const fetchMoniter = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`${baseUrl}/get_monitor`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            user_id: parent_id != 0 ? parseInt(parent_id) : parseInt(userId),
+          }),
+        });
+        const data = await res.json();
+        console.log("Data", data);
+        const sortedMonitors = data.monitors?.sort((a, b) => 
+          new Date(b.created_on) - new Date(a.created_on)
+        ) || [];
+        setTotalPages(Math.max(1, Math.ceil(sortedMonitors.length / dataPerPage)));
+        setMoniter({ ...data, monitors: sortedMonitors });
+      } catch (err) {
+        console.warn("Fetch monitor error:", err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchMoniter();
-  }, [value]);
+  }, [value, dataPerPage, parent_id, token, userId]);
   
   const indexOfLastData = currentPage * dataPerPage;
   const indexOfFirstData = indexOfLastData - dataPerPage;
@@ -676,12 +719,12 @@ const Monitor_cmp = () => {
           
         </div>
       )}
-      <div className="w-full mt-10 mx-auto flex justify-center items-center"> 
-      <ResponsivePagination
-      current={currentPage}
-      total={totalPages}
-      onPageChange={setCurrentPage}
-    />
+      <div className="w-full mt-10 mx-auto flex justify-center items-center">
+        <ResponsivePagination
+          current={currentPage}
+          total={Math.max(1, totalPages)}
+          onPageChange={setCurrentPage}
+        />
       </div>
       
     </div>

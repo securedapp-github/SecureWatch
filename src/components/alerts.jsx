@@ -366,7 +366,7 @@ function Alerts() {
               </div>
               <div className="flex gap-1">
                 <div className=" bg-[#E9E9E9] rounded-md p-1 text-sm">
-                  {address.slice(0, 6)}...{address.slice(-4)}
+                  {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "All Contracts"}
                 </div>
                 {/* <button onClick={copyMessage}>
                   <div className="my-auto">
@@ -427,12 +427,19 @@ function Alerts() {
           </div>
 
 
-        <Modal isOpen={open} onRequestClose={closeModal} style={customStyles}  >
+        <Modal
+          isOpen={open}
+          onRequestClose={closeModal}
+          style={customStyles}
+          shouldCloseOnOverlayClick={true}
+          shouldCloseOnEsc={true}
+          contentLabel="Creating Monitor"
+          ariaHideApp={false}
+        >
           <div className="text-xl font-medium text-center mt-[30px] mx-[60px] md:mx-[120px] text-black">
             Creating Monitor
           </div>
-          <TbLoader2 className="mt-6 mb-[30px] mx-[60px] md:mx-[120px] text-[#2D5C8F] text-9xl" />
-         
+          <TbLoader2 className="mt-6 mb-[30px] mx-[60px] md:mx-[120px] text-[#2D5C8F] text-9xl animate-spin" />
         </Modal>
       </div>
   

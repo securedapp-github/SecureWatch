@@ -783,7 +783,7 @@ function Events() {
                 </div>
                 <div className="flex gap-1">
                   <div className=" bg-[#E9E9E9] rounded-md p-1 text-sm">
-                    {addressState.slice(0, 6) + "..." + addressState.slice(-4)}
+                    {addressState ? addressState.slice(0, 6) + "..." + addressState.slice(-4) : "All Contracts"}
                   </div>
                   {/* <button onClick={copymessage}>
                     <div className="my-auto">

@@ -448,7 +448,7 @@ function Autodefend() {
               </div>
               <div className="flex gap-1">
                 <div className="bg-[#E9E9E9] rounded-md p-1 text-sm">
-                  {address.slice(0, 6)}...{address.slice(-4)}
+                  {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "All Contracts"}
                 </div>
               </div>
             </div>
