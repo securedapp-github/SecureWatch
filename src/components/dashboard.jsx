@@ -96,20 +96,8 @@ function Dashboard() {
   // console.log(monitor);
   //   console.log(s);
   React.useEffect(() => {
-    const emailHash = sha256(userEmail || "demo@securewatch.io");
+    const emailHash = sha256(userEmail || "");
     setHash(emailHash.substring(0, 8));
-
-    if (localStorage.getItem("is_demo") === "true") {
-      setValues({
-        listeners: [{ active_listeners: 12 }],
-        alerts: [{ alerts: 5 }],
-        monitors: [{ id: 1 }, { id: 2 }, { id: 3 }],
-      });
-      setListeners(12);
-      setAlert(5);
-      setMonitorcount(3);
-      return;
-    }
 
     const fetchMoniter = async () => {
       try {
@@ -156,12 +144,6 @@ function Dashboard() {
   }, [User_id, navigate, token, userEmail]);
 
   useEffect(() => {
-    if (localStorage.getItem("is_demo") === "true") {
-      setWalletAlert(2);
-      setWalletMoniterCount(4);
-      return;
-    }
-
     const fetchWalletMoniter = async () => {
       try {
         const res = await fetch(`${baseUrl}/get_wallet_monitor`, {

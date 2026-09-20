@@ -34,46 +34,6 @@ const Monitor_cmp = () => {
   
 
   useEffect(() => {
-    setLoading(true);
-    if (localStorage.getItem("is_demo") === "true") {
-      const demoMonitors = [
-        {
-          id: 1,
-          name: "USDT Treasury Sentinel",
-          network: "Ethereum Mainnet",
-          contract_address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
-          status: "Active",
-          created_on: new Date().toISOString(),
-          active_listeners: 4,
-          is_active: 1,
-        },
-        {
-          id: 2,
-          name: "Uniswap V3 Vault Monitor",
-          network: "Polygon",
-          contract_address: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
-          status: "Active",
-          created_on: new Date(Date.now() - 86400000).toISOString(),
-          active_listeners: 2,
-          is_active: 1,
-        },
-        {
-          id: 3,
-          name: "MultiSig Escrow Guard",
-          network: "Arbitrum",
-          contract_address: "0x111111125421ca6dc452d289314280a0f8842a65",
-          status: "Active",
-          created_on: new Date(Date.now() - 172800000).toISOString(),
-          active_listeners: 1,
-          is_active: 0,
-        },
-      ];
-      setTotalPages(1);
-      setMoniter({ monitors: demoMonitors, listeners: [{ active_listeners: 3 }], alerts: [{ alerts: 5 }] });
-      setLoading(false);
-      return;
-    }
-
     const fetchMoniter = async () => {
       try {
         setLoading(true);

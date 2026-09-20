@@ -20,55 +20,6 @@ function Login() {
   const [showMessage, setShowMessage] = useState(false);
   const navigate = useNavigate();
 
-  const handleDemoLogin = (event) => {
-    if (event) event.preventDefault();
-    const demoUser = {
-      id: "demo-user-1",
-      email: "demo@securewatch.io",
-      parent_id: "0",
-      plan: "Enterprise Demo",
-      is_admin: "true",
-      credits: "500",
-      planexpiry: "2026-12-31",
-      notifications: [
-        { id: 1, message: "Welcome to SecureWatch Demo!", time: "Just now" },
-        { id: 2, message: "Threat monitoring active on test networks", time: "5 mins ago" },
-      ],
-    };
-    const demoToken = "demo_jwt_securewatch_token_2026";
-    const demoMonitor = "active";
-
-    localStorage.setItem("login", "true");
-    localStorage.setItem("is_demo", "true");
-    localStorage.setItem("userId", demoUser.id);
-    localStorage.setItem("email", demoUser.email);
-    localStorage.setItem("parent_id", demoUser.parent_id);
-    localStorage.setItem("planType", demoUser.plan);
-    localStorage.setItem("is_admin", demoUser.is_admin);
-    localStorage.setItem("credits", demoUser.credits);
-    localStorage.setItem("planexpiry", demoUser.planexpiry);
-    localStorage.setItem("token", demoToken);
-    localStorage.setItem("moniter", demoMonitor);
-    localStorage.setItem("notifications", JSON.stringify(demoUser.notifications));
-
-    showSuccessAlert("Logged in as Demo User!");
-    navigate("/dashboard", {
-      state: {
-        userId: demoUser.id,
-        email: demoUser.email,
-        monitor: demoMonitor,
-        token: demoToken,
-        parent_id: demoUser.parent_id,
-        is_admin: demoUser.is_admin,
-      },
-    });
-  };
-
-  const fillDemoCredentials = () => {
-    setEmail("demo@securewatch.io");
-    setPassword("DemoSecure2026!");
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -76,11 +27,6 @@ function Login() {
       const u_password = password.trim();
       if (u_email === "" || u_password === "") {
         showErrorAlert("Invalid email or password.");
-        return;
-      }
-
-      if (u_email === "demo@securewatch.io") {
-        handleDemoLogin(event);
         return;
       }
 
@@ -112,7 +58,6 @@ function Login() {
       localStorage.setItem("email", Email);
       localStorage.setItem("credits", credits);
       localStorage.setItem("planexpiry", planexpiry);
-      localStorage.removeItem("is_demo");
 
       showSuccessAlert("Login Successful");
       navigate("/dashboard", { state: { userId, email: Email, monitor, token, parent_id, is_admin } });
@@ -204,42 +149,12 @@ function Login() {
                 </Link>
               </div>
 
-              <div className="flex items-center justify-between gap-3">
-                <button
-                  type="button"
-                  id="fill-demo-btn"
-                  onClick={fillDemoCredentials}
-                  className="text-xs text-blue-600 hover:text-blue-800 font-medium underline flex items-center gap-1"
-                >
-                  ⚡ Fill Demo Credentials
-                </button>
-                <button
-                  type="submit"
-                  id="login-submit-btn"
-                  className="px-6 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 text-sm md:text-base ml-auto"
-                >
-                  Sign in
-                </button>
-              </div>
-
-              <div className="relative my-1">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200"></div>
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-3 text-gray-500 font-medium">Or Quick Access</span>
-                </div>
-              </div>
-
               <button
-                type="button"
-                id="demo-login-btn"
-                onClick={handleDemoLogin}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 transform active:scale-98 cursor-pointer"
+                type="submit"
+                id="login-submit-btn"
+                className="px-6 bg-blue-600 ms-auto text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 text-sm md:text-base ml-auto"
               >
-                <span className="text-lg">🚀</span>
-                <span>One-Click Demo Login</span>
-                <span className="ml-1 text-xs bg-white/20 px-2 py-0.5 rounded-full font-normal">Instant</span>
+                Sign in
               </button>
 
               {errorMessage && (

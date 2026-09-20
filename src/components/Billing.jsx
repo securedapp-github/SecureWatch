@@ -54,12 +54,6 @@ const BillingForm = () => {
     }
 
      useEffect(() => {
-        setLoading(true);
-        if (localStorage.getItem("is_demo") === "true") {
-          setLoading(false);
-          return;
-        }
-
         const fetchPreviousValues = async () => {
           try {
             setLoading(true);
