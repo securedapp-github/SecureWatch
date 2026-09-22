@@ -23,54 +23,45 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const u_name = event.target.name.value;
-      const u_password = event.target.password.value;
-      if (u_name === "" || u_password === "") {
-        //setErrorMessage("Enter the userame and password");
+      const u_email = email.trim();
+      const u_password = password.trim();
+      if (u_email === "" || u_password === "") {
         showErrorAlert("Invalid email or password.");
-      } else {
-        const response = await axios.post(`${baseUrl}/login_securewatch`, {
-          email,
-          password,
-        });
-
-        console.log("Login Successful:", response.data);
-        const userId = response.data.user.id;
-        console.log("userId", userId);
-        const parent_id = response.data.user.parent_id;
-        localStorage.setItem("parent_id", parent_id);
-        const planType = response.data.user.plan;
-        localStorage.setItem("planType", planType);
-        // console.log("parent_id", parent_id);
-        const is_admin = response.data.user.is_admin;
-        localStorage.setItem("is_admin", is_admin);
-        
-        // console.log("is_admin", is_admin);
-        localStorage.setItem("userId", userId);
-        const token = response.data.token;
-        const monitor = response.data.monitors;
-        console.log("token", token);
-        const Email = response.data.user.email;
-        const credits = response.data.user.credits;
-        const planexpiry = response.data.user.planexpiry;
-        const notifications = response.data.user.notifications;
-        localStorage.setItem("notifications", JSON.stringify(notifications));
-        console.log("notifications", notifications);
-        console.log("credits", credits);
-        console.log("planexpiry", planexpiry);
-        let login = localStorage.setItem("login", true);
-        // console.log(login);
-        let Token = localStorage.setItem("token", token);
-        let Monitor = localStorage.setItem("moniter", monitor);
-        let userEmail = localStorage.setItem("email", Email);
-        let userCredits = localStorage.setItem("credits", credits);
-        let userPlanexpiry = localStorage.setItem("planexpiry", planexpiry);
-
-        showSuccessAlert("Login Successful");
-        navigate("/dashboard", { state: { userId, email, monitor, token, parent_id, is_admin } });
+        return;
       }
+
+      const response = await axios.post(`${baseUrl}/login_securewatch`, {
+        email: u_email,
+        password: u_password,
+      });
+
+      console.log("Login Successful:", response.data);
+      const userId = response.data.user.id;
+      console.log("userId", userId);
+      const parent_id = response.data.user.parent_id;
+      localStorage.setItem("parent_id", parent_id);
+      const planType = response.data.user.plan;
+      localStorage.setItem("planType", planType);
+      const is_admin = response.data.user.is_admin;
+      localStorage.setItem("is_admin", is_admin);
+      localStorage.setItem("userId", userId);
+      const token = response.data.token;
+      const monitor = response.data.monitors;
+      const Email = response.data.user.email;
+      const credits = response.data.user.credits;
+      const planexpiry = response.data.user.planexpiry;
+      const notifications = response.data.user.notifications;
+      localStorage.setItem("notifications", JSON.stringify(notifications));
+      localStorage.setItem("login", "true");
+      localStorage.setItem("token", token);
+      localStorage.setItem("moniter", monitor);
+      localStorage.setItem("email", Email);
+      localStorage.setItem("credits", credits);
+      localStorage.setItem("planexpiry", planexpiry);
+
+      showSuccessAlert("Login Successful");
+      navigate("/dashboard", { state: { userId, email: Email, monitor, token, parent_id, is_admin } });
     } catch (error) {
-      // setErrorMessage("Invalid email or password.");
       showErrorAlert("Invalid email or password.");
     }
   };
@@ -160,7 +151,8 @@ function Login() {
 
               <button
                 type="submit"
-                className="px-6 bg-blue-600 ms-auto text-white py-2  rounded-lg hover:bg-blue-700 transition duration-200 text-sm md:text-base ml-auto"
+                id="login-submit-btn"
+                className="px-6 bg-blue-600 ms-auto text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200 text-sm md:text-base ml-auto"
               >
                 Sign in
               </button>
