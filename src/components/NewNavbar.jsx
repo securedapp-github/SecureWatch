@@ -41,43 +41,78 @@ export default function NewNavbar({ email }) {
     window.location.href = '/'
   }
   return (
-    <div className=" bg-white w-full px-4 py-5 flex justify-between items-center fixed z-50 border-b-2 border-b-[#D3D3D3]">
-      <button className="p-0 sm:hidden" onClick={()=>setIsSupportMenuOpen(!isSupportMenuOpen)}>
-          <BsHeadset className="text-[#535252] text-2xl" />
+    <div className=" bg-white w-full px-4 py-4 flex justify-between items-center fixed z-50 border-b border-gray-200">
+      <button
+        aria-label="Support Contact"
+        className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-lg hover:bg-slate-100 transition sm:hidden"
+        onClick={() => setIsSupportMenuOpen(!isSupportMenuOpen)}
+      >
+        <BsHeadset className="text-[#535252] text-2xl" />
+      </button>
+      {isSupportMenuOpen && (
+        <div className="absolute sm:hidden shadow-xl z-50 left-4 top-16 bg-white border border-gray-200 rounded-xl py-3 w-64 flex flex-col justify-center items-start gap-3">
+          <p className="text-slate-800 flex gap-3 items-center text-sm pl-5">
+            <MdPhoneIphone className="text-slate-700 text-base" /> 9606015868
+          </p>
+          <div className="w-full h-[1px] bg-slate-200"></div>
+          <p className="text-slate-800 flex gap-3 items-center text-sm pl-5">
+            <MdOutlineEmail className="text-slate-700 text-base" /> hello@securedapp.in
+          </p>
+        </div>
+      )}
+      <h1 className="logo text-slate-900 font-bold text-xl sm:text-2xl tracking-tight">SecureWatch</h1>
+      {toggleMenu ? (
+        <button
+          aria-label="Close menu"
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-lg hover:bg-slate-100 transition sm:hidden"
+          onClick={() => setToggleMenu(false)}
+        >
+          <AiOutlineClose fontSize={26} className="text-slate-800" />
         </button>
-        {isSupportMenuOpen && (
-          <div className='absolute sm:hidden customShadow z-50 left-12 mt-32   bg-white rounded-md  py-3 w-56  flex flex-col justify-center items-start gap-3'>    
-              <p className='text-black flex gap-3 items-center text-sm pl-5'> <MdPhoneIphone className='text-black text-sm' /> 9606015868</p>
-              <div className='w-full h-[0.5px] bg-slate-300'></div>
-              <p className='text-black flex gap-3 items-center text-sm pl-5'><MdOutlineEmail className='text-black text-sm' /> hello@securedapp.in</p>
-          </div>)  
-        }
-      <h1 className="logo text-black text-xl sm:text-3xl">Securewatch</h1>
-      {toggleMenu
-      ?<AiOutlineClose fontSize={28} className='text-black cursor-pointer sm:hidden ' onClick={()=>{setToggleMenu(false)}} />
-      :<HiMenuAlt4 fontSize={28} className='text-black cursor-pointer sm:hidden' onClick={()=>{setToggleMenu(true)}} />
-      }
-      {toggleMenu &&(
-        <ul className='z-10 fixed top-0 right-0  w-[80vw] h-screen shadow-2xl sm:hidden list-none flex flex-col justify-start  bg-white rounded-none text-black animate-slide-in'>
-          <li className='text-xl w-full  bg-[#2D5C8F] flex justify-between p-3 items-center'>
-            <div className='flex items-center gap-3'>
-            <button className="p-0 shadow-lg rounded-full " >
-          <div className="avatar placeholder">
-            <div className="bg-white text-[#2d5c8f] w-10 rounded-full">
-              <span>{firstLetter}</span>
-            </div>
-          </div>
+      ) : (
+        <button
+          aria-label="Open menu"
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-lg hover:bg-slate-100 transition sm:hidden"
+          onClick={() => setToggleMenu(true)}
+        >
+          <HiMenuAlt4 fontSize={26} className="text-slate-800" />
         </button>
-              <div className='flex flex-col '>
-              <h1 className="text-white">Hi, {name}!</h1>
-              <button className=' text-white p-0 text-start text-sm underline' onClick={handleLogout}>Signout</button>
+      )}
+      {toggleMenu && (
+        <ul className="z-10 fixed top-0 right-0 w-[85vw] max-w-sm h-screen shadow-2xl sm:hidden list-none flex flex-col justify-start bg-white rounded-none text-black animate-slide-in">
+          <li className="text-xl w-full bg-[#2D5C8F] flex justify-between p-4 items-center">
+            <div className="flex items-center gap-3">
+              <div className="avatar placeholder">
+                <div className="bg-white text-[#2d5c8f] w-10 h-10 rounded-full flex items-center justify-center font-bold">
+                  <span>{firstLetter || "U"}</span>
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-white text-base font-semibold">Hi, {name || "User"}!</h1>
+                <button className="text-blue-200 hover:text-white p-0 text-start text-xs underline cursor-pointer" onClick={handleLogout}>
+                  Sign out
+                </button>
               </div>
             </div>
-            <AiOutlineClose fontSize={28} className='text-white cursor-pointer ' onClick={()=>setToggleMenu(false)}/>
+            <button
+              aria-label="Close menu drawer"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-lg hover:bg-white/10 text-white cursor-pointer"
+              onClick={() => setToggleMenu(false)}
+            >
+              <AiOutlineClose fontSize={24} />
+            </button>
           </li>
-          <div className='flex mt-1 flex-col'>
-            <div className='w-full  pl-8 pr-5 py-4'>
-            <button className='text-[#6A6A6A]  p-0 flex items-center justify-between text-xl w-full' onClick={()=>setExpandRealtimeSecurity(!expandRealtimeSecurity)}><span className='flex items-center gap-4'><LuClock9 className='text-black text-2xl' /> Realtime Security</span> <FaPlus className='text-[#6A6A6A] text-lg' /></button>
+          <div className="flex mt-2 flex-col">
+            <div className="w-full px-5 py-3">
+              <button
+                className="text-slate-700 p-2 flex items-center justify-between text-base font-medium w-full rounded-lg hover:bg-slate-100"
+                onClick={() => setExpandRealtimeSecurity(!expandRealtimeSecurity)}
+              >
+                <span className="flex items-center gap-3">
+                  <LuClock9 className="text-blue-700 text-xl" /> Realtime Security
+                </span>
+                <FaPlus className="text-slate-500 text-sm" />
+              </button>
             </div>
             {
               expandRealtimeSecurity && (

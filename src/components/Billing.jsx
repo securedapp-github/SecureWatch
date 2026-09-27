@@ -54,25 +54,31 @@ const BillingForm = () => {
     }
 
      useEffect(() => {
-        setLoading(true);
         const fetchPreviousValues = async () => {
-          setLoading(true);
-          const res = await fetch(`${baseUrl}/viewOrgInfo`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-             Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              user_id: userId,
-            }),
-          });
-          const data = await res.json();
-          setPreviousValues(data.organisation_info);
-          setLoading(false);
+          try {
+            setLoading(true);
+            const res = await fetch(`${baseUrl}/viewOrgInfo`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                user_id: userId,
+              }),
+            });
+            const data = await res.json();
+            if (data && data.organisation_info) {
+              setPreviousValues(data.organisation_info);
+            }
+          } catch (err) {
+            console.warn("Failed to fetch organisation info:", err);
+          } finally {
+            setLoading(false);
+          }
         };
         fetchPreviousValues();
-      }, [userId, value]);
+      }, [userId, value, token]);
 
       useEffect(() => {
         console.log("previousValues", previousValues);

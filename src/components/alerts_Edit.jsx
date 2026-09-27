@@ -411,13 +411,20 @@ function Alerts_Edit() {
           </div>
     
     
-          <Modal isOpen={open} onRequestClose={closeModal} style={customStyles}  >
-              <div className="text-xl font-medium text-center mt-[30px] mx-[60px] md:mx-[120px] text-black">
-                Updating Monitor
-              </div>
-              <TbLoader2 className="mt-6 mb-[30px] mx-[60px] md:mx-[120px] text-[#2D5C8F] text-9xl" />
-             
-            </Modal>
+          <Modal
+            isOpen={open}
+            onRequestClose={closeModal}
+            style={customStyles}
+            shouldCloseOnOverlayClick={true}
+            shouldCloseOnEsc={true}
+            contentLabel="Updating Monitor"
+            ariaHideApp={false}
+          >
+            <div className="text-xl font-medium text-center mt-[30px] mx-[60px] md:mx-[120px] text-black">
+              Updating Monitor
+            </div>
+            <TbLoader2 className="mt-6 mb-[30px] mx-[60px] md:mx-[120px] text-[#2D5C8F] text-9xl animate-spin" />
+          </Modal>
       </div>
     
     

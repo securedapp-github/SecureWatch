@@ -34,31 +34,34 @@ const Monitor_cmp = () => {
   
 
   useEffect(() => {
-    setLoading(true);
     const fetchMoniter = async () => {
-      setLoading(true);
-      const res = await fetch(`${baseUrl}/get_monitor`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          user_id: parent_id != 0 ? parseInt(parent_id) : parseInt(userId),
-        }),
-      });
-      const data = await res.json();
-      console.log("Data", data);
-      // Sort monitors by created_on in descending order (present to past)
-      const sortedMonitors = data.monitors?.sort((a, b) => 
-        new Date(b.created_on) - new Date(a.created_on)
-      );
-      setTotalPages(Math.ceil(sortedMonitors?.length / dataPerPage));
-      setMoniter({ ...data, monitors: sortedMonitors });
-      setLoading(false);
+      try {
+        setLoading(true);
+        const res = await fetch(`${baseUrl}/get_monitor`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            user_id: parent_id != 0 ? parseInt(parent_id) : parseInt(userId),
+          }),
+        });
+        const data = await res.json();
+        console.log("Data", data);
+        const sortedMonitors = data.monitors?.sort((a, b) => 
+          new Date(b.created_on) - new Date(a.created_on)
+        ) || [];
+        setTotalPages(Math.max(1, Math.ceil(sortedMonitors.length / dataPerPage)));
+        setMoniter({ ...data, monitors: sortedMonitors });
+      } catch (err) {
+        console.warn("Fetch monitor error:", err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchMoniter();
-  }, [value]);
+  }, [value, dataPerPage, parent_id, token, userId]);
   
   const indexOfLastData = currentPage * dataPerPage;
   const indexOfFirstData = indexOfLastData - dataPerPage;
@@ -676,12 +679,12 @@ const Monitor_cmp = () => {
           
         </div>
       )}
-      <div className="w-full mt-10 mx-auto flex justify-center items-center"> 
-      <ResponsivePagination
-      current={currentPage}
-      total={totalPages}
-      onPageChange={setCurrentPage}
-    />
+      <div className="w-full mt-10 mx-auto flex justify-center items-center">
+        <ResponsivePagination
+          current={currentPage}
+          total={Math.max(1, totalPages)}
+          onPageChange={setCurrentPage}
+        />
       </div>
       
     </div>
