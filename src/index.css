@@ -2,222 +2,204 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap');
 
-.logo{
-  font-family: "Poppins", sans-serif;
-  font-weight: bolder;
-}
-html,body,#root{
-    height:100vh;
-    width: 100%;
-    margin:0;
-    padding:0;
-    background-color: white;
-}
-/* Style the scrollbar itself (horizontal) */
-.custom-scrollbar::-webkit-scrollbar {
-  height: 5px;
-  width: auto; /* Height of the horizontal scrollbar */
+:root {
+  --sidebar-width: 264px;
+  --header-height: 64px;
 }
 
-/* Style the handle */
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #888; /* Handle color */
-  border-radius: 4px;
+:root.sidebar-collapsed {
+  --sidebar-width: 72px;
 }
 
-/* Handle on hover */
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #555;
+/* App-Shell Fixed Viewport: Lock outer body when dashboard/sidebar is active */
+body.app-shell-active,
+body:has(#main-sidebar) {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
 }
 
-/* Style the track (optional) */
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  display: none; /* Track color */
-  border-radius: 4px;
-}
-.edit-event::-webkit-scrollbar {
-  height: 5px;
-  width: 4px; /* Height of the horizontal scrollbar */
+body.app-shell-active #root,
+body:has(#main-sidebar) #root {
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
 }
 
-/* Style the handle */
-.edit-event::-webkit-scrollbar-thumb {
-  background: #888; /* Handle color */
-  border-radius: 2px;
+html, body, #root {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #FAFAFB;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: #0F172A;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Handle on hover */
-.edit-event::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.logo {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
-/* Style the track (optional) */
-.edit-event::-webkit-scrollbar-track {
-  background: #f1f1f1;
-   /* Track color */
-  border-radius: 4px;
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
 }
-/* #home_heading{
-    border: 1px solid;
-border-image-source: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
-background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.746419) 66.42%, rgba(255, 255, 255, 0) 100%);
-background-color: white;
-} */
-.ReactModal__Content{
-  border:1px solid #0CA851 !important;
-  max-width:500px;
-  border-radius:20px !important;
-  padding:30px 30px !important;
+
+/* App-Shell Fixed Center Content Layout */
+.main-content-layout {
+  margin-left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
+  height: calc(100vh - var(--header-height));
+  max-height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  transition: margin-left 0.22s cubic-bezier(0.2, 0, 0, 1), width 0.22s cubic-bezier(0.2, 0, 0, 1);
 }
-/* Position and sizing of burger button */
-.bm-burger-button {
-    position: fixed;
-    width: 36px;
-    height: 30px;
-    left: 36px;
-    top: 36px;
+
+/* Gracefully hide obsolete fixed duplicate subnavs across all pages */
+div[class*="ml-[100px]"][class*="w-56"][class*="fixed"],
+div[class*="sm:ml-[100px]"][class*="sm:w-56"][class*="fixed"],
+div[class*="ml-[100px]"][class*="fixed"] {
+  display: none !important;
+}
+
+@media (min-width: 640px) {
+  .main-content-layout,
+  div[class*="sm:ml-80"],
+  div[class*="sm:ml-72"],
+  div[class*="sm:ml-[100px]"],
+  div[class*="sm:ml-96"],
+  div[class*="sm:ml-[88px]"],
+  div[class*="md:ml-80"],
+  div[class*="md:ml-72"] {
+    margin-left: var(--sidebar-width) !important;
+    width: calc(100% - var(--sidebar-width)) !important;
+    height: calc(100vh - var(--header-height)) !important;
+    max-height: calc(100vh - var(--header-height)) !important;
+    margin-top: var(--header-height) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+    transition: margin-left 0.22s cubic-bezier(0.2, 0, 0, 1), width 0.22s cubic-bezier(0.2, 0, 0, 1) !important;
   }
-  
-  /* Color/shape of burger icon bars */
-  .bm-burger-bars {
-    background: #373a47;
+}
+
+@media (max-width: 639px) {
+  .main-content-layout,
+  div[class*="sm:ml-80"],
+  div[class*="sm:ml-72"],
+  div[class*="sm:ml-[100px]"],
+  div[class*="sm:ml-96"],
+  div[class*="sm:ml-[88px]"] {
+    margin-left: 0 !important;
+    width: 100% !important;
+    height: calc(100vh - var(--header-height)) !important;
+    max-height: calc(100vh - var(--header-height)) !important;
+    margin-top: var(--header-height) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
   }
-  
-  /* Color/shape of burger icon bars on hover*/
-  .bm-burger-bars-hover {
-    background: #a90000;
-  }
-  
-  /* Position and sizing of clickable cross button */
-  .bm-cross-button {
-    height: 24px;
-    width: 24px;
-  }
-  
-  /* Color/shape of close button cross */
-  .bm-cross {
-    background: #bdc3c7;
-  }
-  
-  /*
-  Sidebar wrapper styles
-  Note: Beware of modifying this element as it can break the animations - you should not need to touch it in most cases
-  */
-  .bm-menu-wrap {
-    position: fixed;
-    height: 100%;
-  }
-  
-  /* General sidebar styles */
-  .bm-menu {
-    background: #373a47;
-    padding: 2.5em 1.5em 0;
-    font-size: 1.15em;
-  }
-  
-  /* Morph shape necessary with bubble or elastic */
-  .bm-morph-shape {
-    fill: #373a47;
-  }
-  
-  /* Wrapper for item list */
-  .bm-item-list {
-    color: #b8b7ad;
-    padding: 0.8em;
-  }
-  
-  /* Individual item */
-  .bm-item {
-    display: inline-block;
-  }
-  
-  /* Styling of overlay */
-  .bm-overlay {
-    background: rgba(0, 0, 0, 0.3);
-  }
-  /* Individual item */
-.bm-item {
-    display: inline-block;
-  
-    color: #d1d1d1;
-    margin-bottom: 10px;
-    text-align: left;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  
-  .bm-item:hover {
-    color: #ffffff;
-  }
-  .tooltip-container {
-    position: relative;
-  }
-  
-  .tooltip-text {
-    visibility: hidden;
-    width: 80px;
-    background-color: #fff;
-    color: black;
-    text-align: center;
-    padding: 5px ;
-    border-radius: 6px;
-  
-    /* Position the tooltip text */
-    position: absolute;
-    z-index: 1;
-    top: 50px; /* Place tooltip above the icon */
-    left: 100%;
-    margin-left: -60px; /* Use half of the width to center the tooltip */
-  
-    /* Fade in tooltip */
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Modal Styling */
+.ReactModal__Content {
+  border: 1px solid #E2E8F0 !important;
+  max-width: 520px;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Custom Tooltip Animation */
+@keyframes fadeInTooltip {
+  from {
     opacity: 0;
-    transition: opacity 0.3s;
+    transform: translateY(-50%) translateX(-4px);
   }
-  
-  .tooltip-container:hover .tooltip-text {
-    visibility: visible;
+  to {
     opacity: 1;
+    transform: translateY(-50%) translateX(0);
   }
+}
 
-  /* Calendar UI */
+.sidebar-tooltip {
+  animation: fadeInTooltip 0.15s ease-out forwards;
+}
+
+/* Sidebar thin scrollbar — only visible on hover */
+#main-sidebar .scrollbar-thin::-webkit-scrollbar {
+  width: 3px;
+}
+
+#main-sidebar .scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#main-sidebar .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  transition: background 0.2s;
+}
+
+#main-sidebar .scrollbar-thin:hover::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+}
+
+#main-sidebar .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Calendar Overrides */
 .react-calendar__month-view__days__day--weekend {
   color: inherit !important;
 }
 
 .highlight-range {
-  background-color: #e6f7ff !important;
+  background-color: #EFF6FF !important;
 }
 
 .selected-date {
-  background-color: #1a56db !important;
+  background-color: #0F172A !important;
   color: white !important;
-  border-radius: 50% !important;
-  font-weight: bold;
+  border-radius: 6px !important;
+  font-weight: 600;
 }
 
-/* Override any holiday styling */
 .react-calendar__tile--now {
   background: inherit !important;
   color: inherit !important;
 }
 
-/* Reset default selected styling */
 .react-calendar__tile--hasActive,
 .react-calendar__tile--active {
   background: inherit !important;
   color: inherit !important;
-}
-
-/* Calendar container styles */
-.calendar-section {
-  min-height: 200px; /* Ensure consistent height for calendar section */
-}
-
-.time-section {
-  min-height: 70px; /* Ensure consistent height for time section */
 }
 
 .custom-calendar {
@@ -225,68 +207,39 @@ background-color: white;
   max-width: 180px;
   border: none !important;
   box-shadow: none !important;
-  margin: 0 auto; /* Center calendar */
+  margin: 0 auto;
 }
 
-/* Remove any padding that might create unwanted space */
 .react-calendar {
   padding: 0 !important;
   border: none !important;
+  font-family: inherit !important;
 }
 
-/* Ensure all calendar dates are black */
 .custom-calendar .react-calendar__tile {
-color: black !important;
-padding: 4px !important;
-position: relative;
-font-size: 0.7rem !important;
-height: 28px !important;
+  color: #1E293B !important;
+  padding: 4px !important;
+  position: relative;
+  font-size: 0.72rem !important;
+  height: 28px !important;
 }
 
 .react-calendar__month-view__weekdays__weekday {
   font-size: 0.7rem !important;
   padding: 2px !important;
+  color: #64748B !important;
 }
 
-.custom-calendar .selected-date {
-  background-color: #3b82f6 !important;
-  color: white !important;
-  font-weight: bold;
-  border-radius: 4px !important;
-  padding: 2px !important;
-}
-
-.custom-calendar .highlight-range {
-  background-color: #dbeafe;
-}
-
-/* Modified: Remove hover effects from navigation buttons */
 .custom-calendar .react-calendar__navigation button {
-  color: #000000;
-  font-weight: bold;
-  font-size: 0.9rem !important;
+  color: #0F172A;
+  font-weight: 600;
+  font-size: 0.85rem !important;
   padding: 2px !important;
 }
 
-/* Added: Disable hover effects for navigation buttons */
 .custom-calendar .react-calendar__navigation button:hover,
 .custom-calendar .react-calendar__navigation button:focus {
   background-color: transparent !important;
-}
-
-/* Added: Ensure both navigation buttons are styled identically */
-.custom-calendar .react-calendar__navigation__arrow {
-  font-size: 0.9rem !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Added: Make the navigation area equal on both calendars */
-.custom-calendar .react-calendar__navigation__label {
-  flex-grow: 1;
-  text-align: center;
-  font-weight: bold;
 }
 
 .custom-calendar .react-calendar__navigation {
@@ -297,16 +250,10 @@ height: 28px !important;
   align-items: center;
 }
 
-/* Make the calendar a consistent height */
 .custom-calendar .react-calendar__month-view {
   min-height: 170px !important;
 }
 
-.react-calendar__viewContainer {
-  padding: 0 !important;
-}
-
-/* Hide dates from neighboring months */
 .custom-calendar .react-calendar__month-view__days__day--neighboringMonth {
   visibility: hidden;
 }

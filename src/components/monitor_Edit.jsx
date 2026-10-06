@@ -21,8 +21,14 @@ function Monitor_Edit() {
   const planType = parseInt(localStorage.getItem("planType")) || 0;
   console.log("token is", token);
   const email = localStorage.getItem("email");
-  const decoded = jwtDecode(token);
-  const user_Id = decoded.userId;
+  const decoded = (() => {
+    try {
+      return token ? jwtDecode(token) : {};
+    } catch {
+      return {};
+    }
+  })();
+  const user_Id = decoded.userId || localStorage.getItem("userId") || "";
   console.log("user id = ", user_Id);
   const userEmail = localStorage.getItem("email");
   console.log(userEmail);

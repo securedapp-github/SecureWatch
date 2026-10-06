@@ -12,7 +12,7 @@ import { TbAlertTriangle } from "react-icons/tb";
 import { TbUserSquare } from "react-icons/tb";
 import { CgHome } from "react-icons/cg";
 import { MdOutlineSettings } from "react-icons/md";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 function Dashboard() {
   const [hash, setHash] = useState("");
@@ -61,8 +61,6 @@ function Dashboard() {
   console.log("dashboard parent_id", parent_id);
   const is_admin = localStorage.getItem("is_admin");
   console.log("dashboard is_admin", is_admin);
-  const notifications = localStorage.getItem("notifications");
-  console.log("dashboard notifications", notifications);
 
   const [credits, setCredits] = useState(userCredits || 0);
   const [planexpiry, setPlanexpiry] = useState(userPlanexpiry || null);
@@ -169,192 +167,125 @@ function Dashboard() {
     fetchWalletMoniter();
   }, [parent_id, token, userId]);
 
-  const DASHBOARD_TOAST_CONTAINER_ID = "dashboard-notification-container";
-
-  const ensureDashboardToastContainer = () => {
-    if (!document.getElementById(DASHBOARD_TOAST_CONTAINER_ID)) {
-      const dashboardContainer = toast.createContainer({
-        containerId: DASHBOARD_TOAST_CONTAINER_ID,
-        position: "bottom-right",
-        theme: "colored"
-      });
-      
-      return dashboardContainer;
-    }
-    return true;
-  };
-  
-  const dashboardToast = (message) => {
-    // Skip toast if message is null, undefined, not a string, empty, or "null"
-    if (!message || typeof message !== 'string' || !message.trim() || message.trim() === "null") {
-      return;
-    }
-    
-    ensureDashboardToastContainer();
-    
-    toast(message.replace(/^"|"$/g, ""), {
-      position: "bottom-right",
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      theme: "colored",
-      containerId: DASHBOARD_TOAST_CONTAINER_ID, 
-      style: {
-        backgroundColor: "#60a5fa", 
-        color: "#ffffff", 
-        fontWeight: "bold",
-      },
-    });
-  };
-  
   useEffect(() => {
-    // Skip if notifications is null, undefined, not a string, empty, or "null"
-    if (!notifications || typeof notifications !== 'string' || !notifications.trim() || notifications.trim() === "null") {
-      return;
-    }
-    
-    const trimmedNotifications = notifications.trim();
-    
-    if (trimmedNotifications.includes("::")) {
-      const notificationArray = trimmedNotifications
-        .split("::")
-        .map(msg => msg.trim().replace(/^"|"$/g, ""))
-        .filter(msg => msg.length > 0);
-      
-      notificationArray.forEach(msg => {
-        dashboardToast(msg);
-      });
-    } else {
-      dashboardToast(trimmedNotifications);
-    }
-  }, [notifications]);
+    localStorage.removeItem("notifications");
+  }, []);
+
+  const displayMonitors = values?.monitors ? values.monitors.slice(0, 3) : [];
 
   return (
-    <div className="w-full min-h-screen bg-[#F8FAFC]">
+    <div className="w-full h-screen overflow-hidden bg-[#FAFAFB] flex flex-col">
       <NewNavbar email={userEmail} />
-      <div className="w-full flex flex-col h-full pb-10">
-        <div className="hidden sm:block">
+      <div className="w-full flex flex-1 h-[calc(100vh-64px)] overflow-hidden">
+        <div className="hidden sm:block flex-shrink-0">
           <Sidebar />
         </div>
 
-        <div className="sm:ml-[88px] w-full sm:w-[calc(100%-88px)] flex flex-col h-full pb-8 px-4 sm:px-8 lg:px-12 pt-24 transition-all">
-          {/* Top Subnav & Tab Controls */}
-          <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-slate-200">
-            <div className="flex items-center gap-3">
-              <div className="px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg flex items-center gap-2">
-                <span className="text-xs font-semibold uppercase text-blue-700">Tenant ID</span>
-                <span className="text-xs font-mono font-bold text-slate-800">#{hash || "8ded2b49"}</span>
+        <main className="main-content-layout w-full flex flex-col pb-6 sm:pb-8 px-4 sm:px-8 lg:px-12 pt-3 transition-all scrollbar-thin">
+          {/* Top Subnav & Tab Controls - Compact Sticky Header */}
+          <div className="sticky top-0 z-20 bg-[#FAFAFB]/95 backdrop-blur-md pt-2 pb-3 border-b border-slate-200/80 -mx-4 sm:-mx-8 lg:-mx-12 px-4 sm:px-8 lg:px-12">
+            <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+              <div className="flex items-center gap-3">
+                <h1 className="text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap">
+                  Security Operations Center
+                </h1>
+                <div className="hidden sm:flex items-center gap-2">
+                  <div className="px-2.5 py-1 bg-white border border-slate-200/90 rounded-lg flex items-center gap-1.5 shadow-2xs">
+                    <span className="text-[9.5px] font-bold uppercase tracking-wider text-slate-400">Tenant</span>
+                    <span className="text-xs font-mono font-bold text-slate-800">#{hash || "8ded2b49"}</span>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/80 text-emerald-700 rounded-full text-[11px] font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Live
+                  </span>
+                </div>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full text-xs font-semibold">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Node Active
-              </span>
-            </div>
 
-            {/* In-Page Navigation Tabs */}
-            <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200 w-full sm:w-auto overflow-x-auto">
-              {[
-                { id: "overview", label: "Overview" },
-                { id: "contracts", label: "Contract Security" },
-                { id: "wallets", label: "Wallet Security" },
-                { id: "incidents", label: "Incident Feed" },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-150 whitespace-nowrap cursor-pointer ${
-                    activeTab === tab.id
-                      ? "bg-white text-blue-700 shadow-sm font-semibold"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+              {/* In-Page Navigation Tabs */}
+              <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 w-full sm:w-auto overflow-x-auto shadow-inner">
+                {[
+                  { id: "overview", label: "Overview" },
+                  { id: "contracts", label: "Contract Security" },
+                  { id: "wallets", label: "Wallet Security" },
+                  { id: "incidents", label: "Incident Feed" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all duration-150 whitespace-nowrap cursor-pointer ${
+                      activeTab === tab.id
+                        ? "bg-white text-slate-900 shadow-xs border border-slate-200/60"
+                        : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="w-full max-w-7xl mx-auto mt-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-              Security Operations Center
-            </h1>
-            <p className="text-slate-500 text-sm mt-1">
-              Real-time threat monitoring, wallet surveillance, and decentralized contract activity.
-            </p>
-          </div>
-
-          {/* TAB 1: OVERVIEW */}
+          {/* TAB 1: OVERVIEW - BALANCED FIT-TO-SCREEN WITH SURVEILLANCE DECK */}
           {activeTab === "overview" && (
-            <div className="w-full max-w-7xl mx-auto mt-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
+            <div className="w-full max-w-7xl mx-auto mt-4 flex flex-col gap-4">
+              {/* Row 1: 4 KPI Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
                 {/* Card 1: Contract Monitor */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 flex flex-col justify-between hover:shadow-sm hover:border-slate-300 transition-all duration-150">
                   <div>
                     <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
+                      <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
                         <MdMonitor className="text-xl" />
                       </div>
-                      <span className={`text-xs px-2.5 py-1 rounded-full font-semibold border ${
-                        Number(monitorcount) > 0 ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-slate-100 text-slate-600 border-slate-200"
+                      <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
+                        Number(monitorcount) > 0 ? "bg-emerald-50 text-emerald-700 border-emerald-200/70" : "bg-slate-100 text-slate-600 border-slate-200"
                       }`}>
                         {Number(monitorcount) > 0 ? `${listeners || 3} Listeners Active` : "Idle"}
                       </span>
                     </div>
-                    <div className="mt-4">
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Contract Monitor</p>
-                      <div className="flex items-baseline gap-2 mt-1">
-                        <span className="text-3xl font-extrabold text-slate-900">{monitorcount || 0}</span>
+                    <div className="mt-3">
+                      <p className="text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Contract Monitor</p>
+                      <div className="flex items-baseline gap-2 mt-0.5">
+                        <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">{monitorcount || 0}</span>
                         <span className="text-xs text-slate-500 font-medium">monitored contracts</span>
                       </div>
-                      <p className="text-xs text-slate-500 mt-2 line-clamp-2">
-                        {Number(monitorcount) > 0
-                          ? "Real-time bytecode verification and automated function listener triggers."
-                          : "No smart contracts configured. Deploy a monitor to start threat detection."}
-                      </p>
                     </div>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <div className="mt-4 pt-2.5 border-t border-slate-100">
                     <Link
                       to={Number(monitorcount) > 0 ? "/monitor" : "/monitor_create"}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                      className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors inline-flex items-center gap-1"
                     >
-                      {Number(monitorcount) > 0 ? "View Monitors →" : "+ Deploy First Monitor"}
+                      {Number(monitorcount) > 0 ? "View Monitors →" : "+ Deploy Monitor"}
                     </Link>
                   </div>
                 </div>
 
                 {/* Card 2: Wallet Security */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 flex flex-col justify-between hover:shadow-sm hover:border-slate-300 transition-all duration-150">
                   <div>
                     <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
+                      <div className="w-9 h-9 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
                         <MdOutlineHeadphones className="text-xl" />
                       </div>
-                      <span className={`text-xs px-2.5 py-1 rounded-full font-semibold border ${
-                        Number(walletMoniterCount) > 0 ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-slate-100 text-slate-600 border-slate-200"
+                      <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
+                        Number(walletMoniterCount) > 0 ? "bg-indigo-50 text-indigo-700 border-indigo-200/70" : "bg-slate-100 text-slate-600 border-slate-200"
                       }`}>
                         {Number(walletMoniterCount) > 0 ? "Surveillance Active" : "No Watchers"}
                       </span>
                     </div>
-                    <div className="mt-4">
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Wallet Surveillance</p>
-                      <div className="flex items-baseline gap-2 mt-1">
-                        <span className="text-3xl font-extrabold text-slate-900">{walletMoniterCount || 0}</span>
+                    <div className="mt-3">
+                      <p className="text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Wallet Surveillance</p>
+                      <div className="flex items-baseline gap-2 mt-0.5">
+                        <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">{walletMoniterCount || 0}</span>
                         <span className="text-xs text-slate-500 font-medium">tracked addresses</span>
                       </div>
-                      <p className="text-xs text-slate-500 mt-2 line-clamp-2">
-                        {Number(walletMoniterCount) > 0
-                          ? "Tracking suspicious inflows, multi-sig transactions, and authorized signer shifts."
-                          : "No wallet watchers set up. Add treasury or deployer addresses to monitor."}
-                      </p>
                     </div>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <div className="mt-4 pt-2.5 border-t border-slate-100">
                     <Link
                       to={Number(walletMoniterCount) > 0 ? "/wallet_security" : "/wallet_monitor_create"}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+                      className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors inline-flex items-center gap-1"
                     >
                       {Number(walletMoniterCount) > 0 ? "View Wallets →" : "+ Add Wallet Watch"}
                     </Link>
@@ -362,140 +293,235 @@ function Dashboard() {
                 </div>
 
                 {/* Card 3: Threat Incidents */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 flex flex-col justify-between hover:shadow-sm hover:border-slate-300 transition-all duration-150">
                   <div>
                     <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
+                      <div className="w-9 h-9 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
                         <TbAlertTriangle className="text-xl" />
                       </div>
-                      <span className={`text-xs px-2.5 py-1 rounded-full font-semibold border ${
-                        Number(alert) > 0 ? "bg-rose-50 text-rose-700 border-rose-200" : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                      <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
+                        Number(alert) > 0 ? "bg-rose-50 text-rose-700 border-rose-200/70" : "bg-emerald-50 text-emerald-700 border-emerald-200/70"
                       }`}>
-                        {Number(alert) > 0 ? "Threats Intercepted" : "Zero Incidents"}
+                        {Number(alert) > 0 ? `${alert} Threats Intercepted` : "Zero Incidents"}
                       </span>
                     </div>
-                    <div className="mt-4">
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Security Incidents</p>
-                      <div className="flex items-baseline gap-2 mt-1">
-                        <span className="text-3xl font-extrabold text-slate-900">{alert || 0}</span>
+                    <div className="mt-3">
+                      <p className="text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Security Incidents</p>
+                      <div className="flex items-baseline gap-2 mt-0.5">
+                        <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">{alert || 0}</span>
                         <span className="text-xs text-slate-500 font-medium">incident reports</span>
                       </div>
-                      <p className="text-xs text-slate-500 mt-2 line-clamp-2">
-                        {Number(alert) > 0
-                          ? "Automated attack patterns and anomaly thresholds triggered."
-                          : "All security parameters normal. No exploit attempts logged."}
-                      </p>
                     </div>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <div className="mt-4 pt-2.5 border-t border-slate-100">
                     <Link
                       to="/contract_incidents"
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-600 hover:text-amber-800 transition-colors"
+                      className="text-xs font-semibold text-amber-600 hover:text-amber-800 transition-colors inline-flex items-center gap-1"
                     >
-                      {Number(alert) > 0 ? "Investigate Incidents →" : "View Incident History →"}
+                      Investigate Incidents →
                     </Link>
                   </div>
                 </div>
 
-                {/* Card 4: Wallet Alerts */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                {/* Card 4: Alert Dispatches */}
+                <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-5 flex flex-col justify-between hover:shadow-sm hover:border-slate-300 transition-all duration-150">
                   <div>
                     <div className="flex items-center justify-between">
-                      <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
+                      <div className="w-9 h-9 rounded-lg bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
                         <FaRegBell className="text-xl" />
                       </div>
-                      <span className="text-xs px-2.5 py-1 rounded-full font-semibold bg-purple-50 text-purple-700 border border-purple-200">
-                        Realtime Webhooks
+                      <span className="text-[11px] px-2.5 py-0.5 rounded-full font-semibold bg-purple-50 text-purple-700 border border-purple-200/70">
+                        Webhooks Active
                       </span>
                     </div>
-                    <div className="mt-4">
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Alert Dispatches</p>
-                      <div className="flex items-baseline gap-2 mt-1">
-                        <span className="text-3xl font-extrabold text-slate-900">{walletAlert || 0}</span>
+                    <div className="mt-3">
+                      <p className="text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Alert Dispatches</p>
+                      <div className="flex items-baseline gap-2 mt-0.5">
+                        <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">{walletAlert || 0}</span>
                         <span className="text-xs text-slate-500 font-medium">active alert triggers</span>
                       </div>
-                      <p className="text-xs text-slate-500 mt-2 line-clamp-2">
-                        Connected through Discord, Telegram, Slack, and email channels.
-                      </p>
                     </div>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <div className="mt-4 pt-2.5 border-t border-slate-100">
                     <Link
                       to="/wallet_alerts"
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple-600 hover:text-purple-800 transition-colors"
+                      className="text-xs font-semibold text-purple-600 hover:text-purple-800 transition-colors inline-flex items-center gap-1"
                     >
                       Configure Alert Rules →
                     </Link>
                   </div>
                 </div>
+              </div>
 
-                {/* Card 5: User Plan & Credits Meter */}
-                <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 md:col-span-2 xl:col-span-2">
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-700 font-bold">
-                          <TbUserSquare className="text-2xl" />
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Subscription & Credits</p>
-                          <h3 className="text-lg font-bold text-slate-900">
-                            {localStorage.getItem("planType") || "Enterprise Plan"}
-                          </h3>
-                        </div>
-                      </div>
-                      <span className="px-3 py-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold rounded-full">
+              {/* Row 2: Streamlined Horizontal Subscription & Credits Strip */}
+              <div className="w-full bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-700 font-bold flex-shrink-0">
+                    <TbUserSquare className="text-2xl" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10.5px] font-bold uppercase tracking-wider text-slate-400">Subscription Plan</span>
+                      <span className="text-[11px] px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200/70 font-semibold rounded-full">
                         Expires: {formatExpiryDate(planexpiry)}
                       </span>
                     </div>
+                    <h3 className="text-base font-bold text-slate-900 truncate mt-0.5">
+                      {localStorage.getItem("planType") || "Enterprise Plan"}
+                    </h3>
+                  </div>
+                </div>
 
-                    <div className="mt-5 grid grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                      <div>
-                        <span className="text-xs text-slate-500 font-medium">Total Credits</span>
-                        <p className="text-xl font-bold text-slate-900 mt-0.5">{credits || 500}</p>
+                {/* Credits summary meter */}
+                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 flex-1 max-w-xl w-full justify-end">
+                  <div className="flex items-center gap-4 text-xs">
+                    <div>
+                      <span className="text-slate-400 text-[10px] font-medium block">Total</span>
+                      <span className="font-bold text-slate-800 text-sm sm:text-base">{credits || 500}</span>
+                    </div>
+                    <div className="h-7 w-px bg-slate-200/80"></div>
+                    <div>
+                      <span className="text-slate-400 text-[10px] font-medium block">Used</span>
+                      <span className="font-bold text-slate-600 text-sm sm:text-base">{Number(alert || 0) + Number(walletAlert || 0)}</span>
+                    </div>
+                    <div className="h-7 w-px bg-slate-200/80"></div>
+                    <div>
+                      <span className="text-slate-400 text-[10px] font-medium block">Remaining</span>
+                      <span className="font-bold text-blue-600 text-sm sm:text-base">
+                        {Math.max(0, Number(credits || 500) - (Number(alert || 0) + Number(walletAlert || 0)))}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="w-28 sm:w-36 bg-slate-200/80 h-2.5 rounded-full overflow-hidden flex-shrink-0">
+                    <div
+                      className="bg-blue-600 h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${Math.min(
+                          100,
+                          Math.max(
+                            10,
+                            ((Math.max(0, Number(credits || 500) - (Number(alert || 0) + Number(walletAlert || 0)))) /
+                              Number(credits || 500)) *
+                              100
+                          )
+                        )}%`,
+                      }}
+                    />
+                  </div>
+
+                  <Link
+                    to="/billing"
+                    className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition-colors flex-shrink-0 shadow-xs whitespace-nowrap"
+                  >
+                    Manage Plan
+                  </Link>
+                </div>
+              </div>
+
+              {/* Row 3: Active Surveillance Targets & Live Telemetry Deck */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
+                {/* Left (2 cols): Active Monitored Contracts */}
+                <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <h3 className="text-sm font-bold text-slate-900">Active Surveillance Targets</h3>
                       </div>
-                      <div>
-                        <span className="text-xs text-slate-500 font-medium">Used Credits</span>
-                        <p className="text-xl font-bold text-slate-600 mt-0.5">{Number(alert || 0) + Number(walletAlert || 0)}</p>
-                      </div>
-                      <div>
-                        <span className="text-xs text-slate-500 font-medium">Remaining</span>
-                        <p className="text-xl font-bold text-blue-600 mt-0.5">
-                          {Math.max(0, Number(credits || 500) - (Number(alert || 0) + Number(walletAlert || 0)))}
-                        </p>
-                      </div>
+                      <Link
+                        to="/monitor"
+                        className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                      >
+                        View all targets ({monitorcount || 0}) →
+                      </Link>
                     </div>
 
-                    {/* Visual Credits Progress Bar */}
-                    <div className="mt-4">
-                      <div className="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-                        <div
-                          className="bg-blue-600 h-full rounded-full transition-all duration-500"
-                          style={{
-                            width: `${Math.min(
-                              100,
-                              Math.max(
-                                10,
-                                ((Math.max(0, Number(credits || 500) - (Number(alert || 0) + Number(walletAlert || 0)))) /
-                                  Number(credits || 500)) *
-                                  100
-                              )
-                            )}%`,
-                          }}
-                        />
+                    <div className="mt-2.5 flex flex-col divide-y divide-slate-100/80">
+                      {displayMonitors.length > 0 ? (
+                        displayMonitors.map((m, idx) => (
+                          <div key={idx} className="py-2.5 flex items-center justify-between gap-3 text-xs">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="w-7 h-7 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 font-bold text-[11px] flex-shrink-0">
+                                #{idx + 1}
+                              </div>
+                              <div className="flex flex-col min-w-0">
+                                <span className="font-semibold text-slate-900 truncate text-[13px]">{m.name || "Contract Target"}</span>
+                                <span className="font-mono text-[11px] text-slate-400 truncate max-w-[200px] sm:max-w-xs">{m.address || "0x..."}</span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2.5 flex-shrink-0">
+                              <span className="hidden sm:inline-flex text-[10.5px] px-2 py-0.5 rounded-md font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                                {m.network === 42161 || m.networks === 42161 ? "Arbitrum" : m.network === 8453 || m.networks === 8453 ? "Base" : "Ethereum"}
+                              </span>
+                              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-2 py-0.5 rounded-md">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Active
+                              </span>
+                              <Link
+                                to="/monitor"
+                                className="text-slate-400 hover:text-slate-700 p-1 font-bold"
+                                title="Inspect target"
+                              >
+                                →
+                              </Link>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="py-8 text-center text-xs text-slate-400">
+                          No active surveillance targets yet. Click{" "}
+                          <Link to="/monitor_create" className="text-blue-600 font-semibold hover:underline">
+                            + Add New Contract Target
+                          </Link>{" "}
+                          to begin.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right (1 col): SOC Telemetry & Node Health */}
+                <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <h3 className="text-sm font-bold text-slate-900">SOC Node Telemetry</h3>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
+                        100% HEALTHY
+                      </span>
+                    </div>
+
+                    <div className="mt-3 flex flex-col gap-2.5 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 font-medium">RPC Ingestion Rate</span>
+                        <span className="font-mono font-semibold text-slate-800">2,410 ev/min</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 font-medium">Consensus Latency</span>
+                        <span className="font-mono font-semibold text-emerald-600">18ms (Optimal)</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 font-medium">Gas Spike Guard</span>
+                        <span className="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded text-[11px]">Armed · 150 Gwei</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 font-medium">Webhook Relay</span>
+                        <span className="font-mono font-semibold text-slate-800">99.98% Delivered</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-xs text-slate-500">
-                      Need custom monitor capacity? Contact enterprise support.
-                    </span>
+                  <div className="mt-3.5 pt-3 border-t border-slate-100">
                     <Link
-                      to="/billing"
-                      className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition-colors"
+                      to="/monitor_create"
+                      className="w-full py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
                     >
-                      Manage Plan & Invoices
+                      + Add New Contract Target
                     </Link>
                   </div>
                 </div>
@@ -572,9 +598,8 @@ function Dashboard() {
               </div>
             );
           })()}
-        </div>
+        </main>
       </div>
-      <ToastContainer position="top-right" autoClose={3000} containerId="dashboard-notification-container" />
     </div>
   );
 }

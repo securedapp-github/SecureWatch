@@ -2,63 +2,62 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
-import { FaCirclePlus } from "react-icons/fa6";
 import Monitor_cmp from "./monitor_cmp";
+import { LuArrowLeft, LuPlus, LuShieldAlert } from "react-icons/lu";
 
 function Monitor() {
   const userEmail = localStorage.getItem("email");
-  console.log(userEmail);
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const email = localStorage.getItem("email");
   const is_admin = localStorage.getItem("is_admin");
-  console.log(token);
-  console.log(email);
 
   return (
-    <div className="w-full min-h-full bg-white">
+    <div className="w-full min-h-screen bg-[#FAFAFB]">
       <NewNavbar email={userEmail} />
-      <div className="bg-white w-full flex min-h-full">
+      <div className="w-full flex min-h-screen">
         <Sidebar />
 
-        <div className=" h-full sm:flex flex-col gap-5 ml-[100px] w-56 mt-20 hidden fixed">
-          <div className={`mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]`}>
-            <h1 className="text-[#6A6A6A]  font-semibold text-nowrap">
-              Realtime Security
-            </h1>
-          </div>
-          <div className="flex flex-col gap-5 ml-5">
-            <Link to="/dashboard" className="text-[#6A6A6A]">
-            Dashboard
-            </Link>
-            <Link to="/monitor" className="text-[#2D5C8F] font-semibold">
-            Contract Monitor
-            </Link>
-            <Link to="/wallet_security" className="text-[#6A6A6A]">
-                        Wallet Monitor
-                        </Link>
-            {/* <Link to="/log" className="text-[#6A6A6A] ">
-              Logs
-            </Link> */}
-          </div>
-        </div>
+        <div className="main-content-layout p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
+          {/* Top Navigation & Breadcrumb */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 bg-white border border-slate-200 hover:border-blue-200 px-3 py-1.5 rounded-lg shadow-2xs transition"
+                >
+                  <LuArrowLeft className="w-3.5 h-3.5" />
+                  <span>Back to Dashboard</span>
+                </Link>
+                <span className="text-slate-300">/</span>
+                <span className="text-xs font-semibold text-slate-700">Contract Monitors</span>
+              </div>
 
-        <div className=" mt-20 w-full sm:ml-80  min-h-full">
-          <div className="w-full flex justify-between items-center px-4 py-4 mt-4 xl:px-[109px]">
-            <p className="text-black font-semibold text-lg">Monitors</p>
-            {is_admin== 1 && (
+              <div className="flex items-center gap-2 mt-1">
+                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                  Contract Monitors
+                </h1>
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80">
+                  Live Surveillance
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500">
+                Manage automated event watchers, threshold rules, and threat detection across all monitored contracts.
+              </p>
+            </div>
+
+            {is_admin == 1 && (
               <Link
-              to="/monitor_create"
-              className="bg-[#6549FD] text-white px-3 py-2 rounded-lg text-sm font-medium"
-            >
-              Create Monitor
-            </Link>
+                to="/monitor_create"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold shadow-xs transition-all self-start sm:self-auto cursor-pointer"
+              >
+                <LuPlus className="w-4 h-4" />
+                <span>Deploy New Monitor</span>
+              </Link>
             )}
-            
           </div>
+
+          {/* Monitors Table Component */}
           <Monitor_cmp />
         </div>
-        
       </div>
     </div>
   );

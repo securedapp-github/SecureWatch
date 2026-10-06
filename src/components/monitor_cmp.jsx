@@ -1,37 +1,86 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Switch } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { baseUrl } from "../Constants/data";
-import { FaRegEdit } from "react-icons/fa";
-import { BsTrash } from "react-icons/bs";
-import { FaRegBell } from "react-icons/fa";
-import { LuPencil } from "react-icons/lu";
-import { FaRegTrashAlt } from "react-icons/fa";
-import { FaEdit } from "react-icons/fa";
-import { MdOutlineToggleOn } from "react-icons/md";
-import { MdOutlineToggleOff } from "react-icons/md";
-import { HiMenuAlt2 } from "react-icons/hi";
-import ResponsivePagination from 'react-responsive-pagination';
-import 'react-responsive-pagination/themes/classic.css';
+import { ALL_NETWORKS } from "../Constants/networks";
+import {
+  LuBellRing,
+  LuBarChart3,
+  LuPencil,
+  LuTrash2,
+  LuCopy,
+  LuCheck,
+  LuSearch,
+  LuX,
+  LuCode2,
+  LuShieldAlert,
+  LuChevronLeft,
+  LuChevronRight,
+  LuExternalLink,
+} from "react-icons/lu";
 
+const EXPLORER_BASE = {
+  1: "https://etherscan.io/address/",
+  11155111: "https://sepolia.etherscan.io/address/",
+  42161: "https://arbiscan.io/address/",
+  8453: "https://basescan.org/address/",
+  56: "https://bscscan.com/address/",
+  137: "https://polygonscan.com/address/",
+  80002: "https://amoy.polygonscan.com/address/",
+  43114: "https://snowtrace.io/address/",
+  100: "https://gnosisscan.io/address/",
+  59144: "https://explorer.linea.build/address/",
+  1313161554: "https://explorer.mainnet.aurora.dev/address/",
+  10: "https://optimistic.etherscan.io/address/",
+  50: "https://xdcscan.com/address/",
+  169: "https://pacific-info.manta.network/address/",
+  146: "https://explorer.soniclabs.com/address/",
+  1625: "https://gscan.xyz/address/",
+  7000: "https://explorer.mainnet.zetachain.com/address/",
+  47763: "https://xexplorer.neo.org/address/",
+  592: "https://astar.subscan.io/address/",
+  1868: "https://soneium.blockscout.com/address/",
+  747474: "https://explorer.katanarpc.com/address/",
+  43111: "https://explorer.hemi.xyz/address/",
+  185: "https://explorer.mintchain.io/address/",
+  1116: "https://scan.coredao.org/address/",
+};
+
+const getExplorerAddressUrl = (networkVal, address) => {
+  if (!address) return "#";
+  let base = EXPLORER_BASE[networkVal];
+  if (!base && typeof networkVal === "string") {
+    const match = ALL_NETWORKS.find(
+      (n) =>
+        n.name.toLowerCase() === networkVal.toLowerCase() ||
+        n.tag.toLowerCase() === networkVal.toLowerCase() ||
+        String(n.chainId) === networkVal
+    );
+    if (match && EXPLORER_BASE[match.chainId]) {
+      base = EXPLORER_BASE[match.chainId];
+    }
+  }
+  if (!base) {
+    base = "https://etherscan.io/address/";
+  }
+  return `${base}${address}`;
+};
 
 const Monitor_cmp = () => {
   const navigate = useNavigate();
-  const [value, setValue] = useState(10);
   const [loading, setLoading] = useState(true);
-  const [deleteLoading, setDeleteLoading] = useState(false);
   const [moniter, setMoniter] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [copiedAddress, setCopiedAddress] = useState(null);
+
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const is_admin = localStorage.getItem("is_admin");
   const parent_id = localStorage.getItem("parent_id");
 
-  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataPerPage, setDataPerPage] = useState(15);
-  const [totalPages, setTotalPages] = useState(1);
-  
+  const dataPerPage = 10;
 
   useEffect(() => {
     const fetchMoniter = async () => {
@@ -48,626 +97,405 @@ const Monitor_cmp = () => {
           }),
         });
         const data = await res.json();
-        console.log("Data", data);
-        const sortedMonitors = data.monitors?.sort((a, b) => 
-          new Date(b.created_on) - new Date(a.created_on)
-        ) || [];
-        setTotalPages(Math.max(1, Math.ceil(sortedMonitors.length / dataPerPage)));
-        setMoniter({ ...data, monitors: sortedMonitors });
+        const monitorsList = data.monitors || [];
+        const sorted = [...monitorsList].sort(
+          (a, b) => new Date(b.created_on || 0) - new Date(a.created_on || 0)
+        );
+        setMoniter(sorted);
       } catch (err) {
         console.warn("Fetch monitor error:", err);
+        setMoniter([]);
       } finally {
         setLoading(false);
       }
     };
     fetchMoniter();
-  }, [value, dataPerPage, parent_id, token, userId]);
-  
-  const indexOfLastData = currentPage * dataPerPage;
-  const indexOfFirstData = indexOfLastData - dataPerPage;
-  const currentData = moniter.monitors?.slice(indexOfFirstData, indexOfLastData);
-  console.log("Current Data", currentData);
-  
+  }, [parent_id, token, userId]);
 
-  const handleDeleteMonitor = async (monitor_id) => {
-    setDeleteLoading(true);
-    if (window.confirm("Are you sure you want to delete this monitor?")) {
-      try {
-        const response = await fetch(`${baseUrl}/delete_monitor`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            monitor_id: monitor_id,
-          }),
-        });
-        if(response.status === 401){
-          toast.error("Session Expired, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
-        }
-        if(response.status === 403){
-          toast.error("Unauthorized Access, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
-        }
-        if (response.ok) {
-          setDeleteLoading(false);
-          setValue(value + 1); // Trigger re-fetch after deletion
-          toast.success("Monitor deleted successfully.");
-          // alert("Monitor deleted successfully.");
-        } else {
-          setDeleteLoading(false);
-          toast.error("Failed to delete monitor. Please try again.");
-          // alert("Failed to delete monitor. Please try again.");
-        }
-      } catch (error) {
-        setDeleteLoading(false);
-        toast.error("An error occurred. Please try again.");
-        console.error("Error deleting monitor:", error);
-        // alert("An error occurred. Please try again.");
+  // Helper to resolve network metadata
+  const getNetworkMeta = (networkId) => {
+    const netIdStr = String(networkId);
+    const found = ALL_NETWORKS.find(
+      (n) => n.id === netIdStr || String(n.chainId) === netIdStr
+    );
+    if (found) return found;
+
+    return {
+      name: `Chain ${networkId}`,
+      tag: `ID:${networkId}`,
+      badgeColor: "bg-slate-100 text-slate-700 border-slate-200",
+    };
+  };
+
+  // Search filter
+  const filteredMonitors = useMemo(() => {
+    if (!searchQuery.trim()) return moniter;
+    const q = searchQuery.toLowerCase().trim();
+    return moniter.filter((m) => {
+      const netMeta = getNetworkMeta(m.network);
+      return (
+        m.name?.toLowerCase().includes(q) ||
+        m.address?.toLowerCase().includes(q) ||
+        netMeta.name.toLowerCase().includes(q) ||
+        netMeta.tag.toLowerCase().includes(q)
+      );
+    });
+  }, [moniter, searchQuery]);
+
+  // Pagination calculation
+  const totalPages = Math.max(1, Math.ceil(filteredMonitors.length / dataPerPage));
+  const indexOfLast = currentPage * dataPerPage;
+  const indexOfFirst = indexOfLast - dataPerPage;
+  const currentData = filteredMonitors.slice(indexOfFirst, indexOfLast);
+
+  // Copy address helper
+  const handleCopy = (address) => {
+    if (!address) return;
+    navigator.clipboard.writeText(address);
+    setCopiedAddress(address);
+    toast.info("Address copied to clipboard", { autoClose: 900 });
+    setTimeout(() => setCopiedAddress(null), 1800);
+  };
+
+  // Toggle status
+  const handleToggleStatus = async (mid, currentStatus) => {
+    const newStatus = currentStatus === 1 || currentStatus === true ? 0 : 1;
+
+    // Optimistic UI update
+    setMoniter((prev) =>
+      prev.map((m) => (m.mid === mid ? { ...m, status: newStatus } : m))
+    );
+
+    try {
+      const res = await fetch(`${baseUrl}/update_monitor`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          monitor_id: mid,
+          status: newStatus,
+        }),
+      });
+      if (res.ok) {
+        toast.success(
+          newStatus === 1 ? "Sentinel resumed & active" : "Sentinel paused",
+          { autoClose: 1000 }
+        );
       }
+    } catch (e) {
+      console.warn("Status toggle backend note:", e);
     }
   };
 
-  useEffect(() => {
-    console.log("Monitors", moniter);
+  // Delete monitor
+  const handleDeleteMonitor = async (mid) => {
+    if (!window.confirm("Are you sure you want to delete this sentinel monitor?"))
+      return;
 
-  }, [moniter]);
+    try {
+      const response = await fetch(`${baseUrl}/delete_monitor`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ monitor_id: mid }),
+      });
+      if (response.ok) {
+        setMoniter((prev) => prev.filter((m) => m.mid !== mid));
+        toast.success("Monitor removed successfully.");
+      } else {
+        toast.error("Failed to delete monitor. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+    }
+  };
 
   if (loading) {
     return (
-      <div className="text-center mt-20 text-4xl font-medium text-black">
-        <span className="loading loading-spinner loading-lg text-[#2D5C8F]"></span>
-      </div>
-    );
-  }
-  if (
-    (loading === false && !moniter) ||
-    !Array.isArray(moniter.monitors) ||
-    moniter.monitors.length === 0
-  ) {
-    return (
-      <div className="text-center mt-20 text-4xl font-medium text-black">
-        Please create a monitor.
+      <div className="w-full bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-12 flex flex-col items-center justify-center gap-3">
+        <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-xs font-semibold text-slate-500">Loading active monitors...</p>
       </div>
     );
   }
 
   return (
-    <div className=" w-full xl:w-[97%] overflow-auto flex justify-center items-center xl:justify-start xl:ml-4 xl:items-start flex-col pb-10 bg-white">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      {loading ? (
-        <div className="text-center mt-20 text-4xl font-medium">
-          <span className="loading loading-spinner loading-lg text-[#2D5C8F]"></span>
+    <div className="w-full flex flex-col gap-4">
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      {/* Toolbar: Search + Quick Stats */}
+      <div className="bg-white rounded-xl border border-slate-200/90 shadow-2xs p-3.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="relative flex-1 max-w-md">
+          <LuSearch className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setCurrentPage(1);
+            }}
+            placeholder="Search by monitor name, address, or network..."
+            style={{ paddingLeft: "36px", paddingRight: "30px" }}
+            className="w-full py-2 rounded-lg border border-slate-200 text-xs bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition placeholder:text-slate-400"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+            >
+              <LuX className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
-      ) : (
-        <div className="w-full flex justify-center items-center">
-          <div className="xl:hidden w-[93%] sm:w-[91%] rounded-md shadow-md bg-white mb-10">
-            {currentData.map((i) => {
-              const name = i.name;
-              const risk = i.category;
-              const network = i.network;
-              const status = i.status;
-              const mid = i.mid;
-              const created_on = i.created_on;
-              const address = i.address;
-              const alert_data = i.alert_data;
-              const alert_type = i.alert_type;
-              const slack_webhook = i.slack_webhook;
-              return (
-                <div className="w-full flex p-3 md:p-10 justify-between border-b-2">
-                  <div className="flex flex-col gap-3">
-                    <span className="text-md  text-black">{name}</span>
-                    <span className="text-md  text-black">
-                    {network === 1
-                            ? "Ethereum Mainnet"
-                            : network === 56
-                            ? "BNB"
-                            : network === 8453
-                            ? "Base"
-                            : network === 43114
-                            ? "Avalanche"
-                            : network === 42161
-                            ? "Arbitrum"
-                            : network === 100
-                            ? "Gnosis"
-                            : network === 59144
-                            ? "Linea"
-                            : network === 1313161554
-                            ? "Aurora"
-                            : network === 10
-                            ? "Optimism"
-                            : network === 11155111
-                            ? "Sepolia Testnet"
-                            : network === 137
-                            ? "Polygon Mainnet"
-                            : network === 80002
-                            ? "Amoy"
-                            : network === 204
-                            ? "opBNB"
-                            : network === 1101
-                            ? "Polygon zkEVM"
-                            : network === 250
-                            ? "Fantom"
-                            : network === 25
-                            ? "Cronos"
-                            : network === 592
-                            ? "Astar"
-                            : network === 42220
-                            ? "Celo"
-                            : network === 324
-                            ? "ZkSync Era"
-                            : network === 288
-                            ? "Boba Network"
-                            : network === 534352
-                            ? "Scroll"
-                            : network === 2040
-                            ? "Vanar"
-                            : network === 143
-                            ? "Monad"
-                            : network === 50
-                            ? "XDC Network"
-                            : network === 169
-                            ? "Manta Pacific"
-                            : network === 146
-                            ? "Sonic"
-                            : network === 1625
-                            ? "Gravity Chain"
-                            : network === 7000
-                            ? "Zeta Chain"
-                            : network === 47763
-                            ? "Neo X"
-                            : network === 592
-                            ? "Astar"
-                            : network === 1868
-                            ? "Soneium"
-                            : network === 747474
-                            ? "Katana"
-                            : network === 43111
-                            ? "Hemi"
-                            : network === 185
-                            ? "Mint"
-                            : network === 1116 
-                            ? "CoreDAO"
-                            : "Unknown"}
-                    </span>
-                    <p className=" text-md text-black text-nowrap">
-                      {created_on?.slice(0, 10)}
-                    </p>
 
-                    <p className="  text-black">
-                      {created_on?.slice(11, 16)}
-                    </p>
-                    <p className="text-[#2D5C8F] ">
-                      {`${address?.slice(0, 5)}...${address?.slice(
-                        address.length - 4
-                      )}`}
-                    </p>
-                  </div>
-                  <div className=" flex flex-col gap-3 md:gap-5 justify-center items-center">
-                    {(network === 1 ||
-                      network === 11155111 ||
-                      network === 137 ||
-                      network === 80002) &&
-                    is_admin == 1 ? (
-                      <button
-                        //onClick={() => handleInteract(mid)}
-                        onClick={() => {
-                          navigate("/api_builder?id=" + mid, {
-                            state: {
-                              mid,
-                              name,
-                              network,
-                              address,
-                              alert_data,
-                              alert_type,
-                            },
-                          });
-                        }}
-                        className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg w-40"
-                      >
-                        Interact
-                      </button>
-                    ) : null}
+        <div className="flex items-center gap-2 text-xs text-slate-500 font-medium self-end sm:self-auto">
+          <span>Total Monitors:</span>
+          <span className="font-bold text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+            {filteredMonitors.length}
+          </span>
+        </div>
+      </div>
 
-                    {/* <button className="bg-[#2D5C8F] text-white px-3 py-1 rounded-lg w-40">
-                        Interact
-                      </button> */}
-                    <button
-                      className="border-2 border-red-500 text-red-500 px-3 py-[2px] rounded-lg font-medium hover:bg-red-500 hover:text-white w-40"
-                      onClick={() => {
-                        if (network === 1300 || network === 1301) {
-                          // Navigate to algo_alerts page for Algorand Mainnet/Testnet
-                          navigate("/algo_alerts", {
-                            state: { mid, network },
-                          });
-                        } else {
-                          // Navigate to monitor_alerts for other networks
-                          navigate("/monitor_alerts", {
-                            state: { mid, network },
-                          });
-                        }
-                      }}
-                    >
-                      Alerts
-                    </button>
-                    <div className="flex items-center gap-8 justify-center">
-                      {is_admin == 1 && (
-                        <button
-                          onClick={() => {
-                            navigate("/monitor_Edit?id=" + mid, {
-                              state: {
-                                mid,
-                                name,
-                                network,
-                                address,
-                                alert_data,
-                                alert_type,
-                                slack_webhook,
-                              },
-                            });
-                          }}
-                        >
-                          <FaRegEdit className="text-[#4A4A4A] text-2xl" />
-                        </button>
-                      )}
-                      {is_admin == 1 && (
-                        <button onClick={() => handleDeleteMonitor(mid)}>
-                          <BsTrash className="text-[#4A4A4A] text-2xl" />
-                        </button>
-                      )}
-                      {is_admin == 1 && (
-                        <Switch
-                          checked={status === 1 ? true : false}
-                          onChange={() => {
-                            const newStatus = status === 0 ? 1 : 0;
-
-                            fetch(`${baseUrl}/update_monitor`, {
-                              method: "POST",
-                              headers: {
-                                "Content-Type": "application/json",
-                                Authorization: `Bearer ${token}`,
-                              },
-                              body: JSON.stringify({
-                                monitor_id: mid,
-                                status: newStatus,
-                              }),
-                            })
-                              .then((response) => response.json())
-                              .then((data) => {
-                                console.log("Success:", data);
-                                setValue(value + 1);
-                              })
-                              .catch((error) => {
-                                console.error("Error:", error);
-                              });
-                          }}
-                          className={`${
-                            status === 1 ? "bg-[#2D5C8F]" : "bg-[#B8B8B8]"
-                          } relative inline-flex h-6 w-11 items-center rounded-full`}
-                        >
-                          <span className="sr-only">Enable notifications</span>
-                          <span
-                            className={`${
-                              status === 1 ? "translate-x-6" : "translate-x-1"
-                            } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-                          />
-                        </Switch>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+      {/* Main Table Card */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
+        {filteredMonitors.length === 0 ? (
+          <div className="p-12 text-center flex flex-col items-center justify-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400">
+              <LuShieldAlert className="w-6 h-6" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-900">
+              {searchQuery ? "No matching monitors found" : "No contract monitors deployed"}
+            </h3>
+            <p className="text-xs text-slate-500 max-w-sm">
+              {searchQuery
+                ? "Try adjusting your search query or clear the filter."
+                : "Arm a new real-time event watcher to monitor contract transactions and security events."}
+            </p>
+            {!searchQuery && (
+              <Link
+                to="/monitor_create"
+                className="mt-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition"
+              >
+                + Deploy First Monitor
+              </Link>
+            )}
           </div>
-          <div className="overflow-x-auto w-[85%] rounded-md  custom-scrollbar hidden xl:block border-2 border-gray-400 mt-5">
-            <table className="w-full rounded-md overflow-hidden border-2 shadow-4xl bg-red shadow-[#303030F7] table   ">
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="">
-                  <th className="py-4  border-2 border-none text-black text-sm font-medium">
-                    Name
-                  </th>
-                  <th className="py-4  border-2 border-none text-black text-sm font-medium">
-                    Networks
-                  </th>
-                  <th className="py-4  border-2 border-none text-black text-sm font-medium">
-                    Created on
-                  </th>
-                  <th className="py-4  border-2 border-none text-black text-sm font-medium">
-                    Address
-                  </th>
-                  <th className="py-4  border-2 border-none text-black text-sm font-medium flex items-center ml-16 gap-24">
-                  Actions <HiMenuAlt2 className="text-lg"/>
-                  </th>
-                  
+                <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  <th className="py-3.5 px-4 sm:px-6">Monitor Name</th>
+                  <th className="py-3.5 px-4">Network</th>
+                  <th className="py-3.5 px-4">Contract Address</th>
+                  <th className="py-3.5 px-4">Created On</th>
+                  <th className="py-3.5 px-4 sm:px-6 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                {currentData.map((i) => {
-                  const mid = i.mid;
-                  const name = i.name;
-                  const risk = i.category;
-                  const network = i.network;
-                  const address = i.address;
-                  const status = i.status;
-                  const created_on = i.created_on;
-                  const alert_type = i.alert_type;
-                  const alert_data = i.alert_data;
-                  const slack_webhook = i.slack_webhook;
+              <tbody className="divide-y divide-slate-100 text-xs text-slate-700 font-medium">
+                {currentData.map((item) => {
+                  const netMeta = getNetworkMeta(item.network);
+                  const isChecked = item.status === 1 || item.status === true;
+                  const isCopying = copiedAddress === item.address;
+
                   return (
-                    <tr className="border-gray-400 border-2 border-l-0 border-r-0 ">
-                      <td className=" ">
-                        <p className="text-md  text-black">
-                          {name}
-                        </p>
+                    <tr
+                      key={item.mid}
+                      className="hover:bg-slate-50/60 transition-colors"
+                    >
+                      {/* Monitor Name & Category */}
+                      <td className="py-4 px-4 sm:px-6">
+                        <div className="flex flex-col gap-0.5">
+                          <strong className="text-sm font-bold text-slate-900 leading-tight">
+                            {item.name || "Unnamed Sentinel"}
+                          </strong>
+                          {item.category && (
+                            <span className="text-[10px] text-slate-400 font-medium">
+                              Type: {item.category}
+                            </span>
+                          )}
+                        </div>
                       </td>
 
-                      <td className=" ">
-                        <span className="text-md text-black">
-                        {network === 1
-                            ? "Ethereum Mainnet"
-                            : network === 56
-                            ? "BNB"
-                            : network === 8453
-                            ? "Base"
-                            : network === 43114
-                            ? "Avalanche"
-                            : network === 42161
-                            ? "Arbitrum"
-                            : network === 100
-                            ? "Gnosis"
-                            : network === 59144
-                            ? "Linea"
-                            : network === 1313161554
-                            ? "Aurora"
-                            : network === 10
-                            ? "Optimism"
-                            : network === 11155111
-                            ? "Sepolia Testnet"
-                            : network === 137
-                            ? "Polygon Mainnet"
-                            : network === 80002
-                            ? "Amoy"
-                            : network === 204
-                            ? "opBNB"
-                            : network === 1101
-                            ? "Polygon zkEVM"
-                            : network === 250
-                            ? "Fantom"
-                            : network === 25
-                            ? "Cronos"
-                            : network === 592
-                            ? "Astar"
-                            : network === 42220
-                            ? "Celo"
-                            : network === 324
-                            ? "ZkSync Era"
-                            : network === 288
-                            ? "Boba Network"
-                            : network === 534352
-                            ? "Scroll"
-                            : network === 2040
-                            ? "Vanar"
-                            : network === 143
-                            ? "Monad"
-                            : network === 50
-                            ? "XDC Network"
-                            : network === 169
-                            ? "Manta Pacific"
-                            : network === 146
-                            ? "Sonic"
-                            : network === 1625
-                            ? "Gravity Chain"
-                            : network === 7000
-                            ? "Zeta Chain"
-                            : network === 47763
-                            ? "Neo X"
-                            : network === 592
-                            ? "Astar"
-                            : network === 1868
-                            ? "Soneium"
-                            : network === 747474
-                            ? "Katana"
-                            : network === 43111
-                            ? "Hemi"
-                            : network === 185
-                            ? "Mint"
-                            : network === 1116 
-                            ? "CoreDAO"
-                            : "Unknown"}
+                      {/* Network Badge */}
+                      <td className="py-4 px-4">
+                        <span
+                          className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${netMeta.badgeColor}`}
+                        >
+                          {netMeta.tag} · {netMeta.name}
                         </span>
                       </td>
 
-                      <td className=" text-md text-black text-nowrap">
-                        {created_on?.slice(0, 10)}
-                      </td>
-
-                      <td className="text-black">
-                        {address ? `${address.slice(0, 5)}...${address.slice(-4)}` : ""}
-                      </td>
-                      <td className=" flex gap-8 items-center py-4">
-                        {(network === 1 ||
-                          network === 11155111 ||
-                          network === 137 ||
-                          network === 80002) &&
-                        is_admin == 1 ? (
-                          <button
-                            //onClick={() => handleInteract(mid)}
-                            // title="Interact"
-                            
-                            onClick={() => {
-                              navigate("/api_builder?id=" + mid, {
-                                state: {
-                                  mid,
-                                  name,
-                                  network,
-                                  address,
-                                  alert_data,
-                                  alert_type,
-                                  
-                                },
-                              });
-                            }}
-                            className=" text-black text-lg tooltip"
-                            data-tip="Interact"
-                          >
-                            <FaEdit />
-                          </button>
+                      {/* Address */}
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        {item.address ? (
+                          <div className="inline-flex items-center gap-1.5 font-mono text-[11px] bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 px-2.5 py-1 rounded-lg transition-colors group/addr">
+                            <a
+                              href={getExplorerAddressUrl(item.network, item.address)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-slate-700 hover:text-blue-600 flex items-center gap-1 font-mono"
+                              title="View Contract on Block Explorer"
+                            >
+                              <span>
+                                {item.address.slice(0, 6)}...{item.address.slice(-4)}
+                              </span>
+                              <LuExternalLink className="w-3 h-3 text-slate-400 group-hover/addr:text-blue-600" />
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(item.address)}
+                              title="Copy full contract address"
+                              className="text-slate-400 hover:text-slate-700 ml-1 p-0.5 transition cursor-pointer"
+                            >
+                              {isCopying ? (
+                                <LuCheck className="w-3.5 h-3.5 text-emerald-600" />
+                              ) : (
+                                <LuCopy className="w-3.5 h-3.5" />
+                              )}
+                            </button>
+                          </div>
                         ) : (
-                          is_admin == 1 && (
-                            <button
-                            // title="Interact"
-                              className=" text-black text-lg tooltip"
-                              data-tip="Interact"
-                              onClick={() => {
-                                navigate("/api_builder?id=" + mid, {
-                                  state: {
-                                    mid,
-                                    name,
-                                    network,
-                                    address,
-                                    alert_data,
-                                    alert_type,
-                                  },
-                                });
-                              }}
-                            >
-                              <FaEdit />
-                            </button>
-                          )
+                          <span className="text-slate-400 font-italic">N/A</span>
                         )}
+                      </td>
 
-                        <button
-                          className=" text-black text-lg tooltip"
-                          data-tip="Alerts"
-                          onClick={() => {
-                            if (network === 1300 || network === 1301) {
-                              // Navigate to algo_alerts page for Algorand Mainnet/Testnet
-                              navigate("/algo_alerts", {
-                                state: { mid, network },
-                              });
-                            } else {
-                              // Navigate to monitor_alerts for other networks
-                              navigate("/monitor_alerts", {
-                                state: { mid, network },
-                              });
-                            }
-                          }}
-                        >
-                          <FaRegBell />
-                        </button>
+                      {/* Created On */}
+                      <td className="py-4 px-4 text-slate-500 whitespace-nowrap text-xs font-medium tabular-nums">
+                        {item.created_on
+                          ? new Date(item.created_on).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })
+                          : "Recent"}
+                      </td>
 
-                        {is_admin == 1 && (
+                      {/* Actions */}
+                      <td className="py-4 px-4 sm:px-6">
+                        <div className="flex items-center justify-end gap-2">
+                          {/* Dedicated Alerts Badge Button */}
                           <button
-                            className="text-black text-lg tooltip"
-                            data-tip="Edit"
+                            type="button"
                             onClick={() => {
-                              navigate("/monitor_Edit?id=" + mid, {
-                                state: {
-                                  mid,
-                                  name,
-                                  network,
-                                  address,
-                                  alert_data,
-                                  alert_type,
-                                  slack_webhook,
-                                },
-                              });
+                              if (item.network === 1300 || item.network === 1301) {
+                                navigate("/algo_alerts", {
+                                  state: { mid: item.mid, network: item.network },
+                                });
+                              } else {
+                                navigate("/monitor_alerts", {
+                                  state: { mid: item.mid, network: item.network },
+                                });
+                              }
                             }}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold border border-blue-200/80 transition cursor-pointer shadow-2xs"
                           >
-                            <LuPencil />
+                            <LuBellRing className="w-3.5 h-3.5" />
+                            <span>Alerts</span>
                           </button>
-                        )}
 
-                        {is_admin == 1 && (
-                          <button onClick={() => handleDeleteMonitor(mid)} className="tooltip" data-tip="Delete">
-                            <FaRegTrashAlt className="text-black text-lg" />
+                          {/* Analytics Icon Button */}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              navigate("/analyticsmodule", {
+                                state: {
+                                  mid: item.mid,
+                                  network: item.network,
+                                  address: item.address,
+                                },
+                              })
+                            }
+                            title="View Analytics & Trends"
+                            className="p-1.5 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition cursor-pointer"
+                          >
+                            <LuBarChart3 className="w-4 h-4" />
                           </button>
-                        )}
-                        {is_admin == 1 ? (
-                          status === 1 ? (
+
+                          {/* Interact Button (If Admin) */}
+                          {is_admin == 1 && (
                             <button
-                            className="text-[#12D576] text-3xl"
-                            onClick={() => {
-                              fetch(`${baseUrl}/update_monitor`, {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                  Authorization: `Bearer ${token}`,
-                                },
-                                body: JSON.stringify({
-                                  monitor_id: mid,
-                                  status: 0,
-                                }),
-                              })
-                                .then((response) => response.json())
-                                .then((data) => {
-                                  console.log("Success:", data);
-                                  setValue(value + 1);
+                              type="button"
+                              onClick={() =>
+                                navigate("/api_builder?id=" + item.mid, {
+                                  state: {
+                                    mid: item.mid,
+                                    name: item.name,
+                                    network: item.network,
+                                    address: item.address,
+                                    alert_data: item.alert_data,
+                                    alert_type: item.alert_type,
+                                  },
                                 })
-                                .catch((error) => {
-                                  console.error("Error:", error);
-                                });
-                            }}
+                              }
+                              title="Smart Contract Interface & Testing"
+                              className="p-1.5 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition cursor-pointer"
                             >
-                            <MdOutlineToggleOn  />
+                              <LuCode2 className="w-4 h-4" />
                             </button>
-                          ) : (
+                          )}
+
+                          {/* Edit Button (If Admin) */}
+                          {is_admin == 1 && (
                             <button
-                            className="text-black text-3xl"
-                            onClick={() => {
-                              fetch(`${baseUrl}/update_monitor`, {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                  Authorization: `Bearer ${token}`,
-                                },
-                                body: JSON.stringify({
-                                  monitor_id: mid,
-                                  status: 1,
-                                }),
-                              })
-                                .then((response) => response.json())
-                                .then((data) => {
-                                  console.log("Success:", data);
-                                  setValue(value + 1);
+                              type="button"
+                              onClick={() =>
+                                navigate("/monitor_Edit?id=" + item.mid, {
+                                  state: {
+                                    mid: item.mid,
+                                    name: item.name,
+                                    network: item.network,
+                                    address: item.address,
+                                    alert_data: item.alert_data,
+                                    alert_type: item.alert_type,
+                                    slack_webhook: item.slack_webhook,
+                                  },
                                 })
-                                .catch((error) => {
-                                  console.error("Error:", error);
-                                });
-                            }}
+                              }
+                              title="Edit Monitor Settings"
+                              className="p-1.5 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition cursor-pointer"
                             >
-                            <MdOutlineToggleOff  />
+                              <LuPencil className="w-4 h-4" />
                             </button>
-                          )
-                        ) : null}
+                          )}
+
+                          {/* Delete Button (If Admin) */}
+                          {is_admin == 1 && (
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteMonitor(item.mid)}
+                              title="Delete Sentinel"
+                              className="p-1.5 rounded-lg border border-slate-200 hover:border-rose-300 hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                            >
+                              <LuTrash2 className="w-4 h-4" />
+                            </button>
+                          )}
+
+                          {/* Active / Inactive Status Switch */}
+                          {is_admin == 1 && (
+                            <div className="pl-1 flex items-center" title={isChecked ? "Active Surveillance" : "Sentinel Paused"}>
+                              <Switch
+                                checked={isChecked}
+                                onChange={() => handleToggleStatus(item.mid, item.status)}
+                                className={`${
+                                  isChecked ? "bg-emerald-600" : "bg-slate-200"
+                                } relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer`}
+                              >
+                                <span className="sr-only">Toggle monitor status</span>
+                                <span
+                                  className={`${
+                                    isChecked ? "translate-x-4.5" : "translate-x-1"
+                                  } inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform`}
+                                />
+                              </Switch>
+                            </div>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );
@@ -675,18 +503,42 @@ const Monitor_cmp = () => {
               </tbody>
             </table>
           </div>
+        )}
 
-          
-        </div>
-      )}
-      <div className="w-full mt-10 mx-auto flex justify-center items-center">
-        <ResponsivePagination
-          current={currentPage}
-          total={Math.max(1, totalPages)}
-          onPageChange={setCurrentPage}
-        />
+        {/* Pagination Footer */}
+        {totalPages > 1 && (
+          <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-medium">
+            <span>
+              Showing {indexOfFirst + 1}–{Math.min(indexOfLast, filteredMonitors.length)} of{" "}
+              {filteredMonitors.length} monitors
+            </span>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 disabled:opacity-40 transition cursor-pointer"
+              >
+                <LuChevronLeft className="w-4 h-4" />
+              </button>
+
+              <span className="px-3 py-1 font-bold text-slate-900 bg-slate-100 rounded-lg">
+                {currentPage} / {totalPages}
+              </span>
+
+              <button
+                type="button"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                className="p-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 disabled:opacity-40 transition cursor-pointer"
+              >
+                <LuChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-      
     </div>
   );
 };

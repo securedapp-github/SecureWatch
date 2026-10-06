@@ -1,131 +1,414 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { TbClockHour9 } from "react-icons/tb";
-import { GrDocumentText } from "react-icons/gr";
-import { FaRegCalendarAlt } from "react-icons/fa";
-import { PiSquaresFourBold } from "react-icons/pi";
-import { RiPieChartLine } from "react-icons/ri";
-import { IoPersonSharp } from "react-icons/io5";
-import { LuNetwork } from "react-icons/lu";
-import SecureDapp from "../images/SecureDapp.png";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  LuShieldCheck,
+  LuShieldAlert,
+  LuZap,
+  LuHistory,
+  LuBarChart3,
+  LuFileSearch,
+  LuLayers,
+  LuBoxes,
+  LuUsers,
+  LuCreditCard,
+  LuPanelLeftClose,
+  LuPanelLeftOpen,
+  LuExternalLink,
+} from "react-icons/lu";
+import SecureDappLogo from "../images/SecureDapp.png";
+
+const SIDEBAR_EXPANDED_WIDTH = 264;
+const SIDEBAR_COLLAPSED_WIDTH = 72;
+
+const springTransition = {
+  type: "spring",
+  stiffness: 300,
+  damping: 30,
+  mass: 0.8,
+};
 
 export default function Sidebar() {
-  const [expand, setExpand] = useState(false);
   const location = useLocation();
-  const isAdminRoute = location.pathname === "/admin";
+  const [collapsed, setCollapsed] = useState(() => {
+    const saved = localStorage.getItem("sw_sidebar_collapsed");
+    return saved === "true";
+  });
 
-  const navigationItems = [
-    { to: "/dashboard", icon: <TbClockHour9 className="text-2xl" />, text: "Realtime Security" },
-    { href: "https://securedapp.io/solidity-shield", icon: <GrDocumentText className="text-2xl" />, text: "Security Audit", external: true },
-    { to: "/historical_insights", icon: <FaRegCalendarAlt className="text-2xl" />, text: "Historical Insights" },
-    { href: "https://securedapp.io/secure-trace", icon: <PiSquaresFourBold className="text-2xl" />, text: "Blockchain Forensics", external: true },
-    { to: "/analyticsmodule", icon: <RiPieChartLine className="text-2xl" />, text: "Analytics & Reporting" },
-    { to: "/admin", icon: <IoPersonSharp className="text-2xl" />, text: "Admin Panel" },
-    { to: "/comingsoon", icon: <LuNetwork className="text-2xl" />, text: "Integration Hub" },
-  ];
+  // Keep documentElement class synchronized for responsive CSS variables
+  useEffect(() => {
+    if (collapsed) {
+      document.documentElement.classList.add("sidebar-collapsed");
+    } else {
+      document.documentElement.classList.remove("sidebar-collapsed");
+    }
+    localStorage.setItem("sw_sidebar_collapsed", collapsed);
+  }, [collapsed]);
 
-  const sidebarVariants = {
-    expanded: { width: "270px", transition: { duration: 0.25, ease: "easeOut" } },
-    collapsed: { width: "88px", transition: { duration: 0.25, ease: "easeOut" } },
+  // Keyboard shortcut Ctrl+B / Cmd+B to toggle sidebar
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        setCollapsed((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const toggleSidebar = () => {
+    setCollapsed((prev) => !prev);
   };
 
-  const textVariants = {
-    hidden: { opacity: 0, x: -8 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.2 } },
+  const navGroups = [
+    {
+      groupTitle: "Security & Surveillance",
+      items: [
+        {
+          title: "Realtime Security",
+          to: "/dashboard",
+          icon: LuShieldCheck,
+          badge: "Live",
+          badgeVariant: "live",
+          matchPrefixes: ["/dashboard", "/monitor", "/alerts", "/function", "/event"],
+        },
+        {
+          title: "Contract Incidents",
+          to: "/contract_incidents",
+          icon: LuShieldAlert,
+        },
+        {
+          title: "Autodefend Engine",
+          to: "/autodefend",
+          icon: LuZap,
+          badge: "PRO",
+          badgeVariant: "pro",
+          matchPrefixes: ["/autodefend", "/autodefend_edit"],
+        },
+      ],
+    },
+    {
+      groupTitle: "Analytics & Forensics",
+      items: [
+        {
+          title: "Historical Insights",
+          to: "/historical_insights",
+          icon: LuHistory,
+        },
+        {
+          title: "Analytics & Reports",
+          to: "/analyticsmodule",
+          icon: LuBarChart3,
+          matchPrefixes: ["/analyticsmodule", "/analytics", "/algotics"],
+        },
+        {
+          title: "Security Audit",
+          href: "https://securedapp.io/solidity-shield",
+          icon: LuFileSearch,
+          external: true,
+        },
+        {
+          title: "Blockchain Forensics",
+          href: "https://securedapp.io/secure-trace",
+          icon: LuLayers,
+          external: true,
+        },
+      ],
+    },
+    {
+      groupTitle: "Platform & Governance",
+      items: [
+        {
+          title: "Integration Hub",
+          to: "/comingsoon",
+          icon: LuBoxes,
+        },
+        {
+          title: "Admin Panel",
+          to: "/admin",
+          icon: LuUsers,
+          matchPrefixes: ["/admin", "/admin_add_user"],
+        },
+        {
+          title: "Plans & Billing",
+          to: "/billing",
+          icon: LuCreditCard,
+          matchPrefixes: ["/billing", "/pricing"],
+        },
+      ],
+    },
+  ];
+
+  const checkIsActive = (item) => {
+    if (item.external) return false;
+    if (location.pathname === item.to) return true;
+    if (item.matchPrefixes) {
+      return item.matchPrefixes.some((p) => location.pathname.startsWith(p));
+    }
+    return false;
+  };
+
+  // Keep body and documentElement synchronized for app-shell fixed viewport
+  useEffect(() => {
+    document.body.classList.add("app-shell-active");
+    return () => {
+      document.body.classList.remove("app-shell-active");
+    };
+  }, []);
+
+  const badgeStyles = {
+    live: {
+      bg: "bg-emerald-50",
+      text: "text-emerald-700",
+      border: "border-emerald-200/70",
+      dot: "bg-emerald-500",
+    },
+    pro: {
+      bg: "bg-blue-50",
+      text: "text-blue-700",
+      border: "border-blue-200/70",
+      dot: null,
+    },
   };
 
   return (
     <motion.aside
-      id="sidebar"
-      onMouseEnter={() => setExpand(true)}
-      onMouseLeave={() => setExpand(false)}
-      animate={expand ? "expanded" : "collapsed"}
-      variants={sidebarVariants}
-      className={`${
-        expand ? "bg-white shadow-2xl items-start" : "bg-[#FAFAFA] items-center"
-      } border-r border-gray-200 border-t border-gray-200 h-[calc(100vh-80px)] ${
-        isAdminRoute ? "lg:flex" : "sm:flex"
-      } flex-col justify-between fixed top-20 left-0 hidden z-40 py-5 transition-colors select-none`}
+      id="main-sidebar"
+      aria-label="Sidebar navigation"
+      initial={false}
+      animate={{
+        width: collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH,
+      }}
+      transition={springTransition}
+      className="fixed top-16 left-0 h-[calc(100vh-64px)] z-40 flex flex-col justify-between select-none overflow-hidden bg-white border-r border-slate-200/80 shadow-[1px_0_3px_rgba(0,0,0,0.02)]"
     >
-      <div className={`flex flex-col w-full gap-2 ${expand ? "px-4" : "px-3"}`}>
-        {navigationItems.map((item, index) => {
-          const isActive = item.to && (location.pathname === item.to || (item.to !== "/dashboard" && location.pathname.startsWith(item.to)));
+      {/* ── Top: Toggle + Navigation ── */}
+      <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">
+        {/* Sidebar Header */}
+        <div
+          className={`flex items-center h-12 flex-shrink-0 ${
+            collapsed ? "justify-center px-2" : "justify-between px-4"
+          }`}
+        >
+          <AnimatePresence mode="wait">
+            {!collapsed && (
+              <motion.span
+                key="label"
+                initial={{ opacity: 0, x: -6 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -6 }}
+                transition={{ duration: 0.15 }}
+                className="text-[10px] font-bold tracking-[0.1em] uppercase text-slate-400"
+              >
+                Security Workspace
+              </motion.span>
+            )}
+          </AnimatePresence>
 
-          const content = (
-            <div
-              className={`group relative flex items-center gap-3.5 w-full px-3 py-2.5 rounded-xl transition-all duration-150 cursor-pointer ${
-                isActive
-                  ? "bg-[#2d5c8f] text-white shadow-sm font-medium"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
-              title={!expand ? item.text : ""}
-            >
-              {/* Active bar indicator */}
-              {isActive && (
-                <span className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-blue-300 rounded-r-full" />
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            title={collapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+          >
+            {collapsed ? (
+              <LuPanelLeftOpen className="w-[18px] h-[18px]" />
+            ) : (
+              <LuPanelLeftClose className="w-[18px] h-[18px]" />
+            )}
+          </button>
+        </div>
+
+        {/* Divider */}
+        <div className="mx-3.5 h-px bg-slate-200/70 flex-shrink-0" />
+
+        {/* Navigation Groups */}
+        <nav className="flex flex-col gap-5 pt-3 pb-4">
+          {navGroups.map((group, gIdx) => (
+            <div key={gIdx} className="flex flex-col">
+              {/* Group Title */}
+              {!collapsed ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.05, duration: 0.2 }}
+                  className="px-4 pb-1.5 text-[10px] font-bold uppercase tracking-[0.09em] text-slate-400"
+                >
+                  {group.groupTitle}
+                </motion.div>
+              ) : (
+                <div className="mx-auto my-1 w-5 h-px bg-slate-200/50" />
               )}
 
-              <div className={`flex-shrink-0 flex items-center justify-center ${isActive ? "text-white" : "text-slate-600 group-hover:text-blue-600"}`}>
-                {item.icon}
+              {/* Group Items */}
+              <div className="flex flex-col gap-0.5 px-2.5">
+                {group.items.map((item, iIdx) => {
+                  const isActive = checkIsActive(item);
+                  const Icon = item.icon;
+                  const badge = item.badge
+                    ? badgeStyles[item.badgeVariant] || badgeStyles.pro
+                    : null;
+
+                  const LinkWrapper = item.external ? "a" : Link;
+                  const linkProps = item.external
+                    ? {
+                        href: item.href,
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                      }
+                    : { to: item.to };
+
+                  return (
+                    <div key={iIdx} className="relative group">
+                      <LinkWrapper
+                        {...linkProps}
+                        className={`
+                          relative flex items-center gap-3 w-full rounded-xl text-[13px]
+                          transition-all duration-150 ease-out
+                          ${collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2"}
+                          ${
+                            isActive
+                              ? "bg-blue-50/80 text-blue-700 font-semibold shadow-[inset_0_0_0_1px_rgba(59,130,246,0.15)]"
+                              : "text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium"
+                          }
+                        `}
+                      >
+                        {/* Active left indicator pill */}
+                        {isActive && (
+                          <motion.div
+                            layoutId="sidebar-active-indicator"
+                            className="absolute left-1 top-[7px] bottom-[7px] w-1 rounded-full bg-blue-600"
+                            transition={springTransition}
+                          />
+                        )}
+
+                        <div className="flex items-center gap-3 min-w-0">
+                          <Icon
+                            className={`w-[18px] h-[18px] flex-shrink-0 transition-colors duration-150 ${
+                              isActive
+                                ? "text-blue-600"
+                                : "text-slate-400 group-hover:text-slate-600"
+                            }`}
+                          />
+                          <AnimatePresence mode="wait">
+                            {!collapsed && (
+                              <motion.span
+                                key={`label-${item.title}`}
+                                initial={{ opacity: 0, width: 0 }}
+                                animate={{ opacity: 1, width: "auto" }}
+                                exit={{ opacity: 0, width: 0 }}
+                                transition={{ duration: 0.15 }}
+                                className="truncate whitespace-nowrap"
+                              >
+                                {item.title}
+                              </motion.span>
+                            )}
+                          </AnimatePresence>
+                        </div>
+
+                        {/* Badges & External icon */}
+                        <AnimatePresence>
+                          {!collapsed && (
+                            <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.1 }}
+                              className="flex items-center gap-1.5 flex-shrink-0 ml-auto"
+                            >
+                              {badge && (
+                                <span
+                                  className={`
+                                    inline-flex items-center gap-1 text-[9.5px] uppercase font-bold
+                                    tracking-wider px-1.5 py-[2px] rounded-md border
+                                    ${badge.bg} ${badge.text} ${badge.border}
+                                  `}
+                                >
+                                  {badge.dot && (
+                                    <span
+                                      className={`w-1.5 h-1.5 rounded-full ${badge.dot} animate-pulse`}
+                                    />
+                                  )}
+                                  {item.badge}
+                                </span>
+                              )}
+                              {item.external && (
+                                <LuExternalLink className="w-3.5 h-3.5 text-slate-400 opacity-0 group-hover:opacity-70 transition-opacity duration-150" />
+                              )}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </LinkWrapper>
+
+                      {/* Tooltip (Collapsed Mode) */}
+                      {collapsed && (
+                        <div
+                          className="
+                            pointer-events-none absolute left-[calc(100%+8px)] top-1/2 -translate-y-1/2 z-50
+                            hidden group-hover:flex items-center gap-2
+                            px-3 py-1.5 bg-slate-900 text-white text-xs font-medium
+                            rounded-lg shadow-xl whitespace-nowrap
+                            border border-slate-800
+                          "
+                        >
+                          <span>{item.title}</span>
+                          {item.badge && (
+                            <span className="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-px rounded">
+                              {item.badge}
+                            </span>
+                          )}
+                          {item.external && (
+                            <LuExternalLink className="w-3 h-3 text-slate-400" />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-
-              <AnimatePresence>
-                {expand && (
-                  <motion.span
-                    variants={textVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="hidden"
-                    className="text-sm text-nowrap tracking-wide font-medium"
-                  >
-                    {item.text}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-
-              {/* Floating Tooltip when collapsed */}
-              {!expand && (
-                <div className="pointer-events-none absolute left-full ml-3 px-2.5 py-1 bg-slate-900 text-white text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap z-50">
-                  {item.text}
-                </div>
-              )}
             </div>
-          );
-
-          const LinkComponent = item.external ? "a" : Link;
-          const linkProps = item.external
-            ? { href: item.href, target: "_blank", rel: "noopener noreferrer" }
-            : { to: item.to };
-
-          return (
-            <LinkComponent key={index} {...linkProps} className="w-full block">
-              {content}
-            </LinkComponent>
-          );
-        })}
+          ))}
+        </nav>
       </div>
 
-      <div className={`flex items-center gap-3 w-full border-t border-gray-200 pt-4 ${expand ? "px-5" : "justify-center"}`}>
-        <img
-          src={SecureDapp}
-          alt="SecureDapp logo"
-          className="w-8 h-8 object-contain flex-shrink-0"
-        />
-        <AnimatePresence>
-          {expand && (
-            <motion.div
-              variants={textVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              className="flex flex-col overflow-hidden"
+      {/* ── Footer: Brand Pill ── */}
+      <div className="flex-shrink-0 border-t border-slate-200/70 bg-slate-50/50">
+        {!collapsed ? (
+          <div className="p-3">
+            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200/80 shadow-xs">
+              <img
+                src={SecureDappLogo}
+                alt="SecureWatch"
+                className="w-6 h-6 object-contain flex-shrink-0"
+              />
+              <span className="text-[12px] font-semibold text-slate-800 leading-tight truncate">
+                SecureWatch
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center py-3 group relative">
+            <img
+              src={SecureDappLogo}
+              alt="SecureWatch"
+              className="w-6 h-6 object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-150"
+            />
+
+            {/* Collapsed footer tooltip */}
+            <div
+              className="
+                pointer-events-none absolute left-[calc(100%+8px)] top-1/2 -translate-y-1/2 z-50
+                hidden group-hover:flex items-center gap-2
+                px-3 py-1.5 bg-slate-900 text-white text-xs font-medium
+                rounded-lg shadow-xl whitespace-nowrap border border-slate-800
+              "
             >
-              <span className="text-slate-900 font-bold text-sm tracking-tight">SecureWatch</span>
-              <span className="text-slate-400 text-xs font-normal">v1.2.0 • Online</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <span>SecureWatch</span>
+            </div>
+          </div>
+        )}
       </div>
     </motion.aside>
   );

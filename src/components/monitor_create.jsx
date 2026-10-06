@@ -1,7 +1,6 @@
-//if ever facing bad request error, try re logging in. Due to token expiration, bad request error may come.
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import axios from "axios";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { baseUrl } from "../Constants/data";
 import NewNavbar from "./NewNavbar";
@@ -9,753 +8,1460 @@ import Sidebar from "./Sidebar";
 import { Buffer } from "buffer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { IoMdCheckmarkCircle } from "react-icons/io";
-import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import Web3 from "web3";
+import {
+  LuArrowLeft,
+  LuArrowRight,
+  LuCheck,
+  LuCheckCircle2,
+  LuLayers,
+  LuTag,
+  LuKeyRound,
+  LuFileCode2,
+  LuZap,
+  LuShieldAlert,
+  LuBellRing,
+  LuCopy,
+  LuClipboard,
+  LuSparkles,
+  LuCode2,
+  LuHelpCircle,
+  LuExternalLink,
+  LuInfo,
+  LuCoins,
+  LuImage,
+  LuLock,
+  LuMail,
+  LuWebhook,
+  LuChevronDown,
+  LuChevronUp,
+  LuSliders,
+  LuSearch,
+  LuX,
+  LuGlobe,
+} from "react-icons/lu";
+import { TbLoader2 } from "react-icons/tb";
+import { ALL_NETWORKS, FEATURED_NETWORKS } from "../Constants/networks";
+
+// --- PRESET ABI TEMPLATES ---
+const ERC20_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "from", type: "address" },
+      { indexed: true, name: "to", type: "address" },
+      { indexed: false, name: "value", type: "uint256" },
+    ],
+    name: "Transfer",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "owner", type: "address" },
+      { indexed: true, name: "spender", type: "address" },
+      { indexed: false, name: "value", type: "uint256" },
+    ],
+    name: "Approval",
+    type: "event",
+  },
+  {
+    inputs: [
+      { name: "to", type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    name: "transfer",
+    outputs: [{ name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { name: "spender", type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    name: "approve",
+    outputs: [{ name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { name: "from", type: "address" },
+      { name: "to", type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    name: "transferFrom",
+    outputs: [{ name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
+const ERC721_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "from", type: "address" },
+      { indexed: true, name: "to", type: "address" },
+      { indexed: true, name: "tokenId", type: "uint256" },
+    ],
+    name: "Transfer",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "owner", type: "address" },
+      { indexed: true, name: "approved", type: "address" },
+      { indexed: true, name: "tokenId", type: "uint256" },
+    ],
+    name: "Approval",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "owner", type: "address" },
+      { indexed: true, name: "operator", type: "address" },
+      { indexed: false, name: "approved", type: "bool" },
+    ],
+    name: "ApprovalForAll",
+    type: "event",
+  },
+];
+
+const VAULT_ABI = [
+  {
+    anonymous: false,
+    inputs: [{ indexed: false, name: "account", type: "address" }],
+    name: "Paused",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [{ indexed: false, name: "account", type: "address" }],
+    name: "Unpaused",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "sender", type: "address" },
+      { indexed: false, name: "amount", type: "uint256" },
+    ],
+    name: "Deposit",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "recipient", type: "address" },
+      { indexed: false, name: "amount", type: "uint256" },
+    ],
+    name: "Withdrawal",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "previousOwner", type: "address" },
+      { indexed: true, name: "newOwner", type: "address" },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "pause",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "unpause",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
+
+
+// --- TEMPLATES LIST ---
+const TEMPLATE_PRESETS = [
+  {
+    id: "erc20",
+    title: "ERC-20 Fungible Token",
+    badge: "Most Common",
+    badgeClass: "bg-blue-50 text-blue-700 border-blue-200",
+    icon: LuCoins,
+    desc: "Monitors token transfers, approvals, flashloan drains, and high-value wallet movements.",
+    sampleName: "USDT Core Sentinel",
+    abi: ERC20_ABI,
+    events: [
+      { name: "Transfer", desc: "Outflow & balance transfers", severity: "High" },
+      { name: "Approval", desc: "Allowance changes & drain approvals", severity: "Medium" },
+    ],
+  },
+  {
+    id: "erc721",
+    title: "ERC-721 / 1155 NFT",
+    badge: "Digital Collectibles",
+    badgeClass: "bg-purple-50 text-purple-700 border-purple-200",
+    icon: LuImage,
+    desc: "Monitors non-fungible transfers, operator approvals, batch mints, and marketplace authorizations.",
+    sampleName: "Treasury NFT Vault",
+    abi: ERC721_ABI,
+    events: [
+      { name: "Transfer", desc: "Token ownership shifts & transfers", severity: "High" },
+      { name: "ApprovalForAll", desc: "Global operator permissions granted", severity: "Critical" },
+    ],
+  },
+  {
+    id: "vault",
+    title: "DeFi & Pausable Vault",
+    badge: "Security Sensitive",
+    badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    icon: LuLock,
+    desc: "Monitors emergency pause circuit breakers, admin key rotations, and protocol capital flows.",
+    sampleName: "Liquidity Escrow Vault",
+    abi: VAULT_ABI,
+    events: [
+      { name: "Paused", desc: "Emergency circuit breaker triggered", severity: "Critical" },
+      { name: "Unpaused", desc: "Normal operations resumed", severity: "Medium" },
+      { name: "Deposit", desc: "Large protocol capital inflow", severity: "Low" },
+      { name: "Withdrawal", desc: "Outflows & liquidity removals", severity: "High" },
+      { name: "OwnershipTransferred", desc: "Admin key rotation detected", severity: "Critical" },
+    ],
+  },
+  {
+    id: "custom",
+    title: "Custom Contract ABI",
+    badge: "Advanced",
+    badgeClass: "bg-slate-100 text-slate-700 border-slate-300",
+    icon: LuFileCode2,
+    desc: "Paste your compiled contract ABI JSON or upload an artifact to configure custom method listeners.",
+    sampleName: "Custom Sentinel Monitor",
+    abi: [],
+    events: [],
+  },
+];
+
+// --- 5 WIZARD STEPS ---
+const STEPS = [
+  { step: 1, title: "Network", desc: "Select Chain", icon: LuLayers },
+  { step: 2, title: "Target", desc: "Address & Name", icon: LuKeyRound },
+  { step: 3, title: "Standard", desc: "Contract Template", icon: LuFileCode2 },
+  { step: 4, title: "Events", desc: "Armed Listeners", icon: LuZap },
+  { step: 5, title: "Alerts", desc: "Dispatches & Launch", icon: LuBellRing },
+];
 
 function Monitor_create() {
-  //  const { email, token } = location.state || "";
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const email = localStorage.getItem("email");
-  const planType = parseInt(localStorage.getItem("planType")) || 0;
-  const decoded = jwtDecode(token);
-  const user_Id = decoded.userId;
-  const userEmail = localStorage.getItem("email");
-  console.log(userEmail);
-
-  const navigate = useNavigate();
-  const [monitorName, setMonitorName] = useState("");
-  const [riskCategory, setRiskCategory] = useState("");
-  const [address, setAddress] = useState("");
-  const [inputType, setInputType] = useState("ABI");
+  const decoded = (() => {
+    try {
+      return token ? jwtDecode(token) : {};
+    } catch {
+      return {};
+    }
+  })();
+  const user_Id = decoded.userId || localStorage.getItem("userId") || "";
+  const userEmail = localStorage.getItem("email") || "";
   const parent_id = localStorage.getItem("parent_id");
-  //const [appId, setAppId] = useState('');
 
-  const [network, setNetwork] = useState("");
-  const [networkName, setNetworkName] = useState("");
-  const [abi, setAbi] = useState("");
-  // const [smartContract, setSmartContract] = useState("");
-  const [Algoevents, setAlgoEvents] = useState([]);
-  const [code, setCode] = useState("");
-  const [functions, setFunctions] = useState([]);
-  const Token = localStorage.getItem("token");
-  console.log(Token);
-  const [category, setCategory] = useState(2);
+  // Step state
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  console.log("Monitor name:", monitorName);
-  console.log("network:", network);
+  // Step 1: Network
+  const [network, setNetwork] = useState("1");
+  const [networkName, setNetworkName] = useState("Ethereum Mainnet");
+  const [chainSearch, setChainSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [showAllChains, setShowAllChains] = useState(false);
 
-  const handleCategoryChange = (e) => {
-    setCategory(parseInt(e.target.value));
-    setAddress(""); // Clear input when switching between categories
-  };
-
-  // console.log("smart contract:", code);
-  console.log("type", category);
-
-  const handleAppIdChange = useCallback((e) => {
-    const value = e.target.value;
-
-    // Remove any non-digit characters
-    const sanitizedValue = value.replace(/\D/g, "");
-
-    // Ensure the value is within the valid range (0 to 2^64 - 1)
-    // eslint-disable-next-line no-undef
-    const numValue = BigInt(sanitizedValue || "0");
-    // eslint-disable-next-line no-undef
-    const maxValue = BigInt("18446744073709551615");
-
-    if (numValue <= maxValue) {
-      setAddress(sanitizedValue);
-    }
-  }, []);
-
-  const approvalEventHandlers = (code) => {
-    const eventHandlers = [];
-    const eventRegex =
-      /txna ApplicationArgs 0\s*([\s\S]*?)pushbytes 0x([\da-fA-F]+)/g;
-    let match;
-
-    while ((match = eventRegex.exec(code)) !== null) {
-      const hexValue = match[2];
-      const methodName = Buffer.from(hexValue, "hex").toString("utf8");
-      eventHandlers.push(methodName);
+  // Filtered networks based on search, category pill, or "Click More" toggle
+  const displayedNetworks = useMemo(() => {
+    let list = ALL_NETWORKS;
+    if (selectedCategory === "Featured") {
+      list = list.filter((n) => n.isFeatured);
+    } else if (selectedCategory !== "All") {
+      list = list.filter((n) => n.category === selectedCategory);
+    } else if (!showAllChains && !chainSearch.trim()) {
+      list = FEATURED_NETWORKS;
     }
 
-    return eventHandlers;
-  };
-
-  // const extractEventHandlers = (code) => {
-  //     const eventHandlers = [];
-  //     const eventRegex = /Txn\.application_args\[0\]\s*==\s*Bytes\("([^"]+)"\)/g;
-  //     let match;
-  //     while ((match = eventRegex.exec(code)) !== null) {
-  //       eventHandlers.push(match[1]);
-  //     }
-  //     return eventHandlers;
-  //   };
-  const extractEventHandlers = (code) => {
-    // himanshu
-
-    const methodsInfo = {};
-    // Regular expression to find hex-encoded method names in TEAL
-    const eventRegex = /txna ApplicationArgs 0\s+pushbytes 0x([0-9a-fA-F]+)/g;
-    let match;
-  
-    while ((match = eventRegex.exec(code)) !== null) {
-      // Convert hex to string
-      const hexString = match[1];
-      const methodName = Buffer.from(hexString, "hex").toString();
-      const base64Name = Buffer.from(methodName).toString("base64");
-  
-      // Add to the result object
-      methodsInfo[base64Name] = {
-        name: methodName
-      };
+    if (chainSearch.trim()) {
+      const q = chainSearch.toLowerCase().trim();
+      list = list.filter(
+        (n) =>
+          n.name.toLowerCase().includes(q) ||
+          n.tag.toLowerCase().includes(q) ||
+          (n.desc && n.desc.toLowerCase().includes(q)) ||
+          String(n.chainId).includes(q)
+      );
     }
-    console.log(methodsInfo);
-    const methodArray = Object.entries(methodsInfo).map(([base64Name, method]) => {
+    return list;
+  }, [selectedCategory, showAllChains, chainSearch]);
+
+  // Step 2: Target & Identity
+  const [address, setAddress] = useState("");
+  const [monitorName, setMonitorName] = useState("");
+  const [category, setCategory] = useState(2); // 2: App ID, 1: Asset ID (Algorand)
+  const [code, setCode] = useState(""); // Algorand TEAL
+
+  // Step 3: Template & ABI
+  const [selectedTemplateId, setSelectedTemplateId] = useState("erc20");
+  const [rawAbiText, setRawAbiText] = useState(JSON.stringify(ERC20_ABI, null, 2));
+  const [showRawAbiEditor, setShowRawAbiEditor] = useState(false);
+
+  // Step 4: Discovered Events
+  const [selectedEvents, setSelectedEvents] = useState({
+    Transfer: true,
+    Approval: true,
+  });
+
+  // Step 5: Alerts
+  const [emailInput, setEmailInput] = useState(userEmail);
+  const [slackWebhook, setSlackWebhook] = useState("");
+  const [discordWebhook, setDiscordWebhook] = useState("");
+
+  const isAlgorand = network === "1300" || network === "1301";
+
+  // Checksum / Address Validation (UI/UX Pro-Max)
+  const addressValidation = useMemo(() => {
+    const raw = address.trim();
+    if (!raw) return null;
+
+    if (isAlgorand) {
+      const isNum = /^\d+$/.test(raw);
       return {
-        base64: base64Name,
-        name: method.name,
-        args: method.name
+        valid: isNum,
+        severity: isNum ? "success" : "error",
+        charsCount: raw.length,
+        message: isNum
+          ? `Valid Algorand ${category === 2 ? "App ID" : "Asset ID"}`
+          : "Algorand ID must contain numeric digits only",
       };
-    });
-    return methodArray;
+    }
 
-    // // Validate and parse if necessary
-    // if (typeof code === "string") {
-    //   try {
-    //     code = JSON.parse(code);
-    //   } catch (error) {
-    //     console.error("Failed to parse code as JSON:", error);
-    //     return [];
-    //   }
-    // }
+    // EVM Address Validation
+    if (!raw.startsWith("0x") && !raw.startsWith("0X")) {
+      const isCleanHex = /^[a-fA-F0-9]+$/.test(raw);
+      if (raw.length === 40 && isCleanHex) {
+        return {
+          valid: false,
+          severity: "warning",
+          charsCount: raw.length,
+          message: "Missing '0x' prefix",
+        };
+      }
+      return {
+        valid: false,
+        severity: "error",
+        charsCount: raw.length,
+        message: "Address must begin with '0x'",
+      };
+    }
 
-    // if (!code || !Array.isArray(code.methods)) {
-    //   console.error(
-    //     "Invalid code format. Expected an object with a methods array."
-    //   );
-    //   return [];
-    // }
+    const hexPart = raw.slice(2);
+    const hasInvalidChars = !/^[a-fA-F0-9]*$/.test(hexPart);
 
-    // const methodsInfo = [];
-    // code.methods.forEach((method) => {
-    //   const methodInfo = {
-    //     name: method.name,
-    //     args: method.args.map((arg) => `${arg.name}: ${arg.type}`),
-    //     returns: method.returns.type,
-    //   };
-    //   methodsInfo.push(methodInfo);
-    // });
+    if (hasInvalidChars) {
+      return {
+        valid: false,
+        severity: "error",
+        charsCount: raw.length,
+        message: "Invalid characters: only hexadecimal (0-9, a-f) allowed",
+      };
+    }
 
-    // return methodsInfo;
-  };
+    if (raw.length < 42) {
+      return {
+        valid: false,
+        severity: "warning",
+        charsCount: raw.length,
+        message: `Incomplete address (${raw.length}/42 chars - need ${42 - raw.length} more)`,
+      };
+    }
 
-  const sendSmartContract = () => {
-    console.log("Code value before extraction:", code); // Debugging step
-    const extractedEvents = extractEventHandlers(code);
-    setAlgoEvents(extractedEvents);
-    console.log("Extracted methods and arguments:", extractedEvents);
-  };
+    if (raw.length > 42) {
+      return {
+        valid: false,
+        severity: "error",
+        charsCount: raw.length,
+        message: `Address exceeds 42 characters (${raw.length}/42 chars)`,
+      };
+    }
 
-  // const sendSmartContract = () => {
-  //   let extractedEvents = [];
+    return {
+      valid: true,
+      severity: "success",
+      charsCount: raw.length,
+      message: "Valid EVM 20-byte contract address",
+    };
+  }, [address, isAlgorand, category]);
 
-  //   if (inputType === "Approval Program") {
-  //     extractedEvents = approvalEventHandlers(code);  // For Approval Program
-  //   } else {
-  //     extractedEvents = extractEventHandlers(code);   // For ABI
-  //   }
+  // Derived available events from current template/ABI
+  const discoveredEvents = useMemo(() => {
+    if (selectedTemplateId !== "custom") {
+      const tmpl = TEMPLATE_PRESETS.find((t) => t.id === selectedTemplateId);
+      return tmpl?.events || [];
+    }
+    try {
+      const parsed = JSON.parse(rawAbiText);
+      if (Array.isArray(parsed)) {
+        return parsed
+          .filter((item) => item.type === "event")
+          .map((ev) => ({
+            name: ev.name,
+            desc: `Custom event: ${ev.name}`,
+            severity: "High",
+          }));
+      }
+    } catch {
+      // invalid JSON
+    }
+    return [];
+  }, [selectedTemplateId, rawAbiText]);
 
-  //   setAlgoEvents(extractedEvents);
-  //   console.log("Extracted events:", extractedEvents);
-  // };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Monitor name:", monitorName);
-    console.log("network:", network);
-    console.log("network type:",typeof network);
-    console.log("address:", address);
-    console.log("abi:", abi);
-    console.log("risk category:", riskCategory);
-
-    // Common validation for all inputs
-    if(network != 1300 && network != 1301 && network !== 1300 && network !== 1301){
-      if (!monitorName || !network || !address || !abi  ) {
-        console.error("Monitor inputs are incomplete.");
-        toast.error("Please fill out all monitor fields.");
-        return;
+  // Handle template selection
+  const handleSelectTemplate = (template) => {
+    setSelectedTemplateId(template.id);
+    if (template.id !== "custom") {
+      setRawAbiText(JSON.stringify(template.abi, null, 2));
+      const evMap = {};
+      template.events.forEach((ev) => {
+        evMap[ev.name] = true;
+      });
+      setSelectedEvents(evMap);
+      if (!monitorName) {
+        setMonitorName(template.sampleName);
       }
     }
-    
-    
+  };
 
+  // Paste address helper
+  const handlePasteAddress = async () => {
     try {
-      const data = {
-        name: monitorName,
+      const text = await navigator.clipboard.readText();
+      if (text) {
+        let trimmed = text.trim();
+        if (/^[a-fA-F0-9]{40}$/.test(trimmed)) {
+          trimmed = `0x${trimmed}`;
+        }
+        setAddress(trimmed);
+        toast.info("Pasted address from clipboard.", { autoClose: 1000 });
+      }
+    } catch {
+      toast.error("Clipboard access denied. Please paste manually.");
+    }
+  };
+
+  // Step Navigation Validation
+  const canGoNextFromStep1 = !!network;
+  const canGoNextFromStep2 =
+    address.trim().length > 0 &&
+    monitorName.trim().length > 0 &&
+    Boolean(addressValidation?.valid);
+  const canGoNextFromStep3 =
+    selectedTemplateId !== "custom" || (rawAbiText.trim().length > 0 && (() => {
+      try {
+        return Array.isArray(JSON.parse(rawAbiText));
+      } catch {
+        return false;
+      }
+    })());
+  const canGoNextFromStep4 = Object.values(selectedEvents).some(Boolean);
+
+  // Final Submission
+  const handleFinalDeploy = async () => {
+    setIsSubmitting(true);
+    try {
+      const isEvm = !isAlgorand;
+      const finalAbi = isAlgorand
+        ? (category === 1 ? "Asset_ABI" : code)
+        : rawAbiText;
+
+      const payload = {
+        name: monitorName.trim(),
         user_id: parent_id != 0 ? parseInt(parent_id) : parseInt(user_Id),
         network: parseInt(network),
-        address: address,
+        address: address.trim(),
         alert_type: 1,
-        alert_data: "",
-        abi: category === 1 ? "Asset_ABI" : code,
-        //Riskcategory: riskCategory
+        alert_data: emailInput.trim(),
+        slack_webhook: slackWebhook.trim() || discordWebhook.trim(),
+        abi: finalAbi,
         category: parseInt(category),
       };
-      console.log("Sending data:", data);
-      // Handle Algorand network specifically
-      if (network === "1300" || network === "1301") {
-        data.abi = category === 1 ? "Asset_ABI" : code;
+
+      let monitorId = null;
+
+      try {
         const response = await axios.post(
           "https://139-59-5-56.nip.io:3443/add_monitor",
-          data,
+          payload,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
+            timeout: 8000,
           }
         );
-        if(response.status === 401){
-          toast.error("Session Expired, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
+        if (response?.data?.id) {
+          monitorId = response.data.id;
         }
-        if(response.status === 403){
-          toast.error("Unauthorized Access, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
-        }
-        console.log("API response:", response.data);
-        console.log("type:", category);
-
-        toast.success("Monitor created successfully!", {
-          autoClose: 500,
-          onClose: () => {
-
-            navigate("/algoevents", {
-              state: {
-                name: monitorName,
-                network: networkName,
-                address: address,
-                rk: riskCategory,
-                abi: category === 1 ? "Asset_ABI" : code,
-                m_id: response.data.id,
-                email: email,
-                token: token,
-                functions: functions,
-                Algoevents: Algoevents,
-                category: parseInt(category),
-                inputType: inputType,
-              },
-            });
-          },
-        });
-      } else {
-        // Handle other networks
-        data.abi = abi;
-
-        const response = await axios.post(
-          "https://139-59-5-56.nip.io:3443/add_monitor",
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if(response.status === 401){
-          toast.error("Session Expired, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
-        }
-        if(response.status === 403){
-          toast.error("Unauthorized Access, Please login again",
-            {
-              autoClose: 500,
-              onClose: () => {
-                localStorage.clear();
-                navigate("/login");
-              },
-            }
-  
-          )
-        }
-        console.log("monitor id is", response.data.id);
-
-        toast.success("Details updated successfully!", {
-          autoClose: 500,
-          onClose: () => {
-            navigate("/event", {
-              state: {
-                name: monitorName,
-                network: networkName,
-                address: address,
-                rk: riskCategory,
-                abi: abi,
-                m_id: response.data.id,
-                email: email,
-                token: token,
-              },
-            });
-          },
-        });
+      } catch (err) {
+        console.error("Backend add_monitor call error:", err);
+        throw err;
       }
-    } catch (error) {
-      console.error("API request failed:", error);
-      toast.error("Failed to create monitor. Please try again!", {
-        autoClose: 500,
+
+      // Automatically register selected events in background if EVM
+      if (isEvm && monitorId) {
+        try {
+          const web3 = new Web3();
+          const parsed = JSON.parse(finalAbi);
+          const evNames = Object.keys(selectedEvents).filter((k) => selectedEvents[k]);
+
+          for (const evName of evNames) {
+            const evDef = parsed.find((item) => item.type === "event" && item.name === evName);
+            if (evDef) {
+              const sigInputs = (evDef.inputs || []).map((i) => i.type).join(",");
+              const sigData = `${evName}(${sigInputs})`;
+              let sigHex = "";
+              try {
+                sigHex = web3.eth.abi.encodeEventSignature(sigData);
+              } catch {
+                sigHex = `0x${Buffer.from(sigData).toString("hex").slice(0, 64)}`;
+              }
+
+              await axios.post(
+                `${baseUrl}/add_event`,
+                {
+                  name: evName,
+                  mid: monitorId,
+                  signature: sigHex,
+                  arguments: {},
+                },
+                {
+                  headers: { Authorization: `Bearer ${token}` },
+                  timeout: 4000,
+                }
+              ).catch((e) => console.warn("Optional event sync note:", e));
+            }
+          }
+        } catch (e) {
+          console.warn("Event auto-registration notice:", e);
+        }
+      }
+
+      toast.success("Monitor armed and deployed successfully!", {
+        autoClose: 800,
+        onClose: () => {
+          navigate("/monitor");
+        },
       });
+    } catch (err) {
+      console.error("Monitor creation error:", err);
+      toast.error("Failed to deploy monitor. Please verify inputs.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-screen overflow-hidden bg-[#FAFAFB] flex flex-col select-none">
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
+        theme="colored"
       />
       <NewNavbar email={userEmail} />
-      <div className="bg-[#FAFAFA] w-full flex min-h-full">
-        <Sidebar />
 
-        <div className=" h-full lg:flex flex-col gap-5 ml-[100px] hidden lg:mt-20 fixed ">
-          <div className={`mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]`}>
-            <h1 className="text-[#6A6A6A]  font-semibold text-nowrap">
-              Realtime Security
-            </h1>
-          </div>
-          <div className="flex flex-col gap-5 ml-5">
-            <Link to="/dashboard" className="text-[#6A6A6A]">
-            Dashboard
-            </Link>
-            <Link to="/monitor" className="text-[#6A6A6A]">
-            Contract Monitor
-            </Link>
-            {/* <Link to="/log" className="text-[#6A6A6A]">
-              Logs
-            </Link> */}
-          </div>
+      <div className="w-full flex flex-1 h-[calc(100vh-64px)] overflow-hidden">
+        <div className="hidden sm:block flex-shrink-0">
+          <Sidebar />
         </div>
 
-        {/* <div className="  mt-24 w-full  sm:w-[440px] flex flex-col gap-6 sm:ml-72">
-       
-      </div> */}
-
-        <div className="mt-24 w-full sm:ml-28  lg:ml-72 flex justify-start flex-col md:flex-row md:gap-10 lg:gap-20 px-4">
-          <div className="w-full lg:w-1/4 ">
-            <Link to="/monitor">
-              <div className="flex">
-                <div>
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g clip-path="url(#clip0_173_1147)">
-                      <path
-                        d="M22.6223 15.9674H9.3152"
-                        stroke="#7D7D7D"
-                        stroke-width="1.88191"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M15.9688 22.621L9.3152 15.9674L15.9688 9.31387"
-                        stroke="#7D7D7D"
-                        stroke-width="1.88191"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_173_1147">
-                        <rect
-                          width="22.5829"
-                          height="22.5829"
-                          fill="white"
-                          transform="translate(15.9688 31.9368) rotate(-135)"
-                        />
-                      </clipPath>
-                    </defs>
-                  </svg>
-                </div>
-                <div
-                  className="text-base text-[#7D7D7D] my-auto"
-                  style={{ color: "black" }}
+        <main className="main-content-layout w-full flex flex-col pb-16 px-4 sm:px-8 lg:px-12 pt-3 transition-all scrollbar-thin">
+          {/* Sticky Top Bar & Breadcrumb */}
+          <div className="sticky top-0 z-20 bg-[#FAFAFB]/95 backdrop-blur-md pt-2 pb-3 border-b border-slate-200/80 -mx-4 sm:-mx-8 lg:-mx-12 px-4 sm:px-8 lg:px-12">
+            <div className="w-full max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <div className="flex items-center gap-3">
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-lg px-2.5 py-1.5 shadow-2xs transition-all"
+                  title="Return to Dashboard"
                 >
-                  Back to Monitors
+                  <LuArrowLeft className="w-3.5 h-3.5" />
+                  <span>Exit Wizard</span>
+                </Link>
+
+                <div className="h-4 w-px bg-slate-200 hidden sm:block" />
+
+                <div className="flex items-baseline gap-2">
+                  <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                    Create Contract Monitor
+                  </h1>
+                  <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200/70 px-2.5 py-0.5 rounded-full">
+                    Step {currentStep} of 5
+                  </span>
                 </div>
               </div>
-            </Link>
-            <div
-              className="text-3xl font-medium mt-3"
-              style={{ color: "black" }}
-            >
-              Create Monitor
-            </div>
 
-            <div
-              className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm bg-white"
-              style={{ border: "1px solid #2D5C8F" }}
-            >
-              <div className="my-auto" style={{ color: "black" }}>
-                General Information
-              </div>
-              <div className="my-auto ml-auto">
-                {/* <svg
-                    width="27"
-                    height="26"
-                    viewBox="0 0 27 26"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="0.832031"
-                      y="26"
-                      width="26"
-                      height="26"
-                      rx="2.92308"
-                      transform="rotate(-90 0.832031 26)"
-                      fill="#2D5C8F"
-                    />
-                    <path
-                      d="M11.5469 18.647L16.6175 13.5763L11.5469 8.50571"
-                      stroke="white"
-                      stroke-width="1.23515"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg> */}
-                <IoMdCheckmarkCircle className="text-2xl text-[#2D5C8F]" />
-              </div>
-            </div>
-            <div
-              className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"
-              style={{ border: "1px solid #CACACA" }}
-            >
-              <div className="my-auto"> Events</div>
-              <div className="my-auto ml-auto">
-                {/* <svg
-                    width="27"
-                    height="26"
-                    viewBox="0 0 27 26"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M11.5059 18.6469L16.5765 13.5763L11.5059 8.50562"
-                      stroke="black"
-                      stroke-width="1.69021"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg> */}
-                <IoCheckmarkCircleOutline className="text-2xl " />
-              </div>
-            </div>
-            <div
-            data-tip="This feature is available only for Pro users. Upgrade your plan to access Auto Defend."
-            className={`${planType===0?"tooltip  cursor-pointer":""} mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm`}
-                             
-                              style={{ border: "1px solid #CACACA" }}
-                            >
-                
-                              <div className="my-auto " >
-                                {" "}
-                               Autodefend
-                              </div>
-                              <div className="my-auto ml-auto">
-                
-                                <IoCheckmarkCircleOutline className="text-2xl " />
-                              </div>
-                            </div>
-
-            <div
-              className="mt-5 hidden sm:flex gap-2 px-4 py-3 rounded-sm"
-              style={{ border: "1px solid #CACACA" }}
-            >
-              <div className="my-auto">Alerts</div>
-              <div className="my-auto ml-auto">
-                {/* <svg
-                    width="27"
-                    height="26"
-                    viewBox="0 0 27 26"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M11.5059 18.6469L16.5765 13.5763L11.5059 8.50562"
-                      stroke="black"
-                      stroke-width="1.69021"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg> */}
-                <IoCheckmarkCircleOutline className="text-2xl " />
-              </div>
-            </div>
-            <div className="sm:hidden flex gap-2 items-center justify-around mt-5  w-full">
-              <div className=" flex gap-1 items-center ">
-                <IoMdCheckmarkCircle className="text-3xl text-[#2D5C8F]" />
-                <p className="text-black">
-                  General <br /> Information
-                </p>
-              </div>
-              <div className=" flex gap-1 items-center">
-                <IoCheckmarkCircleOutline className="text-3xl " />
-                <p className="">Events</p>
-              </div>
-
-              <div className=" flex gap-1 items-center">
-                <IoCheckmarkCircleOutline className="text-3xl " />
-                <p className="">Alerts</p>
+              {/* Step indicator tracker */}
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+                <span>{STEPS[currentStep - 1].title}</span>
+                <div className="w-24 bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div
+                    className="bg-blue-600 h-full rounded-full transition-all duration-300"
+                    style={{ width: `${(currentStep / 5) * 100}%` }}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-4 lg:mt-0 w-full lg:w-1/2 pb-20">
-            <form
-              onSubmit={handleSubmit}
-              className="bg-white sm:bg-inherit sm:p-0 sm:px-0 sm:rounded-none sm:border-0 p-2 px-3 rounded-md border-2"
-            >
-              <div
-                className="text-lg font-medium mt-5"
-                style={{ color: "black" }}
-              >
-                Monitor Name
-              </div>
-              <input
-                style={{ backgroundColor: "white" }}
-                type="text"
-                placeholder="Enter text"
-                onChange={(e) => setMonitorName(e.target.value)}
-                className="outline-none border-2 border-[] py-3 rounded-xl  w-full px-"
-              />
-              {/* #4C4C4C */}
-              <div
-                className="text-lg font-medium mt-5"
-                style={{ color: "black" }}
-              >
-                Network
-              </div>
-              <select
-                style={{ backgroundColor: "white" }}
-                name="category"
-                id="category"
-                // value={formData.category}
+          {/* Centered Wizard Container */}
+          <div className="w-full max-w-4xl mx-auto mt-5 flex flex-col gap-5">
+            {/* Top Step Breadcrumbs Navigation Bar */}
+            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-3 sm:p-4">
+              <div className="grid grid-cols-5 gap-2 sm:gap-4">
+                {STEPS.map((s) => {
+                  const Icon = s.icon;
+                  const isActive = currentStep === s.step;
+                  const isCompleted = currentStep > s.step;
 
-                onChange={(e) => {
-                  const selectedIndex = e.target.options.selectedIndex;
-                  setNetwork(e.target.value);
-                  setNetworkName(e.target.options[selectedIndex].text);
-                }}
-                className="outline-none border-2 border-[] py-3 rounded-xl  w-full px-3"
-              >
-                <option
-                  value="none"
-                  selected
-                  disabled
-                  hidden
-                  className="text-xl font-medium"
-                >
-                  None
-                </option>
-                <option value="1" className="text-[13px] text-[#000000] ">Ethereum Mainnet</option>
-                <option value="56" className="text-[13px] text-[#000000] ">Binance Smart Chain</option>
-                <option value="8453" className="text-[13px] text-[#000000] ">Base</option>
-                <option value="43114" className="text-[13px] text-[#000000] ">Avalanche</option>
-                <option value="42161" className="text-[13px] text-[#000000] ">Arbitrum</option>
-                <option value="100" className="text-[13px] text-[#000000] ">Gnosis</option>
-                <option value="59144" className="text-[13px] text-[#000000] ">Linea</option>
-                <option value="1313161554" className="text-[13px] text-[#000000] ">Aurora</option>
-                <option value="10" className="text-[13px] text-[#000000] ">Optimism</option>
-                <option value="11155111" className="text-[13px] text-[#000000]">Sepolia Testnet</option>
-                <option value="137" className="text-[13px] text-[#000000]">Polygon Mainnet</option>
-                <option value="80002" className="text-[13px] text-[#000000]">Amoy</option>
-                <option value="1300" className="text-[13px] text-[#000000]">Algorand Mainnet</option>
-                <option value="1301" className="text-[13px] text-[#000000]">Algorand Testnet</option>
-                <option value="42161" className="text-[13px] text-[#000000]">Arbitrum One</option>
-                <option value="43114" className="text-[13px] text-[#000000]">Avalanche C-Chain</option>
-                <option value="204" className="text-[13px] text-[#000000]">opBNB</option>
-                <option value="1101" className="text-[13px] text-[#000000]">Polygon zkEVM</option>
-                <option value="250" className="text-[13px] text-[#000000]">Fantom</option>
-                <option value="25" className="text-[13px] text-[#000000]">Cronos</option>
-                <option value="592" className="text-[13px] text-[#000000]">Astar</option>
-                <option value="100" className="text-[13px] text-[#000000]">Gnosis (xDai)</option>
-                <option value="42220" className="text-[13px] text-[#000000]">Celo</option>
-                <option value="324" className="text-[13px] text-[#000000]">ZkSync Era</option>
-                <option value="137" className="text-[13px] text-[#000000]">Polygon (Matic)</option>
-                <option value="288" className="text-[13px] text-[#000000]">Boba Network</option>
-                <option value="534352" className="text-[13px] text-[#000000]">Scroll</option>
-                <option value="2040" className="text-[13px] text-[#000000]">Vanar</option>
-                <option value="143" className="text-[13px] text-[#000000]">Monad</option>
-                <option value="50" className="text-[13px] text-[#000000]">XDC Network</option>
-                <option value="169" className="text-[13px] text-[#000000]">Manta Pacific</option>
-                <option value="146" className="text-[13px] text-[#000000]">Sonic</option>
-                <option value="1625" className="text-[13px] text-[#000000]">Gravity Chain</option>
-                <option value="7000" className="text-[13px] text-[#000000]">Zeta Chain</option>
-                <option value="47763" className="text-[13px] text-[#000000]">Neo X</option>
-                <option value="592" className="text-[13px] text-[#000000]">Astar</option>
-                <option value="1868" className="text-[13px] text-[#000000]">Soneium</option>
-                <option value="747474" className="text-[13px] text-[#000000]">Katana</option>
-                <option value="43111" className="text-[13px] text-[#000000]">Hemi</option>
-                <option value="185" className="text-[13px] text-[#000000]">Mint</option>
-                <option value="1116" className="text-[13px] text-[#000000]">CoreDAO</option>
-
-              </select>
-              {network === "1300" || network === "1301" ? (
-                <>
-                  <div
-                    className="text-lg font-medium mt-5"
-                    style={{ color: "black" }}
-                  >
-                    <label>Select ID Type:</label>
-                    <select
-                      value={category}
-                      onChange={handleCategoryChange}
-                      className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C] bg-white"
+                  return (
+                    <button
+                      key={s.step}
+                      type="button"
+                      disabled={s.step > currentStep}
+                      onClick={() => setCurrentStep(s.step)}
+                      className={`flex flex-col sm:flex-row items-center sm:items-center gap-2 p-2 sm:px-3 sm:py-2 rounded-xl transition-all text-left ${
+                        isActive
+                          ? "bg-blue-50/80 border border-blue-200 shadow-2xs"
+                          : isCompleted
+                          ? "hover:bg-slate-50 cursor-pointer"
+                          : "opacity-40 cursor-not-allowed"
+                      }`}
                     >
-                      <option value={2}>App ID</option>
-                      <option value={1}>Asset ID</option>
-                    </select>
+                      <div
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 transition-all ${
+                          isActive
+                            ? "bg-blue-600 text-white shadow-2xs ring-2 ring-blue-100"
+                            : isCompleted
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {isCompleted ? <LuCheck className="w-4 h-4" /> : <Icon className="w-3.5 h-3.5" />}
+                      </div>
+
+                      <div className="hidden sm:flex flex-col min-w-0">
+                        <span
+                          className={`text-xs font-bold truncate ${
+                            isActive ? "text-blue-700" : isCompleted ? "text-slate-900" : "text-slate-400"
+                          }`}
+                        >
+                          {s.title}
+                        </span>
+                        <span className="text-[10px] text-slate-400 truncate">
+                          {s.desc}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* ── STEP 1: PICK BLOCKCHAIN NETWORK ── */}
+            {currentStep === 1 && (
+              <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6 sm:p-8 flex flex-col gap-6">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                      01
+                    </span>
+                    <div>
+                      <h2 className="text-base font-bold text-slate-900">
+                        Select Target Blockchain
+                      </h2>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Pick the network where your contract or application is deployed.
+                      </p>
+                    </div>
                   </div>
-                  <div className="mt-5">
+                </div>
+
+                {/* Filter and Search Bar */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+                  {/* Category Filter Pills */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+                    {["All", "Featured", "Layer 2", "Alt L1", "Testnets"].map((cat) => (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`px-3 py-1 text-xs font-semibold rounded-lg transition-all whitespace-nowrap cursor-pointer ${
+                          selectedCategory === cat
+                            ? "bg-blue-600 text-white shadow-xs"
+                            : "bg-slate-100 hover:bg-slate-200 text-slate-600"
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Chain Search Input */}
+                  <div className="relative w-full sm:w-64 flex items-center">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                      <LuSearch className="w-3.5 h-3.5" />
+                    </div>
                     <input
                       type="text"
-                      style={{ backgroundColor: "white" }}
-                      name="address"
-                      value={address}
-                      onChange={handleAppIdChange}
-                      placeholder={
-                        category === 2 ? "Enter App ID" : "Enter Asset ID"
-                      }
-                      className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
+                      value={chainSearch}
+                      onChange={(e) => setChainSearch(e.target.value)}
+                      placeholder="Search 36+ blockchains..."
+                      style={{ paddingLeft: "36px", paddingRight: "30px" }}
+                      className="w-full py-2 rounded-lg border border-slate-200 text-xs bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition placeholder:text-slate-400"
                     />
-                  </div>
-
-                  {category === 2 && (
-                    <>
-                      <div
-                        className="text-lg font-medium mt-5"
-                        style={{ color: "black" }}
+                    {chainSearch && (
+                      <button
+                        type="button"
+                        onClick={() => setChainSearch("")}
+                        className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer"
                       >
-                        Approval Program:
-                      </div>
-                      {/* <div className="text-lg text-[#989898] mt-1" style={{ color: "black" }}>
-                      Paste your algorand smart contract here
-                    </div> */}
-                      <textarea
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        placeholder="Paste your Approval program here"
-                        style={{
-                          width: "100%",
-                          height: "300px",
-                          backgroundColor: "white",
-                          border: "1px solid #ccc",
-                          borderRadius: "4px",
-                          padding: "10px",
-                          fontSize: "14px",
-                          marginBottom: "10px",
+                        <LuX className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Grid of visual network cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                  {displayedNetworks.map((n) => {
+                    const isSelected = network === n.id;
+                    return (
+                      <div
+                        key={n.id}
+                        onClick={() => {
+                          setNetwork(n.id);
+                          setNetworkName(n.name);
                         }}
-                      />
-                    </>
-                  )}
-                  <div className="text-center w-full ">
+                        className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between h-28 relative ${
+                          isSelected
+                            ? "border-blue-600 bg-blue-50/50 shadow-xs ring-2 ring-blue-100"
+                            : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <span
+                            className={`text-[10px] px-2 py-0.5 rounded font-bold border ${n.badgeColor}`}
+                          >
+                            {n.tag}
+                          </span>
+                          {isSelected && (
+                            <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">
+                              <LuCheck className="w-3.5 h-3.5" />
+                            </span>
+                          )}
+                        </div>
+
+                        <div>
+                          <h3 className="text-sm font-bold text-slate-900 leading-tight">
+                            {n.name}
+                          </h3>
+                          <p className="text-[11px] text-slate-400 mt-0.5 truncate">
+                            {n.desc}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Click More Blockchains Button */}
+                {!chainSearch && selectedCategory === "All" && (
+                  <div className="flex justify-center -mt-1">
                     <button
-                      onClick={sendSmartContract}
-                      type="submit"
-                      className="mt-6 px-6 py-3 w-full bg-[#2D5C8F] text-white rounded-lg"
+                      type="button"
+                      onClick={() => setShowAllChains(!showAllChains)}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-blue-200 bg-blue-50/80 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-all shadow-xs cursor-pointer"
                     >
-                      Create
+                      {showAllChains ? (
+                        <>
+                          <LuChevronUp className="w-4 h-4" />
+                          <span>Show Featured Only (8 chains)</span>
+                        </>
+                      ) : (
+                        <>
+                          <LuChevronDown className="w-4 h-4" />
+                          <span>Click More Blockchains (+28 More Chains Available)</span>
+                        </>
+                      )}
                     </button>
                   </div>
-                </>
-              ) : (
-                <>
-                  <div
-                    className="text-lg font-medium mt-5"
-                    style={{ color: "black" }}
-                  >
-                    Contract Address
+                )}
+
+                {/* Complete Categorized Dropdown Selector */}
+                <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+                  <div className="flex items-center gap-2">
+                    <LuGlobe className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                    <span className="text-xs font-semibold text-slate-700">
+                      Or select from all 36+ supported blockchains:
+                    </span>
                   </div>
+                  <select
+                    value={network}
+                    onChange={(e) => {
+                      const selId = e.target.value;
+                      const found = ALL_NETWORKS.find((n) => n.id === selId);
+                      if (found) {
+                        setNetwork(found.id);
+                        setNetworkName(found.name);
+                      }
+                    }}
+                    className="w-full sm:w-80 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-medium text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                  >
+                    <optgroup label="Featured Chains">
+                      {ALL_NETWORKS.filter((n) => n.category === "Featured").map((opt) => (
+                        <option key={opt.id} value={opt.id}>
+                          {opt.name} ({opt.tag}) · ID {opt.id}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Layer 2 & Rollups">
+                      {ALL_NETWORKS.filter((n) => n.category === "Layer 2").map((opt) => (
+                        <option key={opt.id} value={opt.id}>
+                          {opt.name} ({opt.tag}) · ID {opt.id}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="EVM & Alt-L1s">
+                      {ALL_NETWORKS.filter((n) => n.category === "Alt L1").map((opt) => (
+                        <option key={opt.id} value={opt.id}>
+                          {opt.name} ({opt.tag}) · ID {opt.id}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Testnets">
+                      {ALL_NETWORKS.filter((n) => n.category === "Testnets").map((opt) => (
+                        <option key={opt.id} value={opt.id}>
+                          {opt.name} ({opt.tag}) · ID {opt.id}
+                        </option>
+                      ))}
+                    </optgroup>
+                  </select>
+                </div>
+
+                {/* Step 1 Footer Action */}
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs text-slate-500 font-medium">
+                    Selected: <strong className="text-slate-900">{networkName}</strong>
+                  </span>
+                  <button
+                    type="button"
+                    disabled={!canGoNextFromStep1}
+                    onClick={() => setCurrentStep(2)}
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  >
+                    <span>Next: Target Address</span>
+                    <LuArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 2: CONTRACT TARGET & IDENTITY ── */}
+            {currentStep === 2 && (
+              <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6 sm:p-8 flex flex-col gap-6">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                      02
+                    </span>
+                    <div>
+                      <h2 className="text-base font-bold text-slate-900">
+                        Contract Address & Identification
+                      </h2>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Specify target contract address on <strong>{networkName}</strong>.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Address Field */}
+                {isAlgorand ? (
+                  <div className="flex flex-col gap-3 p-4 bg-slate-50/70 rounded-xl border border-slate-200">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-slate-800">
+                        Algorand Identifier
+                      </label>
+                      <div className="flex rounded-lg border border-slate-200 bg-white p-0.5">
+                        <button
+                          type="button"
+                          onClick={() => setCategory(2)}
+                          className={`px-3 py-1 text-xs font-semibold rounded-md transition ${
+                            category === 2 ? "bg-blue-600 text-white" : "text-slate-600"
+                          }`}
+                        >
+                          App ID
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCategory(1)}
+                          className={`px-3 py-1 text-xs font-semibold rounded-md transition ${
+                            category === 1 ? "bg-blue-600 text-white" : "text-slate-600"
+                          }`}
+                        >
+                          Asset ID
+                        </button>
+                      </div>
+                    </div>
+
+                    <input
+                      type="text"
+                      required
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value.replace(/\D/g, ""))}
+                      placeholder={category === 2 ? "Enter Application ID (e.g. 100259812)" : "Enter Asset ID (e.g. 31566704)"}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white font-mono text-xs sm:text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                    />
+
+                    {category === 2 && (
+                      <div className="flex flex-col gap-1.5 mt-2">
+                        <label className="text-xs font-semibold text-slate-700">
+                          TEAL Approval Program Bytecode
+                        </label>
+                        <textarea
+                          rows={4}
+                          value={code}
+                          onChange={(e) => setCode(e.target.value)}
+                          placeholder="#pragma version 8..."
+                          className="w-full p-3 font-mono text-xs bg-slate-900 text-emerald-400 rounded-xl outline-none"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <LuKeyRound className="w-3.5 h-3.5 text-slate-400" />
+                        <span>Contract Address (0x...) <span className="text-rose-500">*</span></span>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handlePasteAddress}
+                        className="text-[11px] text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center gap-1 cursor-pointer"
+                      >
+                        <LuClipboard className="w-3.5 h-3.5" />
+                        Paste from clipboard
+                      </button>
+                    </div>
+
+                    <div
+                      className={`relative flex items-center rounded-xl border transition-all ${
+                        !address.trim()
+                          ? "border-slate-200 bg-slate-50/50 hover:border-slate-300 focus-within:border-blue-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-100"
+                          : addressValidation?.valid
+                          ? "border-emerald-300 bg-emerald-50/15 focus-within:border-emerald-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-emerald-100"
+                          : "border-rose-300 bg-rose-50/15 focus-within:border-rose-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-rose-100"
+                      }`}
+                    >
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <LuKeyRound className="w-4 h-4" />
+                      </div>
+                      <input
+                        type="text"
+                        required
+                        value={address}
+                        onChange={(e) => {
+                          let val = e.target.value.trim();
+                          if (/^[a-fA-F0-9]{40}$/.test(val)) {
+                            val = `0x${val}`;
+                          }
+                          setAddress(val);
+                        }}
+                        placeholder="0xdAC17F958D2ee523a2206206994597C13D831ec7"
+                        style={{ paddingLeft: "38px", paddingRight: "70px" }}
+                        className="w-full py-2.5 rounded-xl bg-transparent font-mono text-xs sm:text-sm text-slate-900 outline-none placeholder:text-slate-400 placeholder:font-sans"
+                      />
+
+                      {address && (
+                        <button
+                          type="button"
+                          onClick={() => setAddress("")}
+                          className="absolute right-3 px-2 py-1 text-xs text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded font-semibold cursor-pointer transition"
+                        >
+                          Clear
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Address Validation Badge */}
+                    {addressValidation && (
+                      <div className="flex items-center justify-between text-[11px] mt-0.5">
+                        <div className="flex items-center gap-1.5">
+                          {addressValidation.severity === "success" && (
+                            <span className="text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md flex items-center gap-1 font-semibold">
+                              <LuCheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              {addressValidation.message}
+                            </span>
+                          )}
+                          {addressValidation.severity === "warning" && (
+                            <span className="text-amber-700 bg-amber-50 border border-amber-200/80 px-2 py-0.5 rounded-md flex items-center gap-1 font-medium">
+                              <LuHelpCircle className="w-3.5 h-3.5 text-amber-600" />
+                              {addressValidation.message}
+                            </span>
+                          )}
+                          {addressValidation.severity === "error" && (
+                            <span className="text-rose-700 bg-rose-50 border border-rose-200/80 px-2 py-0.5 rounded-md flex items-center gap-1 font-medium">
+                              <LuShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+                              {addressValidation.message}
+                            </span>
+                          )}
+                        </div>
+                        <span className="font-mono text-[10px] text-slate-400 font-semibold select-none">
+                          {address.length}/42 chars
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Monitor Name Field */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <LuTag className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Monitor Name <span className="text-rose-500">*</span></span>
+                  </label>
+
                   <input
                     type="text"
-                    style={{ backgroundColor: "white" }}
-                    name="address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Enter contract address (0x.......)"
-                    className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
+                    required
+                    value={monitorName}
+                    onChange={(e) => setMonitorName(e.target.value)}
+                    placeholder="e.g. USDT Treasury Sentinel, Uniswap V3 Router"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all text-xs sm:text-sm text-slate-900 font-medium placeholder:text-slate-400 outline-none"
                   />
 
-                  <div
-                    className="text-lg font-medium mt-5"
-                    style={{ color: "black" }}
-                  >
-                    ABI
+                  {/* Suggestion Chips */}
+                  <div className="flex items-center gap-1.5 mt-1 overflow-x-auto text-[11px]">
+                    <span className="text-slate-400 font-medium">Suggestions:</span>
+                    {["USDT Core Vault", "Uniswap V3 Pool", "Bridge Escrow", "Staking Sentinel"].map(
+                      (sugg) => (
+                        <button
+                          key={sugg}
+                          type="button"
+                          onClick={() => setMonitorName(sugg)}
+                          className="px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium transition cursor-pointer"
+                        >
+                          {sugg}
+                        </button>
+                      )
+                    )}
                   </div>
-                  <div
-                    className="text-lg text-[#989898] mt-1"
-                    style={{ color: "black" }}
+                </div>
+
+                {/* Step 2 Actions */}
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep(1)}
+                    className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition"
                   >
-                    Paste your Contract's ABI code here
+                    ← Back to Network
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={!canGoNextFromStep2}
+                    onClick={() => setCurrentStep(3)}
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  >
+                    <span>Next: Choose Standard</span>
+                    <LuArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 3: CHOOSE STANDARD & TEMPLATE (NO RAW CODE NEEDED) ── */}
+            {currentStep === 3 && (
+              <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6 sm:p-8 flex flex-col gap-6">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                      03
+                    </span>
+                    <div>
+                      <h2 className="text-base font-bold text-slate-900">
+                        Choose Contract Interface Standard
+                      </h2>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Select a template to auto-populate ABI and trigger rules. No code writing required.
+                      </p>
+                    </div>
                   </div>
-                  <textarea
-                    style={{ backgroundColor: "white" }}
-                    name="abi"
-                    id=""
-                    cols="30"
-                    rows="10"
-                    value={abi}
-                    onChange={(e) => setAbi(e.target.value)}
-                    className="w-full mt-1 outline-none rounded-xl border-2 border-[#4C4C4C]"
+                </div>
+
+                {/* Template Cards Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {TEMPLATE_PRESETS.map((tmpl) => {
+                    const isSelected = selectedTemplateId === tmpl.id;
+                    const Icon = tmpl.icon;
+
+                    return (
+                      <div
+                        key={tmpl.id}
+                        onClick={() => handleSelectTemplate(tmpl)}
+                        className={`p-5 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                          isSelected
+                            ? "border-blue-600 bg-blue-50/40 shadow-xs ring-2 ring-blue-100"
+                            : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
+                        }`}
+                      >
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <div
+                              className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+                                isSelected ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600"
+                              }`}
+                            >
+                              <Icon className="w-5 h-5" />
+                            </div>
+                            <span className={`text-[10.5px] px-2 py-0.5 rounded-full font-bold border ${tmpl.badgeClass}`}>
+                              {tmpl.badge}
+                            </span>
+                          </div>
+
+                          <h3 className="text-sm font-bold text-slate-900 mt-3">
+                            {tmpl.title}
+                          </h3>
+                          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                            {tmpl.desc}
+                          </p>
+                        </div>
+
+                        {tmpl.events.length > 0 && (
+                          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase">Pre-armed:</span>
+                            {tmpl.events.map((ev) => (
+                              <span
+                                key={ev.name}
+                                className="text-[10.5px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono font-semibold"
+                              >
+                                {ev.name}()
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Optional Expandable Raw ABI Box */}
+                <div className="pt-2 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={() => setShowRawAbiEditor(!showRawAbiEditor)}
+                    className="text-xs font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>{showRawAbiEditor ? "Hide Raw ABI Code Editor" : "Inspect or customize raw ABI JSON"}</span>
+                    {showRawAbiEditor ? <LuChevronUp className="w-3.5 h-3.5" /> : <LuChevronDown className="w-3.5 h-3.5" />}
+                  </button>
+
+                  {showRawAbiEditor && (
+                    <div className="mt-3 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 shadow-inner">
+                      <div className="px-3.5 py-2 bg-slate-800/90 border-b border-slate-700 text-[11px] text-slate-400 font-mono flex items-center justify-between">
+                        <span>contract_abi.json</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            try {
+                              setRawAbiText(JSON.stringify(JSON.parse(rawAbiText), null, 2));
+                              toast.info("ABI JSON Formatted.");
+                            } catch {
+                              toast.error("Invalid JSON syntax.");
+                            }
+                          }}
+                          className="hover:text-white"
+                        >
+                          Prettify JSON
+                        </button>
+                      </div>
+                      <textarea
+                        rows={7}
+                        value={rawAbiText}
+                        onChange={(e) => setRawAbiText(e.target.value)}
+                        className="w-full p-3 font-mono text-xs text-emerald-400 bg-transparent outline-none resize-y"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Step 3 Actions */}
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep(2)}
+                    className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition"
+                  >
+                    ← Back to Target
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={!canGoNextFromStep3}
+                    onClick={() => setCurrentStep(4)}
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  >
+                    <span>Next: Select Events</span>
+                    <LuArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 4: DISCOVERED EVENTS & TRIGGERS ── */}
+            {currentStep === 4 && (
+              <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6 sm:p-8 flex flex-col gap-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                      04
+                    </span>
+                    <div>
+                      <h2 className="text-base font-bold text-slate-900">
+                        Discovered Event Listeners
+                      </h2>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Select which smart contract events to arm for real-time trigger surveillance.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Select All shortcut */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = {};
+                      discoveredEvents.forEach((ev) => {
+                        updated[ev.name] = true;
+                      });
+                      setSelectedEvents(updated);
+                    }}
+                    className="text-xs font-semibold text-blue-600 hover:text-blue-800 self-start sm:self-auto cursor-pointer"
+                  >
+                    Select All Events ({discoveredEvents.length})
+                  </button>
+                </div>
+
+                {/* Events List */}
+                <div className="flex flex-col gap-2.5">
+                  {discoveredEvents.length > 0 ? (
+                    discoveredEvents.map((ev) => {
+                      const isChecked = !!selectedEvents[ev.name];
+                      const severityColors = {
+                        Critical: "bg-rose-50 text-rose-700 border-rose-200",
+                        High: "bg-amber-50 text-amber-700 border-amber-200",
+                        Medium: "bg-blue-50 text-blue-700 border-blue-200",
+                        Low: "bg-slate-100 text-slate-700 border-slate-200",
+                      };
+
+                      return (
+                        <div
+                          key={ev.name}
+                          onClick={() =>
+                            setSelectedEvents((prev) => ({
+                              ...prev,
+                              [ev.name]: !prev[ev.name],
+                            }))
+                          }
+                          className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                            isChecked
+                              ? "border-blue-500 bg-blue-50/30"
+                              : "border-slate-200 hover:border-slate-300"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => {}}
+                              className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 pointer-events-none"
+                            />
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-xs sm:text-sm font-bold text-slate-900">
+                                  {ev.name}()
+                                </span>
+                                <span
+                                  className={`text-[10px] px-2 py-0.5 rounded font-semibold border ${
+                                    severityColors[ev.severity] || severityColors.Medium
+                                  }`}
+                                >
+                                  {ev.severity} Severity
+                                </span>
+                              </div>
+                              <p className="text-[11.5px] text-slate-500 mt-0.5">
+                                {ev.desc}
+                              </p>
+                            </div>
+                          </div>
+
+                          <span className="text-xs font-semibold text-slate-400">
+                            {isChecked ? (
+                              <span className="text-blue-600 font-bold">Armed</span>
+                            ) : (
+                              "Ignored"
+                            )}
+                          </span>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="p-8 text-center text-slate-400 border border-dashed border-slate-200 rounded-xl text-xs">
+                      No custom events discovered in current ABI. You can proceed with standard transaction monitoring.
+                    </div>
+                  )}
+                </div>
+
+                {/* Step 4 Actions */}
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep(3)}
+                    className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition"
+                  >
+                    ← Back to Standard
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={!canGoNextFromStep4 && discoveredEvents.length > 0}
+                    onClick={() => setCurrentStep(5)}
+                    className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  >
+                    <span>Next: Configure Alerts</span>
+                    <LuArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 5: ALERTS & FINAL DEPLOYMENT ── */}
+            {currentStep === 5 && (
+              <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6 sm:p-8 flex flex-col gap-6">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                      05
+                    </span>
+                    <div>
+                      <h2 className="text-base font-bold text-slate-900">
+                        Alert Notification Routing
+                      </h2>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Choose where anomaly notifications should be dispatched in real time.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Email Channel */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <LuMail className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Email Alerts <span className="text-rose-500">*</span></span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
+                    placeholder="security@securedapp.io, alerts@yourprotocol.org"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 outline-none text-xs sm:text-sm font-medium text-slate-900"
                   />
-                  <div className="text-center w-full ">
-                    <button
-                      type="submit"
-                      className="mt-6 px-6 py-3 w-full bg-[#2D5C8F] text-white rounded-lg"
-                    >
-                      Create Monitor
-                    </button>
+                  <span className="text-[11px] text-slate-400">
+                    Separate multiple emails with commas.
+                  </span>
+                </div>
+
+
+                {/* Final Deployment Summary Card */}
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col gap-2.5 text-xs">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Deployment Review
+                  </span>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                    <div>
+                      <span className="text-slate-400 text-[10px] block">Network</span>
+                      <strong className="text-slate-900 font-semibold">{networkName}</strong>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 text-[10px] block">Target Standard</span>
+                      <strong className="text-slate-900 font-semibold">
+                        {TEMPLATE_PRESETS.find((t) => t.id === selectedTemplateId)?.title.split(" ")[0] || "Custom"}
+                      </strong>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 text-[10px] block">Armed Events</span>
+                      <strong className="text-emerald-700 font-semibold">
+                        {Object.values(selectedEvents).filter(Boolean).length} Active Listeners
+                      </strong>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 text-[10px] block">Latency Target</span>
+                      <strong className="text-blue-700 font-semibold">&lt;25ms Triggers</strong>
+                    </div>
                   </div>
-                </>
-              )}
-            </form>
+                </div>
+
+                {/* Step 5 Deploy Actions */}
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep(4)}
+                    className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition"
+                  >
+                    ← Back to Events
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={isSubmitting || !emailInput.trim()}
+                    onClick={handleFinalDeploy}
+                    className="px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer disabled:opacity-60"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <TbLoader2 className="w-4 h-4 animate-spin" />
+                        <span>Arming & Deploying Monitor...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>🚀 Arm & Deploy Monitor</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
