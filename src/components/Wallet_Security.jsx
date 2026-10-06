@@ -1,66 +1,64 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import NewNavbar from "./NewNavbar";
 import Sidebar from "./Sidebar";
-import { FaCirclePlus } from "react-icons/fa6";
-
 import Wallet_Security_Cmp from "./Wallet_Security_Cmp";
+import { LuArrowLeft, LuPlus, LuWallet } from "react-icons/lu";
 
 function Wallet_Security() {
   const userEmail = localStorage.getItem("email");
-  console.log(userEmail);
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const email = localStorage.getItem("email");
   const is_admin = localStorage.getItem("is_admin");
-  console.log(token);
-  console.log(email);
 
   return (
-    <div className="w-full min-h-full bg-white">
+    <div className="w-full min-h-screen bg-[#FAFAFB]">
       <NewNavbar email={userEmail} />
-      <div className="bg-white w-full flex min-h-full">
+      <div className="w-full flex min-h-screen">
         <Sidebar />
 
-        <div className=" h-full sm:flex flex-col gap-5 ml-[100px] w-56 mt-20 hidden fixed">
-          <div className={`mt-5 py-3 pl-4 pr-9 rounded-r-full bg-[#6A6A6A1A]`}>
-            <h1 className="text-[#6A6A6A]  font-semibold text-nowrap">
-              Realtime Security
-            </h1>
-          </div>
-          <div className="flex flex-col gap-5 ml-5">
-            <Link to="/dashboard" className="text-[#6A6A6A]">
-            Dashboard
-            </Link>
-            <Link to="/monitor" className="text-[#6A6A6A]">
-            Contract Monitor
-            </Link>
-            <Link
-              to="/wallet_security"
-              className="text-[#2D5C8F] font-semibold"
-            >
-              Wallet Monitor
-            </Link>
-            {/* <Link to="/log" className="text-[#6A6A6A] ">
-              Logs
-            </Link> */}
-          </div>
-        </div>
+        <div className="main-content-layout p-4 sm:p-6 lg:p-8 flex flex-col gap-6 w-full">
+          {/* Top Navigation & Breadcrumb */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 bg-white border border-slate-200 hover:border-blue-200 px-3 py-1.5 rounded-lg shadow-2xs transition"
+                >
+                  <LuArrowLeft className="w-3.5 h-3.5" />
+                  <span>Back to Dashboard</span>
+                </Link>
+                <span className="text-slate-300">/</span>
+                <span className="text-xs font-semibold text-slate-700">Wallet Monitors</span>
+              </div>
 
-        <div className=" mt-20 w-full sm:ml-80  min-h-full">
-          <div className="w-full flex justify-between items-center px-4 py-4 mt-4 xl:px-[106px]">
-            <p className="text-[#6A6A6A] font-semibold text-lg">
-              Wallet Monitor
-            </p>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl border border-indigo-100">
+                  <LuWallet className="w-5 h-5" />
+                </div>
+                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                  Wallet Monitors
+                </h1>
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                  Active Sentinel
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500">
+                Continuous surveillance for treasury accounts, multisigs, and hot wallets against unauthorized transfers and abnormal outflows.
+              </p>
+            </div>
+
             {is_admin == 1 && (
               <Link
                 to="/wallet_monitor_create"
-                className="bg-[#6549FD] text-white px-3 py-2 rounded-lg text-sm font-medium"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold shadow-xs transition-all self-start sm:self-auto cursor-pointer"
               >
-                Create Wallet Monitor
+                <LuPlus className="w-4 h-4" />
+                <span>Deploy Wallet Monitor</span>
               </Link>
             )}
           </div>
+
+          {/* Wallet Monitors Table Component */}
           <Wallet_Security_Cmp />
         </div>
       </div>

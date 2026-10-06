@@ -45,8 +45,14 @@ const Api_builder = () => {
   }, [consoleLog]);
 
   const token = localStorage.getItem("token");
-  const decoded = jwtDecode(token);
-  const user_Id = decoded.userId;
+  const decoded = (() => {
+    try {
+      return token ? jwtDecode(token) : {};
+    } catch {
+      return {};
+    }
+  })();
+  const user_Id = decoded.userId || localStorage.getItem("userId") || "";
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const targetMids = query.get("id");
